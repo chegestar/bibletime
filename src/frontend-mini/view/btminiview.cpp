@@ -1343,6 +1343,14 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     d->_mousePower.ry() *= qMin(qAbs(speed.y()) * 200.0f / d->_sizeFactor, (qreal)1.0);
     d->_mousePower += speed * 50.0f;
 
+	int tapping = d->_mouseTapping;
+
+	// cut down horizontal kinetic power, for a while
+	d->_mousePower.rx() = 0.0;
+
+	d->_mouseTapping = 0;
+	d->_mouseDown = false;
+
     if(!d->_mouseLeaveZone)
     {
         QPersistentModelIndex index = indexAt(e->pos());
@@ -1350,41 +1358,36 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
         if(selectionModel())
             selectionModel()->select(index, selectionCommand(index, e));
 
-        if(d->_mouseTapping >= SERVICE_PRESS_DELAY)
+        if(tapping >= SERVICE_PRESS_DELAY)
         {
-            d->_mouseTapping = 0;
-            d->_mouseDown = false;
             emit servicePressed(index);
         }
-        else if(d->_mouseTapping >= LONG_PRESS_DELAY)
+        else if(tapping >= LONG_PRESS_DELAY)
         {
-            d->_mouseTapping = 0;
-            d->_mouseDown = false;
             emit longPressed(index);
         }
         else
         {
-            d->_mouseTapping = 0;
-            d->_mouseDown = false;
             emit clicked(index);
-        }
 
-        if(index.isValid())
-        {
-            if(model()->hasChildren(index))
-            {
-                Q_ASSERT(!d->_ld->plainMode() && "Model for plain layout must not have children");
+			if(index.isValid())
+			{
+				if(model()->hasChildren(index))
+				{
+					Q_ASSERT(!d->_ld->plainMode() &&
+						"Model for plain layout must not have children");
 
-                // switch to left subview with children items
-                makeSubView(d->_currentSubView + 1, index.child(0, 0));
-                activateSubView(d->_currentSubView + 1);
-            }
-            else if(d->_interactive)
-            {
-                close();
-            }
+					// switch to left subview with children items
+					makeSubView(d->_currentSubView + 1, index.child(0, 0));
+					activateSubView(d->_currentSubView + 1);
+				}
+				else if(d->_interactive)
+				{
+					close();
+				}
+			}
         }
-    }
+	}
     else
     {
         // switch subview if passed horizontal snapping
@@ -1396,13 +1399,6 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
         if(xl > d->_snappingValue)
             slideLeft();
     }
-
-
-    // cut down horizontal kinetic power, for a while
-    d->_mousePower.rx() = 0.0;
-
-    d->_mouseDown    = false;
-    d->_mouseTapping = 0;
 
     viewport()->update();
 }

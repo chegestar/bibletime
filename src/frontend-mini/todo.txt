@@ -6,12 +6,18 @@ kalemas@mail.ru :
 +	restore red letter words
 +	correct rows insert/remove for plain layout
 -	contents of numbers for subView
+	decide how to render entries with SimpleKey
+	search view
+		in search term add: *term* AND *otherTerm*
+	improve BT modularity
+		Install manager - information of repos/modules, manage modules
+		Search
+		Bookmarks
+	context view
+	restore original BT paths
 	current subview indication
 	context menu: add left(+), add right(+), clear(+), bookmark, select
 	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
-	search view
-		in search term add: *term* AND *otherTerm*
-	context view
 	combined subViews
 	rendering caching
 	modules model: module manager button, category / language+modules layout

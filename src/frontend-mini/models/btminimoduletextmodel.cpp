@@ -264,8 +264,10 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                     List *l = d->indexList(index);
 
                     if(l->_module)
-                    {
-                        Rendering::CEntryDisplay *display = l->_module->getDisplay();
+					{
+						//Rendering::CEntryDisplay display() = l->_module->getDisplay();
+                        Rendering::CEntryDisplay *display = &Rendering::CEntryDisplay();
+
                         CSwordVerseKey key(d->indexToVerseKey(index));
 
                         //qDebug() << "MODEL: render" << key.Index() << key.getText() << index;
@@ -278,7 +280,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                                     r += "<center><b><big>" + key.book() + " " +
                                         QString::number(key.getChapter()) + "</big></b></center>";
 
-                                r += display->text(QList<const CSwordModuleInfo*>() << l->_module, 
+								r += display->Rendering::CEntryDisplay::text(QList<const CSwordModuleInfo*>() << l->_module, 
                                     QString::fromUtf8(key.getText()),
                                     l->_displayOptions, l->_filterOptions);
                             }
