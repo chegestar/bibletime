@@ -1,17 +1,13 @@
-/*************************************************************************
- * menu.cpp - common used menu
- *
- * author: Konstantin Maslyuk "Kalemas" mailto:kalemas@mail.ru
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation version 2.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- ************************************************************************/
+/*********
+*
+* In the name of the Father, and of the Son, and of the Holy Spirit.
+*
+* This file is part of BibleTime Mini project. Visit 
+* http://sourceforge.net/projects/bibletimemini for more information.
+*
+* This code is licensed under the GNU General Public License version 2.0.
+*
+**********/
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -27,12 +23,17 @@
 #include <QStyleOptionMenuItem>
 #include <QtDebug>
 
-#include "menu.h"
+#include "btminimenu.h"
 
-class MenuPrivate
+namespace BtMini
+{
+    extern QWidget * mainWidget();
+}
+
+class BtMiniMenuPrivate
 {
 public:
-    MenuPrivate()
+    BtMiniMenuPrivate()
     {
         _result = -1;
 		_eventLoop = 0;
@@ -40,23 +41,9 @@ public:
 		_canceled = false;
     }
     
-    ~MenuPrivate()
+    ~BtMiniMenuPrivate()
     {
         ;
-    }
-    
-    static QWidget * mainWidget()
-    {
-        QWidget *m(0);
-        foreach(QWidget *w, qApp->topLevelWidgets())
-        {
-            if(!m)
-                m = w;
-            else if(m->width() < w->width() && m->height() < w->height())
-                m = w;
-        }
-        Q_ASSERT(m);
-        return m;
     }
     
     QList<QWidget*>  _buttons;
@@ -67,7 +54,8 @@ public:
 
 };
 
-Menu::Menu() : d_ptr(new MenuPrivate), QWidget(MenuPrivate::mainWidget(), Qt::FramelessWindowHint)
+BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
+    , QWidget(BtMini::mainWidget(), Qt::FramelessWindowHint)
 {
 	//setWindowModality(Qt::ApplicationModal);
     //setModal(false);
@@ -76,17 +64,19 @@ Menu::Menu() : d_ptr(new MenuPrivate), QWidget(MenuPrivate::mainWidget(), Qt::Fr
 	//setAttribute(Qt::WA_NoMousePropagation);
 
 	if(parentWidget())
+	{
 		setMaximumSize(parentWidget()->size());
 
-    QFont f = font();
-    f.setBold(true);
-    f.setPixelSize(f.pixelSize() * 1.6);
-    setFont(f);
+		QFont f(parentWidget()->font());
+		f.setBold(true);
+		f.setPixelSize(f.pixelSize() * 1.6);
+		setFont(f);
+	}
 
 	hide();
 }
 
-Menu::~Menu()
+BtMiniMenu::~BtMiniMenu()
 {
 	if(d_ptr->_eventLoop)
 		d_ptr->_eventLoop->exit();
@@ -94,7 +84,7 @@ Menu::~Menu()
 	delete d_ptr;
 }
 
-void Menu::show()
+void BtMiniMenu::show()
 {
     adjustSize();
     const QSize s = (parentWidget()->geometry().size()-	frameSize())/2;
@@ -105,14 +95,14 @@ void Menu::show()
     QWidget::show();
 }
 
-void Menu::hide()
+void BtMiniMenu::hide()
 {
     QWidget::hide();
 
     qApp->removeEventFilter(this);
 }
 
-void Menu::exec()
+void BtMiniMenu::exec()
 {
 	QEventLoop eventLoop;
 	d_ptr->_eventLoop = &eventLoop;
@@ -120,55 +110,61 @@ void Menu::exec()
 	show();
 
 	QPointer<QObject> guard = this;
+	
 	eventLoop.exec();
+	
 	if(guard.isNull())
 		return;
 
 	d_ptr->_eventLoop = 0;
 }
 
-void Menu::mouseMoveEvent(QMouseEvent *e)
+void BtMiniMenu::mouseMoveEvent(QMouseEvent *e)
 {
 }
 
-void Menu::mousePressEvent(QMouseEvent *e)
+void BtMiniMenu::mousePressEvent(QMouseEvent *e)
 {
 }
 
-void Menu::mouseDoubleClickEvent(QMouseEvent *e)
+void BtMiniMenu::mouseDoubleClickEvent(QMouseEvent *e)
 {
 }
 
-void Menu::mouseReleaseEvent(QMouseEvent *e)
+void BtMiniMenu::mouseReleaseEvent(QMouseEvent *e)
 {
 }
 
-QSize Menu::sizeHint() const
+QSize BtMiniMenu::sizeHint() const
 {
 	return QWidget::sizeHint().boundedTo(parentWidget()->size());
 }
 
-QSize Menu::minimumSizeHint() const
+QSize BtMiniMenu::minimumSizeHint() const
 {
 	return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
 }
 
-QWidget * Menu::buttonAt(int id) const
+QWidget * BtMiniMenu::buttonAt(int id) const
 {
     return d_ptr->_buttons[id];
 }
 
-void Menu::buttonTrigger()
+void BtMiniMenu::buttonTrigger()
 {
     d_ptr->_result = d_ptr->_buttons.indexOf(qobject_cast<QWidget*>(sender()));
     hide();
 }
 
-Menu * Menu::createQuery(QString text, QStringList actions)
+BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
 {
-    Menu *dialog = new Menu;
+    BtMiniMenu *dialog = new BtMiniMenu;
     
     QVBoxLayout *v = new QVBoxLayout;
+
+    const int m = dialog->font().pixelSize() / 4;
+	v->setSpacing(m);
+    v->setContentsMargins(m, m, m, m);
     
     // add menu text
     if(!text.isEmpty())
@@ -206,21 +202,21 @@ Menu * Menu::createQuery(QString text, QStringList actions)
     return dialog;
 }
 
-int Menu::execQuery(QString text, QStringList actions)
+int BtMiniMenu::execQuery(QString text, QStringList actions)
 {
-    QScopedPointer<Menu> dialog(createQuery(text, actions));
+    QScopedPointer<BtMiniMenu> dialog(createQuery(text, actions));
     dialog->exec();
     return dialog->d_ptr->_result;
 }
 
-int Menu::execMenu(QStringList actions)
+int BtMiniMenu::execMenu(QStringList actions)
 {
-    QScopedPointer<Menu> dialog(createQuery(QString(), actions));
+    QScopedPointer<BtMiniMenu> dialog(createQuery(QString(), actions));
     dialog->exec();
     return dialog->d_ptr->_result;
 }
 
-void Menu::paintEvent(QPaintEvent *e)
+void BtMiniMenu::paintEvent(QPaintEvent *e)
 {
     QPainter p(this);
     
@@ -251,19 +247,21 @@ void Menu::paintEvent(QPaintEvent *e)
     }
 }
 
-bool Menu::event(QEvent *e)
+bool BtMiniMenu::event(QEvent *e)
 {
 	return QWidget::event(e);
 }
 
-void Menu::hideEvent(QHideEvent *e)
+void BtMiniMenu::hideEvent(QHideEvent *e)
 {
 	if(d_ptr->_eventLoop)
 		d_ptr->_eventLoop->exit();
 }
 
-bool Menu::eventFilter(QObject *watched, QEvent *e)
+bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 {
+    //qDebug() << "menu event filter" << watched << e;
+
 	switch(e->type())
 	{
 	case QEvent::MouseButtonDblClick:
@@ -276,18 +274,22 @@ bool Menu::eventFilter(QObject *watched, QEvent *e)
 		    if(!rect().adjusted(w, w, -w, -w).contains(p))
 		    {
                 if(e->type() == QEvent::MouseButtonRelease && !d_ptr->_modal)
-                    hide();
+                    cancel();
 			    return true;
 		    }
         }
 		break;
+    case QEvent::Close:
+        if(children().contains(o))
+            hide();
+        break;
 	}
 	return false;
 }
 
-Menu * Menu::createProgress(QString text)
+BtMiniMenu * BtMiniMenu::createProgress(QString text)
 {
-    Menu *dialog = new Menu;
+    BtMiniMenu *dialog = new BtMiniMenu;
 
     QVBoxLayout *vl = new QVBoxLayout;
 
@@ -311,7 +313,7 @@ Menu * Menu::createProgress(QString text)
     return dialog;
 }
 
-void Menu::setValue(int percent)
+void BtMiniMenu::setValue(int percent)
 {
     QProgressBar *pb = findChild<QProgressBar*>();
     if(pb)
@@ -321,19 +323,19 @@ void Menu::setValue(int percent)
     }
 }
 
-void Menu::setText(QString text)
+void BtMiniMenu::setText(QString text)
 {
     QLabel *l = findChild<QLabel*>();
     if(l)
         l->setText(text);
 }
 
-bool Menu::wasCanceled()
+bool BtMiniMenu::wasCanceled()
 {
     return d_ptr->_canceled;
 }
 
-void Menu::cancel()
+void BtMiniMenu::cancel()
 {
 	d_ptr->_canceled = true;
     hide();

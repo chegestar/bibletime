@@ -1,55 +1,66 @@
 kalemas@mail.ru :
-=== commited ===================================================================
-+	sometime DrawCache mix up items
-+	line breaks. do not break lines if there is only one character on the next line.
-+	sbItem::getItem (sbDirection) global directions NEXT, PREV, LEFT, RIGHT
-+	better enumeration of modules in module selection and module installer
-+	warning war - clean build log from warnings
-+	module manager
-+		raise connection
-+	create patch for ftplibt
-+	mods.d and modules creation if not exists
+=== tasks ======================================================================
++	support delayedLayout and fix subview risizes
++	long tapping indication
++	model module range relative module bounds
++	restore red letter words
++	correct rows insert/remove for plain layout
+-	contents of numbers for subView
+	current subview indication
+	context menu: add left(+), add right(+), clear(+), bookmark, select
+	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
+	search view
+		in search term add: *term* AND *otherTerm*
+	context view
+	combined subViews
+	rendering caching
+	modules model: module manager button, category / language+modules layout
+	sometimes view resized more than mainWidget
+	preview role and threaded data retrieving
+	selecting items and active item
+?	layout n items on line without account of contents width
+		
+	model/view architecture for lists
+		BtMiniTextModel
+			Comentary
+			Bible
+			Lexicon
+			Book
+			Images
+			Lexicon Lookup
+			Word / Strongs Lookup
+			Verses Lookup / Search
+		BtMiniModulesModel == BtBookshelfModel
+			Select
+			Remove
+			Install
+				Language
+				Type
+				Modules
+		BtMiniSettingsModel
+			Display
+				Font Size
+			Default Modules
+			Default Filters
+			General
+				Search Type (CLucene, Sword Plain Search)
+				Module prior Category Language
+				Display Tips
+		BtMiniSearchModel
+			Settings
+			Results
+				long tap will follow place
+	            
 
-=== current tasks ==============================================================
-+	Qt Port
--	opengl-es or openvg graphics sytem for qt (faster, but unstable)
-%	fix long-height item expansion
-+	switch to sword utf8 locale
-+	interface based on qt
-+		install module dialog
-+		module installation progress
-+		restore input for search
-+		restore slide left/right arrows
-+		focus loose in search lineedit
-+	drawing slow enought
-+		divide interface on widgets
-+		all items based on qtextdocument
-+	use bibletime sword backend
-+	css for application
-+	different screens and runtime orientation change
-+	cdisplayentry
-+		add bottom margin to last entry in chapter
-+		show verse number only
-+	menu
-+	own modern finger-oriented QStyle
-+	search - clucence
-+	power consurmption on device
--		activate/deactivate events dont work on wince
-+			fix: make test on timer for active window
-+	make device to vibrate
-	tips
-*		check box for style
-		ItemView to show scrollable text item
-+		on search view: how to set range
-+		on module view: sliding left/right to add module views
+	tips: ItemView to show scrollable text item
 	memory leaking
 		crtdebug detect leaking starting from QApplication init
 ?	buttons instead label in header
 	application settings dialog
 		search type
 		font size
-	model/view architecture for lists
-		at least view for sbList
+	lexicon/dictionary view
+	open details view on long tap
 	scrollbar
 		count list height, if listStartConstructed and listEndConstructed
 		proper method to scroll list
