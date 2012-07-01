@@ -4933,7 +4933,7 @@ Do you want to continue?</source>
     <message>
         <location filename="../../src/frontend/searchdialog/csearchdialog.cpp" line="131"/>
         <source>The following modules need to be indexed before they can be searched in:</source>
-        <translation>Следующие модули необходимо индексировать, чтобы делать в них поиск:</translation>
+        <translation>Следующие модули необходимо проиндексировать, чтобы делать в них поиск:</translation>
     </message>
     <message>
         <location filename="../../src/frontend/searchdialog/csearchdialog.cpp" line="132"/>

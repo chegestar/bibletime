@@ -13,12 +13,23 @@
 #define BTMINI_H
 
 #include <QtCore/Qt>
+#include <QModelIndex>
 
 class BtMiniView;
 class QWidget;
 
-namespace BtMini
+class BtMini : public QObject
 {
+	Q_OBJECT
+
+	BtMini();
+
+public:
+	~BtMini();
+
+	static BtMini& instance();
+
+public:
     enum ItemDataRole
     {
         /** Referenced Sword module or key (QString). */
@@ -29,37 +40,41 @@ namespace BtMini
     };
     
     /** Main widget. */
-    QWidget * mainWidget();
+    static QWidget * mainWidget();
     
     /** Module text view. */
-    QWidget * worksWidget();
+    static QWidget * worksWidget();
 
     /** */
-    QWidget * searchWidget();
+    static QWidget * searchWidget();
 
     /** Manage modules, repositories, search indecies, install manager. */
-    QWidget * bookshelfWidget();
+    static QWidget * installerWidget();
     
     /** */
-    QWidget * settingsWidget();
+    static QWidget * settingsWidget();
 
     /** */
-    QWidget * aboutWidget();
+    static QWidget * aboutWidget();
 
     /** User data: bookmarks, history, favorites. */
-    QWidget * bookmarksWidget();
+    static QWidget * bookmarksWidget();
 
     /** Raised if user tapped on verse. */
-    QWidget * contextWidget();
+    static QWidget * contextWidget();
     
     /** The only way to switch interface states. Works with functions above. */
-    void setActiveWidget(QWidget *widget);
+    static void setActiveWidget(QWidget *widget);
     
     /** Cast widget into type of BtMiniView or search for child of that type and
         return. This function should throw exception if view not found, no need
         to check pointer. */
-    BtMiniView * findView(QWidget *widget);
+    static BtMiniView * findView(QWidget *widget);
+
+public slots:
+	/** */
+	void installerQuery(const QModelIndex &index);
     
-}
+};
 
 #endif

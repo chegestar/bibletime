@@ -47,6 +47,7 @@ kalemas@mail.ru :
 	replace unistd.h with io.h/direct.h
 	translation
 	megre linked verses in model
+	context for highlited word broken
 	
 	
 === known tasks ================================================================

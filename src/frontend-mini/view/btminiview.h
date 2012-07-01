@@ -14,7 +14,7 @@
 
 #include <QAbstractItemView>
 
-#include "btmini.h"
+//#include "btmini.h"
 
 class BtMiniLayoutDelegate;
 class BtMiniViewPrivate;
@@ -77,7 +77,7 @@ public:
     
     /** Using thread will work for active view only. \param previewRole Make preview
         before thread calculates contents. This function change level options. */
-    void setThreadedLayout(bool useThread = true, int previewRole = BtMini::PreviewRole);
+    void setThreadedLayout(bool useThread = true, int previewRole = Qt::UserRole + 256 + 2);
     
     /** Set default role for searching indexes. This function change level options. */
     void setSearchRole(int searchRole = Qt::EditRole, int level = -1);

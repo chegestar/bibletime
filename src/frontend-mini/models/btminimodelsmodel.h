@@ -15,6 +15,8 @@
 #include <QAbstractItemModel>
 #include <QVector>
 
+class BtMiniModelsModelPrivate;
+
 /** 
 */
 class BtMiniModelsModel : public QAbstractItemModel
@@ -44,7 +46,8 @@ public slots:
 protected:
 
 private:
-    QVector<QPair<QAbstractItemModel*, QString>> _models;
+	Q_DECLARE_PRIVATE(BtMiniModelsModel)
+	BtMiniModelsModelPrivate * const d_ptr;
 
 };
 

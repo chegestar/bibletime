@@ -16,6 +16,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QStandardItemModel>
 #include <QStackedWidget>
 #include <QStyle>
 #include <QTextStream>
@@ -30,6 +31,7 @@
 #include "backend/config/cbtconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/btinstallbackend.h"
+#include "frontend/bookshelfmanager/btinstallmgr.h"
 #include "backend/managers/cdisplaytemplatemgr.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/managers/btstringmgr.h"
@@ -38,6 +40,7 @@
 
 #include <SWLog.h>
 
+#include "btmini.h"
 #include "models/btminimoduletextmodel.h"
 #include "models/btminimodelsmodel.h"
 #include "ui/btminimenu.h"
@@ -136,6 +139,22 @@ protected:
     }
 
 };
+
+BtMini::BtMini()
+{
+	;
+}
+
+BtMini::~BtMini()
+{
+	;
+}
+
+BtMini & BtMini::instance()
+{
+	static BtMini bm;
+	return bm;
+}
 
 QWidget * BtMini::mainWidget()
 {
@@ -258,7 +277,7 @@ QWidget * BtMini::worksWidget()
 				if(m->type() == CSwordModuleInfo::Bible)
 				{
 					modules = QStringList() << m->name();
-					places = QStringList() << CBTConfig::getDefault(CBTConfig::openPlaces)[1];
+					places = QStringList() << CBTConfig::getDefault(CBTConfig::openPlaces)[0];
 					break;
 				}
 		}	
@@ -339,7 +358,7 @@ QWidget * BtMini::searchWidget()
 }
 
 /** */
-QWidget * BtMini::bookshelfWidget()
+QWidget * BtMini::installerWidget()
 {
     static BtMiniWidget *w = 0;
 
@@ -358,24 +377,30 @@ QWidget * BtMini::bookshelfWidget()
         vl->addWidget(v);
         vl->addWidget(p);
 
-        w->setLayout(vl);
+		w->setLayout(vl);
 
         // Setup model
-        QStringList sources(BtInstallBackend::sourceNameList(true));
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
+        QStringList        ss(BtInstallBackend::sourceNameList(true));
+		BtInstallMgr      *im = new BtInstallMgr(m);
 
-        foreach(QString source, sources)
+        foreach(QString s, ss)
         {
-            sword::InstallSource is = BtInstallBackend::source(source);
-            CSwordBackend *be = BtInstallBackend::backend(is);
+            sword::InstallSource is = BtInstallBackend::source(s);
+			//im.refreshRemoteSource(&is);
+			CSwordBackend *be = BtInstallBackend::backend(is);
 
-            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
+			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
+			mm->setDisplayFormat(QList<QVariant>() << "<p>" << BtBookshelfModel::ModuleNameRole << "</p><p>"
+				"<font size=\"50%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font></p>");
             mm->setSourceModel(be->model());
 
-            m->addModel(mm, source);
+            m->addModel(mm, "<center><b>" + s + "</b></center>");
         }
 
         v->setModel(m);
+
+		QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
     }
 
     return w;
@@ -398,6 +423,36 @@ BtMiniView * BtMini::findView(QWidget *widget)
 
     Q_ASSERT(false);
     return 0;
+}
+
+void BtMini::installerQuery(const QModelIndex &index)
+{
+	CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
+
+	if(m)
+	{
+		// TODO detect module status: installed, obsolete, not installed
+
+		if (BtMiniMenu::execQuery(QString("Do you want to install %1 ?").arg(m->name()), QStringList() << "Install" << "Cancel") == 0)
+		{
+			BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
+			
+			QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Installing ..."));
+			dialog->show();
+
+			QObject::connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+
+			// index.data(BtBookshelfModel::ModuleInstallPathRole).toString().toLatin1()
+			int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &BtInstallBackend::source(
+				BtInstallBackend::sourceNameList(true)[index.parent().row()]));
+
+			if (status != 0 || dialog->wasCanceled())
+				BtMiniMenu::execQuery(QString("Module was not installed"));
+			else
+				//CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+				BtMiniMenu::execQuery(QString("Completed. Restart application to see module"));
+		}
+	}
 }
 
 /** Sword debug messages. */
@@ -461,7 +516,7 @@ int main(int argc, char *argv[])
 	
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
-	app.setApplicationVersion("2.9.0");
+	app.setApplicationVersion("2.9.1");
     app.setAutoSipEnabled(true);
 
 	CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());

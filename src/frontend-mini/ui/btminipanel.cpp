@@ -148,7 +148,7 @@ void BtMiniPanel::controlActivated()
         BtMini::setActiveWidget(BtMini::worksWidget());
         break;
     case Installer:
-        BtMini::setActiveWidget(BtMini::bookshelfWidget());
+        BtMini::setActiveWidget(BtMini::installerWidget());
         break;
     default:
         Q_ASSERT(false);

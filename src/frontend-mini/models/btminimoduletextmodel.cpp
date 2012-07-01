@@ -80,8 +80,8 @@ struct List
         {
             CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(_module);
 
-            _firstEntry = bm->lowerBound().Index();
-            _maxEntries = bm->upperBound().Index() - _firstEntry + 1;
+            _firstEntry = bm->lowerBound().getIndex();
+            _maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
 
             _displayOptions.verseNumbers = true;
         }
@@ -106,7 +106,7 @@ struct List
 		
 		if(_hasScope)
 			for(int i = 0; i < list.Count(); ++i)
-				_scopeMap.append(list.GetElement(i)->Index());
+				_scopeMap.append(list.GetElement(i)->getIndex());
 	}
     
 	QString             _name;
@@ -150,12 +150,12 @@ public:
 		if(l->_hasScope)
 		{
 			key.Headings(1);
-			key.Index(l->_scopeMap[index.row()]);
+			key.setIndex(l->_scopeMap[index.row()]);
 		}
 		else
 		{
 			key.Headings(1);
-			key.Index(index.row() + l->_firstEntry);
+			key.setIndex(index.row() + l->_firstEntry);
 		}
 
         return key;
@@ -566,7 +566,7 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString key) const
     verse.setKey(key);
 
     const List *l = &d->_lists[i];
-    const int r = verse.Index() - l->_firstEntry;
+    const int r = verse.getIndex() - l->_firstEntry;
 
     if(r < 0 || r >= l->_maxEntries)
         return QModelIndex();

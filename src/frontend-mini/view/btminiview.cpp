@@ -68,6 +68,223 @@ qreal scroll_back_attenuation()
 
 class BtMiniViewItem
 {
+private:
+	class TextItem
+	{
+	public:
+		TextItem(const QString &text, QFont font)
+		{
+			// prepare hypertext stack
+			QVector<QPair<QString,Data>> stack;
+			stack << QPair<QString,Data>(QString(),Data());
+
+			stack.last().second.font = font;
+
+			_data.append(stack.last().second);
+
+			// break on parts
+			for(int c = 0; c < text.size();)
+			{
+				if(text[c] == '<')
+				{
+					bool end = false;
+
+					if(text[c + 1] == '/')
+						c++, end = true;
+					
+					// if have text, start new part
+					if(_data.last().text.size() > 0)
+						_data.append(stack.last().second);
+
+					QString tag = text.mid(c + 1, text.indexOf('>', c) - c - 1);
+
+					if(!end)
+					{
+						stack.append(QPair<QString,Data>(tag, stack.last().second));
+
+						// modify data by tag names
+						if(tag == "center")
+							stack.last().second.center = true;
+						else if(tag == "b")
+							stack.last().second.font.setWeight(QFont::Bold);
+
+						_data[_data.size() - 1] = stack.last().second;
+					}
+					else
+					{
+						if(tag != stack.last().first)
+							qDebug() << "TextItem, mismatched tags" << text;
+						stack.erase(stack.end() - 1);
+					}
+
+					c += tag.size() + 2;
+					continue;
+				}
+
+				_data.last().text.append(text[c]);
+
+				++c;
+			}
+
+			// strip last empty part
+			if(_data.last().text.size() == 0)
+				_data.erase(_data.end() - 1);
+		}
+
+		~TextItem()
+		{
+			;
+		}
+
+		inline void paint(QPainter *painter, const QPoint &point, const QRect &clipping) const
+		{
+			painter->save();
+			painter->setClipping(true);
+			painter->setClipRect(clipping.translated(point));
+			for(int i=0; i < _data.size(); ++i)
+			{
+				painter->setFont(_data[i].font);
+				painter->translate(0, _data[i].size.height());
+				painter->drawText(point + _data[i].pos, _data[i].text);
+				painter->translate(0, -_data[i].size.height());
+
+			}
+			painter->restore();
+		}
+
+		/** Detect whether text can use simple text renderer. */
+		static bool acceptable(const QString &text)
+		{
+			const QStringList types(QStringList() << "b" << "center");
+
+			QString tag;
+			bool skip = true;
+			for(int i = 0; i < text.size(); ++i)
+			{
+				if(text[i] == '<')
+				{
+					skip = false;
+					tag = QString();
+				}
+				else if(skip == false)
+				{
+					if(text[i] == '>' || text[i] == ' ')
+					{
+						if(types.indexOf(tag) == -1)
+						{
+							//qDebug() << "TextItem unacceptable tag:" << tag;
+							return false;
+						}
+						skip = true;
+					}
+					else if(text[i] != '/')
+						tag.append(text[i]);
+				}
+			}
+
+			return true;
+		}
+
+		/** prepare item to display */
+		inline void resize(int width, int height)
+		{
+			_size.setWidth(width);
+			layout();
+		}
+
+		inline QSize size() const
+		{
+			return _size;
+		}
+
+	private:
+		void layout()
+		{
+			if(_data.size() == 0)
+				return;
+
+			const int ident = _data[0].font.pixelSize() * 0.4;
+			const int width = _size.width();
+
+			// sizes
+			for(int i = 0; i < _data.size(); ++i)
+			{
+				QFontMetrics fm(_data[i].font);
+				_data[i].size = QSize(fm.width(_data[i].text), _data[i].font.pixelSize());
+				_data[i].pos = QPoint();
+			}
+
+			// lines and centring
+			int h = _data[0].size.height();
+			int w = _data[0].size.width();
+			for(int i = 1; i < _data.size(); ++i)
+			{
+				_data[i].pos.setX(_data[i - 1].pos.x() + _data[i - 1].size.width());
+				h = qMax(h, _data[i].size.height());
+
+				// todo break part at particular character
+
+				// center previous line, if width is exceeded
+				if(w + _data[i].size.width() > width && _data[i - 1].center)
+				{
+					int d = (width - w) / 2;
+					for(int ii = i - 1; ii >= 0; --ii)
+					{
+						bool start = _data[ii].pos.x() == 0;
+						_data[ii].pos.setX(qMax(ident, _data[ii].pos.x() + d));
+						if(start)
+							break;
+					}
+				}
+
+				// move part to new line
+				if(w + _data[i].size.width() > width)
+				{
+					_data[i].pos = QPoint(0, _data[i].pos.y() + h);
+					h = _data[i].size.height();
+					w = _data[i].size.width();
+				}
+				else
+					w += _data[i].size.width();
+			}
+
+			// finish last line
+			if(_data.last().center)
+			{
+				int d = (width - w) / 2;
+				for(int ii = _data.size() - 1; ii >= 0; --ii)
+				{
+					bool start = _data[ii].pos.x() == 0;
+					_data[ii].pos.setX(qMax(ident, _data[ii].pos.x() + d));
+					if(start)
+						break;
+				}
+			}
+
+			// set height
+			_size.setHeight(_data.last().pos.y() + h + ident);
+		}
+
+		struct Data
+		{
+			Data()
+			{
+				center = false;
+				font = QFont();
+				font.setStyleStrategy(QFont::NoAntialias);
+			}
+
+			QString  text;
+			QFont    font;
+			QPoint   pos;
+			bool     center;
+			QSize    size;
+		};
+
+		QVector<Data>  _data;
+		QSize          _size;
+	};
+
 public:
     BtMiniViewItem()
     {
@@ -81,6 +298,7 @@ public:
         _width       = 0;
         _height      = 0;
         _doc         = 0;
+		_ti          = 0;
     }
     
     virtual ~BtMiniViewItem()
@@ -89,18 +307,28 @@ public:
         if(_wp)
             delete _wp;
 #endif
-        if(_doc)
-            delete _doc;
+		if(_doc)
+			delete _doc;
+
+		if(_ti)
+			delete _ti;
     }
     
-    void setText(const QString &text, QWidget *parent = 0)
+    void setText(const QString &text, QWidget *widget = 0)
     {
-        _iconSize = parent->font().pixelSize();
+		_iconSize = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
+
+		if(TextItem::acceptable(text))
+		{
+			_ti = new TextItem(text, widget->font());
+			resize(size());
+			return;
+		}
 
 #ifdef USE_WEBKIT
         if(text.size() > 64)
         {
-            QWebPage *wp = new QWebPage(parent);
+            QWebPage *wp = new QWebPage(widget);
             
             if(wp == 0)
             {
@@ -108,9 +336,9 @@ public:
                 return;
             }
 
-            wp->settings()->setFontFamily(QWebSettings::StandardFont, parent->font().family());
-            wp->settings()->setFontSize(QWebSettings::DefaultFontSize, parent->font().pixelSize());
-            wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, parent->font().pixelSize());
+            wp->settings()->setFontFamily(QWebSettings::StandardFont, widget->font().family());
+            wp->settings()->setFontSize(QWebSettings::DefaultFontSize, widget->font().pixelSize());
+            wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, widget->font().pixelSize());
             
             wp->setPreferredContentsSize(QSize(_width, 1));
             wp->mainFrame()->setHtml(text);
@@ -137,7 +365,7 @@ public:
         
         if(!text.isEmpty())
         {
-            doc = new QTextDocument(parent);
+            doc = new QTextDocument(widget);
         
             if(doc == 0)
             {
@@ -165,12 +393,12 @@ public:
                     {
                         int column = ct.indexOf(":", fontSize) + 1;
                         ct.replace(column, ct.indexOf(";", fontSize) - column,
-                            QString("%1px").arg(parent->font().pixelSize()));
+                            QString("%1px").arg(widget->font().pixelSize()));
                     }
                 }
             }
 
-            doc->setDefaultFont(parent->font());
+            doc->setDefaultFont(widget->font());
             doc->setHtml(ct);
         }
         
@@ -195,8 +423,11 @@ public:
     /** Size Routines. */
     inline quint16 width() const { return _width; }
     inline quint16 height() const { return _height; }
+
     inline QSize size() const { return QSize(_width, _height); }
+
     inline void resize(QSize &newSize) { resize(newSize.width(), newSize.height()); }
+
     QSize contentsSize() const
     {
 #ifdef USE_WEBKIT
@@ -207,14 +438,23 @@ public:
             return QSize(_doc->idealWidth(), _doc->size().height());
         return QSize();
     }
+
     void resize(const int width, const int height)
     {
-        _width = width;
-
-        int w = _width;
+        int w = _width = width;
+		int h = 0;
 
         if(!_icon.isNull())
+		{
             w -= _iconSize;
+			h = qMax(h, (int)_iconSize);
+		}
+
+		if(_ti)
+		{
+			_ti->resize(w, height);
+			h = qMax(h, _ti->size().height());
+		}
 
 #ifdef USE_WEBKIT
         if(_wp)
@@ -231,16 +471,16 @@ public:
         if(_doc)
         {
             _doc->setTextWidth(w);
-            _height = qMax(height, (int)_doc->size().height());
+            h = qMax(h, (int)_doc->size().height());
         }
-        else
-            _height = height;
+
+		_height = h;
     }
 
     /** Rendering. */
     virtual void paint(QPainter *painter, const QPoint &point, const QRect &clipping)
     {
-        int d = 0;
+        QPoint p = point;
 
         if(!_icon.isNull())
         {
@@ -251,14 +491,14 @@ public:
                 _icon.paint(painter, rect);
             }
 
-            d += _iconSize;
+            p.setX(p.x() + _iconSize);
         }
 
 #ifdef USE_WEBKIT
         if(_wp)
         {
             painter->save();
-            painter->translate(point.x() + d, point.y());
+            painter->translate(p);
             _wp->mainFrame()->render(painter, clipping);
             painter->restore();
         }
@@ -266,10 +506,13 @@ public:
         if(_doc)
         {
             painter->save();
-            painter->translate(point.x() + d, point.y());
-            _doc->drawContents(painter, clipping.translated(-d, 0));
+            painter->translate(p);
+            _doc->drawContents(painter, clipping.translated(point.x() - p.x(), 0));
             painter->restore();
         }
+
+		if(_ti)
+			_ti->paint(painter, p, clipping);
     }
 
 public:
@@ -293,6 +536,8 @@ public:
 #ifdef USE_WEBKIT
     QWebPage        *_wp;
 #endif
+
+	TextItem        *_ti;
 
 };
 
@@ -1819,6 +2064,9 @@ void BtMiniView::doItemsLayout()
     // need to stop delayed layout first, so code below can schedule layout again
     QAbstractItemView::doItemsLayout();
 
+	// if there is no model, it is not time to create subviews...
+	if(!model()) return;
+
     // create views if them not created yet
 	d->activateIndex(QModelIndex(), true);
 
@@ -2022,8 +2270,8 @@ void BtMiniView::activateSubView(int id)
         d->_mousePower = QPointF();
 
         d->updateViews();
-        
-        scheduleDelayedItemsLayout();
+		
+		scheduleDelayedItemsLayout();
 
         emit currentChanged(currentIndex());
     }
@@ -2050,7 +2298,7 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
     setVerticalScrollBarPolicy(d->_ld->levelOption().scrollBarPolicy);
     d->activateIndex(index, true);
 
-    scheduleDelayedItemsLayout();
+	scheduleDelayedItemsLayout();
 }
 
 void BtMiniView::slideLeft()
@@ -2244,7 +2492,7 @@ void BtMiniView::resizeEvent(QResizeEvent *e)
     d->_limitHeightTop = e->size().height() * 1.5;
     d->_limitHeightBottom = e->size().height() * 2.5;
 
-    scheduleDelayedItemsLayout();
+	scheduleDelayedItemsLayout();
 
     QAbstractItemView::resizeEvent(e);
 }

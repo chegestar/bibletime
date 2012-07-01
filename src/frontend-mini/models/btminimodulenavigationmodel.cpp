@@ -37,11 +37,11 @@ public:
 
 		if(!index.isValid())
 		{
-			_key.Index(0);
+			_key.setIndex(0);
 			return;
 		}
 
-		_key.Index(index.internalId());
+		_key.setIndex(index.internalId());
     }
 
 	void setupVerseKey(const QModelIndex &parent, int child) const
@@ -171,7 +171,7 @@ QModelIndex BtMiniModuleNavigationModel::index(int row, int column, const QModel
 
     d->setupVerseKey(parent, row);
 
-    return createIndex(row, column, d->_key.Index());
+    return createIndex(row, column, d->_key.getIndex());
 }
 
 QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
@@ -203,7 +203,7 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 
     Q_ASSERT(row >= 0);
 
-    return createIndex(row, 0, d->_key.Index());
+    return createIndex(row, 0, d->_key.getIndex());
 }
 
 QVariant BtMiniModuleNavigationModel::data(const QModelIndex &index, int role) const
@@ -268,5 +268,5 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
     else if(d->_key.getVerse() == 0)
         row = d->_key.getChapter() - 1;
 
-    return createIndex(row, 0, d->_key.Index());
+    return createIndex(row, 0, d->_key.getIndex());
 }

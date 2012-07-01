@@ -13,8 +13,19 @@
 
 #include "btminimodelsmodel.h"
 
+class BtMiniModelsModelPrivate
+{
+public:
+	BtMiniModelsModelPrivate() {;}
+	~BtMiniModelsModelPrivate() {;}
+
+	QVector<QPair<QAbstractItemModel*, QString>>  _models;
+	mutable QVector<QModelIndex>                  _mapping;
+
+};
+
 BtMiniModelsModel::BtMiniModelsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractItemModel(parent), d_ptr(new BtMiniModelsModelPrivate())
 {
     ;
 }
@@ -31,39 +42,96 @@ int BtMiniModelsModel::columnCount(const QModelIndex &parent) const
 
 int BtMiniModelsModel::rowCount(const QModelIndex &parent) const
 {
+	Q_D(const BtMiniModelsModel);
+
     if(!parent.isValid())
-        return _models.size();
-    else
-    {
-        Q_ASSERT(parent.model() == this);
-        int i = _models[parent.row()].first->rowCount(QModelIndex()); 
-        return i;
-    }
+        return d->_models.size();
+
+	if (parent.internalId() == 0)
+		return d->_models[parent.row()].first->rowCount(QModelIndex());
+
+	QModelIndex mi = d->_mapping[parent.internalId() - 1];
+	return mi.model()->rowCount(mi);
 }
 
 QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if(!parent.isValid() && row < _models.size() && row >= 0)
-        return createIndex(row, column);
+	Q_D(const BtMiniModelsModel);
 
-    return QModelIndex();
+    if (!parent.isValid())
+	{
+		Q_ASSERT(row < d->_models.size() && row >= 0);
+        return createIndex(row, column);
+	}
+
+	QModelIndex mi;
+	
+	if (parent.internalId() == 0)
+	{
+		QAbstractItemModel *m = d->_models[parent.row()].first;
+		mi = m->index(row, column, QModelIndex());
+	}
+	else
+	{
+		QModelIndex pi = d->_mapping[parent.internalId() - 1];
+		mi = pi.child(row, column);
+	}
+
+	Q_ASSERT(mi.isValid());
+
+	int i = d->_mapping.indexOf(mi) + 1;
+
+	if (i == 0)
+	{
+		d->_mapping.append(mi);
+		i = d->_mapping.size();
+	}
+
+	return createIndex(row, column, i);
 }
 
 QModelIndex BtMiniModelsModel::parent(const QModelIndex &index) const
 {
-    Q_ASSERT(index.model() == this);
+	Q_D(const BtMiniModelsModel);
+
+	if (index.internalId() > 0)
+	{
+		QModelIndex mi = d->_mapping[index.internalId() - 1];
+
+		if (mi.parent() == QModelIndex())
+		{
+			for (int i = 0; i < d->_models.size(); ++i)
+				if (mi.model() == d->_models[i].first)
+					return createIndex(i, 0);
+			Q_ASSERT(false);
+		}
+		else
+		{
+			return createIndex(mi.parent().row(), 0, d->_mapping.indexOf(mi.parent()) + 1);
+		}
+	}
 
     return QModelIndex();
 }
 
 QVariant BtMiniModelsModel::data(const QModelIndex &index, int role) const
 {
+	Q_D(const BtMiniModelsModel);
+
     Q_ASSERT(index.model() == this);
 
-    if(role == Qt::DisplayRole && index.model() == this && index.row() < _models.size())
-        return _models[index.row()].second;
-
-    return QVariant();
+    if(index.internalId() == 0)
+	{
+		if (role == Qt::DisplayRole)
+	        return d->_models[index.row()].second;
+		else
+			return QVariant();
+	}
+	else
+	{
+		QModelIndex mi = d->_mapping[index.internalId() - 1];
+		return mi.data(role);
+	}
 }
 
 bool BtMiniModelsModel::hasChildren(const QModelIndex &parent) const
@@ -92,5 +160,7 @@ bool BtMiniModelsModel::setData(const QModelIndex &index, const QVariant &value,
 
 void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 {
-    _models.append(QPair<QAbstractItemModel*, QString>(model, name));
+	Q_D(BtMiniModelsModel);
+
+    d->_models.append(QPair<QAbstractItemModel*, QString>(model, name));
 }

@@ -25,10 +25,6 @@
 
 #include "btminimenu.h"
 
-namespace BtMini
-{
-    extern QWidget * mainWidget();
-}
 
 class BtMiniMenuPrivate
 {
@@ -55,7 +51,7 @@ public:
 };
 
 BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
-    , QWidget(BtMini::mainWidget(), Qt::FramelessWindowHint)
+	, QWidget(QApplication::topLevelWidgets()[0], Qt::FramelessWindowHint)
 {
 	//setWindowModality(Qt::ApplicationModal);
     //setModal(false);

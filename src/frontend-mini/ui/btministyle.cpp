@@ -247,6 +247,9 @@ public:
                             const float vv = scrollbar->sliderPosition;
                             const float sp = qRound((vh - sh) * (vv / hh));
 
+							if(sh >= scrollbar->rect.height())
+								return QRect();
+
                             return scrollbar->rect.adjusted(0, sp, 
                                     0, sp + sh - scrollbar->rect.height());
                         }
