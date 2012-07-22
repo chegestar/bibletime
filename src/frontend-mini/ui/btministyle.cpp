@@ -274,7 +274,20 @@ public:
         }
 
         return QCommonStyle::subControlRect(cc, option, sc, widget);
-    }
+	}
+
+	QSize sizeFromContents(ContentsType ct, const QStyleOption *opt, const QSize &csz, const QWidget *widget) const
+	{
+		switch(ct)
+		{
+		case CT_PushButton:
+			{
+				QSize s = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
+				return QSize(s.width(), s.height() * 1.4);
+			}
+		}
+		return QCommonStyle::sizeFromContents(ct, opt, csz, widget);
+	}
 
 
 public slots:

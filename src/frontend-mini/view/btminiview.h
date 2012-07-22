@@ -54,7 +54,8 @@ public:
         cause view to close and currentIndex() will return pressed model index. */
     void setInteractive(bool mode = true);
     
-    /** */
+    /** This cause to allocate image of size more that widget size to store render caching.
+		Calls of this function (off, then on) are also used to update cache parameters. */
     void setRenderCaching(bool mode);
 
     /** */
@@ -124,6 +125,7 @@ protected:
     void resizeEvent(QResizeEvent *e);
     void timerEvent(QTimerEvent *e);
     void showEvent(QShowEvent *e);
+	void keyPressEvent(QKeyEvent *e);
 
     /** Reimplemented from QAbstractItemView. */
     void        dataChanged(const QModelIndex &, const QModelIndex &);

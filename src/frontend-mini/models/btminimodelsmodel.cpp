@@ -60,7 +60,7 @@ QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &par
 
     if (!parent.isValid())
 	{
-		Q_ASSERT(row < d->_models.size() && row >= 0);
+		//Q_ASSERT(row < d->_models.size() && row >= 0);
         return createIndex(row, column);
 	}
 

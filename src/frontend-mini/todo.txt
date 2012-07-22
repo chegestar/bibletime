@@ -18,25 +18,25 @@ kalemas@mail.ru :
 +	icon rendering for view
 +	fix resize on scrollbars
 +	use dialog util to display messages on screen
-?	footnote displayed using icon
 +	CSwordBibleModuleInfo bounds information caching
 +	modules model
 +	optimize power consurmption: timer to stop update
 +	layout n items on line without account of contents width
-	current subview indication
-	context menu: add left(+), add right(+), clear(+), bookmark, select
-	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
-	modules model: module manager button, category / language+modules layout
++	rendering caching
++	context menu: add left(+), add right(+), clear(+), bookmark, select
++	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
++	modules model: module manager button, category / language+modules layout
++	simple html render item (fast)
 	selecting items and active item
-	rendering caching
+	current subview indication
+	footnote display using icon
 	preview role and threaded data retrieving
 	restore original BT paths, or dirs in resources
 	improve BT modularity
-		Install manager - information of repos/modules, manage modules
++		Install manager - information of repos/modules, manage modules
 		Bookmarks
 		move all model roles to global header
 	bug, delayed module verses layout stops on missed content
-	simple html render item (fast)
 
 	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init
@@ -44,10 +44,13 @@ kalemas@mail.ru :
 		not load external style sheet
 		font enumeration in font-family dont work
 		process unhandled css construction before passing to QTextDocument
-	replace unistd.h with io.h/direct.h
-	translation
+	replace unistd.h with io.h/direct.h on wince
++	translation
 	megre linked verses in model
 	context for highlited word broken
+	new menu look
+	context for word even withot tagging (dictionary lookup)
+	new system for default Modules: add/remove from context lookup
 	
 	
 === known tasks ================================================================

@@ -58,7 +58,8 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
     Q_D(BtMiniPanel);
 
 	QFont f(font());
-	f.setPixelSize(f.pixelSize() * 1.3);
+	f.setPixelSize(f.pixelSize() * 0.9);
+	f.setWeight(QFont::Bold);
 	setFont(f);
 
 	setBackgroundRole(QPalette::Button);

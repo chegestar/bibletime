@@ -65,7 +65,7 @@ BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
 
 		QFont f(parentWidget()->font());
 		f.setBold(true);
-		f.setPixelSize(f.pixelSize() * 1.6);
+		f.setPixelSize(f.pixelSize() * 1.3);
 		setFont(f);
 	}
 
@@ -269,7 +269,7 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
             const int w = style()->pixelMetric(QStyle::PM_MenuPanelWidth);
 		    if(!rect().adjusted(w, w, -w, -w).contains(p))
 		    {
-                if(e->type() == QEvent::MouseButtonRelease && !d_ptr->_modal)
+                if(e->type() == QEvent::MouseButtonPress && !d_ptr->_modal)
                     cancel();
 			    return true;
 		    }

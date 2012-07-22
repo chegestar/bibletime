@@ -17,6 +17,7 @@
 #include <QPainter>
 #include <QScrollBar>
 #include <QTextDocument>
+#include <QThread>
 #include <QVariant>
 #include <QtCore/qmath.h>
 #include <QtDebug>
@@ -60,11 +61,392 @@ void __leds(bool on, int id)
 #define LONG_PRESS_DELAY         32
 #define SCROLL_SNAPPING_SPEED    0.3f
 #define SCROLL_ATTENUATION       0.93
+#define CACHED_SURFACE_OVERLAP   0.5
 
 qreal scroll_back_attenuation()
 { qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t; }
 #define SCROLL_BACK_ATTENUATION  (scroll_back_attenuation())
 
+
+// Text item
+//class BtMiniViewItem
+//{
+//protected:
+//	BtMiniViewItem()
+//	{
+//		_selected    = false;
+//		_interactive = false;
+//		_active      = true;
+//		_newLine     = true;
+//		_width       = 0;
+//		_height      = 0;
+//		_iconSize    = QApplication::font().pixelSize();
+//	}
+//
+//public:
+//	virtual ~BtMiniViewItem()
+//	{
+//		;
+//	}
+//
+//	/** Factory. */
+//	static BtMiniViewItem * create(const QString &text, QWidget *widget);
+//
+//	/** Resize and fit contents to the new size. */
+//	virtual void resize(const int width, const int height);
+//	void resize(QSize s) { resize(s.width(), s.height()); }
+//
+//	/** Size. */
+//	virtual QSize size() const { return QSize(_width, _height); }
+//	inline int width() const { return _width; }
+//	inline int height() const { return _height; }
+//
+//	/** Contents size. */
+//	virtual QSize contentsSize() const { return QSize(); }
+//
+//	/** Rendering. */
+//	virtual void paint(QPainter *painter, const QPoint &point, const QRect &clipping) const;
+//
+//	void setIcon(QIcon &icon)
+//	{
+//		_icon = icon;
+//		resize(size());
+//	}
+//
+//public:
+//	bool             _selected;
+//	bool             _interactive;
+//	bool             _active;
+//
+//	/** Item is placed at the beginning of line. All line items have same height. */
+//	bool             _newLine;
+//
+//	qint32           _row;
+//
+//	/** Contents size. */
+//	int              _width;
+//	int              _height;
+//
+//	QIcon            _icon;
+//	int              _iconSize;
+//};
+//
+//class BtMiniViewItemDocument : public BtMiniViewItem, QTextDocument
+//{
+//	BtMiniViewItemDocument(const QString &text, QWidget *widget = 0) : QTextDocument(widget)
+//	{
+//		if(widget)
+//			_iconSize = widget->font().pixelSize();
+//
+//		// HACK correct css to work with QTextDocument
+//		QString ct = text;
+//		int cssStart = ct.indexOf("<style type=\"text/css\">");
+//
+//		if(cssStart >= 0)
+//		{
+//			int contentStart = ct.indexOf("#content", cssStart);
+//			int cssEnd = ct.indexOf("</style>");
+//
+//			// fix default font size
+//			if(contentStart >= 0 && contentStart < cssEnd)
+//			{
+//				int fontSize = ct.indexOf("font-size:", contentStart);
+//
+//				if(fontSize >= 0 && fontSize < ct.indexOf("}", contentStart))
+//				{
+//					int column = ct.indexOf(":", fontSize) + 1;
+//					ct.replace(column, ct.indexOf(";", fontSize) - column,
+//						QString("%1px").arg(widget->font().pixelSize()));
+//				}
+//			}
+//		}
+//
+//		setDefaultFont(widget->font());
+//		setHtml(ct);
+//	
+//		resize(_width, _height);
+//	}
+//
+//	QSize contentsSize() const
+//	{
+//		return QSize(idealWidth(), height());
+//	}
+//
+//
+//	virtual void paint(QPainter *painter, const QPoint &point, const QRect &clipping)
+//	{
+//		QPoint p = point;
+//
+//		if(!_icon.isNull())
+//		{
+//			QRect rect(0, 0, _iconSize, _iconSize);
+//			if(!rect.intersected(clipping).isEmpty())
+//			{
+//				rect.translate(point);
+//				_icon.paint(painter, rect);
+//			}
+//
+//			p.setX(p.x() + _iconSize);
+//		}
+//
+//		painter->save();
+//		painter->translate(p);
+//		drawContents(painter, clipping.translated(point.x() - p.x(), 0));
+//		painter->restore();
+//	}
+//
+//	void resize(const int width, const int height)
+//	{
+//		int w = _width = width;
+//		int h = 0;
+//
+//		if(!_icon.isNull())
+//		{
+//			w -= _iconSize;
+//			h = qMax(h, (int)_iconSize);
+//		}
+//
+//		setTextWidth(w);
+//		h = qMax(h, QTextDocument::size().toSize().height());
+//		
+//		_height = h;
+//	}
+//};
+
+//class BtMiniViewItemSimple : public BtMiniViewItem
+//{
+//	BtMiniViewItemSimple(const QString &text, QFont font)
+//	{
+//		// prepare hypertext stack
+//		QVector<QPair<QString,Data>> stack;
+//		stack << QPair<QString,Data>(QString(),Data());
+//
+//		stack.last().second.font = font;
+//
+//		_data.append(stack.last().second);
+//
+//		// break on parts
+//		for(int c = 0; c < text.size();)
+//		{
+//			if(text[c] == '<')
+//			{
+//				bool end = false;
+//
+//				if(text[c + 1] == '/')
+//					c++, end = true;
+//
+//				// if have text, start new part
+//				if(_data.last().text.size() > 0)
+//					_data.append(stack.last().second);
+//
+//				QString tag = text.mid(c + 1, text.indexOf('>', c) - c - 1);
+//
+//				if(!end)
+//				{
+//					stack.append(QPair<QString,Data>(tag, stack.last().second));
+//
+//					// modify data by tag names
+//					if(tag == "center")
+//						stack.last().second.center = true;
+//					else if(tag == "b")
+//						stack.last().second.font.setWeight(QFont::Bold);
+//
+//					_data[_data.size() - 1] = stack.last().second;
+//				}
+//				else
+//				{
+//					if(tag != stack.last().first)
+//						qDebug() << "TextItem, mismatched tags" << text;
+//					stack.erase(stack.end() - 1);
+//				}
+//
+//				c += tag.size() + 2;
+//				continue;
+//			}
+//
+//			_data.last().text.append(text[c]);
+//
+//			++c;
+//		}
+//
+//		// strip last empty part
+//		if(_data.last().text.size() == 0)
+//			_data.erase(_data.end() - 1);
+//	}
+//
+//	~BtMiniViewItemSimple()
+//	{
+//		;
+//	}
+//
+//	inline void paint(QPainter *painter, const QPoint &point, const QRect &clipping) const
+//	{
+//		painter->save();
+//		painter->setClipping(true);
+//		painter->setClipRect(clipping.translated(point));
+//		for(int i=0; i < _data.size(); ++i)
+//		{
+//			painter->setFont(_data[i].font);
+//			painter->translate(0, _data[i].size.height());
+//			painter->drawText(point + _data[i].pos, _data[i].text);
+//			painter->translate(0, -_data[i].size.height());
+//
+//		}
+//		painter->restore();
+//	}
+//
+//	/** Detect whether text can use simple text renderer. */
+//	static bool acceptable(const QString &text)
+//	{
+//		const QStringList types(QStringList() << "b" << "center");
+//
+//		QString tag;
+//		bool skip = true;
+//		for(int i = 0; i < text.size(); ++i)
+//		{
+//			if(text[i] == '<')
+//			{
+//				skip = false;
+//				tag = QString();
+//			}
+//			else if(skip == false)
+//			{
+//				if(text[i] == '>' || text[i] == ' ')
+//				{
+//					if(types.indexOf(tag) == -1)
+//					{
+//						//qDebug() << "TextItem unacceptable tag:" << tag;
+//						return false;
+//					}
+//					skip = true;
+//				}
+//				else if(text[i] != '/')
+//					tag.append(text[i]);
+//			}
+//		}
+//
+//		return true;
+//	}
+//
+//	/** prepare item to display */
+//	void resize(const int width, const int height)
+//	{
+//		int w = _width = width;
+//		int h = 0;
+//
+//		if(!_icon.isNull())
+//		{
+//			w -= _iconSize;
+//			h = qMax(h, (int)_iconSize);
+//		}
+//
+//		_size.setWidth(width);
+//		layout();
+//
+//		h = qMax(h, _size.height());
+//
+//		_height = h;
+//	}
+//
+//	QSize size() const
+//	{
+//		return _size;
+//	}
+//
+//private:
+//	void layout()
+//	{
+//		if(_data.size() == 0)
+//			return;
+//
+//		const int ident = _data[0].font.pixelSize() * 0.5;
+//		const int width = _size.width();
+//
+//		// sizes
+//		for(int i = 0; i < _data.size(); ++i)
+//		{
+//			QFontMetrics fm(_data[i].font);
+//			_data[i].size = QSize(fm.width(_data[i].text), _data[i].font.pixelSize());
+//			_data[i].pos = QPoint(0, ident * 0.75);
+//		}
+//
+//		// lines and centring
+//		int h = _data[0].size.height();
+//		int w = _data[0].size.width();
+//		for(int i = 1; i < _data.size(); ++i)
+//		{
+//			_data[i].pos.setX(_data[i - 1].pos.x() + _data[i - 1].size.width());
+//			h = qMax(h, _data[i].size.height());
+//
+//			// todo break part at particular character
+//
+//			// center previous line, if width is exceeded
+//			if(w + _data[i].size.width() > width && _data[i - 1].center)
+//			{
+//				int d = (width - w) / 2;
+//				for(int ii = i - 1; ii >= 0; --ii)
+//				{
+//					bool start = _data[ii].pos.x() == 0;
+//					_data[ii].pos.setX(qMax(ident, _data[ii].pos.x() + d));
+//					if(start)
+//						break;
+//				}
+//			}
+//
+//			// move part to new line
+//			if(w + _data[i].size.width() > width)
+//			{
+//				_data[i].pos = QPoint(0, _data[i].pos.y() + h);
+//				h = _data[i].size.height();
+//				w = _data[i].size.width();
+//			}
+//			else
+//				w += _data[i].size.width();
+//		}
+//
+//		// finish last line
+//		if(_data.last().center)
+//		{
+//			int d = (width - w) / 2;
+//			for(int ii = _data.size() - 1; ii >= 0; --ii)
+//			{
+//				bool start = _data[ii].pos.x() == 0;
+//				_data[ii].pos.setX(qMax(ident, _data[ii].pos.x() + d));
+//				if(start)
+//					break;
+//			}
+//		}
+//
+//		// set height
+//		_size.setHeight(_data.last().pos.y() + h + (ident * 2));
+//	}
+//
+//	struct Data
+//	{
+//		Data()
+//		{
+//			center = false;
+//			font = QFont();
+//			font.setStyleStrategy(QFont::NoAntialias);
+//		}
+//
+//		QString  text;
+//		QFont    font;
+//		QPoint   pos;
+//		bool     center;
+//		QSize    size;
+//	};
+//
+//	QVector<Data>  _data;
+//	QSize          _size;
+//};
+//
+//BtMiniViewItem * BtMiniViewItem::create(const QString &text, QWidget *widget)
+//{
+//	if(BtMiniViewItemSimple::acceptable(text))
+//		return new BtMiniViewItemSimple(text, widget->font());
+//	return new BtMiniViewItemDocument(text, widget);
+//}
 
 class BtMiniViewItem
 {
@@ -203,7 +585,7 @@ private:
 			if(_data.size() == 0)
 				return;
 
-			const int ident = _data[0].font.pixelSize() * 0.4;
+			const int ident = _data[0].font.pixelSize() * 0.5;
 			const int width = _size.width();
 
 			// sizes
@@ -211,7 +593,7 @@ private:
 			{
 				QFontMetrics fm(_data[i].font);
 				_data[i].size = QSize(fm.width(_data[i].text), _data[i].font.pixelSize());
-				_data[i].pos = QPoint();
+				_data[i].pos = QPoint(0, ident * 0.75);
 			}
 
 			// lines and centring
@@ -262,7 +644,7 @@ private:
 			}
 
 			// set height
-			_size.setHeight(_data.last().pos.y() + h + ident);
+			_size.setHeight(_data.last().pos.y() + h + (ident * 2));
 		}
 
 		struct Data
@@ -318,8 +700,14 @@ public:
     {
 		_iconSize = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
 
+		if(_ti)
+			delete _ti, _ti = 0;
+
 		if(TextItem::acceptable(text))
 		{
+			if(_doc)
+				delete _doc, _doc = 0;
+
 			_ti = new TextItem(text, widget->font());
 			resize(size());
 			return;
@@ -361,22 +749,13 @@ public:
             return;
         }
 #endif
-        QTextDocument *doc(0);
-        
-        if(!text.isEmpty())
+        QString ct = text;
+		
+		if(!text.isEmpty())
         {
-            doc = new QTextDocument(widget);
-        
-            if(doc == 0)
-            {
-                qDebug("BtMiniViewItem::setText Can't allocate QTextDocument");
-                return;
-            }
-
             Q_ASSERT(_width > 0);
 
             // HACK correct css to work with QTextDocument
-            QString ct = text;
             int cssStart = ct.indexOf("<style type=\"text/css\">");
 
             if(cssStart >= 0)
@@ -397,23 +776,18 @@ public:
                     }
                 }
             }
-
-            doc->setDefaultFont(widget->font());
-            doc->setHtml(ct);
         }
+
+		if(!_doc)
+			_doc = new QTextDocument(widget);
         
-        qSwap(_doc, doc);
-
+		_doc->setDefaultFont(widget->font());
+		_doc->setHtml(ct);
+		
         resize(size());
-
-        if(doc)
-            delete doc;
-
-        if(_doc)
-            _doc->moveToThread(QApplication::instance()->thread());
     }
 
-    /** */
+    /** Add icon to item. */
     void setIcon(QIcon &icon)
     {
         _icon = icon;
@@ -554,7 +928,7 @@ public:
         clear();
     }
 
-    /** Render subview on screen.
+    /** Render subview to screen or cache.
         \param rect is screen area, that needs to be painted.
         \param clipping is in local subview coordinates.*/
     void paint(QPainter *painter, const QRect &rect, const QRect &clipping)
@@ -611,7 +985,7 @@ public:
             _parentIndex = index.parent();
             _rowCount = index.model()->rowCount(_parentIndex);
             
-            Q_ASSERT(_rowCount > 0);
+            //Q_ASSERT(_rowCount > 0);
         }
         else
         {
@@ -621,6 +995,7 @@ public:
 
         clear();
     }
+
     void updateModelIndex(const QModelIndex &index)
     {
         Q_ASSERT(_index.parent() == index.parent());
@@ -629,18 +1004,22 @@ public:
 
         _index = index;
     }
+
     inline const QModelIndex & modelIndex() const
     {
         return _index;
     }
+
     QModelIndex modelIndex(const int row) const
     {
         return _index.model()->index(row, 0, _parentIndex);
     }
+
     inline const QModelIndex & modelParentIndex() const
     {
         return _parentIndex;
     }
+
     const int & rowCount() const
     {
         Q_ASSERT(_items.size() <= _rowCount);
@@ -895,10 +1274,12 @@ public:
 
 private:
     /** Contents rectangle, top left point used by parent to hold its 
-    position in subviews structure. X right, Y down. */
+		position in subviews structure. X right, Y down. When scroll
+		this value moves up/down, so top can be negative value. */
     QRectF                  _rect;
 
-    /** Base subview size, it is equal to the size of parent's viewport. */
+    /** Base subview size, it is equal to the size of parent's viewport. 
+		Deprecated. */
     QSize                   _size;
 
     /** Subview base index in the model used for this view. Index and all 
@@ -916,7 +1297,6 @@ public:
     {
         _vx              = 0.0f;
         _vt              = 0;
-        _usingThread     = false;
         _currentSubView  = 0;
         _mouseDown       = false;
         _interactive     = false;
@@ -931,11 +1311,29 @@ public:
         _timer.start();
 
         _ld = new BtMiniLayoutDelegate(q);
+
+		_useRenderCaching = false;
+		_cachedSurface    = 0;
+
+		_threads.append(new BtMiniViewThread());
     }
 
     ~BtMiniViewPrivate()
     {
         clear();
+
+		if(_cachedSurface)
+			delete _cachedSurface;
+
+		foreach(BtMiniViewThread *t, _threads)
+		{
+			t->_stop = true;
+			
+			for(int i = 0; i < 0xffffffff && t->isRunning(); ++i)
+				;
+
+			delete t;
+		}
     }
 
     inline BtMiniSubView * currentSubView()
@@ -1060,7 +1458,7 @@ public:
         }
     }
 
-    /** */
+    /** Updats views geometry. */
     void updateViews()
     {
         Q_Q(BtMiniView);
@@ -1100,18 +1498,28 @@ public:
 		}
     }
 
-    /** This will only scroll subview, should be called after items are changed.
-        Parameters are subview local. */
-    void updateHeight(int subView, const int from, const int to, const int height)
+    /** General callback on area change. This will only scroll subview, should be called after 
+		items are changed. Parameters are subview local. */
+    void rectChanged(int subView, const int from, const int to, const int height)
     {
         BtMiniSubView *v = _subViews[subView];
         const int d = (from - to) + height;
 
+		// ?
 		if(from + v->contentsRect().top() < v->baseSize().height() &&
 			to + v->contentsRect().top() > 0)
 		{
 			Q_Q(BtMiniView);
 			q->viewport()->update();
+		}
+
+		// update render cache
+		if(_useRenderCaching && !_cachedRect.isEmpty())
+		{
+			if(to < _cachedRect.top())
+				_cachedRect.translate(0, d);
+			else if(to < _cachedRect.bottom())
+				_cachedRect = QRect();
 		}
 
 		if(to - from == d)
@@ -1244,7 +1652,7 @@ public:
 
             // finally update on viewport if necessary
             const int p = v->itemXy(start).y();
-            updateHeight(subView, p, p + oldHeight, maxHeight);
+            rectChanged(subView, p, p + oldHeight, maxHeight);
         }
 
 #ifdef QT_DEBUG
@@ -1273,30 +1681,42 @@ public:
         // insert at beginning or end supported for now
         Q_ASSERT(insertAt == 0 || insertAt == v->_items.size());
 
-        BtMiniViewItem *item = new BtMiniViewItem;
-        
-        item->_row = index.row();
-        item->resize(width, 0);
+		const BtMiniLayoutOption &o = _ld->levelOption(subView);
 
-        const BtMiniLayoutOption &o = _ld->levelOption(subView);
+		BtMiniViewItem *item = new BtMiniViewItem;
 
-        // Icon
-        QVariant decoration = index.data(Qt::DecorationRole);
-        QIcon icon;
-        if(decoration.canConvert(QVariant::Icon))
-            icon = decoration.value<QIcon>();
+		item->_row = index.row();
+		item->resize(width, 0);
 
-        if(!icon.isNull())
-            item->setIcon(icon);
+		// Icon
+		QVariant decoration = index.data(Qt::DecorationRole);
+		QIcon icon;
+		if(decoration.canConvert(QVariant::Icon))
+			icon = decoration.value<QIcon>();
 
-        // Text
-        QVariant display = index.data();
-        QString text;
+		if(!icon.isNull())
+			item->setIcon(icon);
 
-        if(display.canConvert(QVariant::String))
-            text = display.toString();
+		// Text
+		QVariant display = index.data(o.useThread ? BtMini::PreviewRole : Qt::DisplayRole);
+		QString text;
 
-        item->setText(o.preText + text + o.postText, q);
+		if(display.canConvert(QVariant::String))
+			text = display.toString();
+
+		item->setText(o.preText + text + o.postText, q);
+
+		// threaded processing
+		if(o.useThread)
+		{
+			BtMiniViewThread *mt = _threads[0];
+
+			foreach(BtMiniViewThread *t, _threads)
+				if(t->_toProcess.size() < mt->_toProcess.size())
+					mt = t;
+				
+			mt->_toProcess.append(index);
+		}
 
         // New line
         bool newLine = true;
@@ -1351,7 +1771,7 @@ public:
         if(newLine)
         {
             const int p = insertAt == 0 ? 0 : v->contentsRect().height();
-            updateHeight(subView, p, p, item->height());
+            rectChanged(subView, p, p, item->height());
         }
         else
         {
@@ -1360,8 +1780,7 @@ public:
     }
     
     /** Remove item from subview, change subview contents size and do necessary 
-        scrolling, clear render cache if necessary. If multiline mode enabled, whole
-        line will be deleted. */
+        scrolling. If multiline mode enabled, whole line will be deleted. */
     void removeItem(const int subView, const int pos)
     {
         BtMiniSubView  *v  = _subViews[subView];
@@ -1398,15 +1817,19 @@ public:
         Q_ASSERT(end == v->_items.size() || v->_items[end]->_newLine);
 #endif
 
+		// erase items
         for(int i = start; i < end; ++i)
         {
             //qDebug() << "erase" << v->_items[start]->_doc->toPlainText();
+
+			// remove from threaded processing
+			//_indexesToRemove.append(v->modelIndex(v->_items[start]->_row));
 
             delete v->_items[start];
             v->_items.erase(v->_items.begin() + start);
         }
 
-        updateHeight(subView, y, y + h, 0);
+        rectChanged(subView, y, y + h, 0);
 
         Q_ASSERT(v->_items[0]->_newLine);
     }
@@ -1509,11 +1932,14 @@ public:
         _vt = q->verticalScrollBar()->value();
     }
 
-    /** */
+    /** Cyclic procedure. */
     void updateSubView(int subView)
-    {
+	{
+		Q_Q(BtMiniView);
+
         BtMiniSubView *v = _subViews[subView];
 
+		// resize items
         if(v->_resizeCursor >= 0)
         {
             for(int i = 0, c = qMax(1, _ld->levelOption(subView).perCycle), s = v->_resizeCursor; i < c; ++i)
@@ -1557,9 +1983,160 @@ public:
             }
         }
 
-        if(o.perCycle > 0)
+		// update threading
+		bool itemAddedFromThread = false;
+
+		for(int ti = 0; ti < _threads.size(); ++ti)
+		{
+			BtMiniViewThread *t = _threads[ti];
+
+			if(o.useThread && !t->isRunning())
+				t->start(QThread::LowPriority);
+
+			// do work only when thread is paused
+			if(!t->_pause)
+				continue;
+
+			// do the work
+			for(int p = 0; p < t->_toProcess.size(); ++p)
+			{
+				QModelIndex parent = t->_toProcess[p].parent();
+
+				for(int v = 0; v < _subViews.size(); ++v)
+				{
+					if(parent == _subViews[v]->modelParentIndex())
+					{
+						int i = _subViews[v]->indexItem(t->_toProcess[p]);
+
+						if(i != -1)
+						{
+							// add data
+							if(t->_toProcess[p] == t->_index)
+							{
+								QRect r(_subViews[v]->itemXy(i), _subViews[v]->_items[i]->size());
+
+								// TODO obtain subView options
+
+								_subViews[v]->_items[i]->setText(t->_text, q);
+
+								rectChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height());
+
+								itemAddedFromThread = true;
+
+								t->_toProcess.remove(p--);
+							}
+							else
+							{
+								// determine priority
+								;//if(v == _currentSubView && )
+							}
+						}
+						else
+							// erase 
+							t->_toProcess.remove(p--);
+					}
+				}
+			}
+
+			// update removed items
+			//for(int i = 0; i < _indexesToRemove.size(); ++i)
+			//{
+			//	int ii = t->_toProcess.indexOf(_indexesToRemove[i]);
+			//	if(ii >= 0)
+			//	{
+			//		t->_toProcess.remove(ii);
+			//		_indexesToRemove.remove(i);
+			//		--i;
+			//	}
+			//}
+
+			//if(_indexesToRemove.contains(t->_index))
+			//{
+			//	qDebug() << "Thread processed removed index";
+			//	t->_pause = false;
+			//	break;
+			//}
+
+			// find index and paste processed item text
+			/*QModelIndex parent = t->_index.parent();
+
+			for(int v = 0; v < _subViews.size(); ++v)
+			{
+				if(parent == _subViews[v]->modelParentIndex())
+				{
+					int ii = _subViews[v]->indexItem(t->_index);
+					if(ii != -1)
+					{
+						QRect r(_subViews[v]->itemXy(ii), _subViews[v]->_items[ii]->size());
+
+						_subViews[v]->_items[ii]->setText(t->_text, q);
+
+						rectChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[ii]->height());
+
+						itemAddedFromThread = true;
+
+						t->_toProcess.remove(t->_toProcess.indexOf(t->_index));
+					}
+				}
+			}*/
+
+			t->_pause = false;
+		}
+
+        if(o.perCycle > 0 && !itemAddedFromThread)
             layoutItems(subView, o.perCycle);
     }
+
+private:
+	class BtMiniViewThread : public QThread
+	{
+	public:
+		BtMiniViewThread()
+		{
+			_stop  = false;
+			_pause = false;
+		}
+
+		~BtMiniViewThread()
+		{
+			Q_ASSERT(!isRunning());
+		}
+
+		void run()
+		{
+			_stop  = false;
+			_pause = false;
+
+			while(true)
+			{
+				while(_pause)
+					msleep(5);
+
+				if(_stop)
+					break;
+
+				if(_toProcess.size() > 0)
+				{
+					_index = _toProcess[0];
+					_text  = _index.data().toString();
+					_pause = true;
+				}
+				else
+					msleep(100);
+			}
+		}
+
+		bool                 _stop;
+
+		/** When thread is paused, it indicates that data is calculated and needs to be refreshed */
+		bool                 _pause;
+
+		QVector<QModelIndex> _toProcess;
+
+		/** Resulting data. */
+		QModelIndex          _index;
+		QString              _text;
+	};
 
 public:
     /** User feedback. */
@@ -1598,7 +2175,8 @@ public:
     
     /** Thread for background calculations launched. Should be set true in 
         main thread and set false in created thread. */
-    bool                          _usingThread;
+	QVector<QModelIndex>          _indexesToRemove;
+	QVector<BtMiniViewThread*>    _threads;
     
     /** Item and subview layout delegate. */
     BtMiniLayoutDelegate         *_ld;
@@ -1612,6 +2190,11 @@ public:
 	QAbstractItemView::ScrollHint _scrollHint;
 	bool                          _needScroll;
 	bool                          _needEmitCurrentChanged;
+
+	// we cache current subview only, in two parts
+	bool                          _useRenderCaching;
+	QPixmap                      *_cachedSurface;
+	QRect                         _cachedRect;
 
     Q_DECLARE_PUBLIC(BtMiniView);
     BtMiniView * const             q_ptr;
@@ -2266,6 +2849,10 @@ void BtMiniView::activateSubView(int id)
                 d->removeItem(d->_currentSubView, 0);
         }
 
+		// free render cache
+		if(d->_useRenderCaching)
+			d->_cachedRect = QRect();
+
         d->_currentSubView = id;
         d->_mousePower = QPointF();
 
@@ -2402,7 +2989,7 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 	if(d->_currentSubView >= d->_subViews.size())
         return;
 
-    // update according vertical scrollbar
+    // REMAKE update according vertical scrollbar
     if(d->_vt != verticalScrollBar()->value())
     {
 		if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
@@ -2419,9 +3006,14 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 
     QPainter painter(viewport());
 
-    // for clipping test
-    //painter.scale(0.5, 0.5);
-    //painter.translate(100, 100);
+	const bool debugClipping = false;
+	const bool debugCache = false;
+    
+	if(debugClipping || debugCache)
+	{
+		painter.scale(0.5, 0.5);
+		painter.translate(100, 100);
+	}
 
     // draw subviews
     foreach(BtMiniSubView *v, d->_subViews)
@@ -2432,12 +3024,86 @@ void BtMiniView::paintEvent(QPaintEvent *e)
         if(area.isNull())
             continue;
 
+		// subview-related clipping
         const QRect clip(QRect(QPoint(), v->contentsRect().size().toSize()) &
             viewport()->rect().translated(QPoint(d->_vx, 0) -
             v->contentsRect().topLeft().toPoint()));
 
         if(!clip.isNull())
-            v->paint(&painter, area, clip);
+		{
+			if(d->_useRenderCaching && d->_subViews[d->_currentSubView] == v && 
+				v->contentsRect().width() == d->_cachedSurface->width())
+			{
+				Q_CHECK_PTR(d->_cachedSurface);
+				Q_ASSERT(d->_cachedSurface->size() == d->_cachedSurface->size().expandedTo(clip.size()));
+
+				const int overlap = (d->_cachedSurface->height() * CACHED_SURFACE_OVERLAP) / 2;
+
+				// renew
+				if(d->_cachedRect == QRect() || !d->_cachedRect.intersects(clip))
+				{
+					d->_cachedRect = QRect(QPoint(0, qMax(0, clip.top() - overlap)), d->_cachedSurface->size());
+
+					d->_cachedSurface->fill(this, QPoint());
+					QPainter p(d->_cachedSurface);
+					v->paint(&p, QRect(QPoint(), d->_cachedSurface->size()), d->_cachedRect);
+					if(debugCache)
+					{
+						p.setPen(QPen(Qt::red, 2));
+						p.drawRect(d->_cachedSurface->rect());
+					}
+				}
+
+				// shift cache
+				if(!d->_cachedRect.contains(clip))
+				{
+					int vd = clip.bottom() > d->_cachedRect.bottom() ? clip.bottom() - d->_cachedRect.bottom() + 
+						(overlap * 0.75) : clip.top() - d->_cachedRect.top() - (overlap * 0.75);
+
+					QRect rs, rd;
+
+					if(vd > 0)
+					{
+						rs = d->_cachedRect;
+						rs.setTop(rs.bottom());
+						rs.setBottom(rs.bottom() + vd);
+						rd = QRect(0, d->_cachedSurface->height() - vd, d->_cachedSurface->width(), d->_cachedSurface->height());
+					}
+					else
+					{
+						rs = d->_cachedRect;
+						rs.setBottom(rs.top());
+						rs.setTop(rs.top() + vd);
+						rd = QRect(0, 0, d->_cachedSurface->width(), -vd);
+					}
+
+					d->_cachedSurface->scroll(0, -vd, d->_cachedSurface->rect());
+					d->_cachedRect.translate(0, vd);
+
+					QPainter p(d->_cachedSurface);
+					v->paint(&p, rd, rs);
+
+					if(debugCache)
+					{
+						p.setPen(QPen(Qt::yellow, 2));
+						p.drawRect(rd);
+
+						qDebug() << rs << rd << d->_cachedRect << vd;
+					}
+				}
+
+				Q_ASSERT(area.size() == clip.size());
+				Q_ASSERT(d->_cachedRect.contains(clip));
+
+				// flush cache to window
+				painter.drawPixmap(area, *d->_cachedSurface, clip.translated(-d->_cachedRect.topLeft()));
+
+				if(debugCache)
+					painter.drawPixmap(QPoint(d->_cachedSurface->size().width(), 0), *d->_cachedSurface);
+			}
+			else
+	            v->paint(&painter, area, clip);
+		}
     }
     
     // draw shadow
@@ -2493,6 +3159,12 @@ void BtMiniView::resizeEvent(QResizeEvent *e)
     d->_limitHeightBottom = e->size().height() * 2.5;
 
 	scheduleDelayedItemsLayout();
+
+	if(d->_useRenderCaching)
+	{
+		setRenderCaching(false);
+		setRenderCaching(true);
+	}
 
     QAbstractItemView::resizeEvent(e);
 }
@@ -2838,4 +3510,37 @@ const BtMiniLayoutDelegate * BtMiniView::layoutDelegate() const
     Q_D(const BtMiniView);
 
     return d->_ld;
+}
+
+void BtMiniView::setRenderCaching(bool mode)
+{
+	Q_D(BtMiniView);
+
+	d->_useRenderCaching = mode;
+
+	if(mode)
+	{
+		d->_cachedSurface = new QPixmap(QSize(size().width(), size().height() * (1.0 + CACHED_SURFACE_OVERLAP)));
+		d->_cachedRect = QRect();
+	}
+	else 
+	{
+		if(d->_cachedSurface)
+			delete d->_cachedSurface;
+	}
+}
+
+void BtMiniView::keyPressEvent( QKeyEvent *e )
+{
+	Q_D(BtMiniView);
+
+#ifdef QT_DEBUG
+	switch(e->key())
+	{
+	case Qt::Key_C:
+		setRenderCaching(!d->_useRenderCaching);
+		viewport()->update();
+		break;
+	}
+#endif
 }

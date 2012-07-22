@@ -21,6 +21,7 @@
 #include <QStyle>
 #include <QTextStream>
 #include <QTimer>
+#include <QTranslator>
 #include <QtDebug>
 
 #ifdef Q_OS_WIN32
@@ -46,6 +47,7 @@
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
 #include "view/btminiview.h"
+#include "view/btminilayoutdelegate.h"
 
 
 // Main stacked widget
@@ -183,7 +185,8 @@ QWidget * BtMini::mainWidget()
         w->show();
         w->showFullScreen();
 #else
-        w->showNormal();
+		w->show();
+        w->raise();
 #endif
     }
     
@@ -202,10 +205,13 @@ QWidget * BtMini::worksWidget()
 
         v->setTopShadowEnabled(true);
 
+		if(CBTConfig::get(CBTConfig::useRenderCaching))
+			v->setRenderCaching(true);
+
         // Setup controls
         QPushButton *b1 = new QPushButton(v->style()->standardIcon(QStyle::SP_ArrowLeft), QString(), w);
         QPushButton *b2 = new QPushButton(v->style()->standardIcon(QStyle::SP_ArrowRight), QString(), w);
-        QPushButton *b3 = new QPushButton(QString("Module"), w);
+        QPushButton *b3 = new QPushButton(QString("Work"), w);
         QPushButton *b4 = new QPushButton(QString("Place"), w);
 
         QObject::connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
@@ -219,7 +225,7 @@ QWidget * BtMini::worksWidget()
         b2->setIconSize(iconSize);
 
         QFont f = w->font();
-        f.setPixelSize(f.pixelSize() * 0.8);
+        f.setPixelSize(f.pixelSize() * 0.75);
         f.setWeight(QFont::DemiBold);
         b3->setFont(f);
         b4->setFont(f);
@@ -364,6 +370,18 @@ QWidget * BtMini::installerWidget()
 
     if(!w)
     {
+		bool refresh = true;
+
+		switch(BtMiniMenu::execQuery(tr("Update all sources?"), 
+			QStringList() << tr("Yes") << tr("No") << tr("Cancel")))
+		{
+		case 2:
+		case -1:
+			return 0;
+		case 1:
+			refresh = false;
+		}
+
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
@@ -381,13 +399,21 @@ QWidget * BtMini::installerWidget()
 
         // Setup model
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
-        QStringList        ss(BtInstallBackend::sourceNameList(true));
+        QStringList        ss(BtInstallBackend::sourceNameList(refresh));
 		BtInstallMgr      *im = new BtInstallMgr(m);
+
+		BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
+		o.limitItems = true;
+		o.perCycle = 5;
+		o.scrollPerItem = true;
+		v->layoutDelegate()->setLevelOption(1, o);
 
         foreach(QString s, ss)
         {
             sword::InstallSource is = BtInstallBackend::source(s);
-			//im.refreshRemoteSource(&is);
+			if(refresh)
+				im->refreshRemoteSource(&is);
+	
 			CSwordBackend *be = BtInstallBackend::backend(is);
 
 			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
@@ -408,7 +434,8 @@ QWidget * BtMini::installerWidget()
 
 void BtMini::setActiveWidget(QWidget *widget)
 {
-    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
+	if(widget)
+	    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
 }
 
 BtMiniView * BtMini::findView(QWidget *widget)
@@ -433,24 +460,23 @@ void BtMini::installerQuery(const QModelIndex &index)
 	{
 		// TODO detect module status: installed, obsolete, not installed
 
-		if (BtMiniMenu::execQuery(QString("Do you want to install %1 ?").arg(m->name()), QStringList() << "Install" << "Cancel") == 0)
+		if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()), QStringList() << "Install" << "Cancel") == 0)
 		{
 			BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
 			
-			QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Installing ..."));
+			QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
 			dialog->show();
 
 			QObject::connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 
-			// index.data(BtBookshelfModel::ModuleInstallPathRole).toString().toLatin1()
 			int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &BtInstallBackend::source(
 				BtInstallBackend::sourceNameList(true)[index.parent().row()]));
 
 			if (status != 0 || dialog->wasCanceled())
-				BtMiniMenu::execQuery(QString("Module was not installed"));
+				BtMiniMenu::execQuery(QString(tr("Module was not installed")));
 			else
 				//CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
-				BtMiniMenu::execQuery(QString("Completed. Restart application to see module"));
+				BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
 		}
 	}
 }
@@ -521,7 +547,20 @@ int main(int argc, char *argv[])
 
 	CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
 
-	// TODO install translators
+	// install translators
+	QTranslator qtTranslator;qtTranslator.load("qt_" + QLocale::system().name());
+	app.installTranslator(&qtTranslator);
+
+	QTranslator BibleTimeTranslator;
+	BibleTimeTranslator.load( QString("bibletime_ui_").append(QLocale::system().name()), 
+		util::directory::getLocaleDir().canonicalPath());
+	app.installTranslator(&BibleTimeTranslator);
+	
+	QTranslator BtMiniTranslator;
+	BtMiniTranslator.load( QString("bibletimemini_").append(QLocale::system().name()), 
+		util::directory::getLocaleDir().canonicalPath());
+	app.installTranslator(&BtMiniTranslator);
+
 
 	QString errorMessage;
 	new CDisplayTemplateMgr(errorMessage);

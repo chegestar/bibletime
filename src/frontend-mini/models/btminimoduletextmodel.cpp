@@ -223,8 +223,8 @@ public:
         else if(module == "[Contents]")
         {
             o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
-            o.limitItems     = false;
-            o.perCycle       = 0;
+            o.limitItems      = false;
+            o.perCycle        = 0;
         }
         else if(module == "[Commentary]")
         {
@@ -233,8 +233,9 @@ public:
 		else
 		{
 			o.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
-			o.limitItems     = true;
-			o.perCycle       = 1;
+			o.limitItems      = true;
+			o.perCycle        = 1;
+			o.useThread       = true;
 		}
 
 		os.insert(i, o);
@@ -416,8 +417,9 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
     Q_D(const BtMiniModuleTextModel);
 
     switch(role)
-    {
-    case Qt::DisplayRole:
+	{
+	case BtMini::PreviewRole:
+	case Qt::DisplayRole:
         {
             QString r;
 
@@ -432,8 +434,12 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                     if(l->_module)
 					{
                         CSwordVerseKey key(d->indexToVerseKey(index));
-						
-						if(key.getBook() > 0 && key.getChapter() > 0 && key.getVerse() > 0 && 
+
+						if(role == BtMini::PreviewRole)
+						{
+							r = QString("<center><b>%1</b></center>").arg(key.getVerse());
+						}
+						else if(key.getBook() > 0 && key.getChapter() > 0 && key.getVerse() > 0 && 
                             key.rawText().length() > 0)
 						{
                             using namespace Rendering;
@@ -611,7 +617,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
         BtMiniMenu menu;
 
         QFont f(menu.font());
-        f.setPixelSize(f.pixelSize() * 0.55f);
+        f.setPixelSize(f.pixelSize() * 0.65f);
         menu.setFont(f);
 
         BtMiniView *view = new BtMiniView(&menu);
@@ -698,7 +704,7 @@ void BtMiniModuleTextModel::openModuleSelection()
     BtMiniMenu menu;
 
     QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.55);
+    f.setPixelSize(f.pixelSize() * 0.65);
     menu.setFont(f);
 
     BtMiniView *view = new BtMiniView(&menu);
@@ -765,7 +771,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
     BtMiniMenu menu;
 
     QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.8);
+    f.setPixelSize(f.pixelSize() * 0.9);
     menu.setFont(f);
 
     BtMiniView *view = new BtMiniView(&menu);
