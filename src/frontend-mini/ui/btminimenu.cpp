@@ -260,6 +260,12 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 
 	switch(e->type())
 	{
+	//case QEvent::Resize:
+	//	{
+	//		QResizeEvent re 
+	//		;
+	//	}
+	//	break;
 	case QEvent::MouseButtonDblClick:
 	case QEvent::MouseButtonPress:
 	case QEvent::MouseButtonRelease:

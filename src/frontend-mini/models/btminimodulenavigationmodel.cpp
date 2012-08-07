@@ -9,6 +9,7 @@
 *
 **********/
 
+#include <QMutex>
 #include <QtDebug>
 
 #include "backend/managers/cswordbackend.h"
@@ -17,6 +18,9 @@
 #include "btmini.h"
 #include "btminimodulenavigationmodel.h"
 #include "view/btminilayoutdelegate.h"
+
+
+extern QMutex BtMiniSwordMutex;
 
 class BtMiniModuleNavigationModelPrivate
 {
@@ -33,6 +37,8 @@ public:
 
     void setupVerseKey(const QModelIndex &index) const
     {
+		QMutexLocker locker(&BtMiniSwordMutex);
+
         Q_ASSERT(_bm);
 
 		if(!index.isValid())
@@ -42,17 +48,20 @@ public:
 		}
 
 		_key.setIndex(index.internalId());
-    }
+	}
 
 	void setupVerseKey(const QModelIndex &parent, int child) const
 	{
 		Q_ASSERT(_bm);
 
+		QMutexLocker locker(&BtMiniSwordMutex);
+
 		if(_parentIndex != parent)
 		{
 			_parentIndex = parent;
+			locker.unlock();
 			setupVerseKey(_parentIndex);
-			
+			locker.relock();
 			_parentKey.copyFrom(_key);
 		}
 
@@ -181,6 +190,8 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
     d->setupVerseKey(index);
     int row = 0;
 
+	QMutexLocker locker(&BtMiniSwordMutex);
+
 	Q_ASSERT(d->_key.getBook() != 0);
 
     if(d->_key.getBook() == 0 || d->_key.getChapter() == 0)
@@ -193,6 +204,14 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
         d->_key.setChapter(0);
         d->_key.setVerse(0);
         d->_key.Normalize();
+
+#ifdef QT_DEBUG
+		if(d->_bm->books()->indexOf(d->_key.book()) == -1)
+		{
+			qDebug() << d->_bm->books() << d->_key.book();
+		}
+#endif
+
         row = d->_bm->books()->indexOf(d->_key.book());
     }
     else
@@ -211,6 +230,8 @@ QVariant BtMiniModuleNavigationModel::data(const QModelIndex &index, int role) c
     Q_D(const BtMiniModuleNavigationModel);
 
     d->setupVerseKey(index);
+
+	QMutexLocker locker(&BtMiniSwordMutex);
 
     switch(role)
     {
@@ -258,6 +279,8 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
     Q_D(const BtMiniModuleNavigationModel);
 
     d->setupVerseKey(QModelIndex());
+
+	QMutexLocker locker(&BtMiniSwordMutex);
 
     d->_key.setKey(key);
 

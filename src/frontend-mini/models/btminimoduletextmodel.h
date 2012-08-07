@@ -77,6 +77,9 @@ public slots:
 		workWidget module. */
 	void startSearch();
 
+	/** Called after module installation. */
+	void modulesReloaded();
+
 protected:
 
 private:

@@ -24,7 +24,7 @@
 #include <QTranslator>
 #include <QtDebug>
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 #include <windows.h>
 //#include <CRTDBG.H>
 #endif
@@ -214,8 +214,8 @@ QWidget * BtMini::worksWidget()
         QPushButton *b3 = new QPushButton(QString("Work"), w);
         QPushButton *b4 = new QPushButton(QString("Place"), w);
 
-        QObject::connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
-        QObject::connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
+        connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
+        connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
 
         const int maxSize = w->font().pixelSize()*2.0;
         const QSize iconSize(w->font().pixelSize()*1.3, w->font().pixelSize()*1.3);
@@ -295,9 +295,9 @@ QWidget * BtMini::worksWidget()
 
 		v->setModel(m);
 
-		QObject::connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
-		QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
-		QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
+		connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
+		connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
+		connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
 
 		m->setIndicators(b1, b3, b4, b2);
 
@@ -314,6 +314,9 @@ QWidget * BtMini::worksWidget()
 		        v->setCurrentIndex(index);
             }
 		}
+
+		connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)), 
+			m, SLOT(modulesReloaded()));
     }
     
     return w;
@@ -355,9 +358,9 @@ QWidget * BtMini::searchWidget()
 
 		v->setModel(m);
 
-		QObject::connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
-		QObject::connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
-        QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
+		connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
+		connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
+        connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
 	}
 
 	return w;
@@ -426,7 +429,7 @@ QWidget * BtMini::installerWidget()
 
         v->setModel(m);
 
-		QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+		connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
     }
 
     return w;
@@ -454,20 +457,22 @@ BtMiniView * BtMini::findView(QWidget *widget)
 
 void BtMini::installerQuery(const QModelIndex &index)
 {
-	CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
+	CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(
+		index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
 
 	if(m)
 	{
 		// TODO detect module status: installed, obsolete, not installed
 
-		if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()), QStringList() << "Install" << "Cancel") == 0)
+		if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()), 
+			QStringList() << tr("Install") << tr("Cancel")) == 0)
 		{
 			BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
 			
 			QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
 			dialog->show();
 
-			QObject::connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+			connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 
 			int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &BtInstallBackend::source(
 				BtInstallBackend::sourceNameList(true)[index.parent().row()]));
@@ -475,8 +480,8 @@ void BtMini::installerQuery(const QModelIndex &index)
 			if (status != 0 || dialog->wasCanceled())
 				BtMiniMenu::execQuery(QString(tr("Module was not installed")));
 			else
-				//CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
-				BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
+				CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+				//BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
 		}
 	}
 }
@@ -517,6 +522,50 @@ void BtMiniMessageHandler(QtMsgType type, const char *msg)
 #endif
 }
 
+class BtMiniApplication : public QApplication
+{
+public:
+	BtMiniApplication(int argc, char **argv) : QApplication(argc, argv)
+	{
+		mainLoop = false;
+	}
+
+	~BtMiniApplication() {;}
+
+#ifdef Q_OS_WINCE
+	bool winEventFilter (MSG *msg, long *result)
+	{
+		switch(msg->message)
+		{
+		case WM_TIMER:
+			break;
+		case WM_PAINT:
+			mainLoop = true;
+			break;
+		case WM_ACTIVATE:
+			{
+				if(mainLoop)
+				{
+					int active = LOWORD(msg->wParam);
+					bool minimized = (BOOL) HIWORD(msg->wParam);
+
+					if(BtMini::mainWidget()->winId() == msg->hwnd)
+						BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
+				}
+			}
+			break;
+		//default:
+		//	qDebug() << "msg:" << msg->message;
+		}
+
+		return false;
+	}
+#endif
+
+public:
+	bool mainLoop;
+};
+
 /** Application entry. */
 int main(int argc, char *argv[])
 {
@@ -532,7 +581,7 @@ int main(int argc, char *argv[])
     QApplication::setStyle("mini");
     
 	// Init application
-	QApplication app(argc, argv);
+	BtMiniApplication app(argc, argv);
     
 	if(!util::directory::initDirectoryCache())
 	{

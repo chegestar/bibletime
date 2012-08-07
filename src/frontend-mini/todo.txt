@@ -30,7 +30,7 @@ kalemas@mail.ru :
 	selecting items and active item
 	current subview indication
 	footnote display using icon
-	preview role and threaded data retrieving
+%	preview role and threaded data retrieving
 	restore original BT paths, or dirs in resources
 	improve BT modularity
 +		Install manager - information of repos/modules, manage modules

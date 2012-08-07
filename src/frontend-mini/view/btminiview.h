@@ -70,18 +70,12 @@ public:
     
     /** Set specified options for given level. */
     void setLevelOptions(int level, int itemsOnLine, QString preText, QString postText);
-
-    /** Set batch mode for layout items. \param useLimits Respect items amount and
-        list height to limit items count. Otherwise layout whole list. This function
-        change level options. */
-    void setBatchedLayout(int itemsPerCycle = 1, bool useLimits = true);
-    
-    /** Using thread will work for active view only. \param previewRole Make preview
-        before thread calculates contents. This function change level options. */
-    void setThreadedLayout(bool useThread = true, int previewRole = Qt::UserRole + 256 + 2);
     
     /** Set default role for searching indexes. This function change level options. */
     void setSearchRole(int searchRole = Qt::EditRole, int level = -1);
+
+	/** View does not update subviews during sleeping. */
+	void setSleep(bool sleep);
 
 
 public slots:
@@ -105,7 +99,7 @@ public slots:
 	    match() can be set using setSearchRole(). */
 	void scrollTo(QVariant data);
 
-signals:    
+signals:
     /** Emitted when user have long pressed item.*/
     void shortPressed(const QModelIndex &index);
     
