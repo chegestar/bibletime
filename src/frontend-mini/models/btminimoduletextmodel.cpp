@@ -155,11 +155,11 @@ public:
 
         Q_ASSERT(indexDepth(index) == 2);
 
-        const List *l = indexList(index);
+		const List *l = indexList(index);
 
-		BtMiniSwordMutex.lock();
-
-        CSwordVerseKey key(l->_module);
+        QMutexLocker locker(&BtMiniSwordMutex);
+        
+		CSwordVerseKey key(l->_module);
 
 		if(l->_hasScope)
 		{
@@ -171,9 +171,7 @@ public:
 			key.Headings(1);
 			key.setIndex(index.row() + l->_firstEntry);
 		}
-
-		BtMiniSwordMutex.unlock();
-
+		
         return key;
     }
 
@@ -230,9 +228,10 @@ public:
 		if(module == "[Search]")
 		{
 			o.scrollBarPolicy = Qt::ScrollBarAsNeeded;
-			o.limitItems     = true;
-			o.perCycle       = 1;
-			o.scrollPerItem  = true;
+			o.limitItems      = true;
+			o.perCycle        = 1;
+			o.scrollPerItem   = true;
+			o.allowStaticText = false;
 
 			_isSearch        = true;
         }
@@ -465,25 +464,21 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
                     if(l->_module)
 					{
-						// prevent access to sword from thread
-						//QMutexLocker locker(&d->_mutex);
+						CSwordVerseKey key(d->indexToVerseKey(index));
+						const int v = key.getVerse();
 
-                        CSwordVerseKey key(d->indexToVerseKey(index));
-
-						if(!d->_isSearch && key.getVerse() == 1)
-						{
-							r += "<center><b><big>" + key.book() + " " +
-								QString::number(key.getChapter()) + "</big></b></center>";
-						}
+						if(!d->_isSearch && v == 1)
+							r += "<center><b><font size='+1'>" + key.book() + " " +
+								QString::number(key.getChapter()) + "</font></b></center>";
 
 						if(role == BtMini::PreviewRole)
 						{
-							int v = key.getVerse();
+							if(v == 1)
+								r += "<font size='1'><br>&nbsp;</br></font>";
 							if(v > 0)
-								r += QString("<center><b>%1</b></center>").arg(v);
+								r += QString("<font color='#aaaaaa'><center>%1</center></font><font size='1'><br>&nbsp;</br></font>").arg(v);
 						}
-						else if(key.getBook() > 0 && key.getChapter() > 0 && key.getVerse() > 0 && 
-                            key.haveText())
+						else if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
 						{
                             using namespace Rendering;
 
@@ -539,6 +534,9 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                             r += render.renderKeyTree(tree);
 
                             qDeleteAll(tree);
+
+							if(v == key.getVerseMax())
+								r += "<font size='1'><br>&nbsp;</font>";
                             
                             if(d->_isSearch && !d->_searchText.isEmpty())
     							r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
@@ -745,7 +743,7 @@ void BtMiniModuleTextModel::openModuleSelection()
     BtMiniMenu menu;
 
     QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.65);
+    f.setPixelSize(f.pixelSize() * 0.68);
     menu.setFont(f);
 
     BtMiniView *view = new BtMiniView(&menu);
@@ -757,8 +755,8 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
-    m->setDisplayFormat(QList<QVariant>() << "<p>" << BtBookshelfModel::ModuleNameRole << "</p><p>"
-        "<font size=\"50%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font></p>");
+    m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br>&nbsp;</br>"
+        "<word-breaks/><font size='60%' color='#555555'>" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
 
     view->setModel(m);
 

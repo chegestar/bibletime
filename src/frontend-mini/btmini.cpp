@@ -26,8 +26,12 @@
 
 #ifdef Q_OS_WIN
 #include <windows.h>
-//#include <CRTDBG.H>
+#ifdef Q_OS_WIN32
+//#include <crtdbg.h>
 #endif
+#endif
+
+#include <SWLog.h>
 
 #include "backend/config/cbtconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
@@ -38,8 +42,6 @@
 #include "backend/managers/btstringmgr.h"
 #include "util/directory.h"
 #include "util/cresmgr.h"
-
-#include <SWLog.h>
 
 #include "btmini.h"
 #include "models/btminimoduletextmodel.h"
@@ -420,8 +422,8 @@ QWidget * BtMini::installerWidget()
 			CSwordBackend *be = BtInstallBackend::backend(is);
 
 			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
-			mm->setDisplayFormat(QList<QVariant>() << "<p>" << BtBookshelfModel::ModuleNameRole << "</p><p>"
-				"<font size=\"50%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font></p>");
+			mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+				"<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
             mm->setSourceModel(be->model());
 
             m->addModel(mm, "<center><b>" + s + "</b></center>");
@@ -570,7 +572,7 @@ public:
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_WIN32
-    //_CrtSetBreakAlloc(101307);
+    //_CrtSetBreakAlloc(1324);
     //_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 #endif
 

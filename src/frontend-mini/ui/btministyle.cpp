@@ -57,9 +57,14 @@ public:
         switch(element)
         {
         case CE_ScrollBarSlider:
-            p->setBrush(Qt::white);
-            p->drawRect(opt->rect.adjusted(opt->rect.width() / 3, 0, -opt->rect.width() / 3, 0));
-            return;
+			{
+				int s = opt->rect.width() / 3;
+				p->setBrush(Qt::white);
+				p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
+				p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
+				p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));
+				return;
+			}
         case CE_PushButtonBevel:
             break;
         case CE_PushButton:

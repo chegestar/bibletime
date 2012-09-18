@@ -22,6 +22,7 @@ BtMiniLayoutOption::BtMiniLayoutOption()
     previewRole     = BtMini::PreviewRole;
 	scrollPerItem   = false;
 	searchRole      = BtMini::PlaceRole;
+	allowStaticText = true;
 }
 
 BtMiniLayoutDelegate::BtMiniLayoutDelegate(QObject *parent) : QObject(parent)

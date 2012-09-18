@@ -17,9 +17,8 @@
 #include <QMutexLocker>
 #include <QPainter>
 #include <QScrollBar>
-#include <QStaticText>
+//#include <QStaticText>
 #include <QTextDocument>
-#include <QTextLayout>
 #include <QThread>
 #include <QVariant>
 #include <QWaitCondition>
@@ -28,6 +27,8 @@
 
 #include "btminilayoutdelegate.h"
 #include "btminiview.h"
+
+#include "text/btstatictext.h"
 
 #ifndef QT_NO_WEBKIT
 // actually not supported
@@ -67,12 +68,13 @@ void __leds(bool on, int id)
 #define SCROLL_SNAPPING_SPEED    0.3f
 #define SCROLL_ATTENUATION       0.93
 #define CACHED_SURFACE_OVERLAP   0.5
+#define SCROLL_BACK_ATTENUATION  13.285713041 // qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t;
 
-qreal scroll_back_attenuation()
-{ qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t; }
-#define SCROLL_BACK_ATTENUATION  (scroll_back_attenuation())
-
-
+/**
+	Basic item to hold data and render text for view.
+	There is no ploymorphysm, beacause for one object we may change
+	implementation after object was created, so we use pointers to implementations.
+*/
 class BtMiniViewItem
 {
 private:
@@ -81,13 +83,13 @@ private:
 	public:
 		TextItem(const QString &text, QFont font)
 		{
-			// prepare hypertext stack
 			QVector<QPair<QString,Data>> stack;
 			stack << QPair<QString,Data>(QString(),Data());
 
 			stack.last().second.font = font;
-
 			_data.append(stack.last().second);
+
+			bool wordBreaks = false;
 
 			// break on parts
 			for(int c = 0; c < text.size();)
@@ -95,15 +97,23 @@ private:
 				if(text[c] == '<')
 				{
 					bool end = false;
-
+					
 					if(text[c + 1] == '/')
 						c++, end = true;
-					
-					// if have text, start new part
-					if(_data.last().text.size() > 0)
+
+					unsigned int f = text.indexOf('>', c);
+					QString tag = text.mid(c + 1, qMin(f, (unsigned int)text.indexOf(' ', c)) - c - 1);
+
+					if(tag[tag.size() - 1] == '/')
+						tag.resize(tag.size() - 1);
+					else if(_data.last().text.size() > 0) // if have text, start new part
 						_data.append(stack.last().second);
 
-					QString tag = text.mid(c + 1, text.indexOf('>', c) - c - 1);
+					Q_ASSERT(tag.indexOf('>') == -1);
+					Q_ASSERT(tag.indexOf(' ') == -1);
+					Q_ASSERT(tag.indexOf('/') == -1);
+					Q_ASSERT((int)f < text.size());
+
 
 					if(!end)
 					{
@@ -114,21 +124,64 @@ private:
 							stack.last().second.center = true;
 						else if(tag == "b")
 							stack.last().second.font.setWeight(QFont::Bold);
+						else if(tag == "font")
+						{
+							int e = text.indexOf('>', c);
+							int l = text.indexOf("color", c);
+							int s = text.indexOf("size", c);
 
+							if(l < e && l >= 0)
+							{
+								QString v = text.mid(l + 7, 7);
+								stack.last().second.color = QColor(v);
+							}
+
+							if(s < e && s >= 0)
+							{
+								int ss = s + 6;
+								QString v = text.mid(ss, qMin((unsigned int)text.indexOf('\"', ss),
+									(unsigned int)text.indexOf('\'', ss)) - ss);
+
+								if(v == "1")
+									stack.last().second.font.setPixelSize(font.pixelSize() / 2);
+								else if(v == "+1")
+									stack.last().second.font.setPixelSize(stack.last().second.font.pixelSize() * 1.2);
+								else if(v[v.size() - 1] == '%')
+									stack.last().second.font.setPixelSize(stack.last().second.font.pixelSize() /
+										100.0 * v.left(v.size() - 1).toInt());
+								else
+									qDebug() << "Unable to resolve font size" << v;
+							}
+						}
+						else if(tag == "br")
+							stack.last().second.newLine = true;
+						else if(tag == "p")
+							stack.last().second.newLine = true;
+						else 
+							if(tag == "word-breaks")
+								wordBreaks = true;
+						
 						_data[_data.size() - 1] = stack.last().second;
 					}
 					else
 					{
 						if(tag != stack.last().first)
-							qDebug() << "TextItem, mismatched tags" << text;
+							qDebug() << "TextItem, mismatched tags" << tag << stack.last().first << text;
+						
+						if(tag == "word-breaks")
+							wordBreaks = false;
+
 						stack.erase(stack.end() - 1);
 					}
 
-					c += tag.size() + 2;
+					c = f + 1;
 					continue;
 				}
 
 				_data.last().text.append(text[c]);
+
+				if(wordBreaks && text[c] == ' ')
+					_data.append(stack.last().second);
 
 				++c;
 			}
@@ -136,6 +189,18 @@ private:
 			// strip last empty part
 			if(_data.last().text.size() == 0)
 				_data.erase(_data.end() - 1);
+
+			// replace new line
+			for(int i = 0; i < _data.size(); ++i)
+			{
+				if(_data[i].text == "&nbsp;")
+				{
+					_data[i].text = " ";
+					if(i < _data.size() - 1)
+						_data[i + 1].newLine = true;
+				}
+				Q_ASSERT(_data[i].text.indexOf("&nbsp;") == -1);
+			}
 		}
 
 		~TextItem()
@@ -154,6 +219,7 @@ private:
 			for(int i=0; i < _data.size(); ++i)
 			{
 				painter->setFont(_data[i].font);
+				painter->setPen(_data[i].color);
 				painter->translate(0, _data[i].size.height());
 				painter->drawText(point + _data[i].pos, _data[i].text);
 				painter->translate(0, -_data[i].size.height());
@@ -162,40 +228,7 @@ private:
 			painter->restore();
 		}
 
-		/** Detect whether text can use simple text renderer. */
-		static bool acceptable(const QString &text)
-		{
-			const QStringList types(QStringList() << "b" << "center");
-
-			QString tag;
-			bool skip = true;
-			for(int i = 0; i < text.size(); ++i)
-			{
-				if(text[i] == '<')
-				{
-					skip = false;
-					tag = QString();
-				}
-				else if(skip == false)
-				{
-					if(text[i] == '>' || text[i] == ' ')
-					{
-						if(types.indexOf(tag) == -1)
-						{
-							//qDebug() << "TextItem unacceptable tag:" << tag;
-							return false;
-						}
-						skip = true;
-					}
-					else if(text[i] != '/')
-						tag.append(text[i]);
-				}
-			}
-
-			return true;
-		}
-
-		/** prepare item to display */
+		/** Set width and prepare to display. */
 		inline void resize(int width, int height)
 		{
 			_size.setWidth(width);
@@ -224,18 +257,22 @@ private:
 				_data[i].pos = QPoint(0, ident * 0.75);
 			}
 
-			// lines and centring
+			// lines and centering
 			int h = _data[0].size.height();
 			int w = _data[0].size.width();
 			for(int i = 1; i < _data.size(); ++i)
 			{
-				_data[i].pos.setX(_data[i - 1].pos.x() + _data[i - 1].size.width());
+				_data[i].pos = QPoint(_data[i - 1].pos.x() + _data[i - 1].size.width(), _data[i - 1].pos.y());
+				//_data[i].pos.setX(_data[i - 1].pos.x() + _data[i - 1].size.width());
+				
 				h = qMax(h, _data[i].size.height());
 
 				// todo break part at particular character
 
+				bool nl = w + _data[i].size.width() > width || _data[i].newLine;
+
 				// center previous line, if width is exceeded
-				if(w + _data[i].size.width() > width && _data[i - 1].center)
+				if(nl && _data[i - 1].center)
 				{
 					int d = (width - w) / 2;
 					for(int ii = i - 1; ii >= 0; --ii)
@@ -248,7 +285,7 @@ private:
 				}
 
 				// move part to new line
-				if(w + _data[i].size.width() > width)
+				if(nl)
 				{
 					_data[i].pos = QPoint(0, _data[i].pos.y() + h);
 					h = _data[i].size.height();
@@ -279,16 +316,21 @@ private:
 		{
 			Data()
 			{
-				center = false;
-				font = QFont();
+				font    = QFont();
 				font.setStyleStrategy(QFont::NoAntialias);
+				color   = Qt::black;
+				center  = false;
+				newLine = false;
 			}
 
 			QString  text;
 			QFont    font;
 			QPoint   pos;
-			bool     center;
 			QSize    size;
+			QColor   color;
+
+			char     center:1;
+			char     newLine:1; // part should be placed on new line
 		};
 
 		QVector<Data>  _data;
@@ -299,18 +341,18 @@ public:
     BtMiniViewItem()
     {
 #ifdef USE_WEBKIT
-        _wp          = 0;
+        _wp              = 0;
 #endif
-        _selected    = false;
-        _interactive = false;
-        _active      = true;
-        _newLine     = true;
-        _width       = 0;
-        _height      = 0;
-        _doc         = 0;
-		_ti          = 0;
-		_tl          = 0;
-		_st          = 0;
+        _selected        = false;
+        _interactive     = false;
+        _active          = true;
+        _newLine         = true;
+		_allowStaticText = true;
+        _width           = 0;
+        _height          = 0;
+        _doc             = 0;
+		_ti              = 0;
+		_st              = 0;
     }
     
     virtual ~BtMiniViewItem()
@@ -329,18 +371,17 @@ public:
 			delete _doc, _doc = 0;
 		if(_ti)
 			delete _ti, _ti = 0;
-		if(_tl)
-			delete _tl, _tl = 0;
 		if(_st)
 			delete _st, _st = 0;
 	}
 
 
-	/** Detect whether text can use simple text renderer. */
-	static bool isTextAcceptable(const QString &text, QStringList tags)
+	/** Detect whether text use allowed tags or unallowed if exclusive is true. */
+	static bool isTextAcceptable(const QString &text, QStringList tags, bool exclusive = false)
 	{
 		QString tag;
 		bool skip = true;
+		
 		for(int i = 0; i < text.size(); ++i)
 		{
 			if(text[i] == '<')
@@ -352,11 +393,10 @@ public:
 			{
 				if(text[i] == '>' || text[i] == ' ')
 				{
-					if(tags.indexOf(tag) == -1)
-					{
-						//qDebug() << "TextItem unacceptable tag:" << tag;
+					if((tags.indexOf(tag) == -1 && !exclusive) || 
+						(tags.indexOf(tag) != -1 && exclusive))
 						return false;
-					}
+						
 					skip = true;
 				}
 				else if(text[i] != '/')
@@ -369,21 +409,13 @@ public:
     
     void setText(const QString &text, QWidget *widget = 0)
     {
-		_font = widget->font();
-		_iconSize = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
+		_scale = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
 
 		clear();
 
-		if(isTextAcceptable(text, QStringList() << "b" << "center"))
+		if(isTextAcceptable(text, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
-			_ti = new TextItem(text, _font);
-			resize(size());
-			return;
-		}
-
-		if(false && isTextAcceptable(text, QStringList() << "b" << "center"))
-		{
-			_tl = new QTextLayout(text, _font);
+			_ti = new TextItem(text, widget->font());
 			resize(size());
 			return;
 		}
@@ -454,23 +486,15 @@ public:
             }
         }
 
-		// found that QStaticText get incorrect results for item height
-#ifdef Q_OS_WINCE
-		if(true || isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "p"))
+		if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
 		{
-			_st = new QStaticText();
-			_st->setTextFormat(Qt::RichText);
+			_st = new BtStaticText();
 			_st->setText(ct);
+			_st->prepare(QTransform(), widget->font());
 			
-			//QTextOption to = _st->textOption();
-			//to.setUseDesignMetrics(true);
-			//_st->setTextOption(to);
-
 			resize(size());
-
 			return;
 		}
-#endif
 
 		if(!_doc)
 			_doc = new QTextDocument(widget);
@@ -516,8 +540,8 @@ public:
 
         if(!_icon.isNull())
 		{
-            w -= _iconSize;
-			h = qMax(h, (int)_iconSize);
+            w -= _scale * 1.66;
+			h = qMax(h, (int)(_scale * 1.66));
 		}
 
 		if(_ti)
@@ -529,33 +553,7 @@ public:
 		if(_st)
 		{
 			_st->setTextWidth(w);
-			_st->prepare(QTransform(), _font);
-
 			h = qMax(h, (int)_st->size().height());
-		}
-
-		if(_tl)
-		{
-			QFontMetrics fm(_tl->font());
-
-			int leading = fm.leading();
-
-			qreal height = 0;
-			_tl->beginLayout();
-			while (1) {
-				QTextLine line = _tl->createLine();
-
-				if (!line.isValid())
-					break;
-
-				line.setLineWidth(w);
-				height += leading;
-				line.setPosition(QPointF(0, height));
-				height += line.height();
-			}
-			_tl->endLayout();
-
-			h = qMax(h, _tl->boundingRect().toRect().height());
 		}
 
 #ifdef USE_WEBKIT
@@ -586,14 +584,15 @@ public:
 
         if(!_icon.isNull())
         {
-            QRect rect(0, 0, _iconSize, _iconSize);
+            QRect rect(0, 0, _scale * 1.08, _scale * 1.08);
+			rect.translate(_scale * 0.26, _scale * 0.33);
+
             if(!rect.intersected(clipping).isEmpty())
             {
                 rect.translate(point);
                 _icon.paint(painter, rect);
             }
-
-            p.rx() += _iconSize;
+            p.rx() += _scale * 1.66;
         }
 
 #ifdef USE_WEBKIT
@@ -615,33 +614,32 @@ public:
 		if(_ti)
 			_ti->paint(painter, p, clipping);
 
-		if(_tl)
-			_tl->draw(painter, p, QVector<QTextLayout::FormatRange>(), clipping);
-
 		if(_st)
 		{
 			QRect b(clipping.intersected(QRect(p.x() - point.x(), 0, _width, _height)).translated(point));
 
 			painter->save();
 
-			painter->setFont(_font);
+			painter->setFont(_st->defaultFont());
 			painter->setClipping(true);
 			painter->setClipRect(clipping.translated(point));
 			//painter->eraseRect(b);
 
-			painter->drawStaticText(p, *_st);
+			painter->drawStaticText(p, *((QStaticText*)_st));
 
 			painter->restore();
 		}
     }
 
 public:
-    bool             _selected;
-    bool             _interactive;
-    bool             _active;
+    char             _selected:1;
+    char             _interactive:1;
+    char             _active:1;
 
     /** Item is placed at the beginning of line. All line items have same height. */
-    bool             _newLine;
+    char             _newLine:1;
+
+	char             _allowStaticText:1;
     
     qint32           _row;
     
@@ -650,17 +648,14 @@ public:
 
 
     QIcon            _icon;
-    quint16          _iconSize;
-
-	QFont            _font;
+    quint16          _scale;
 
 #ifdef USE_WEBKIT
     QWebPage        *_wp;
 #endif
 	QTextDocument   *_doc;
 	TextItem        *_ti;
-	QTextLayout     *_tl;
-	QStaticText     *_st;
+	BtStaticText    *_st;
 
 };
 
@@ -679,7 +674,7 @@ public:
 
     /** Render subview to screen or cache.
         \param rect is screen area, that needs to be painted.
-        \param clipping is in local subview coordinates.*/
+        \param clipping is in local subview coordinates. */
     void paint(QPainter *painter, const QRect &rect, const QRect &clipping)
     {
 #ifdef TURN_OFF_CACHED_ITEMS
@@ -1067,6 +1062,7 @@ public:
 		_cachedSurface    = 0;
 
 		_sleep            = false;
+		_justOpened       = true;
     }
 
     ~BtMiniViewPrivate()
@@ -1082,7 +1078,7 @@ public:
 		{
 			t->_stop = true;
 
-			// wait while thread stop execution
+			// wait before thread stops execution
 			QMutex mutex;
 			mutex.lock();
 
@@ -1126,7 +1122,6 @@ public:
 
         _subViews.clear();
     }
-
 
     /** After this function subview will contain \param index. */
     void checkIndexCreated(int subView, const QModelIndex &index)
@@ -1227,6 +1222,7 @@ public:
 
 			_needScroll = true;
 			_scrollHint = hint;
+			_justOpened = true;
         }
     }
 
@@ -1272,18 +1268,15 @@ public:
 
     /** General callback on area change. This will only scroll subview, should be called after 
 		items are changed. Parameters are subview local. */
-    void areaChanged(int subView, const int from, const int to, const int height)
+    void areaChanged(int subView, const int from, const int to, const int height, float resizeFactor = 0.0)
     {
         BtMiniSubView *v = _subViews[subView];
         const int d = (from - to) + height;
 
-		// ?
+		// needs to update view
 		if(from + v->contentsRect().top() < v->baseSize().height() &&
 			to + v->contentsRect().top() > 0)
-		{
-			Q_Q(BtMiniView);
-			q->viewport()->update();
-		}
+			q_func()->viewport()->update();
 
 		//qDebug() << "updateHeight" << from << to << d << height << v->contentsRect() << _cachedRect;
 
@@ -1301,57 +1294,25 @@ public:
 
 		const int oldHeight = v->contentsRect().height();
 
-
 		v->setContentsSize(v->contentsRect().width(), oldHeight + d);
 
-        if(true)
-        {
-            if(from == to)       // add
-            {
-                if(oldHeight == 0)
-                    v->setContentsTop(0);
-                else if(from == 0)
-                    v->setContentsTop(v->contentsRect().top() - d);
-            }
-            else if(height == 0) // remove
-            {
-                if(from == 0)
-                    v->setContentsTop(v->contentsRect().top() - d);
-            }
-            else                 // resize
-            {
-                if(v->contentsRect().top() + to < 0)
-                    v->setContentsTop(v->contentsRect().top() - d);
-            }
-        }
-        else
-        {
-		    if(oldHeight == 0 && from == to && d > 0)
-		    {
-			    //qDebug() << "zero";
-			    v->setContentsTop(0);
-		    }
-		    else if(from == 0)
-		    {
-			    //qDebug() << "top";
-			    v->setContentsTop(v->contentsRect().top() - d);
-		    }
-		    else if(to == oldHeight)
-		    {
-			    //qDebug() << "bottom";
-			    v->updateCachedItems();
-		    }
-		    else if(v->contentsRect().top() + to <= 0)
-		    {
-			    //qDebug() << "above";
-			    v->setContentsTop(v->contentsRect().top() - d);
-		    }
-		    else
-		    {
-			    //qDebug() << "below";
-			    v->updateCachedItems();
-		    }
-        }
+		if(from == to)       // add
+		{
+			if(oldHeight == 0)
+				v->setContentsTop(0);
+			else if(from == 0)
+				v->setContentsTop(v->contentsRect().top() - d);
+		}
+		else if(height == 0) // remove
+		{
+			if(from == 0)
+				v->setContentsTop(v->contentsRect().top() - d);
+		}
+		else                 // resize
+		{
+			if(v->contentsRect().top() + to <= v->baseSize().height() * resizeFactor)
+				v->setContentsTop(v->contentsRect().top() - d);
+		}
 
 		updateScrollBars();
     }
@@ -1460,6 +1421,7 @@ public:
 
 		item->_row = index.row();
 		item->resize(width, 0);
+		item->_allowStaticText = o.allowStaticText;
 
 		// Icon
 		QVariant decoration = index.data(Qt::DecorationRole);
@@ -1470,24 +1432,18 @@ public:
 		if(!icon.isNull())
 			item->setIcon(icon);
 
-		// Text
-		QVariant display = index.data(o.useThread ? BtMini::PreviewRole : Qt::DisplayRole);
-		QString text;
-
-		if(display.canConvert(QVariant::String))
-			text = display.toString();
-
-		item->setText(o.preText + text + o.postText, q);
+		// text
+		item->setText(o.preText + index.data(o.useThread ? BtMini::PreviewRole :
+			Qt::DisplayRole).toString() + o.postText, q);
 
 		// threaded processing
 		if(o.useThread)
 		{
-			_mutex.lock();
+			QMutexLocker locker(&_mutex);
 			_toCalculate.append(index);
-			_mutex.unlock();
 		}
 
-        // New line
+        // newline
         bool newLine = true;
 
         if(o.perLine > 1)
@@ -1766,7 +1722,12 @@ public:
 				_threads.append(new BtMiniViewThread(&_toCalculate, &_mutex));
 
 			_mutex.lock();
-			QVector<int> distance(_toCalculate.size(), 0xffffffff);
+			QVector<int> distance(_toCalculate.size(), INT_MAX);
+
+			//for(int i = 0; i < _toCalculate.size(); ++i)
+			//{
+			//	qDebug() << _toCalculate[i].data(BtMini::ModuleRole).toString() << _toCalculate[i].data(BtMini::PlaceRole).toString();
+			//}
 
 			for(int i = 0; i < _toCalculate.size(); ++i)
 			{
@@ -1774,17 +1735,23 @@ public:
 				if(v->modelParentIndex() == _toCalculate[i].parent())
 				{
 					int ii = v->indexItem(_toCalculate[i]);
+					
 					if(ii >= 0)
 					{
 						int y = v->itemXy(ii).y() + v->contentsRect().top();
-						if(y <= 0 && y + v->_items[ii]->height() > 0)
+							
+						if(!_justOpened)
+							distance[i] = qAbs(y + (v->_items[ii]->height() / 2) - (v->baseSize().height() / 2));
+						else if(y <= 0 && y + v->_items[ii]->height() > 0)
 							distance[i] = qAbs(y);
 						else
 							distance[i] = y > 0 ? y : qAbs(y) + v->baseSize().height();
 					}
 					//else
 					//{
-					//	// probably item deleted yet
+					//	// probably item was deleted
+					//	qDebug() << "Index removed from thread compute" << _toCalculate[i].data(BtMini::ModuleRole).toString() <<
+					//		_toCalculate[i].data(BtMini::PlaceRole).toString();
 					//	distance.remove(i);
 					//	_toCalculate.erase(_toCalculate.begin() + i);
 					//	--i;
@@ -1846,8 +1813,8 @@ public:
 							// TODO obtain subView options
 
 							_subViews[v]->_items[i]->setText(done.values()[p], q);
-
-							areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height());
+							areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(), 
+								_justOpened ? 0.0 : 0.45);
 
 							threadDone = true;
 						}
@@ -1890,13 +1857,14 @@ public:
 				if(_todo->size() == 0)
 				{
 					_mutex->unlock();
-					msleep(100);
+					msleep(200);
 					continue;
 				}
 
 				index = _todo->takeAt(0);
 				_mutex->unlock();
 
+				//msleep(2000);
 				QString text(index.data().toString());
 
 				_mutex->lock();
@@ -1955,6 +1923,10 @@ public:
 	QVector<BtMiniViewThread*>    _threads;
 	QMutex                        _mutex;
 	bool                          _sleep;
+	
+	/** If user just opened view or scrolled to an index, necessary to determine when resize
+		thread computed items from center or top. */
+	bool                          _justOpened;
     
     /** Item and subview layout delegate. */
     BtMiniLayoutDelegate         *_ld;
@@ -2027,7 +1999,6 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
 BtMiniView::~BtMiniView()
 {
     Q_D(BtMiniView);
-
     delete d;
 }
 
@@ -2073,7 +2044,6 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
     if(index.isValid())
     {
         d->currentSubView()->updateModelIndex(index);
-
         emit currentChanged(index);
     }
 }
@@ -2175,6 +2145,8 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
     {
         d->_mouseLeaveZone = true;
         d->_mouseTapping   = 0;
+		
+		d->_justOpened     = false;
     }
 
     // Kinetic scrolling
@@ -2373,7 +2345,6 @@ QModelIndex BtMiniView::indexAt(const QPoint &point) const
 QModelIndex BtMiniView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
 {
     //qDebug("BtMiniView::moveCursor");
-
     return QModelIndex();
 }
 
@@ -2568,7 +2539,6 @@ const QModelIndexList BtMiniView::currentIndexes() const
 int BtMiniView::currentLevel() const
 {
     Q_D(const BtMiniView);
-
     return d->_currentSubView;
 }
 
@@ -2650,7 +2620,7 @@ void BtMiniView::reset()
     Q_D(BtMiniView);
 
     //qDebug() << "BtMiniView::reset";
-
+	
     d->clear();
     QAbstractItemView::reset();
 }
@@ -2672,14 +2642,12 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
 void BtMiniView::slideLeft()
 {
     Q_D(BtMiniView);
-    
     activateSubView(qMax(d->_currentSubView - 1, 0));
 }
 
 void BtMiniView::slideRight()
 {
     Q_D(BtMiniView);
-    
     activateSubView(qMin(d->_currentSubView + 1, d->_subViews.size() - 1));
 }
 
@@ -2722,27 +2690,21 @@ void BtMiniView::setSearchRole(int searchRole, int level)
 void BtMiniView::showEvent(QShowEvent *e)
 {
     Q_D(BtMiniView);
-
     //qDebug() << "BtMiniView::showEvent" << rect();
-
     //d->updateViews();
 }
 
 void BtMiniView::setCurrentIndex(const QModelIndex &index)
 {
     Q_D(BtMiniView);
-
     //qDebug() << "BtMiniView::setCurrentIndex" << index;
-
     Q_ASSERT(index.isValid());
-
     d->activateIndex(index, true);
 }
 
 void BtMiniView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
 {
     qDebug() << "BtMiniView::setSelection" << rect << command;
-
     selectionModel()->select(indexAt(rect.topLeft()), command);
 }
 
@@ -2944,9 +2906,7 @@ void BtMiniView::resizeEvent(QResizeEvent *e)
 void BtMiniView::setLayoutDelegate(BtMiniLayoutDelegate *ld)
 {
     Q_D(BtMiniView);
-
     d->_ld = ld == 0 ? findChild<BtMiniLayoutDelegate *>() : ld;
-
     Q_CHECK_PTR(d->_ld);
 }
 
@@ -2985,14 +2945,12 @@ QRect BtMiniView::visualRect(const QModelIndex &index) const
 QRegion BtMiniView::visualRegionForSelection(const QItemSelection &selection) const
 {
     qDebug() << "BtMiniView::visualRegionForSelection" << selection;
-
     return QRegion();
 }
 
 void BtMiniView::setTopShadowEnabled(bool mode)
 {
     Q_D(BtMiniView);
-
     d->_enableTopShadow = mode;
 }
 
@@ -3115,30 +3073,29 @@ QString BtMiniView::currentContents() const
                     return el[el.size() - 1].toOuterXml();
                 }
 #endif
+				int sp;
+				QString st;
+				QString dt;
 
-                QTextDocument *doc(v->_items[i]->_doc);
-				QScopedPointer<QTextDocument> toDelete;
-
-				// recreate QTextDocument
-				if(!doc && v->_items[i]->_st)
-				{
-					doc = new QTextDocument();
-
-					doc->setDefaultFont(v->_items[i]->_font);
-					doc->setHtml(v->_items[i]->_st->text());
-					doc->setTextWidth(v->_items[i]->_st->textWidth());
-					
-					toDelete.reset(doc);
-				}
-
-                if(doc)
+                if(v->_items[i]->_doc)
                 {
-                    int sp = doc->documentLayout()->hitTest(pp, Qt::ExactHit);
-
+                    sp = v->_items[i]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
                     if(sp < 0)
                         return QString();
-
-                    QString &st = doc->toPlainText();
+                    st = v->_items[i]->_doc->toPlainText();
+				}
+				
+				if(v->_items[i]->_st)
+				{
+					sp = v->_items[i]->_st->hitTest(pp);
+					if(sp < 0)
+						return QString();
+					st = v->_items[i]->_st->plainText();
+					dt = v->_items[i]->_st->text();
+				}
+				
+				if(!st.isEmpty())
+				{
                     QChar c = st[sp];
 
                     if(c.isSpace())
@@ -3158,7 +3115,10 @@ QString BtMiniView::currentContents() const
                         }
                     }
 
-                    QString dt = d->currentSubView()->modelIndex(v->_items[i]->_row).data().toString();
+					// qstatictext yet have model text
+					// simultaneous call of sword model data() may cause data corruption
+					if(dt.isEmpty())
+						dt = d->currentSubView()->modelIndex(v->_items[i]->_row).data().toString();
 
                     // erase css style sheet in text
                     dt = dt.left(dt.indexOf("<head>", Qt::CaseInsensitive)) +
@@ -3182,100 +3142,18 @@ QString BtMiniView::currentContents() const
                         }
                     }
 
+					//if(dt[dp] != st[sp])
                     if(dc != sc)
-                    {
+					{
+						qDebug() << "Can't find correspondence " << st << dt << c << sc << dc;
                         Q_ASSERT(false);
-                        qDebug() << "Can't find correspondence " << st << dt << c << sc << dc;
                     }
 
                     int from = dt.lastIndexOf('<', dp);
 
                     // first tag must not be closing tag
                     if(dt[from + 1] != '/')
-                    {
-#if 0
-                        // break on parts
-                        QStringList tags("");
-                        int ti;
-                        
-                        for(int i = 0; i < dt.size(); ++i)
-                        {
-                            if(dt[i] == '<' && tags.last().size() > 0 && tags.last()[0] != '<')
-                                tags.append("");
-
-                            tags.last() += dt[i];
-
-                            if(i == dp)
-                                ti = tags.size() - 1;
-
-                            if(dt[i] == '>' && tags.last().size() > 0)
-                                tags.append("");
-                        }
-
-                        if(tags.last().size() == 0)
-                            tags.removeLast();
-
-                        Q_ASSERT(tags[ti][0] != '<');
-
-                        // remove unnecessary tags
-                        for(int i = 0, st = 0; i < tags.size(); ++i)
-                        {
-                            if(i == ti)
-                                continue;
-
-                            if(tags[i][0] == '<')
-                            {
-                                if(tags[i][1] == '/')
-                                {
-                                    int st = i;
-
-                                    QString tn = tags[i].left(tags[i].size() - 1).mid(2);
-
-                                    while(st-- > 0)
-                                    {
-                                        if(tags[st][0] != '<' || tags[st][1] == '/' ||
-                                            tags[st][tags[st].size() - 2] == '/')
-                                            continue;
-
-                                        QString otherName = tags[st].left(tags[st].size() - 1).mid(
-                                            1).split(" ")[0].remove('/');
-
-                                        if(otherName == tn)
-                                            break;
-                                    }
-
-                                    if(!(st < ti && i > ti))
-                                    {
-                                        tags.erase(tags.begin() + st, tags.begin() + i + 1);
-                                        if(i <= ti)
-                                            ti -= i - st + 1;
-                                        i -= i - st + 1;
-
-                                        Q_ASSERT(ti > 0);
-                                    }
-                                }
-                                else if(tags[i][tags[i].size() - 2] == '/')
-                                {
-                                    tags.erase(tags.begin() + i);
-                                    if(i <= ti)
-                                        --ti;
-                                    --i;
-                                }
-                            }
-                            else
-                            {
-                                tags.erase(tags.begin() + i);
-                                if(i <= ti)
-                                    --ti;
-                                --i;
-                            }
-                        }
-                        
-                        return tags.join("");
-#endif
-
                         return dt.mid(from, dt.indexOf('>', dp) - from + 1);
-                    }
                 }
             }
         }
@@ -3287,14 +3165,12 @@ QString BtMiniView::currentContents() const
 BtMiniLayoutDelegate * BtMiniView::layoutDelegate()
 {
     Q_D(BtMiniView);
-
     return d->_ld;
 }
 
 const BtMiniLayoutDelegate * BtMiniView::layoutDelegate() const
 {
     Q_D(const BtMiniView);
-
     return d->_ld;
 }
 

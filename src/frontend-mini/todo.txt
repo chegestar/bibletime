@@ -27,16 +27,25 @@ kalemas@mail.ru :
 +	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
 +	modules model: module manager button, category / language+modules layout
 +	simple html render item (fast)
-	selecting items and active item
-	current subview indication
-	footnote display using icon
-%	preview role and threaded data retrieving
-	restore original BT paths, or dirs in resources
++	while context info is opening, threaded text rendering from sword cause mixed up text, josh 2 2
++	text formating for preview text
++	threaded text aquirition priority, for now first text rendered for inactive views
++	when receive verse text from thread, resize from center
++	context info problems, misalignment qtextdocument | qstatictext
++	remove hack with QTextDocument recreation in BtMiniView::currentContents - increase perfomance
++	preview role and threaded data retrieving
 	improve BT modularity
 +		Install manager - information of repos/modules, manage modules
 		Bookmarks
-		move all model roles to global header
++		move all model roles to global header
+	selecting items and active item
+	install manager by languages
+	current subview indication
+	footnote display using icon
+	restore original BT paths, or dirs in resources
 	bug, delayed module verses layout stops on missed content
+	crush when search RSTchs on здравству*
+	bug, sometimes on Matt n navigation second level opens as books again
 
 	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init

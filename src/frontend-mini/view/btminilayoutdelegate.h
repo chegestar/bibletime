@@ -43,6 +43,8 @@ struct BtMiniLayoutOption
     
     bool    allowInputBox;
     int     searchRole;
+
+	bool    allowStaticText;
 };
 
 /** Class that controls layout of subviews and items in view.
