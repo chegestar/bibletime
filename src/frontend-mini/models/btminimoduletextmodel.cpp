@@ -22,6 +22,8 @@
 #include "backend/config/cbtconfig.h"
 #include "backend/cswordmodulesearch.h"
 #include "backend/drivers/cswordbiblemoduleinfo.h"
+#include "backend/drivers/cswordlexiconmoduleinfo.h"
+#include "backend/drivers/cswordbookmoduleinfo.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/rendering/cdisplayrendering.h"
 #include "btglobal.h"
@@ -107,6 +109,12 @@ public:
 				_maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
 
 				_displayOptions.verseNumbers = true;
+			}
+
+			if(_module->type() == CSwordModuleInfo::Lexicon)
+			{
+				CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(_module);
+				_maxEntries = lm->entries().size();
 			}
 		}
 
@@ -444,12 +452,6 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
     switch(role)
 	{
 	case BtMini::PreviewRole:
-	//	{
-	//		// temporary solution
-	//		return QString(" ");
-	//	}
-	//	break;
-
 	case Qt::DisplayRole:
         {
             QString r;
@@ -462,7 +464,8 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                 {
 					const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
 
-                    if(l->_module)
+					if(l->_module && (l->_module->type() == CSwordModuleInfo::Bible ||
+						l->_module->type() == CSwordModuleInfo::Commentary))
 					{
 						CSwordVerseKey key(d->indexToVerseKey(index));
 						const int v = key.getVerse();
@@ -497,35 +500,31 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
                             if(!d->_isSearch)
                             {
-                                if(l->_module->type() == CSwordModuleInfo::Bible ||
-                                    l->_module->type() == CSwordModuleInfo::Commentary)
+                                ((sword::VerseKey*)(l->_module->module()->getKey()))->Headings(1);
+
+                                CSwordVerseKey k1(l->_module);
+                                k1.Headings(1);
+                                k1.setKey(keyName);
+
+                                CTextRendering::KeyTreeItem::Settings preverse_settings(false,
+                                    CTextRendering::KeyTreeItem::Settings::NoKey);
+
+                                if(k1.getVerse() == 1)
                                 {
-                                    ((sword::VerseKey*)(l->_module->module()->getKey()))->Headings(1);
-
-                                    CSwordVerseKey k1(l->_module);
-                                    k1.Headings(1);
-                                    k1.setKey(keyName);
-
-                                    CTextRendering::KeyTreeItem::Settings preverse_settings(false,
-                                        CTextRendering::KeyTreeItem::Settings::NoKey);
-
-                                    if(k1.getVerse() == 1)
+                                    if (k1.getChapter() == 1)
                                     {
-                                        if (k1.getChapter() == 1)
-                                        {
-                                            k1.setChapter(0);
-                                            k1.setVerse(0);
-                                            if(k1.rawText().length() > 0)
-                                            {
-                                                tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
-                                            }
-                                            k1.setChapter(1);
-                                        }
+                                        k1.setChapter(0);
                                         k1.setVerse(0);
                                         if(k1.rawText().length() > 0)
                                         {
                                             tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
                                         }
+                                        k1.setChapter(1);
+                                    }
+                                    k1.setVerse(0);
+                                    if(k1.rawText().length() > 0)
+                                    {
+                                        tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
                                     }
                                 }
                             }
@@ -544,6 +543,23 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                         else
                             Q_ASSERT(!d->_isSearch);
                     }
+					else if(l->_module && l->_module->type() == CSwordModuleInfo::Lexicon)
+					{
+						using namespace Rendering;
+
+						CDisplayRendering render(l->_displayOptions, l->_filterOptions);
+						CTextRendering::KeyTreeItem::Settings settings(false, CTextRendering::KeyTreeItem::Settings::SimpleKey);
+						CTextRendering::KeyTree tree;
+						CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
+
+						QList<const CSwordModuleInfo*> modules;
+						modules << l->_module;
+
+						tree.append(new Rendering::CTextRendering::KeyTreeItem(lm->entries()[index.row()], modules, settings));
+						r += render.renderKeyTree(tree);
+
+						qDeleteAll(tree);
+					}
 
                     if(l->_hasContents)
                         r += l->_contents.toString();
@@ -554,6 +570,11 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
         }
         
     case BtMini::PlaceRole:
+		if(d->indexList(index)->_module->type() == CSwordModuleInfo::Lexicon)
+		{
+			CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(d->indexList(index)->_module);
+			return lm->entries()[index.row()];
+		}
         if(d->indexDepth(index) == 2 && d->indexList(index)->_module)
             return d->indexToVerseKey(index).key();
         break;
@@ -602,13 +623,23 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString key) const
 
 	Q_ASSERT(!d->_lists[i]._hasScope);
 
+	const BtMiniModuleTextModelPrivate::List *l = &d->_lists[i];
+
+	// handle lexicons
+	if(l->_module->type() == CSwordModuleInfo::Lexicon)
+	{
+		CSwordLexiconModuleInfo *li = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
+		int i = li->entries().indexOf(key);
+		if(i >= 0)
+			return createIndex(i, 0, (void*)l);
+		
+		return QModelIndex();
+	}
+
 	BtMiniSwordMutex.lock();
 
-    CSwordVerseKey verse(d->_lists[i]._module);
-    
+    CSwordVerseKey verse(l->_module);
     verse.setKey(key);
-
-	const BtMiniModuleTextModelPrivate::List *l = &d->_lists[i];
     const int r = verse.getIndex() - l->_firstEntry;
 	
 	BtMiniSwordMutex.unlock();
@@ -640,9 +671,12 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
     Q_D(BtMiniModuleTextModel);
 
     BtMiniView *v = qobject_cast<BtMiniView *>(sender());
-    QString contents = v->currentContents();
 
+	Q_CHECK_PTR(v);
+
+    QString contents = v->currentContents();
     const QString place = v->currentIndex().data(BtMini::PlaceRole).toString();
+
     if(!place.isEmpty())
     {
         if(contents[0] == '<')
@@ -738,7 +772,8 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 void BtMiniModuleTextModel::openModuleSelection()
 {
     BtMiniView *works = BtMini::findView(BtMini::worksWidget());
-    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+	works->setSleep(true);
 
     BtMiniMenu menu;
 
@@ -755,8 +790,16 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
-    m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br>&nbsp;</br>"
-        "<word-breaks/><font size='60%' color='#555555'>" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+    m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'>"
+		"<br>&nbsp;</br><word-breaks/>" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+
+	// if modules more than 4, scrollbar always visible
+	if(m->modules().size() > 4)
+	{
+		BtMiniLayoutOption o = view->layoutDelegate()->levelOption();
+		o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
+		view->layoutDelegate()->setLevelOption(o);
+	}
 
     view->setModel(m);
 
@@ -790,14 +833,20 @@ void BtMiniModuleTextModel::openModuleSelection()
     }
     else
     {
-        // Restore module place
-        place.setModule(CSwordBackend::instance()->findModuleByName(nm));
+		CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(nm);
+        
+		// Restore module place
+		if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+		{
+	        place.setModule(mi);
 	
-		QModelIndex index = keyIndex(works->currentLevel(), place.key());
-
-		if(index.isValid())
-			works->scrollTo(index);
+			QModelIndex index = keyIndex(works->currentLevel(), place.key());
+			if(index.isValid())
+				works->scrollTo(index);
+		}
 	}
+
+	works->setSleep(false);
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
@@ -807,7 +856,9 @@ void BtMiniModuleTextModel::openPlaceSelection()
     BtMiniView *works = BtMini::findView(BtMini::worksWidget());
 
     QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
-    QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
+	QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
+
+	works->setSleep(true);
 
     BtMiniMenu menu;
 
@@ -823,17 +874,13 @@ void BtMiniModuleTextModel::openPlaceSelection()
     l->addWidget(view);
     menu.setLayout(l);
 
-	// prevent access to sword
-	//QMutexLocker locker(&d->_mutex);
-	works->setSleep(true);
-
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
 
     view->setModel(m);
 
 	// setup current place and scroll to proper place
 	QModelIndex pi = m->keyToIndex(cp);
-    view->setCurrentIndex(pi);
+	view->setCurrentIndex(pi);
 	while(pi.parent() != QModelIndex())
 		pi = pi.parent();
 	view->scrollTo(pi);
@@ -857,15 +904,13 @@ void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
 		QString place(index.data(BtMini::PlaceRole).toString());
 
         // Shorten text
-        if(!place.isEmpty())
+		if(!place.isEmpty() && (d->indexList(index)->_module->type() == CSwordModuleInfo::Bible ||
+			d->indexList(index)->_module->type() == CSwordModuleInfo::Commentary))
         {
-            CSwordVerseKey key(d->indexToVerseKey(index));
-			
-			BtMiniSwordMutex.lock();
+            CSwordVerseKey key(d->indexToVerseKey(index));			
+			QMutexLocker locker(&BtMiniSwordMutex);
 
             place = QString::fromLocal8Bit(key.getShortText());
-
-			BtMiniSwordMutex.unlock();
         }
 
         d->_placeIndicator->setEnabled(!place.isEmpty());
@@ -943,9 +988,8 @@ void BtMiniModuleTextModel::startSearch()
 
 		m->module()->createSearchFramework();
 
-		results = m->module()->search(d->_searchText.toUtf8(), 0, 0,
-			&scope, 0, &BtMiniModuleTextModelPrivate::searchProgress,
-            &qMakePair(dialog.data(), m));
+		results = m->module()->search(d->_searchText.replace(tr("strong:", "Strongs search keyword"), "strong:").toUtf8(),
+			0, 0, &scope, 0, &BtMiniModuleTextModelPrivate::searchProgress, &qMakePair(dialog.data(), m));
 
 		if(dialog->wasCanceled() || m->module()->terminateSearch)
 			results = sword::ListKey();

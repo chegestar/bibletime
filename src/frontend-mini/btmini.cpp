@@ -10,11 +10,13 @@
 **********/
 
 #include <QApplication>
+#include <QBitmap>
 #include <QBoxLayout>
 #include <QDesktopWidget>
 #include <QFile>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPainter>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QStackedWidget>
@@ -524,12 +526,27 @@ void BtMiniMessageHandler(QtMsgType type, const char *msg)
 #endif
 }
 
+// presentation mode
+#ifdef Q_OS_WIN32
+#define PRESENTATION
+#endif
+
 class BtMiniApplication : public QApplication
 {
 public:
 	BtMiniApplication(int argc, char **argv) : QApplication(argc, argv)
 	{
 		mainLoop = false;
+
+#ifdef PRESENTATION
+		QPixmap bmu("hand01.png");
+		QPixmap bmd("hand02.png");
+
+		cu = QCursor(bmu);
+		cd = QCursor(bmd);
+
+		setOverrideCursor(cu);
+#endif
 	}
 
 	~BtMiniApplication() {;}
@@ -559,13 +576,31 @@ public:
 		//default:
 		//	qDebug() << "msg:" << msg->message;
 		}
-
+		return false;
+	}
+#elif defined Q_OS_WIN && defined PRESENTATION
+	bool winEventFilter (MSG *msg, long *result)
+	{
+		switch(msg->message)
+		{
+		case WM_LBUTTONDOWN:
+			setOverrideCursor(cd);
+			break;
+		case WM_LBUTTONUP:
+			setOverrideCursor(cu);
+			break;
+		}
 		return false;
 	}
 #endif
 
 public:
 	bool mainLoop;
+
+#ifdef PRESENTATION
+	QCursor cu;
+	QCursor cd;
+#endif
 };
 
 /** Application entry. */

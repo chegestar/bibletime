@@ -9,6 +9,8 @@
 *
 **********/
 
+#include "backend/config/cbtconfig.h"
+
 #include "btminilayoutdelegate.h"
 
 BtMiniLayoutOption::BtMiniLayoutOption()

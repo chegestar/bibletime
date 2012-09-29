@@ -14,6 +14,7 @@
 
 #include "backend/managers/cswordbackend.h"
 #include "backend/drivers/cswordbiblemoduleinfo.h"
+#include "backend/drivers/cswordlexiconmoduleinfo.h"
 
 #include "btmini.h"
 #include "btminimodulenavigationmodel.h"
@@ -28,6 +29,7 @@ public:
 	BtMiniModuleNavigationModelPrivate() : _key(0), _parentKey(0)
     {
         _bm = 0;
+		_lm = 0;
     }
     
     ~BtMiniModuleNavigationModelPrivate()
@@ -89,14 +91,15 @@ public:
 		}
 	}
 
-    CSwordBibleModuleInfo  *_bm;
-    QString                 _module;
+	CSwordBibleModuleInfo   *_bm;
+	CSwordLexiconModuleInfo *_lm;
+    QString                  _module;
 
-	mutable CSwordVerseKey  _key;
-	mutable CSwordVerseKey  _parentKey;
-	mutable QModelIndex     _parentIndex;
+	mutable CSwordVerseKey   _key;
+	mutable CSwordVerseKey   _parentKey;
+	mutable QModelIndex      _parentIndex;
 
-    BtMiniLayoutDelegate   *_ld;
+    BtMiniLayoutDelegate    *_ld;
 };
 
 BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObject *parent)
@@ -116,6 +119,13 @@ BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObjec
     o.preText = "<b><center>";
     o.postText = "</center></b>";
 
+	if(d->_lm && d->_lm->entries().size() > 100)
+	{
+		o.scrollPerItem = true;
+		o.limitItems    = true;
+		o.perCycle      = 5;
+	}
+
     d->_ld->setLevelOption(0, o);
 
     o.perLine = 3;
@@ -133,18 +143,28 @@ BtMiniModuleNavigationModel::~BtMiniModuleNavigationModel()
 void BtMiniModuleNavigationModel::setModule(QString &module)
 {
     Q_D(BtMiniModuleNavigationModel);
+
+	CSwordModuleInfo *mi = qobject_cast<CSwordModuleInfo*>(CSwordBackend::instance()->findModuleByName(module));
     
     d->_module = module;
-    d->_bm = qobject_cast<CSwordBibleModuleInfo*>(CSwordBackend::instance()->findModuleByName(module));
 
-    Q_CHECK_PTR(d->_bm);
+	if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+	{
+		d->_bm = qobject_cast<CSwordBibleModuleInfo*>(mi);
 
-	d->_key.setModule(d->_bm);
-	d->_key.Headings(1);
+		Q_CHECK_PTR(d->_bm);
 
-	d->_parentIndex = QModelIndex();
-	d->setupVerseKey(d->_parentIndex);
-	d->_parentKey.copyFrom(d->_key);
+		d->_key.setModule(d->_bm);
+		d->_key.Headings(1);
+
+		d->_parentIndex = QModelIndex();
+		d->setupVerseKey(d->_parentIndex);
+		d->_parentKey.copyFrom(d->_key);
+	}
+	else if(mi->type() == CSwordModuleInfo::Lexicon)
+	{
+		d->_lm = qobject_cast<CSwordLexiconModuleInfo*>(mi);
+	}
 }
 
 int BtMiniModuleNavigationModel::columnCount(const QModelIndex &parent) const
@@ -166,10 +186,13 @@ int BtMiniModuleNavigationModel::rowCount(const QModelIndex &parent) const
         
         // chapter count or verse count
         if(d->_key.getChapter() == 0)
-            return d->_key.getChapterMax(); //d->_bm->chapterCount(key.book());
+            return d->_key.getChapterMax();
         else if(d->_key.getVerse() == 0)
-            return d->_key.getVerseMax(); //d->_bm->verseCount(key.book(), key.getChapter());
+            return d->_key.getVerseMax();
     }
+
+	if(d->_lm && !parent.isValid())
+		return d->_lm->entries().size();
 
     return 0;
 }
@@ -178,79 +201,107 @@ QModelIndex BtMiniModuleNavigationModel::index(int row, int column, const QModel
 {
     Q_D(const BtMiniModuleNavigationModel);
 
-    d->setupVerseKey(parent, row);
+	if(d->_bm)
+	{
+	    d->setupVerseKey(parent, row);
+	    return createIndex(row, column, d->_key.getIndex());
+	}
 
-    return createIndex(row, column, d->_key.getIndex());
+	if(d->_lm)
+		return createIndex(row, column);
+
+	return QModelIndex();
 }
 
 QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 {
     Q_D(const BtMiniModuleNavigationModel);
 
-    d->setupVerseKey(index);
-    int row = 0;
+	if(d->_bm)
+	{
+		d->setupVerseKey(index);
+		int row = 0;
 
-	QMutexLocker locker(&BtMiniSwordMutex);
+		QMutexLocker locker(&BtMiniSwordMutex);
 
-	Q_ASSERT(d->_key.getBook() != 0);
+		Q_ASSERT(d->_key.getBook() != 0);
 
-    if(d->_key.getBook() == 0 || d->_key.getChapter() == 0)
-    {
-        return QModelIndex();
-    }
-    else if(d->_key.getVerse() == 0)
-    {
-        d->_key.setAutoNormalize(false);
-        d->_key.setChapter(0);
-        d->_key.setVerse(0);
-        d->_key.Normalize();
-
-#ifdef QT_DEBUG
-		if(d->_bm->books()->indexOf(d->_key.book()) == -1)
+		if(d->_key.getBook() == 0 || d->_key.getChapter() == 0)
 		{
-			qDebug() << d->_bm->books() << d->_key.book();
+			return QModelIndex();
 		}
-#endif
+		else if(d->_key.getVerse() == 0)
+		{
+			d->_key.setAutoNormalize(false);
+			d->_key.setChapter(0);
+			d->_key.setVerse(0);
+			d->_key.Normalize();
 
-        row = d->_bm->books()->indexOf(d->_key.book());
-    }
-    else
-    {
-        d->_key.setVerse(0);
-        row = d->_key.getChapter() - 1;
-    }
+	#ifdef QT_DEBUG
+			if(d->_bm->books()->indexOf(d->_key.book()) == -1)
+			{
+				qDebug() << d->_bm->books() << d->_key.book();
+			}
+	#endif
 
-    Q_ASSERT(row >= 0);
+			row = d->_bm->books()->indexOf(d->_key.book());
+		}
+		else
+		{
+			d->_key.setVerse(0);
+			row = d->_key.getChapter() - 1;
+		}
 
-    return createIndex(row, 0, d->_key.getIndex());
+		Q_ASSERT(row >= 0);
+
+		return createIndex(row, 0, d->_key.getIndex());
+	}
+
+	if(d->_ld)
+		return QModelIndex();
+
+	return QModelIndex();
 }
 
 QVariant BtMiniModuleNavigationModel::data(const QModelIndex &index, int role) const
 {
     Q_D(const BtMiniModuleNavigationModel);
 
-    d->setupVerseKey(index);
+	if(d->_lm)
+	{
+		QString r;
 
-	QMutexLocker locker(&BtMiniSwordMutex);
+		if((role == Qt::DisplayRole && index.isValid()) || role == BtMini::PlaceRole)
+			r += d->_lm->entries()[index.row()];
 
-    switch(role)
-    {
-    case Qt::DisplayRole:
-        {
-            QString r;
+		return r;
+	}
 
-            if(d->_key.getChapter() == 0)
-                r = d->_key.book();
-            else if(d->_key.getVerse() == 0)
-                r = QString::number(d->_key.getChapter());
-            else
-                r = QString::number(d->_key.getVerse());
-            
-            return QVariant(r);
-        }
-    case BtMini::PlaceRole:
-        return d->_key.key();
-    }
+	if(d->_bm)
+	{
+		d->setupVerseKey(index);
+
+		QMutexLocker locker(&BtMiniSwordMutex);
+
+		switch(role)
+		{
+		case Qt::DisplayRole:
+			{
+				QString r;
+
+				if(d->_key.getChapter() == 0)
+					r = d->_key.book();
+				else if(d->_key.getVerse() == 0)
+					r = QString::number(d->_key.getChapter());
+				else
+					r = QString::number(d->_key.getVerse());
+	            
+				return QVariant(r);
+			}
+		case BtMini::PlaceRole:
+			return d->_key.key();
+		}
+	}
 
     return QVariant();
 }
@@ -278,18 +329,30 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
 {
     Q_D(const BtMiniModuleNavigationModel);
 
-    d->setupVerseKey(QModelIndex());
+	if(d->_bm)
+	{
+		d->setupVerseKey(QModelIndex());
 
-	QMutexLocker locker(&BtMiniSwordMutex);
+		QMutexLocker locker(&BtMiniSwordMutex);
 
-    d->_key.setKey(key);
+		d->_key.setKey(key);
 
-    int row = d->_key.getVerse() - 1;
+		int row = d->_key.getVerse() - 1;
 
-    if(d->_key.getChapter() == 0)
-        row = d->_key.getBook() - 1;
-    else if(d->_key.getVerse() == 0)
-        row = d->_key.getChapter() - 1;
+		if(d->_key.getChapter() == 0)
+			row = d->_key.getBook() - 1;
+		else if(d->_key.getVerse() == 0)
+			row = d->_key.getChapter() - 1;
 
-    return createIndex(row, 0, d->_key.getIndex());
+		return createIndex(row, 0, d->_key.getIndex());
+	}
+
+	if(d->_lm)
+	{
+		int i = d->_lm->entries().indexOf(key);
+		if(i >= 0)
+			return createIndex(i, 0);
+	}
+
+	return QModelIndex();
 }

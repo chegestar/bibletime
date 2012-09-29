@@ -62,9 +62,7 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 	f.setWeight(QFont::Bold);
 	setFont(f);
 
-	setBackgroundRole(QPalette::Button);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
-    setAutoFillBackground(true);
 
     QHBoxLayout *l = new QHBoxLayout;
 

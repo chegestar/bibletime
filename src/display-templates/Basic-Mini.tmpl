@@ -1,261 +1,206 @@
 <head>
   #MODULE_STYLESHEET#
   <style type="text/css">
-    
-body {
-  background-color: #ffffff;
-  color: #000000;
-}
 
-a {
-  text-decoration: none;
-  color: #4aacff;
-  font-weight: bold;
-  font-size: 85%;
-}
+    body {
+    background-color: #ffffff;
+    color: #000000;
+    }
 
-.jesuswords {
-  color:#9C2323;
-}
+    a {
+    color: #4aacff;
+    font-weight: bold;
+    text-decoration: none;
+    }
 
-.footnote {
-	vertical-align:super;
-	color: #4aacff;
-  font-weight: bold;
-	cursor: help;
-}
+    .entryname a {
+    font-size: 125%;
+    vertical-align: super;
+    }
 
-.footnote:before { content:"("; }
-.footnote:after { content:")"; }
+    .jesuswords {
+    color:#9C2323;
+    }
 
-.footnotepre {
- 	font-style: italic;
-}
+    .footnote {
+    vertical-align: middle;
+    color: #4aacff;
+    font-weight: bold;
+    font-size: 140%;
+    }
 
-.crossreference {
-	font-size: 80%;
-	color: #4aacff;
-}
-#bible .crossreference:before  { content:" ["; }
-#bible .crossreference:after  { content:"]"; }
+    .footnote:before { content:"("; }
+    .footnote:after { content:")"; }
 
-.crossreference a {
-	color: #4aacff;
-}
-.crossreference a:hover {
-	color: #4aacff;
-}
+    .footnotepre {
+    font-style: italic;
+    }
 
-.sectiontitle {
-  font-weight: bold;
-  font-size: medium;
-  text-align: center;
-}
+    .crossreference {
+    font-size: 80%;
+    color: #4aacff;
+    }
 
-.transchange {
-  font-style:italic;
-}
+    #bible .crossreference:before  { content:" ["; }
+    #bible .crossreference:after  { content:"]"; }
 
-.morphSegmentation {
-  border-right: 2px solid gray;
-}
+    .crossreference a {
+    color: #4aacff;
+    }
+    .crossreference a:hover {
+    color: #4aacff;
+    }
 
-/* Settings which apply to all entries in all modules */
+    .sectiontitle {
+    font-weight: bold;
+    font-size: medium;
+    text-align: center;
+    }
 
-.entry {
-  padding: 2px;
-  text-align: justify;
-  /*font-size: 26pt;*/
-  font-weight: normal;
-}
+    .transchange {
+    font-style:italic;
+    }
 
-td.entry, td.currententry {
-  vertical-align: top;
-  text-align: justify !important;
-}
-.entry[dir=rtl] {
-  text-align: right !important;
-}
-#printer .entry[dir=rtl] {
-  text-align:right !important;
-}
+    .morphSegmentation {
+    border-right: 2px solid gray;
+    }
 
-/* Keep the values the same as in .entry (take the border into account!) */
-.currententry {
-  padding: 2px;
-  /*vertical-align: middle;*/
-  text-align: justify;
-  background-color: #E6E4FF;
-}
-.currententry[dir=rtl] {
+    /* Settings which apply to all entries in all modules */
+
+    .entry {
+    padding: 2px;
+    text-align: justify;
+    /*font-size: 26pt;*/
+    font-weight: normal;
+    }
+
+    td.entry, td.currententry {
+    vertical-align: top;
+    text-align: justify !important;
+    }
+    .entry[dir=rtl] {
+    text-align: right !important;
+    }
+    #printer .entry[dir=rtl] {
     text-align:right !important;
-}
-div.currententry {
-}
-span.currententry {
-background-color: #EDEFFF !important;
-}
+    }
 
-/* Space between the columns of modules displayed side by side */
-  td.entry + td.entry {
-  margin-left: 5px;
-}
+    /* Keep the values the same as in .entry (take the border into account!) */
+    .currententry {
+    padding: 2px;
+    /*vertical-align: middle;*/
+    text-align: justify;
+    background-color: #E6E4FF;
+    }
 
-/* Several additional settings for display of modules*/
-#bible div.currententry, #bible td.currententry {
-  border: 1px solid #B7B7B7;
-  padding: 2px;
-}
+    .currententry[dir=rtl] {
+    text-align:right !important;
+    }
 
+    div.currententry {
+    }
 
-/*Same for books!*/
-#book div.currententry, #book td.currententry {
-  border: 1px solid #B7B7B7;
-  padding: 2px;
-}
-#book .entryname + .entry {
-  margin-top:2px;
-  padding-top:1px;
-}
-/* To remove the gap between the entrynam and the entry's content*/
-#book .entry > *, #book .currententry > * {
-margin-top:0px;
-padding-top:0px;
-}
+    span.currententry {
+    background-color: #EDEFFF !important;
+    }
 
-.entry[dir=rtl] .entryname, .currententry[dir=rtl] .entryname {
-padding: 0 0 0 2px;
-/*font-size: 80%;*/
-vertical-align: super;
-}
-.entryname a, #printer .entryname  {
-}
+    /* Space between the columns of modules displayed side by side */
+    td.entry + td.entry {
+    margin-left: 5px;
+    }
 
-#printer .entry  .entry, #printer .entry .sectiontitle , #printer .entry .booktitle {
-padding-top: 0.05em;
-margin-left: 10px;
-}
+    /* Several additional settings for display of modules*/
+    #bible div.currententry, #bible td.currententry {
+    border: 1px solid #B7B7B7;
+    padding: 2px;
+    }
 
-.alternative {}
-.alternative:before { content:"'"attr(alternative); }
-.alternative:after{ content:"'";}
+    #printer .entry  .entry, #printer .entry .sectiontitle , #printer .entry .booktitle {
+    padding-top: 0.05em;
+    margin-left: 10px;
+    }
 
-.abbreviation {
+    .introduction {
+    font-size:80%;
+    text-align:justify;
+    }
 
-}
+    .sup {
+    vertical-align: super;
+    }
+    .sub {
+    vertical-align: sub;
+    }
+    .right {
+    text-align: right;
+    }
+    .center {
+    text-align: center;
+    }
 
-.introduction {
-  font-size:80%;
-  text-align:justify;
-}
+    .bold {
+    font-weight:bold;
+    }
+    .italic {
+    font-style:italic;
+    }
+    .line-through {
+    text-decoration: line-through;
+    }
+    .small-caps {
+    font-variant: small-caps;
+    }
+    .underline {
+    text-decoration: underline;
+    }
 
-.quotation {
-}
-.poetry {
-}
-.sup {
-  vertical-align: super;
-}
-.sub {
-  vertical-align: sub;
-}
-.right {
-  text-align: right;
-}
-.center {
-  text-align: center;
-}
+    .name > .divine {
+    font-variant: small-caps;
+    }
 
-.bold {
-  font-weight:bold;
-}
-.illuminated {
-}
-.italic {
-  font-style:italic;
-}
-.line-through {
-  text-decoration: line-through;
-}
-.normal {
-}
-.small-caps {
-  font-variant: small-caps;
-}
-.underline {
-  text-decoration: underline;
-}
+    #infodisplay {
+    margin:0;
+    padding:0;
+    }
 
-.inscription {
-}
-.mentioned {
-}
-.name > .geographic {
-}
-.name > .holiday {
-}
-.name > .nonhuman {
-}
-.name > .person {
-}
-.name > .ritual {
-}
-.name > .divine {
-  font-variant: small-caps;
-}
+    #infodisplay .footnoteinfo h3, #infodisplay .strongsinfo h3, #infodisplay .morphinfo h3, #infodisplay .translationinfo h3, #infodisplay .crossrefinfo h3, #infodisplay .moduleinfo h3 {
+    padding: 4px 4px 2px 0;
+    color: darkGray;
+    text-align: right;
+    border-bottom: 1px solid gray;
+    }
 
-#infodisplay {
-	margin:0;
-	padding:0;
-}
+    #infodisplay > p, #infodisplay * > p, #infodisplay > .para, #infodisplay * > .para { /* We only format the first p child in a special way */
+    text-align:justify !important;
+    color:black;
+    margin:0px;
+    padding:0px;
+    }
 
-#infodisplay .footnoteinfo h3, #infodisplay .strongsinfo h3, #infodisplay .morphinfo h3, #infodisplay .translationinfo h3, #infodisplay .crossrefinfo h3, #infodisplay .moduleinfo h3 {
-	padding: 4px 4px 2px 0;
-	color: darkGray;
-	/*font-weight: bold;*/
-	text-align: right;
-	border-bottom: 1px solid gray;
-}
+    /*Required for cross references*/
+    #infodisplay .entry {
+    padding:2px;
+    text-align:justify !important;
+    margin-bottom:10px;
+    margin-left:15px;
+    }
+    #infodisplay .entry[dir=rtl] {
+    text-align: right !important;
+    }
+    #infodisplay .entry .entry { /*No smaller font size for nested entries*/
+    margin:0px;
+    }
+    #infodisplay .entry .entry[dir=rtl] { /*No smaller font size for nested entries*/
+    text-align: right !important;
+    }
 
-#infodisplay > p, #infodisplay * > p,
-#infodisplay > .para, #infodisplay * > .para
-{ /* We only format the first p child in a special way */
-	text-align:justify !important;
-	color:black;
-	margin:0px;
-	padding:0px;
-}
+    #infodisplay .rangeheading {
+    color:black;
+    font-weight:bold;
+    margin-left:-10px;
+    }
 
-/*Required for cross references*/
-#infodisplay .entry {
-	padding:2px;
-	text-align:justify !important;
-	margin-bottom:10px;
-	margin-left:15px;
-}
-#infodisplay .entry[dir=rtl] {
-	text-align: right !important;
-}
-#infodisplay .entry .entry { /*No smaller font size for nested entries*/
-	margin:0px;
-}
-#infodisplay .entry .entry[dir=rtl] { /*No smaller font size for nested entries*/
-	text-align: right !important;
-}
-#infodisplay .entryname {
-	padding:2px;
-	margin:0px;
-	text-align:left !important;
-	font-weight:bold;
-}
-
-#infodisplay .rangeheading {
-	color:black;
-	font-weight:bold;
-	margin-left:-10px;
-}
-
-#LANG_CSS#
+    #LANG_CSS#
 
   </style>
 </head>

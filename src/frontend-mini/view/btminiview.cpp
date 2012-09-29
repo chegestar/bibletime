@@ -72,7 +72,7 @@ void __leds(bool on, int id)
 
 /**
 	Basic item to hold data and render text for view.
-	There is no ploymorphysm, beacause for one object we may change
+	There is no ploymorphysm, because for one object we may change
 	implementation after object was created, so we use pointers to implementations.
 */
 class BtMiniViewItem
@@ -90,6 +90,7 @@ private:
 			_data.append(stack.last().second);
 
 			bool wordBreaks = false;
+			bool newLine = false;
 
 			// break on parts
 			for(int c = 0; c < text.size();)
@@ -104,20 +105,16 @@ private:
 					unsigned int f = text.indexOf('>', c);
 					QString tag = text.mid(c + 1, qMin(f, (unsigned int)text.indexOf(' ', c)) - c - 1);
 
-					if(tag[tag.size() - 1] == '/')
-						tag.resize(tag.size() - 1);
-					else if(_data.last().text.size() > 0) // if have text, start new part
+					 // if have text, start new part
+					if(_data.last().text.size() > 0)
 						_data.append(stack.last().second);
-
-					Q_ASSERT(tag.indexOf('>') == -1);
-					Q_ASSERT(tag.indexOf(' ') == -1);
-					Q_ASSERT(tag.indexOf('/') == -1);
-					Q_ASSERT((int)f < text.size());
-
 
 					if(!end)
 					{
-						stack.append(QPair<QString,Data>(tag, stack.last().second));
+						if(tag[tag.size() - 1] == '/')
+							tag.resize(tag.size() - 1);
+						else
+							stack.append(QPair<QString,Data>(tag, stack.last().second));
 
 						// modify data by tag names
 						if(tag == "center")
@@ -153,15 +150,14 @@ private:
 									qDebug() << "Unable to resolve font size" << v;
 							}
 						}
-						else if(tag == "br")
-							stack.last().second.newLine = true;
-						else if(tag == "p")
-							stack.last().second.newLine = true;
-						else 
-							if(tag == "word-breaks")
+						else if(tag == "word-breaks")
 								wordBreaks = true;
 						
+						// set parameters from stack to empty part
 						_data[_data.size() - 1] = stack.last().second;
+
+						if(tag == "br" || tag == "p")
+							newLine = true;
 					}
 					else
 					{
@@ -178,6 +174,9 @@ private:
 					continue;
 				}
 
+				if(newLine && _data.last().text.size() == 0)
+					_data.last().newLine = true, newLine = false;
+					
 				_data.last().text.append(text[c]);
 
 				if(wordBreaks && text[c] == ' ')
@@ -483,6 +482,30 @@ public:
                             QString("%1px").arg(widget->font().pixelSize()));
                     }
                 }
+
+				// fix percent font-size
+				for(int i = cssStart; i < cssEnd; )
+				{
+					int fontSize = ct.indexOf("font-size:", i);
+					
+					if(fontSize == -1)
+						break;
+
+					for(int ii = fontSize + 10; ; ++ii)
+					{
+						if(ct[ii] == '\n')
+							break;
+						else if(ct[ii] == '%')
+						{
+							int fs = fontSize + 10;
+							int v = ct.mid(fs, ii - fs).toInt();
+							ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
+						}
+					}
+
+					i = fontSize + 10;
+
+				}
             }
         }
 
@@ -612,7 +635,8 @@ public:
         }
 
 		if(_ti)
-			_ti->paint(painter, p, clipping);
+			_ti->paint(painter, p, clipping.translated(point.x() - p.x(), 0).intersected(
+				QRect(0, 0, _width, _height)));
 
 		if(_st)
 		{
@@ -719,6 +743,8 @@ public:
 		}
 
         _items.clear();
+
+		_viualCenter = 0.0;
     }
 
     /** Work with model. */
@@ -1017,6 +1043,11 @@ public:
     QPair<int, int>         _cachedTopItem;
     QPair<int, int>         _cachedBottomItem;
     QPair<int, int>         _cachedLastItem;
+	
+	/** If user just opened view or scrolled to an index, necessary to determine when resize
+		thread computed items from center or top. */
+	float                   _viualCenter;
+
 
 private:
     /** Contents rectangle, top left point used by parent to hold its 
@@ -1062,7 +1093,6 @@ public:
 		_cachedSurface    = 0;
 
 		_sleep            = false;
-		_justOpened       = true;
     }
 
     ~BtMiniViewPrivate()
@@ -1076,26 +1106,7 @@ public:
 
 		foreach(BtMiniViewThread *t, _threads)
 		{
-			t->_stop = true;
-
-			// wait before thread stops execution
-			QMutex mutex;
-			mutex.lock();
-
-			QWaitCondition waitCondition;
-
-			for(int i = 0; i < 50 && t->isRunning(); ++i)
-				waitCondition.wait(&mutex, 20);
-
-			mutex.unlock();
-
-			// thread won't stop
-			if(t->isRunning())
-			{
-				qDebug() << "Termination of thread.";
-				t->terminate();
-			}
-
+			t->stop();
 			delete t;
 		}
     }
@@ -1114,7 +1125,7 @@ public:
     void clear()
 	{
 		_mutex.lock();
-		_toCalculate.clear();
+		_modelWork.clear();
 		_mutex.unlock();
 
         foreach(BtMiniSubView* v, _subViews)
@@ -1222,7 +1233,6 @@ public:
 
 			_needScroll = true;
 			_scrollHint = hint;
-			_justOpened = true;
         }
     }
 
@@ -1440,7 +1450,7 @@ public:
 		if(o.useThread)
 		{
 			QMutexLocker locker(&_mutex);
-			_toCalculate.append(index);
+			_modelWork.append(index);
 		}
 
         // newline
@@ -1549,9 +1559,9 @@ public:
 
 			// remove from threaded processing
 			_mutex.lock();
-			int ii = _toCalculate.indexOf(v->modelIndex(v->_items[start]->_row));
+			int ii = _modelWork.indexOf(v->modelIndex(v->_items[start]->_row));
 			if(ii >= 0)
-				_toCalculate.removeAt(ii);
+				_modelWork.removeAt(ii);
 			_mutex.unlock();
 
             delete v->_items[start];
@@ -1713,50 +1723,43 @@ public:
         }
 
 		// update threading
-		bool threadDone = false;
+		bool workDone = false;
+		bool simulate = true;
 
-		// priority items
-		if(o.useThread)
+		// start threads
+		if(o.useThread && !simulate)
 		{
 			if(_threads.size() == 0)
-				_threads.append(new BtMiniViewThread(&_toCalculate, &_mutex));
+				_threads.append(new BtMiniViewThread(this));
 
+			for(int i = 0; i < _threads.size(); ++i)
+				if(!_threads[i]->isRunning())
+					_threads[i]->start(QThread::LowPriority);
+		}
+
+		// calculate priority
+		if(_modelWork.size() > 0)
+		{
 			_mutex.lock();
-			QVector<int> distance(_toCalculate.size(), INT_MAX);
+			QVector<int> distance(_modelWork.size(), INT_MAX);
 
-			//for(int i = 0; i < _toCalculate.size(); ++i)
-			//{
-			//	qDebug() << _toCalculate[i].data(BtMini::ModuleRole).toString() << _toCalculate[i].data(BtMini::PlaceRole).toString();
-			//}
-
-			for(int i = 0; i < _toCalculate.size(); ++i)
+			for(int i = 0; i < _modelWork.size(); ++i)
 			{
 				// calculate rating
-				if(v->modelParentIndex() == _toCalculate[i].parent())
+				if(v->modelParentIndex() == _modelWork[i].parent())
 				{
-					int ii = v->indexItem(_toCalculate[i]);
-					
+					int ii = v->indexItem(_modelWork[i]);
 					if(ii >= 0)
 					{
 						int y = v->itemXy(ii).y() + v->contentsRect().top();
 							
-						if(!_justOpened)
-							distance[i] = qAbs(y + (v->_items[ii]->height() / 2) - (v->baseSize().height() / 2));
+						if(v->_viualCenter != 0.0)
+							distance[i] = qAbs(y + (v->_items[ii]->height() / 2) - (v->baseSize().height() * v->_viualCenter));
 						else if(y <= 0 && y + v->_items[ii]->height() > 0)
 							distance[i] = qAbs(y);
 						else
 							distance[i] = y > 0 ? y : qAbs(y) + v->baseSize().height();
 					}
-					//else
-					//{
-					//	// probably item was deleted
-					//	qDebug() << "Index removed from thread compute" << _toCalculate[i].data(BtMini::ModuleRole).toString() <<
-					//		_toCalculate[i].data(BtMini::PlaceRole).toString();
-					//	distance.remove(i);
-					//	_toCalculate.erase(_toCalculate.begin() + i);
-					//	--i;
-					//	continue;
-					//}
 				}
 
 				// sort array
@@ -1765,65 +1768,52 @@ public:
 					if(distance[ii] > distance[ii + 1])
 					{
 						qSwap(distance[ii], distance[ii + 1]);
-						qSwap(_toCalculate[ii], _toCalculate[ii + 1]);
+						qSwap(_modelWork[ii], _modelWork[ii + 1]);
 					}
 				}
 			}
+
+			if(distance[0] == INT_MAX)
+				simulate = false;
 			
 			_mutex.unlock();
 		}
 
-		// paste thread calculated data
-		for(int ti = 0; ti < _threads.size(); ++ti)
+		// paste calculated data
+		while(_modelDone.size() > 0)
 		{
-			BtMiniViewThread *t = _threads[ti];
+			QPair<QModelIndex, QString> done = _modelDone.takeAt(0);
+			QModelIndex parent = done.first.parent();
 
-			if(o.useThread && !t->isRunning())
-				t->start(QThread::LowPriority);
-
-			_mutex.lock();
-			
-			// retrieve done data
-			if(t->_done.size() == 0)
+			for(int v = 0; v < _subViews.size(); ++v)
 			{
-				_mutex.unlock();
-				continue;
-			}
-
-			QMap<QModelIndex, QString> done;
-			qSwap(done, t->_done);
-
-			_mutex.unlock();
-
-			// add item
-			for(int p = 0; p < done.size(); ++p)
-			{
-				QModelIndex index = done.keys()[p];
-				QModelIndex parent = index.parent();
-
-				for(int v = 0; v < _subViews.size(); ++v)
+				if(parent == _subViews[v]->modelParentIndex())
 				{
-					if(parent == _subViews[v]->modelParentIndex())
+					int i = _subViews[v]->indexItem(done.first);
+					if(i != -1)
 					{
-						int i = _subViews[v]->indexItem(index);
-						if(i != -1)
-						{
-							QRect r(_subViews[v]->itemXy(i), _subViews[v]->_items[i]->size());
+						QRect r(_subViews[v]->itemXy(i), _subViews[v]->_items[i]->size());
 
-							// TODO obtain subView options
+						// TODO obtain subView options
 
-							_subViews[v]->_items[i]->setText(done.values()[p], q);
-							areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(), 
-								_justOpened ? 0.0 : 0.45);
+						_subViews[v]->_items[i]->setText(done.second, q);
+						areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(), 
+							_subViews[v]->_viualCenter);
 
-							threadDone = true;
-						}
+						workDone = true;
 					}
 				}
 			}
 		}
 
-        if(o.perCycle > 0 && !threadDone)
+		if(!workDone && simulate && _modelWork.size() > 0)
+		{
+			_modelDone.append(QPair<QModelIndex, QString>(_modelWork[0], _modelWork[0].data().toString()));
+			_modelWork.erase(_modelWork.begin());
+			workDone = true;
+		}
+
+        if(o.perCycle > 0 && !workDone)
             layoutItems(subView, o.perCycle);
     }
 
@@ -1831,11 +1821,10 @@ public:
 	class BtMiniViewThread : public QThread
 	{
 	public:
-		BtMiniViewThread(QList<QModelIndex> *data, QMutex *mutex)
+		BtMiniViewThread(BtMiniViewPrivate *view)
 		{
 			_stop  = false;
-			_todo  = data;
-			_mutex = mutex;
+			_view = view;
 		}
 
 		~BtMiniViewThread()
@@ -1843,43 +1832,60 @@ public:
 			Q_ASSERT(!isRunning());
 		}
 
+		void stop()
+		{
+			_stop = true;
+
+			// wait before thread stops execution
+			QMutex mutex;
+			mutex.lock();
+
+			QWaitCondition waitCondition;
+
+			for(int i = 0; i < 100 && isRunning(); ++i)
+				waitCondition.wait(&mutex, 20);
+
+			mutex.unlock();
+
+			// thread won't stop
+			if(isRunning())
+			{
+				qDebug() << "Termination of thread.";
+				terminate();
+			}
+		}
+
 		void run()
 		{
 			qDebug() << "thread" << this << "started";
 
-			QModelIndex index;
-			_stop  = false;
+			_stop = false;
 
 			while(!_stop)
 			{
-				_mutex->lock();
+				_view->_mutex.lock();
 				
-				if(_todo->size() == 0)
+				if(_view->_modelWork.size() == 0)
 				{
-					_mutex->unlock();
+					_view->_mutex.unlock();
 					msleep(200);
 					continue;
 				}
 
-				index = _todo->takeAt(0);
-				_mutex->unlock();
+				QModelIndex index = _view->_modelWork.takeAt(0);
+				_view->_mutex.unlock();
 
 				//msleep(2000);
 				QString text(index.data().toString());
 
-				_mutex->lock();
-				_done.insert(index, text);
-				_mutex->unlock();
+				_view->_modelDone.append(QPair<QModelIndex, QString>(index, text));
 			}
 
 			qDebug() << "thread" << this << "stoped";
 		}
 
 		bool                        _stop;
-
-		QList<QModelIndex>         *_todo;
-		QMap<QModelIndex, QString>  _done;
-		QMutex                     *_mutex;
+		BtMiniViewPrivate          *_view;
 	};
 
 public:
@@ -1918,15 +1924,12 @@ public:
     int                           _limitHeightBottom;
     
     /** Thread for background calculations launched. Should be set true in 
-        main thread and set false in created thread. */
-	QList<QModelIndex>            _toCalculate;
-	QVector<BtMiniViewThread*>    _threads;
-	QMutex                        _mutex;
-	bool                          _sleep;
-	
-	/** If user just opened view or scrolled to an index, necessary to determine when resize
-		thread computed items from center or top. */
-	bool                          _justOpened;
+	main thread and set false in created thread. */
+	QList<QModelIndex>                 _modelWork;
+	QList<QPair<QModelIndex, QString>> _modelDone;
+	QVector<BtMiniViewThread*>         _threads;
+	QMutex                             _mutex;
+	bool                               _sleep;
     
     /** Item and subview layout delegate. */
     BtMiniLayoutDelegate         *_ld;
@@ -2146,7 +2149,7 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
         d->_mouseLeaveZone = true;
         d->_mouseTapping   = 0;
 		
-		d->_justOpened     = false;
+		d->currentSubView()->_viualCenter = 0.45f;
     }
 
     // Kinetic scrolling
@@ -2287,8 +2290,6 @@ void BtMiniView::scroll(float horizontal, float vertical)
 {
     Q_D(BtMiniView);
 
-    //qDebug() << "scroll" << horizontal << vertical;
-
     const int oy = d->currentSubView()->contentsRect().top();
     const int ox = d->_vx;
 
@@ -2305,8 +2306,6 @@ void BtMiniView::scroll(float horizontal, float vertical)
 void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 {
     Q_D(BtMiniView);
-
-    //qDebug() << "ScrollTo" << index;
     
     d->activateIndex(index, false, hint);
 
@@ -2344,7 +2343,6 @@ QModelIndex BtMiniView::indexAt(const QPoint &point) const
 
 QModelIndex BtMiniView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
 {
-    //qDebug("BtMiniView::moveCursor");
     return QModelIndex();
 }
 
@@ -2369,8 +2367,26 @@ void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 
     foreach(BtMiniSubView *v, d->_subViews)
     {
+		// module changed
         if(v->modelParentIndex() == topLeft)
         {
+			// stop threads and clear affected indexes
+			//foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
+			//	t->stop();
+
+			//foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
+			//	foreach(const QModelIndex &i, t->_done.keys())
+			//		if(i.parent() == v->modelParentIndex())
+			//		{
+			//			qDebug() << "Erased on module change" << i.data(BtMini::ModuleRole) << i.data(BtMini::PlaceRole);
+			//			t->_done.take(i);
+			//		}
+
+			//for(int i = 0; i < d->_toCalculate.size(); ++i)
+			//	if(d->_toCalculate[i].parent() == v->modelParentIndex())
+			//		d->_toCalculate.erase(d->_toCalculate.begin() + i--);
+
+			// reset subview
             v->clear();
 
 			QModelIndex i = topLeft.child(qMin(model()->rowCount(topLeft) - 1, 
@@ -2586,8 +2602,6 @@ void BtMiniView::activateSubView(int id)
 
     if(d->_currentSubView != id)
     {
-        //qDebug() << "activateSubView" << id;
-
         // remove unnecessary items of previous view to release memory
         BtMiniSubView *v = d->currentSubView();
         if(layoutDelegate()->levelOption(d->_currentSubView).perCycle > 0)
@@ -2595,8 +2609,7 @@ void BtMiniView::activateSubView(int id)
             while(v->_items.size() > 0 && v->contentsRect().bottom() -
                 v->_items[v->_items.size() - 1]->height() > height())
                 d->removeItem(d->_currentSubView, v->_items.size() - 1);
-            while(v->_items.size() > 0 && v->contentsRect().top() +
-                v->_items[0]->height() < 0)
+            while(v->_items.size() > 0 && v->contentsRect().top() + v->_items[0]->height() < 0)
                 d->removeItem(d->_currentSubView, 0);
         }
 
@@ -2605,12 +2618,10 @@ void BtMiniView::activateSubView(int id)
 			d->_cachedRect = QRect();
 
         d->_currentSubView = id;
-        d->_mousePower = QPointF();
+        d->_mousePower     = QPointF();
 
         d->updateViews();
-		
 		scheduleDelayedItemsLayout();
-
         emit currentChanged(currentIndex());
     }
 }
@@ -2712,14 +2723,9 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 {
     Q_D(BtMiniView);
 
-	//qDebug() << "paintEvent" << rect() << viewport()->rect();
-
-	if(d->_currentSubView >= d->_subViews.size())
-        return;
-
-    // REMAKE update according vertical scrollbar
-    if(d->_vt != verticalScrollBar()->value())
-    {
+	// update according vertical scrollbar
+	if(d->_vt != verticalScrollBar()->value())
+	{
 		if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
 		{
 			scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
@@ -2730,7 +2736,8 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 			d->_vt = verticalScrollBar()->value();
 			d->_mousePower.ry() = 0.0f;
 		}
-    }
+	}
+
 
     QPainter painter(viewport());
 
@@ -3123,6 +3130,11 @@ QString BtMiniView::currentContents() const
                     // erase css style sheet in text
                     dt = dt.left(dt.indexOf("<head>", Qt::CaseInsensitive)) +
                         dt.mid(dt.indexOf("</head>", Qt::CaseInsensitive) + 7);
+
+					// remove highlighting
+					int hsp = dt.indexOf("<span style=\"background-color:#FFFF66;\">");
+					if(hsp >= 0)
+						dt = dt.remove(dt.indexOf("</span>", hsp), 7).remove(hsp, 40);
                     
                     int dc = 0;
                     int dp = 0;

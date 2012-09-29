@@ -39,9 +39,6 @@ struct BtMiniLayoutOption
     bool    scrollPerItem;
 
     bool    useThread;
-    int     previewRole;
-    
-    bool    allowInputBox;
     int     searchRole;
 
 	bool    allowStaticText;

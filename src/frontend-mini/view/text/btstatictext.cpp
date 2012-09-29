@@ -455,10 +455,12 @@ QFont BtStaticText::defaultFont()
 */
 int BtStaticText::hitTest(QPoint coordinates)
 {
-	QPointF p(coordinates + data->position);
+	QPointF p(coordinates + data->position - QPoint(0, data->font.pixelSize() / 4));
+
 	float d = 0.0;
 	int c = -1;
 	int cc = 0;
+
 	for (int item = 0; item < data->itemCount; ++item)
 	{
 		QStaticTextItem *textItem = data->items + item;

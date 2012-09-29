@@ -144,7 +144,22 @@ public:
         return QCommonStyle::pixelMetric(metric, option, widget);
     }
 
-    void polish(QWidget *widget)
+	QPalette standardPalette() const
+	{
+		static QPalette defaultPalette(Qt::white);
+
+	    defaultPalette.setColor(QPalette::Window, Qt::white);
+		defaultPalette.setColor(QPalette::Button, Qt::white);
+	    defaultPalette.setColor(QPalette::WindowText, QColor("#000000"));
+	    defaultPalette.setColor(QPalette::ButtonText, QColor("#000000"));
+	    defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+	    defaultPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
+
+	    return defaultPalette;
+	}
+
+
+	void polish(QWidget *widget)
     {
         static bool initialized = false;
 
@@ -164,32 +179,26 @@ public:
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 
-        if(QString(widget->metaObject()->className()) == "BtMiniMainWidget")
-        {
-            QPalette defaultPalette = QCommonStyle::standardPalette();
-
-            defaultPalette.setColor(QPalette::Window, Qt::white);
-            defaultPalette.setColor(QPalette::Button, Qt::white);
-            defaultPalette.setColor(QPalette::WindowText, QColor("#333333"));
-            defaultPalette.setColor(QPalette::ButtonText, QColor("#333333"));
-            defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-            defaultPalette.setColor(QPalette::HighlightedText, QColor("#333333"));
-
-            widget->setPalette(defaultPalette);
-        }
+        if(QString(widget->metaObject()->className()) == "QWidget")
+		{
+			widget->setAutoFillBackground(true);
+			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
+				w->setPalette(standardPalette());
+		}
 
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
-        {
-            QPalette p = widget->palette();
+		{
+			widget->setAutoFillBackground(true);
 
+            QPalette p = widget->palette();
             p.setColor(QPalette::Window, QColor(102, 102, 102));
             p.setColor(QPalette::Button, QColor(102, 102, 102));
             p.setColor(QPalette::WindowText, Qt::white);
             p.setColor(QPalette::ButtonText, Qt::white);
 
-            foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
-                w->setPalette(p);
+			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
+				w->setPalette(p);
         }
 
 #ifdef Q_WS_WINCE
