@@ -47,6 +47,20 @@ public:
         case PE_PanelButtonCommand:
         case PE_PanelMenu:
             return;
+		case PE_CustomBase + 1:
+			{
+				QRect r(opt->rect.adjusted(0, 0, 0, opt->fontMetrics.height() - opt->rect.height()));
+
+				QLinearGradient g(r.topLeft(), r.bottomLeft());
+
+				g.setColorAt(0.0, QColor(0, 0, 0, 100));
+				g.setColorAt(1.0, QColor(0, 0, 0, 0));
+
+				p->setPen(Qt::NoPen);
+				p->setBrush(g);
+				p->drawRect(r);
+			}
+			return;
         }
         QCommonStyle::drawPrimitive(element, opt, p, widget);
     }
@@ -85,7 +99,6 @@ public:
                 if(const QStyleOptionSlider *scrollbar = qstyleoption_cast<const QStyleOptionSlider *>(option))
                 {
                     p->setPen(Qt::NoPen);
-                    //p->setBrush(QColor(0, 138, 255, 128));
                     p->setBrush(QColor(127, 196, 255));
                     p->drawRect(scrollbar->rect);
 
@@ -101,10 +114,14 @@ public:
 
                             drawControl(CE_ScrollBarSlider, &to, p, widget);
                         }
-                    }
+					}
+
+					QCommonStyle::drawComplexControl(cc, option, p, widget);
+
+					//drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), option, p);
                 }
             }
-            break;
+            return;
         }
 
         QCommonStyle::drawComplexControl(cc, option, p, widget);

@@ -121,8 +121,6 @@ public:
 		/** Set list contents to specified text. */
 		void setContents(QString &contents)
 		{
-			Q_ASSERT(_name == "[Contents]");
-
 			_hasContents = true;
 			_contents = contents;
 
@@ -136,9 +134,8 @@ public:
 			_hasScope = list.Count() > 0;
 			_scopeMap.clear();
 
-			if(_hasScope)
-				for(int i = 0; i < list.Count(); ++i)
-					_scopeMap.append(list.GetElement(i)->getIndex());
+			for(int i = 0; i < list.Count(); ++i)
+				_scopeMap.append(list.GetElement(i)->getIndex());
 		}
 
 		QString             _name;
@@ -193,14 +190,18 @@ public:
     const List * indexList(const QModelIndex &index) const
     {
         if(indexDepth(index) == 1)
-        {
-            Q_ASSERT(index.internalId() >= 0 && index.internalId() < _lists.size());
             return &_lists[index.internalId()];
-        }
         else
         {
-            Q_CHECK_PTR(reinterpret_cast<const List*>(index.internalId()));
-            return reinterpret_cast<const List*>(index.internalId());
+			const List *l = reinterpret_cast<const List*>(index.internalId());
+#ifdef QT_DEBUG
+			for(int i = 0; i < _lists.size(); ++i)
+				if(&_lists[i] == l)
+					break;
+				else if(i == _lists.size() - 1)
+					Q_ASSERT(false);
+#endif
+            return l;
         }
     }
 
@@ -215,6 +216,7 @@ public:
             if(&_lists[i] == l)
                 return i;
         
+		qDebug() << l->_module->name();
         Q_ASSERT(false);
         return -1;
     }
@@ -222,57 +224,22 @@ public:
     /** */
     void insertModule(int i, QString module)
     {
-        _lists.insert(i, List(module));
+		_lists.insert(i, List());
 
-		QVector<BtMiniLayoutOption> os;
-
-		for(int ii = 0; ii < _ld->levelOptionsCount(); ++ii)
-			os.append(_ld->levelOption(ii));
-
-        BtMiniLayoutOption o(_ld->levelOption(i));
-
-        _isSearch        = false;
-
-		if(module == "[Search]")
+		// insert new option
+		if(_lists.size() > _ld->levelOptionsCount())
 		{
-			o.scrollBarPolicy = Qt::ScrollBarAsNeeded;
-			o.limitItems      = true;
-			o.perCycle        = 1;
-			o.scrollPerItem   = true;
-			o.allowStaticText = false;
+			QVector<BtMiniLayoutOption> os;
+			for(int ii = 0; ii < _ld->levelOptionsCount(); ++ii)
+				os.append(_ld->levelOption(ii));
 
-			_isSearch        = true;
-        }
-        else if(module == "[Contents]")
-        {
-            o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
-            o.limitItems      = false;
-            o.perCycle        = 0;
-        }
-        else if(module == "[Commentary]")
-        {
-            o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
-        }
-		else
-		{
-			o.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
-			o.limitItems      = true;
+			os.insert(i, _ld->levelOption(i));
 
-			if(CBTConfig::get(CBTConfig::threadedTextRetrieving))
-			{
-				o.perCycle    = 3;
-				o.useThread   = true;
-			}
-			else
-			{
-				o.perCycle    = 1;
-			}
+			for(int ii = 0; ii < os.size(); ++ii)
+				_ld->setLevelOption(ii, os[ii]);
 		}
 
-		os.insert(i, o);
-
-		for(int ii = 0; ii < os.size(); ++ii)
-			_ld->setLevelOption(ii, os[ii]);
+		setupModule(i, module);
     }
 
     /** */
@@ -281,6 +248,58 @@ public:
         _ld->eraseLevelOption(i);
         _lists.erase(_lists.begin() + i);
     }
+
+	/** */
+	void setupModule(int i, QString module)
+	{
+		_lists[i] = List(module);
+
+		BtMiniLayoutOption o/*(_ld->levelOption(i))*/;
+
+		_isSearch = false;
+
+		if(module.isEmpty())
+		{
+			;
+		}
+		else if(module == "[Search]")
+		{
+			o.scrollBarPolicy = Qt::ScrollBarAsNeeded;
+			o.limitItems      = true;
+			o.perCycle        = 1;
+			o.scrollPerItem   = true;
+			o.allowStaticText = false;
+
+			_isSearch         = true;
+		}
+		else if(module == "[Contents]")
+		{
+			o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
+			o.limitItems      = false;
+			o.perCycle        = 0;
+		}
+		else if(module == "[Commentary]")
+		{
+			o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
+		}
+		else
+		{
+			o.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
+			o.limitItems      = true;
+			o.perCycle        = 1;
+
+			if(_lists[i]._module->type() == CSwordModuleInfo::Lexicon)
+				;
+			else if(CBTConfig::get(CBTConfig::threadedTextRetrieving))
+			{
+				o.perCycle    = 3;
+				o.useThread   = true;
+			}
+		}
+		
+		Q_ASSERT(i < _ld->levelOptionsCount());
+		_ld->setLevelOption(i, o);
+	}
 
 	/** */
 	static void searchProgress(char percent, void *data)
@@ -328,9 +347,11 @@ public:
 
         for(int i = 0; i < modules.size(); ++i)
         {
+			List *l = &m->d_func()->_lists[i];
+
             if(modules[i] == "[Contents]")
             {
-                m->d_func()->_lists[i].setContents(mc);
+                l->setContents(mc);
             }
             if(modules[i] == "[Commentary]")
             {
@@ -342,9 +363,11 @@ public:
 
                 if(!place.isEmpty())
                 {
-                    CSwordVerseKey key(m->d_func()->_lists[i]._module);
-                    m->d_func()->_lists[i].setScope(key.ParseVerseList(
-                        (const char*)place.toUtf8()));
+                    CSwordVerseKey key(l->_module);
+                    l->setScope(key.ParseVerseList((const char*)place.toUtf8()));
+
+					if(!l->_hasContents)
+						l->setContents(QString());
                 }
             }
         }
@@ -401,13 +424,13 @@ int BtMiniModuleTextModel::rowCount(const QModelIndex &parent) const
         return d->_lists.size();
     case 1:
 		{
-			if(d->_lists[parent.internalId()]._hasScope)
-				return d->_lists[parent.internalId()]._scopeMap.size();
+			const BtMiniModuleTextModelPrivate::List *l = &d->_lists[parent.internalId()];
 
-            if(d->_lists[parent.internalId()]._hasContents)
+			if(l->_hasScope)
+				return l->_scopeMap.size();
+            if(l->_hasContents)
                 return 1;
-
-			return d->_lists[parent.internalId()]._maxEntries;
+			return l->_maxEntries;
 		}
     }
 
@@ -570,13 +593,21 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
         }
         
     case BtMini::PlaceRole:
-		if(d->indexList(index)->_module->type() == CSwordModuleInfo::Lexicon)
 		{
-			CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(d->indexList(index)->_module);
-			return lm->entries()[index.row()];
+			const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
+
+			if(l->_module)
+			{
+				if(l->_module->type() == CSwordModuleInfo::Lexicon)
+				{
+					CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
+					return lm->entries()[index.row()];
+				}
+
+				if(d->indexDepth(index) == 2)
+					return d->indexToVerseKey(index).key();
+			}
 		}
-        if(d->indexDepth(index) == 2 && d->indexList(index)->_module)
-            return d->indexToVerseKey(index).key();
         break;
         
     case BtMini::ModuleRole:
@@ -940,8 +971,7 @@ bool BtMiniModuleTextModel::setData(const QModelIndex &index, const QVariant &va
         {
             QModelIndex i(d->indexDepth(index) == 2 ? index.parent() : index);
             const int l = d->indexListId(i);
-            d->eraseModule(l);
-            d->insertModule(l, value.toString());
+            d->setupModule(l, value.toString());
             emit dataChanged(i, i);
         }
         return true;

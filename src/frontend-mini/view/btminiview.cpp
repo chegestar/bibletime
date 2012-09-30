@@ -62,7 +62,6 @@ void __leds(bool on, int id)
 }
 #endif
 
-#define TURN_OFF_CACHED_ITEMS
 #define SHORT_PRESS_DELAY        13
 #define LONG_PRESS_DELAY         32
 #define SCROLL_SNAPPING_SPEED    0.3f
@@ -701,9 +700,7 @@ public:
         \param clipping is in local subview coordinates. */
     void paint(QPainter *painter, const QRect &rect, const QRect &clipping)
     {
-#ifdef TURN_OFF_CACHED_ITEMS
         QPair<int, int> _cachedTopItem;
-#endif
 
         for(int n = _cachedTopItem.first, x = 0, y = 0,
             y2 = _cachedTopItem.second; n < _items.size(); ++n)
@@ -733,18 +730,13 @@ public:
     {
         _cachedLastItem = _cachedTopItem = _cachedBottomItem = qMakePair(0, 0);
         _resizeCursor   = -1;
-
-        _rect.setHeight(0);
-        _rect.moveTop(0);
+		_rect           = QRect(_rect.left(), 0, _rect.width(), 0);
+		_viualCenter    = 0.0;
 
         foreach(BtMiniViewItem *i, _items)
-		{
             delete i;
-		}
 
         _items.clear();
-
-		_viualCenter = 0.0;
     }
 
     /** Work with model. */
@@ -756,8 +748,6 @@ public:
         {
             _parentIndex = index.parent();
             _rowCount = index.model()->rowCount(_parentIndex);
-            
-            //Q_ASSERT(_rowCount > 0);
         }
         else
         {
@@ -771,9 +761,6 @@ public:
     void updateModelIndex(const QModelIndex &index)
     {
         Q_ASSERT(_index.parent() == index.parent());
-
-		//qDebug() << "updateModelIndex" << index;
-
         _index = index;
     }
 
@@ -811,8 +798,17 @@ public:
             return;
 
         //qDebug() << "setContentsTop" << vertical;
-        
-        updateCachedItems();
+
+#ifdef QT_DEBUG
+		// check height
+		{
+			int height = 0;
+			for(int i = 0; i < _items.size(); ++i)
+				if(_items[i]->_newLine)
+					height += _items[i]->size().height();
+			Q_ASSERT(height == contentsRect().height());
+		}
+#endif
     }
     void setContentsLeft(int horizontal)
     {
@@ -845,111 +841,10 @@ public:
         return _size;
     }
 
-
-    /** */
-    void updateCachedItems()
-    {
-        if(_items.size() == 0)
-            return;
-
-#ifdef QT_DEBUG
-        {
-            int height = 0;
-            for(int i = 0; i < _items.size(); ++i)
-                if(_items[i]->_newLine)
-                    height += _items[i]->size().height();
-            Q_ASSERT(height == contentsRect().height());
-        }
-#endif
-
-#ifdef TURN_OFF_CACHED_ITEMS
-        return;
-#endif
-
-        // last new line item
-        _cachedLastItem.first = _items.size() - 1;
-        while(!_items[_cachedLastItem.first]->_newLine)
-            --_cachedLastItem.first;
-        _cachedLastItem.second = _rect.height() - _items[_cachedLastItem.first]->size().height();
-
-        // first new line item on screen
-        for(int i = _cachedTopItem.first - 1; i >= 0; --i)
-        {
-            if(_rect.top() + _cachedTopItem.second <= 0)
-                break;
-
-            if(_items[i]->_newLine)
-            {
-                qDebug() << "_cachedTopItem --" << _cachedTopItem;
-
-                _cachedTopItem.first = i;
-                _cachedTopItem.second -= _items[i]->size().height();
-
-                qDebug() << "\t" << _cachedTopItem;
-            }
-        }
-
-        for(int i = _cachedTopItem.first + 1; i <= _cachedLastItem.first; ++i)
-        {
-            if(_rect.top() + _cachedTopItem.second + _items[_cachedTopItem.first]->size().height() > 0)
-                break;
-
-            if(_items[i]->_newLine)
-            {
-                qDebug() << "_cachedTopItem ++" << _cachedTopItem;
-
-                _cachedTopItem.second += _items[_cachedTopItem.first]->size().height();
-                _cachedTopItem.first = i;
-
-                qDebug() << "\t" << _cachedTopItem;
-
-            }
-        }
-
-        // last new line item on screen
-        _cachedBottomItem = _cachedTopItem;
-
-        for(int i = _cachedTopItem.first + 1; i <= _cachedLastItem.first; ++i)
-        {
-            if(_rect.top() + _cachedBottomItem.second + 
-                _items[_cachedBottomItem.first]->size().height() > _size.height())
-                break;
-
-            if(_items[i]->_newLine)
-            {
-                _cachedBottomItem.second += _items[_cachedBottomItem.first]->size().height();
-                _cachedBottomItem.first = i;
-            }
-        }
-
-        Q_ASSERT(_cachedTopItem.first == 0 ? _cachedTopItem.second == 0 : true);
-        Q_ASSERT(_cachedTopItem.first == _cachedLastItem.first ? _cachedTopItem.second ==
-            _cachedLastItem.second : true);
-        Q_ASSERT(_cachedBottomItem.first == _cachedLastItem.first ? _cachedBottomItem.second ==
-            _cachedLastItem.second : true);
-    }
-
     /** */
     QPoint itemXy(const int pos) const
     {
         QPair<int, int> p;
-
-#ifndef TURN_OFF_CACHED_ITEMS
-        if(pos == 0)
-            return QPoint();
-        else if(pos == _cachedTopItem.first)
-            return QPoint(0, _cachedTopItem.second);
-        else if(pos == _cachedBottomItem.first)
-            return QPoint(0, _cachedBottomItem.second);
-        else if(pos < _cachedTopItem.first)
-            ;
-        else if(pos < _cachedBottomItem.first)
-            p = _cachedTopItem;
-        else if(pos >= _cachedLastItem.first)
-            p = _cachedLastItem;
-        else
-            p = _cachedBottomItem;
-#endif
 
         for(int i = p.first, x = 0, y = p.second, y2 = y; i < _items.size(); ++i)
         {
@@ -969,9 +864,7 @@ public:
     /** */
     int xyItem(const QPoint &point) const
     {
-#ifdef TURN_OFF_CACHED_ITEMS
         QPair<int,int> _cachedTopItem;
-#endif
 
         QRect r(0, 0, baseSize().width(), _cachedTopItem.second);
 
@@ -1533,19 +1426,6 @@ public:
         const int y = v->itemXy(start).y();
         const int h = v->_items[start]->size().height();
 
-#ifndef TURN_OFF_CACHED_ITEMS
-        // pre update cached items
-        if(v->_cachedTopItem.first >= end)
-        {
-            qDebug() << "change cached top" << v->_cachedTopItem << "minus" << end - start << h;
-
-            v->_cachedTopItem.first  -= end - start;
-            v->_cachedTopItem.second -= h;
-        }
-        else
-            Q_ASSERT(v->_cachedTopItem.first < start);
-#endif
-
 #ifdef QT_DEBUG
         for(int i = start; i < end; ++i)
             Q_ASSERT(i == start ? v->_items[i]->_newLine : !v->_items[i]->_newLine);
@@ -1724,7 +1604,7 @@ public:
 
 		// update threading
 		bool workDone = false;
-		bool simulate = true;
+		bool simulate = false;
 
 		// start threads
 		if(o.useThread && !simulate)
@@ -1738,9 +1618,9 @@ public:
 		}
 
 		// calculate priority
+		_mutex.lock();
 		if(_modelWork.size() > 0)
 		{
-			_mutex.lock();
 			QVector<int> distance(_modelWork.size(), INT_MAX);
 
 			for(int i = 0; i < _modelWork.size(); ++i)
@@ -1775,9 +1655,8 @@ public:
 
 			if(distance[0] == INT_MAX)
 				simulate = false;
-			
-			_mutex.unlock();
 		}
+		_mutex.unlock();
 
 		// paste calculated data
 		while(_modelDone.size() > 0)
@@ -1804,6 +1683,9 @@ public:
 					}
 				}
 			}
+
+			if(!workDone)
+				qDebug() << "Can't insert computed index:" << done.first.data(BtMini::ModuleRole) << done.first.data(BtMini::PlaceRole);
 		}
 
 		if(!workDone && simulate && _modelWork.size() > 0)
@@ -1816,6 +1698,47 @@ public:
         if(o.perCycle > 0 && !workDone)
             layoutItems(subView, o.perCycle);
     }
+
+	/** Cleanup for subviews. */
+	void clearSubView(int subview, bool remove = false, bool onlyUnusedItems = false)
+	{
+		if(onlyUnusedItems)
+		{
+			// remove unnecessary items of previous view to release memory
+			BtMiniSubView *v = currentSubView();
+			
+			if(_ld->levelOption(_currentSubView).perCycle > 0)
+			{
+				while(v->_items.size() > 0 && v->contentsRect().bottom() -
+					v->_items[v->_items.size() - 1]->height() > v->baseSize().height())
+					removeItem(_currentSubView, v->_items.size() - 1);
+				while(v->_items.size() > 0 && v->contentsRect().top() + v->_items[0]->height() < 0)
+					removeItem(_currentSubView, 0);
+			}
+
+			return;
+		}
+
+		_subViews[subview]->clear();
+
+		// stop threads and clear affected indexes
+		foreach(BtMiniViewThread *t, _threads)
+			t->stop();
+
+		for(int i = 0; i < _modelWork.size(); ++i)
+			if(_modelWork[i].parent() == _subViews[subview]->modelParentIndex())
+				_modelWork.erase(_modelWork.begin() + i--);
+
+		for(int i = 0; i < _modelDone.size(); ++i)
+			if(_modelDone[i].first.parent() == _subViews[subview]->modelParentIndex())
+				_modelDone.erase(_modelDone.begin() + i--);
+
+		if(remove)
+		{
+			delete _subViews[subview];
+			_subViews.erase(_subViews.begin() + subview);
+		}
+	}
 
 public:
 	class BtMiniViewThread : public QThread
@@ -1868,7 +1791,7 @@ public:
 				if(_view->_modelWork.size() == 0)
 				{
 					_view->_mutex.unlock();
-					msleep(200);
+					msleep(333);
 					continue;
 				}
 
@@ -2365,37 +2288,21 @@ void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 {
     Q_D(BtMiniView);
 
-    foreach(BtMiniSubView *v, d->_subViews)
+    for(int i = 0; i < d->_subViews.size(); ++i)
     {
+		BtMiniSubView *v = d->_subViews[i];
+
 		// module changed
         if(v->modelParentIndex() == topLeft)
         {
-			// stop threads and clear affected indexes
-			//foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
-			//	t->stop();
+			d->clearSubView(i);
 
-			//foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
-			//	foreach(const QModelIndex &i, t->_done.keys())
-			//		if(i.parent() == v->modelParentIndex())
-			//		{
-			//			qDebug() << "Erased on module change" << i.data(BtMini::ModuleRole) << i.data(BtMini::PlaceRole);
-			//			t->_done.take(i);
-			//		}
+			QModelIndex index = topLeft.child(qMin(model()->rowCount(topLeft) - 1, v->modelIndex().row()), 0);
 
-			//for(int i = 0; i < d->_toCalculate.size(); ++i)
-			//	if(d->_toCalculate[i].parent() == v->modelParentIndex())
-			//		d->_toCalculate.erase(d->_toCalculate.begin() + i--);
-
-			// reset subview
-            v->clear();
-
-			QModelIndex i = topLeft.child(qMin(model()->rowCount(topLeft) - 1, 
-				v->modelIndex().row()), 0);
-
-            v->setModelIndex(i);
+            v->setModelIndex(index);
 
 			if(d->currentSubView() == v)
-				emit currentChanged(i);
+				emit currentChanged(index);
 
 			scheduleDelayedItemsLayout();
 
@@ -2581,15 +2488,10 @@ void BtMiniView::makeSubView(int id, const QModelIndex &index)
 
     d->_subViews[id]->setModelIndex(index);
 
+	// clear all subviews after changed subview
     if(!d->_ld->plainMode())
-    {
-        // clear all subviews after changed subview
         while(d->_subViews.size() > id + 1)
-        {
-            delete d->_subViews[id + 1];
-            d->_subViews.erase(d->_subViews.begin() + id + 1);
-        }
-    }
+			d->clearSubView(id + 1, true);
 
 	scheduleDelayedItemsLayout();
 }
@@ -2602,16 +2504,7 @@ void BtMiniView::activateSubView(int id)
 
     if(d->_currentSubView != id)
     {
-        // remove unnecessary items of previous view to release memory
-        BtMiniSubView *v = d->currentSubView();
-        if(layoutDelegate()->levelOption(d->_currentSubView).perCycle > 0)
-        {
-            while(v->_items.size() > 0 && v->contentsRect().bottom() -
-                v->_items[v->_items.size() - 1]->height() > height())
-                d->removeItem(d->_currentSubView, v->_items.size() - 1);
-            while(v->_items.size() > 0 && v->contentsRect().top() + v->_items[0]->height() < 0)
-                d->removeItem(d->_currentSubView, 0);
-        }
+		d->clearSubView(d->_currentSubView, false, true);
 
 		// free render cache
 		if(d->_useRenderCaching)
@@ -2850,16 +2743,9 @@ void BtMiniView::paintEvent(QPaintEvent *e)
     // draw shadow
     if(d->_enableTopShadow)
     {
-		QRect r(viewport()->rect().adjusted(0, 0, 0, d->_sizeFactor - viewport()->rect().height()));
-            
-        QLinearGradient g(r.topLeft(), r.bottomLeft());
-        
-        g.setColorAt(0.0, QColor(0, 0, 0, 100));
-        g.setColorAt(1.0, QColor(0, 0, 0, 0));
-        
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(g);
-        painter.drawRect(r);
+		QStyleOption o;
+		o.initFrom(viewport());
+		style()->drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), &o, &painter);
     }
 
     // draw tapping
@@ -2972,13 +2858,11 @@ void BtMiniView::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int 
 
     if(!parent.isValid() && d->_ld->plainMode())
     {
-        delete d->_subViews[start];
-        d->_subViews.erase(d->_subViews.begin() + start);
+		d->clearSubView(start, true);
 
 		Q_ASSERT(start == d->_currentSubView);
 
-        if(d->_currentSubView > 0)
-		    d->_currentSubView--;
+		d->_currentSubView = qMax(0, d->_currentSubView - 1);
 
 		scheduleDelayedItemsLayout();
 
@@ -3132,8 +3016,7 @@ QString BtMiniView::currentContents() const
                         dt.mid(dt.indexOf("</head>", Qt::CaseInsensitive) + 7);
 
 					// remove highlighting
-					int hsp = dt.indexOf("<span style=\"background-color:#FFFF66;\">");
-					if(hsp >= 0)
+					for(int hsp; (hsp = dt.indexOf("<span style=\"background-color:#FFFF66;\">")) >= 0; )
 						dt = dt.remove(dt.indexOf("</span>", hsp), 7).remove(hsp, 40);
                     
                     int dc = 0;
@@ -3231,5 +3114,7 @@ void BtMiniView::setSleep(bool sleep)
 
 		foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
 			t->_stop = true;
+
+		d->clearSubView(d->_currentSubView, false, true);
 	}
 }

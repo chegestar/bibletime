@@ -38,6 +38,7 @@ kalemas@mail.ru :
 +	fixed boundle for desktop
 +	scrollbar always shown if more than 5 modules in module selection
 +	lexicon/dictionary support
++	localized strong: search keyword
 	improve BT modularity
 +		Install manager - information of repos/modules, manage modules
 		Bookmarks
@@ -51,8 +52,10 @@ kalemas@mail.ru :
 	crush when search RSTchs on здравству*
 	bug, sometimes on Matt n navigation second level opens as books again
 	bug, sometimes book stay unlocalized in text view in chapter area
-+	localized strong: search keyword
 	call style to draw view shadow
+	
+	-add comment on setScope, this fuction may fail
+	make commentary context parallel
 
 	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init

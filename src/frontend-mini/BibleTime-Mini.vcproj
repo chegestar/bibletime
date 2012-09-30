@@ -179,9 +179,9 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory="\Internal Storage\Program Files\BibleTime Mini"
+				RemoteDirectory="\Storage Card\Program Files\BibleTime Mini"
 				RegisterOutput="0"
-				AdditionalFiles="bibletimemini_ru.qm|$(InputDir)\translations|\Internal Storage\Program Files\BibleTime Mini\bibletime\locale|0;Basic.tmpl|$(InputDir)\..\..\$(ConfigurationName)\bibletime\display-templates|\Internal Storage\Program Files\BibleTime Mini\bibletime\display-templates|0"
+				AdditionalFiles="bibletimemini_ru.qm|$(InputDir)\translations|\Storage Card\Program Files\BibleTime Mini\bibletime\locale|0;Basic.tmpl|$(InputDir)\..\..\$(ConfigurationName)\bibletime\display-templates|\Storage Card\Program Files\BibleTime Mini\bibletime\display-templates|0"
 			/>
 			<DebuggerTool
 			/>
@@ -438,9 +438,9 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory="\Internal Storage\Program Files\BibleTime Mini"
+				RemoteDirectory="\Storage Card\Program Files\BibleTime Mini"
 				RegisterOutput="0"
-				AdditionalFiles="bibletimemini_ru.qm|$(InputDir)\translations|\Internal Storage\Program Files\BibleTime Mini\bibletime\locale|0;Basic.tmpl|$(InputDir)\..\..\$(ConfigurationName)\bibletime\display-templates|\Internal Storage\Program Files\BibleTime Mini\bibletime\display-templates|0"
+				AdditionalFiles="bibletimemini_ru.qm|$(InputDir)\translations|\Storage Card\Program Files\BibleTime Mini\bibletime\locale|0;Basic.tmpl|$(InputDir)\..\..\$(ConfigurationName)\bibletime\display-templates|\Storage Card\Program Files\BibleTime Mini\bibletime\display-templates|0"
 			/>
 			<DebuggerTool
 			/>

@@ -17,11 +17,9 @@ BtMiniLayoutOption::BtMiniLayoutOption()
 {
     perLine         = 1;
     scrollBarPolicy = Qt::ScrollBarAsNeeded;
-    allowInputBox   = false;
     perCycle        = 0;
     limitItems      = false;
     useThread       = false;
-    previewRole     = BtMini::PreviewRole;
 	scrollPerItem   = false;
 	searchRole      = BtMini::PlaceRole;
 	allowStaticText = true;

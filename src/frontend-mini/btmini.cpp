@@ -443,6 +443,8 @@ void BtMini::setActiveWidget(QWidget *widget)
 {
 	if(widget)
 	    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
+
+	findView(worksWidget())->setSleep(widget != worksWidget());
 }
 
 BtMiniView * BtMini::findView(QWidget *widget)
@@ -556,8 +558,6 @@ public:
 	{
 		switch(msg->message)
 		{
-		case WM_TIMER:
-			break;
 		case WM_PAINT:
 			mainLoop = true;
 			break;
@@ -572,6 +572,12 @@ public:
 						BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
 				}
 			}
+			break;
+		case WM_CLOSE:
+			qDebug("Close");
+			break;
+		case WM_HIBERNATE:
+			qDebug("Low memory");
 			break;
 		//default:
 		//	qDebug() << "msg:" << msg->message;
