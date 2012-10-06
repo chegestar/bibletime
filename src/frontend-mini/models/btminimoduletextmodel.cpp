@@ -128,7 +128,7 @@ public:
 			_firstEntry = 0;
 		}
 
-		/** For sword module lists set scope of verses. */
+		/** For sword module lists set scope of verses. Scope will not be set if \list is empty. */
 		void setScope(sword::ListKey &list)
 		{
 			_hasScope = list.Count() > 0;

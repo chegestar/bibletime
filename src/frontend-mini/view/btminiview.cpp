@@ -1801,7 +1801,9 @@ public:
 				//msleep(2000);
 				QString text(index.data().toString());
 
+				_view->_mutex.lock();
 				_view->_modelDone.append(QPair<QModelIndex, QString>(index, text));
+				_view->_mutex.unlock();
 			}
 
 			qDebug() << "thread" << this << "stoped";
@@ -2118,9 +2120,9 @@ void BtMiniView::timerEvent(QTimerEvent *e)
 		return;
 
     // update kinetic scrolling
-    if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
+    //if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
     {
-        d->_mousePower *= SCROLL_ATTENUATION;
+        //d->_mousePower *= SCROLL_ATTENUATION;
         scroll(d->_mousePower.x(), d->_mousePower.y());
     }
 
