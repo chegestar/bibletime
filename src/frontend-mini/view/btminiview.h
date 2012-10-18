@@ -30,6 +30,9 @@ public:
     BtMiniView(QWidget *parent = 0);
     virtual ~BtMiniView();
 
+	/** Reimplemented from QWidget */
+	QSize sizeHint() const;
+
     /** Reimplemented from QAbstractItemView. */
     const QModelIndex currentIndex() const;
     QModelIndex       indexAt(const QPoint &point) const;

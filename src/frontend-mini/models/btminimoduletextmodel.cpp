@@ -475,16 +475,39 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
     switch(role)
 	{
 	case BtMini::PreviewRole:
+		{
+			const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
+
+			// there was issue with VerseKey::freshtext simoultaneous call
+			static CSwordVerseKey vk(list->_module);
+			vk.setModule(list->_module);
+			vk.setIndex(index.row() + list->_firstEntry);
+			int v = vk.getVerse();
+			
+			if(v == 0)
+				return QString();
+
+			QString r("<font color='#aaaaaa'>");
+
+			if(v == 1)
+				r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
+				"<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
+
+			if(v > 0)
+				r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
+
+			return r + "</font>";
+		}
+
 	case Qt::DisplayRole:
         {
-            QString r;
-
-            switch(d->indexDepth(index))
-            {
-            case 1:
-                return d->_lists[index.internalId()]._module->name();
-            case 2:
-                {
+			switch(d->indexDepth(index))
+			{
+			case 1:
+				return d->_lists[index.internalId()]._module->name();
+			case 2:
+				{
+					QString r;
 					const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
 
 					if(l->_module && (l->_module->type() == CSwordModuleInfo::Bible ||
@@ -497,75 +520,68 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 							r += "<center><b><font size='+1'>" + key.book() + " " +
 								QString::number(key.getChapter()) + "</font></b></center>";
 
-						if(role == BtMini::PreviewRole)
+						if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
 						{
-							if(v == 1)
-								r += "<font size='1'><br>&nbsp;</br></font>";
-							if(v > 0)
-								r += QString("<font color='#aaaaaa'><center>%1</center></font><font size='1'><br>&nbsp;</br></font>").arg(v);
-						}
-						else if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
-						{
-                            using namespace Rendering;
+							using namespace Rendering;
 
-						    CDisplayRendering render(l->_displayOptions, l->_filterOptions);
-    
-                            CTextRendering::KeyTreeItem::Settings settings(false, d->_isSearch ?
-                                CTextRendering::KeyTreeItem::Settings::CompleteShort :
-                                CTextRendering::KeyTreeItem::Settings::SimpleKey);
+							CDisplayRendering render(l->_displayOptions, l->_filterOptions);
 
-                            CTextRendering::KeyTree tree;
+							CTextRendering::KeyTreeItem::Settings settings(false, d->_isSearch ?
+								CTextRendering::KeyTreeItem::Settings::CompleteShort :
+								CTextRendering::KeyTreeItem::Settings::SimpleKey);
 
-                            QList<const CSwordModuleInfo*> modules;
-                            modules << l->_module;
+							CTextRendering::KeyTree tree;
 
-                            QString keyName = key.key();
+							QList<const CSwordModuleInfo*> modules;
+							modules << l->_module;
 
-                            if(!d->_isSearch)
-                            {
-                                ((sword::VerseKey*)(l->_module->module()->getKey()))->Headings(1);
+							QString keyName = key.key();
 
-                                CSwordVerseKey k1(l->_module);
-                                k1.Headings(1);
-                                k1.setKey(keyName);
+							if(!d->_isSearch)
+							{
+								((sword::VerseKey*)(l->_module->module()->getKey()))->Headings(1);
 
-                                CTextRendering::KeyTreeItem::Settings preverse_settings(false,
-                                    CTextRendering::KeyTreeItem::Settings::NoKey);
+								CSwordVerseKey k1(l->_module);
+								k1.Headings(1);
+								k1.setKey(keyName);
 
-                                if(k1.getVerse() == 1)
-                                {
-                                    if (k1.getChapter() == 1)
-                                    {
-                                        k1.setChapter(0);
-                                        k1.setVerse(0);
-                                        if(k1.rawText().length() > 0)
-                                        {
-                                            tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
-                                        }
-                                        k1.setChapter(1);
-                                    }
-                                    k1.setVerse(0);
-                                    if(k1.rawText().length() > 0)
-                                    {
-                                        tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
-                                    }
-                                }
-                            }
-                            
-                            tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
-                            r += render.renderKeyTree(tree);
+								CTextRendering::KeyTreeItem::Settings preverse_settings(false,
+									CTextRendering::KeyTreeItem::Settings::NoKey);
 
-                            qDeleteAll(tree);
+								if(k1.getVerse() == 1)
+								{
+									if (k1.getChapter() == 1)
+									{
+										k1.setChapter(0);
+										k1.setVerse(0);
+										if(k1.rawText().length() > 0)
+										{
+											tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
+										}
+										k1.setChapter(1);
+									}
+									k1.setVerse(0);
+									if(k1.rawText().length() > 0)
+									{
+										tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
+									}
+								}
+							}
+	                        
+							tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
+							r += render.renderKeyTree(tree);
+
+							qDeleteAll(tree);
 
 							if(v == key.getVerseMax())
 								r += "<font size='1'><br>&nbsp;</font>";
-                            
-                            if(d->_isSearch && !d->_searchText.isEmpty())
-    							r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
-                        }
-                        else
-                            Q_ASSERT(!d->_isSearch);
-                    }
+	                        
+							if(d->_isSearch && !d->_searchText.isEmpty())
+								r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
+						}
+						else
+							Q_ASSERT(!d->_isSearch);
+					}
 					else if(l->_module && l->_module->type() == CSwordModuleInfo::Lexicon)
 					{
 						using namespace Rendering;
@@ -584,12 +600,12 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						qDeleteAll(tree);
 					}
 
-                    if(l->_hasContents)
-                        r += l->_contents.toString();
-                }
-                break;
-            }
-            return r;
+					if(l->_hasContents)
+						r += l->_contents.toString();
+
+					return r;
+				}
+			}
         }
         
     case BtMini::PlaceRole:
@@ -842,7 +858,9 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
 
-    menu.exec();
+	menu.exec();
+
+	works->setSleep(false);
 
     if(menu.wasCanceled())
         return;
@@ -876,8 +894,6 @@ void BtMiniModuleTextModel::openModuleSelection()
 				works->scrollTo(index);
 		}
 	}
-
-	works->setSleep(false);
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()

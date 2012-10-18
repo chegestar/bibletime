@@ -12,65 +12,76 @@
 <context>
     <name>BtMini</name>
     <message>
-        <location filename="../btmini.cpp" line="374"/>
+        <location filename="../btmini.cpp" line="382"/>
         <source>Update all sources?</source>
-        <translation type="unfinished">Обновить источники?</translation>
+        <translation>Обновить источники?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="375"/>
+        <location filename="../btmini.cpp" line="383"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="375"/>
+        <location filename="../btmini.cpp" line="383"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="375"/>
+        <location filename="../btmini.cpp" line="383"/>
+        <location filename="../btmini.cpp" line="477"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="462"/>
+        <location filename="../btmini.cpp" line="476"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="466"/>
+        <location filename="../btmini.cpp" line="477"/>
+        <source>Install</source>
+        <translation type="unfinished">Установка</translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="481"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="476"/>
+        <location filename="../btmini.cpp" line="490"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="479"/>
         <source>Completed. Restart application to see module</source>
-        <translation>Готово. Перезапустите приложение чтобы увидеть модуль</translation>
+        <translation type="obsolete">Готово. Перезапустите приложение чтобы увидеть модуль</translation>
     </message>
 </context>
 <context>
     <name>BtMiniModuleTextModel</name>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="662"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="788"/>
         <source>Add Left</source>
         <translation>Добавить Слева</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="662"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="788"/>
         <source>Add Right</source>
         <translation>Добавить Справа</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="665"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="791"/>
         <source>Clear</source>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="960"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1037"/>
+        <source>strong:</source>
+        <comment>Strongs search keyword</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1108"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
     </message>
@@ -78,37 +89,37 @@
 <context>
     <name>BtMiniPanel</name>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="76"/>
+        <location filename="../ui/btminipanel.cpp" line="75"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="84"/>
+        <location filename="../ui/btminipanel.cpp" line="83"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="92"/>
+        <location filename="../ui/btminipanel.cpp" line="91"/>
         <source>Install</source>
         <translation>Установка</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="100"/>
+        <location filename="../ui/btminipanel.cpp" line="99"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="141"/>
+        <location filename="../ui/btminipanel.cpp" line="140"/>
         <source>Exit?</source>
         <translation>Выйти?</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="141"/>
+        <location filename="../ui/btminipanel.cpp" line="140"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="141"/>
+        <location filename="../ui/btminipanel.cpp" line="140"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -388,42 +399,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="454"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="460"/>
         <source>Old testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="455"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="461"/>
         <source>Moses/Pentateuch/Torah</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="456"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="462"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="457"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="463"/>
         <source>Prophets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="458"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="464"/>
         <source>New testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="459"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="465"/>
         <source>Gospels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="460"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="466"/>
         <source>Letters/Epistles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="461"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="467"/>
         <source>Paul&apos;s Epistles</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1505,7 +1516,7 @@ Language name ppk</extracomment>
         <location filename="../../util/dialogutil.cpp" line="73"/>
         <source>Cancel</source>
         <comment>Dialog Button</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Отмена</translation>
     </message>
     <message>
         <location filename="../../util/dialogutil.cpp" line="74"/>

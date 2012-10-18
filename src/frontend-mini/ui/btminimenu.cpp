@@ -41,6 +41,13 @@ public:
     {
         ;
     }
+
+	void updateGeometry(QWidget *menu)
+	{
+		menu->adjustSize();
+		const QSize s = (menu->parentWidget()->geometry().size() - menu->frameSize())/2;
+		menu->move(QPoint(s.width(), s.height()));
+	}
     
     QList<QWidget*>  _buttons;
     int              _result;
@@ -68,6 +75,8 @@ BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
 		f.setPixelSize(f.pixelSize() * 1.3);
 		setFont(f);
 	}
+	else
+		Q_ASSERT(false);
 
 	hide();
 }
@@ -82,9 +91,7 @@ BtMiniMenu::~BtMiniMenu()
 
 void BtMiniMenu::show()
 {
-    adjustSize();
-    const QSize s = (parentWidget()->geometry().size()-	frameSize())/2;
-    move(QPoint(s.width(), s.height()));
+	d_ptr->updateGeometry(this);
 
     qApp->installEventFilter(this);
 
@@ -133,7 +140,15 @@ void BtMiniMenu::mouseReleaseEvent(QMouseEvent *e)
 
 QSize BtMiniMenu::sizeHint() const
 {
-	return QWidget::sizeHint().boundedTo(parentWidget()->size());
+	QSize s(parentWidget()->size());
+
+	// take some place
+	if(s.width() * 0.8 > s.height())
+		s.setWidth(s.width() * 0.9 - (parentWidget()->fontMetrics().height() * 2));
+	else
+		s.setHeight(s.height() * 0.9 - (parentWidget()->fontMetrics().height() * 2));
+
+	return QWidget::sizeHint().boundedTo(s);
 }
 
 QSize BtMiniMenu::minimumSizeHint() const
@@ -166,8 +181,16 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
     if(!text.isEmpty())
     {
         QLabel *l = new QLabel(text, dialog);
-        l->setWordWrap(true);
-        l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		l->setWordWrap(true);
+		
+		//l->setMinimumWidth(1);
+		//l->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred, QSizePolicy::Label));
+
+		//QSizePolicy p(l->sizePolicy());
+		//p.setHorizontalPolicy(QSizePolicy::Expanding);
+		//p.setVerticalPolicy(QSizePolicy::Expanding);
+		//l->setSizePolicy(p);
+
         v->addWidget(l, 0, Qt::AlignCenter);
     }
     
@@ -260,12 +283,13 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 
 	switch(e->type())
 	{
-	//case QEvent::Resize:
-	//	{
-	//		QResizeEvent re 
-	//		;
-	//	}
-	//	break;
+	case QEvent::Resize:
+		if(o == parentWidget())
+		{
+			setMaximumSize(parentWidget()->size());
+			d_ptr->updateGeometry(this);
+		}
+		break;
 	case QEvent::MouseButtonDblClick:
 	case QEvent::MouseButtonPress:
 	case QEvent::MouseButtonRelease:
@@ -295,13 +319,17 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
     QVBoxLayout *vl = new QVBoxLayout;
 
+	const int m = dialog->font().pixelSize() / 4;
+	vl->setSpacing(m);
+	vl->setContentsMargins(m, m, m, m);
+
     QLabel *l = new QLabel(text, dialog);
     l->setWordWrap(true);
     vl->addWidget(l, 0, Qt::AlignCenter);
 
     QProgressBar *pb = new QProgressBar(dialog);
     pb->setRange(0, 100);
-	pb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+	pb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     vl->addWidget(pb, 0, Qt::AlignCenter);
 
     QPushButton *b = new QPushButton("Cancel", dialog);
@@ -309,8 +337,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
     vl->addWidget(b, 0, Qt::AlignCenter);
 
     dialog->setLayout(vl);
-
-    dialog->d_ptr->_modal = true;
+	dialog->d_ptr->_modal = true;
 
     return dialog;
 }

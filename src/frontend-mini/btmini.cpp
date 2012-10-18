@@ -444,7 +444,10 @@ void BtMini::setActiveWidget(QWidget *widget)
 	if(widget)
 	    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
 
-	findView(worksWidget())->setSleep(widget != worksWidget());
+	bool b = widget != worksWidget();
+	findView(worksWidget())->setSleep(b);
+
+	qDebug() << "Set works sleep" << b;
 }
 
 BtMiniView * BtMini::findView(QWidget *widget)
@@ -530,7 +533,7 @@ void BtMiniMessageHandler(QtMsgType type, const char *msg)
 
 // presentation mode
 #ifdef Q_OS_WIN32
-#define PRESENTATION
+//#define PRESENTATION
 #endif
 
 class BtMiniApplication : public QApplication
@@ -569,7 +572,10 @@ public:
 					bool minimized = (BOOL) HIWORD(msg->wParam);
 
 					if(BtMini::mainWidget()->winId() == msg->hwnd)
+					{
 						BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
+						qDebug() << "Set works sleep winEvent" << (active == WA_INACTIVE) << active;
+					}
 				}
 			}
 			break;

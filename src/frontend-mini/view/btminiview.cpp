@@ -1602,9 +1602,8 @@ public:
             }
         }
 
-		// update threading
-		bool workDone = false;
-		bool simulate = false;
+		bool workDone = false; // was hard work done on this cycle
+		bool simulate = false; // hard coded option, if true, not start threads, compute everything in main
 
 		// start threads
 		if(o.useThread && !simulate)
@@ -1661,8 +1660,12 @@ public:
 		// paste calculated data
 		while(_modelDone.size() > 0)
 		{
+			_mutex.lock();
 			QPair<QModelIndex, QString> done = _modelDone.takeAt(0);
+			_mutex.unlock();
+
 			QModelIndex parent = done.first.parent();
+			bool wd = false;
 
 			for(int v = 0; v < _subViews.size(); ++v)
 			{
@@ -1679,13 +1682,15 @@ public:
 						areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(), 
 							_subViews[v]->_viualCenter);
 
-						workDone = true;
+						wd = true;
 					}
 				}
 			}
 
-			if(!workDone)
+			if(!wd)
 				qDebug() << "Can't insert computed index:" << done.first.data(BtMini::ModuleRole) << done.first.data(BtMini::PlaceRole);
+			else
+				workDone = true;
 		}
 
 		if(!workDone && simulate && _modelWork.size() > 0)
@@ -1798,7 +1803,9 @@ public:
 				QModelIndex index = _view->_modelWork.takeAt(0);
 				_view->_mutex.unlock();
 
-				//msleep(2000);
+#if defined(Q_OS_WIN32) && defined(QT_DEBUG)
+				msleep(2000);
+#endif
 				QString text(index.data().toString());
 
 				_view->_mutex.lock();
@@ -1897,16 +1904,18 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
 
         const int b = style()->pixelMetric(QStyle::PM_MenuPanelWidth) * 2;
         
-        if(w->width() < w->height())
-        {
-            setMinimumWidth(qMin(w->width() - b, (int)(w->width() * 0.8)));
-            setMinimumHeight(w->height()*0.7);
-        }
-        else
-        {
-            setMinimumWidth(w->width()*0.7);
-            setMinimumHeight(qMin(w->width() - b, (int)(w->width() * 0.8)));
-        }
+        //if(w->width() < w->height())
+        //{
+        //    setMinimumWidth(qMin(w->width() - b, (int)(w->width() * 0.8)));
+        //    setMinimumHeight(w->height()*0.7);
+        //}
+        //else
+        //{
+        //    setMinimumWidth(w->width()*0.7);
+        //    setMinimumHeight(qMin(w->width() - b, (int)(w->width() * 0.8)));
+        //}
+
+		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     }
 
 	setAttribute(Qt::WA_InputMethodEnabled, false);
@@ -2120,9 +2129,9 @@ void BtMiniView::timerEvent(QTimerEvent *e)
 		return;
 
     // update kinetic scrolling
-    //if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
+    if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
     {
-        //d->_mousePower *= SCROLL_ATTENUATION;
+        d->_mousePower *= SCROLL_ATTENUATION;
         scroll(d->_mousePower.x(), d->_mousePower.y());
     }
 
@@ -3020,7 +3029,11 @@ QString BtMiniView::currentContents() const
 					// remove highlighting
 					for(int hsp; (hsp = dt.indexOf("<span style=\"background-color:#FFFF66;\">")) >= 0; )
 						dt = dt.remove(dt.indexOf("</span>", hsp), 7).remove(hsp, 40);
-                    
+
+					// remove new lines
+					for(int nlp; (nlp = dt.indexOf("&nbsp;")) >= 0; )
+						dt = dt.remove(nlp, 6);
+					
                     int dc = 0;
                     int dp = 0;
                     bool skip = false;
@@ -3039,12 +3052,8 @@ QString BtMiniView::currentContents() const
                         }
                     }
 
-					//if(dt[dp] != st[sp])
                     if(dc != sc)
-					{
-						qDebug() << "Can't find correspondence " << st << dt << c << sc << dc;
-                        Q_ASSERT(false);
-                    }
+						qDebug() << "Correspondence can be invalid" << st << dt << c << sc << dc;
 
                     int from = dt.lastIndexOf('<', dp);
 
@@ -3119,4 +3128,9 @@ void BtMiniView::setSleep(bool sleep)
 
 		d->clearSubView(d->_currentSubView, false, true);
 	}
+}
+
+QSize BtMiniView::sizeHint() const
+{
+	return QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }

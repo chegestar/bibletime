@@ -252,6 +252,19 @@ public:
         return QCommonStyle::hitTestComplexControl(cc, option, point, widget);
     }
 
+	QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget = 0) const
+	{
+		switch(element)
+		{
+		case SE_ProgressBarContents:
+		case SE_ProgressBarGroove:
+		case SE_ProgressBarLabel:
+			return option->rect;
+		}
+
+		return QCommonStyle::subElementRect(element, option, widget);
+	}
+
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *option,
         SubControl sc, const QWidget *widget) const
     {

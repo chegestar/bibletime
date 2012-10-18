@@ -35,10 +35,12 @@ kalemas@mail.ru :
 +	remove hack with QTextDocument recreation in BtMiniView::currentContents - increase perfomance
 +	preview role and threaded data retrieving
 +	context for highlited word broken
-+	fixed boundle for desktop
++	fixed desktop build
 +	scrollbar always shown if more than 5 modules in module selection
 +	lexicon/dictionary support
 +	localized strong: search keyword
++	translation
++	call style to draw view shadow
 	improve BT modularity
 +		Install manager - information of repos/modules, manage modules
 		Bookmarks
@@ -52,9 +54,9 @@ kalemas@mail.ru :
 	crush when search RSTchs on здравству*
 	bug, sometimes on Matt n navigation second level opens as books again
 	bug, sometimes book stay unlocalized in text view in chapter area
-	call style to draw view shadow
 	
 	make commentary context parallel
+		make work array and threads array static
 
 	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init
@@ -63,11 +65,10 @@ kalemas@mail.ru :
 		font enumeration in font-family dont work
 		process unhandled css construction before passing to QTextDocument
 	replace unistd.h with io.h/direct.h on wince
-+	translation
 	megre linked verses in model
 	new menu look
 	context for word even withot tagging (dictionary lookup)
-	new system for default Modules: add/remove from context lookup
+	new system for context modules: add/remove from context lookup
 	
 	
 === known tasks ================================================================
@@ -144,8 +145,7 @@ Holy Scriptures Library, Time for Bible, Time to read Bible, Place to read Bible
 Bibliarim, SiBi, Raed, Roombi, Gospel Traveler, Gospel Day, Day Word,
 BibleStudy
 
-Main purpose: every day Bible Reading, nice looking, responsible, intuitive
-interface, comfortable.
+Main purpose: every day Bible Reading, nice looking, intuitive interface, comfortable.
 
 === SWORD ======================================================================
 	load locales on demand
