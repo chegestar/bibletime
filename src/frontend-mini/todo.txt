@@ -57,6 +57,7 @@ kalemas@mail.ru :
 	
 	make commentary context parallel
 		make work array and threads array static
+	current module seem to fail to get text from sword after module installation
 
 	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init
