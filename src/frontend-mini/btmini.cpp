@@ -2,7 +2,7 @@
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
-* This file is part of BibleTime Mini project. Visit 
+* This file is part of BibleTime Mini project. Visit
 * http://sourceforge.net/projects/bibletimemini for more information.
 *
 * This code is licensed under the GNU General Public License version 2.0.
@@ -17,6 +17,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPainter>
+#include <QPlastiqueStyle>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QStackedWidget>
@@ -33,7 +34,11 @@
 #endif
 #endif
 
-#include <SWLog.h>
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
+#include <swlog.h>
 
 #include "backend/config/cbtconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
@@ -54,25 +59,105 @@
 #include "view/btminilayoutdelegate.h"
 
 
+// Vibration
+#ifdef ANDROID
+#include <jni.h>
+
+jmethodID   jniBtMiniVibrateMethodId = 0;
+JavaVM     *jniBtMiniVm;
+jclass      jniBtMiniClass;
+
+JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
+{
+    JNIEnv  *p_env;
+    jniBtMiniVm = vm;
+
+    if (jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
+    {
+        qCritical("Jni cant get environment");
+        return -1;
+    }
+
+    jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity");
+    if (!jniBtMiniClass)
+    {
+        qCritical("Jni cant get class");
+        return -1;
+    }
+
+    jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V");
+    if (!jniBtMiniVibrateMethodId)
+    {
+        qCritical("Jni cant get method");
+        return -1;
+    }
+
+    return JNI_VERSION_1_6;
+}
+#endif
+
+#ifdef Q_OS_WINCE
+#include  <windows.h>
+#include  <nled.h>
+
+extern "C"
+{
+    BOOL WINAPI NLedSetDevice(UINT nDeviceId, void *pInput);
+};
+#endif
+
+void BtMini::vibrate(int milliseconds)
+{
+#ifdef Q_OS_WINCE
+    NLED_SETTINGS_INFO settings;
+    settings.LedNum = 1;
+    settings.OffOnBlink = true;
+    NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
+
+    Sleep(milliseconds);
+
+    NLED_SETTINGS_INFO settings;
+    settings.LedNum = 1;
+    settings.OffOnBlink = false;
+    NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
+#endif
+
+#ifdef ANDROID
+    JNIEnv  *p_env;
+
+    if (jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
+    {
+        qCritical("Jni cant attach to thread");
+        return;
+    }
+
+    jlong ms = milliseconds;
+
+    p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
+
+    jniBtMiniVm->DetachCurrentThread();
+#endif
+}
+
 // Main stacked widget
 class BtMiniMainWidget : public QStackedWidget
 {
 public:
-	BtMiniMainWidget(QWidget *parent=0) : QStackedWidget(parent)
-	{
-	    setAttribute(Qt::WA_DeleteOnClose);
-	    setFrameStyle(QFrame::NoFrame);
+    BtMiniMainWidget(QWidget *parent=0) : QStackedWidget(parent)
+    {
+        setAttribute(Qt::WA_DeleteOnClose);
+        setFrameStyle(QFrame::NoFrame);
         _saveTimer = startTimer(5*60*1000);
-        
+
         setWindowTitle("BibleTime Mini");
         setWindowIcon(util::directory::getIcon(CResMgr::mainWindow::icon));
-	}
-	
+    }
+
     ~BtMiniMainWidget()
     {
         saveConfig();
     }
-    
+
     /** Save opened session. */
     void saveConfig()
     {
@@ -80,21 +165,71 @@ public:
 
         QModelIndexList list = v->currentIndexes();
         QStringList modules, places;
-        
+
         for(int i = 0; i < list.size(); ++i)
         {
             if(list[i] == v->currentIndex())
                 CBTConfig::set(CBTConfig::openModule, i);
-            
+
             modules.append(list[i].data(BtMini::ModuleRole).toString());
             places.append(list[i].data(BtMini::PlaceRole).toString());
         }
-        
+
         CBTConfig::set(CBTConfig::openModules, modules);
         CBTConfig::set(CBTConfig::openPlaces, places);
-        
+
         CBTConfig::syncConfig();
     }
+
+    /** */
+    enum ScreenOrientation {
+        ScreenOrientationLockPortrait,
+        ScreenOrientationLockLandscape,
+        ScreenOrientationAuto
+    };
+    void setOrientation(ScreenOrientation orientation)
+    {
+        Qt::WidgetAttribute attribute;
+        switch (orientation) {
+    #if QT_VERSION < 0x040702
+        // Qt < 4.7.2 does not yet have the Qt::WA_*Orientation attributes
+        case ScreenOrientationLockPortrait:
+            attribute = static_cast<Qt::WidgetAttribute>(128);
+            break;
+        case ScreenOrientationLockLandscape:
+            attribute = static_cast<Qt::WidgetAttribute>(129);
+            break;
+        default:
+        case ScreenOrientationAuto:
+            attribute = static_cast<Qt::WidgetAttribute>(130);
+            break;
+    #else // QT_VERSION < 0x040702
+        case ScreenOrientationLockPortrait:
+            attribute = Qt::WA_LockPortraitOrientation;
+            break;
+        case ScreenOrientationLockLandscape:
+            attribute = Qt::WA_LockLandscapeOrientation;
+            break;
+        default:
+        case ScreenOrientationAuto:
+            attribute = Qt::WA_AutoOrientation;
+            break;
+    #endif // QT_VERSION < 0x040702
+        };
+        setAttribute(attribute, true);
+    }
+
+    void showExpanded()
+    {
+    #if defined(Q_WS_SIMULATOR)
+        showFullScreen();
+    #elif defined(Q_WS_MAEMO_5)
+        showMaximized();
+    #else
+        show();
+    #endif
+    }
+
 
 protected:
     QSize sizeHint() const
@@ -114,7 +249,7 @@ protected:
         else
             QStackedWidget::timerEvent(e);
     }
-    
+
 private:
     int _saveTimer;
 
@@ -148,18 +283,18 @@ protected:
 
 BtMini::BtMini()
 {
-	;
+    ;
 }
 
 BtMini::~BtMini()
 {
-	;
+    ;
 }
 
 BtMini & BtMini::instance()
 {
-	static BtMini bm;
-	return bm;
+    static BtMini bm;
+    return bm;
 }
 
 QWidget * BtMini::mainWidget()
@@ -169,48 +304,63 @@ QWidget * BtMini::mainWidget()
     if(!w)
     {
         //QSize size(240, 320);
-		QSize size(480, 640);
-    
+        QSize size(480, 640);
+
 #ifdef Q_WS_WINCE
         size = QApplication::desktop()->size();
 #endif
-    
+
         w = new BtMiniMainWidget;
-        
+
         QFont f = w->font();
         f.setPixelSize(qMin(size.width(), size.height())/14.0f);
         w->setFont(f);
-        
-     	w->resize(size);
 
-        //w->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    
+        w->resize(size);
+
 #ifdef Q_OS_WINCE
         w->show();
         w->showFullScreen();
+#elif defined (ANDROID)
+        w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
+        w->showExpanded();
 #else
-		w->show();
+        w->show();
         w->raise();
 #endif
     }
-    
+
     return w;
 }
 
 QWidget * BtMini::worksWidget()
 {
     static BtMiniWidget *w = 0;
-    
+
     if(!w)
     {
+        bool haveAnyBible = false;
+        foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+            if(m->type() == CSwordModuleInfo::Bible)
+            {
+                haveAnyBible = true;
+                break;
+            }
+
+        if(!haveAnyBible)
+        {
+            return installerWidget(true);
+        }
+
+
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
 
         v->setTopShadowEnabled(true);
 
-		if(CBTConfig::get(CBTConfig::useRenderCaching))
-			v->setRenderCaching(true);
+        if(CBTConfig::get(CBTConfig::useRenderCaching))
+            v->setRenderCaching(true);
 
         // Setup controls
         QPushButton *b1 = new QPushButton(v->style()->standardIcon(QStyle::SP_ArrowLeft), QString(), w);
@@ -237,7 +387,7 @@ QWidget * BtMini::worksWidget()
         b3->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         b4->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << 
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             BtMiniPanel::Search << BtMiniPanel::Installer << BtMiniPanel::Exit, w);
 
         // Put into layout
@@ -248,153 +398,157 @@ QWidget * BtMini::worksWidget()
         hl->addWidget(b3, Qt::AlignCenter);
         hl->addWidget(b4, Qt::AlignCenter);
         hl->addWidget(b2, Qt::AlignRight);
-        
+
         vl->addLayout(hl);
         vl->addWidget(v);
         vl->addWidget(p);
 
         w->setLayout(vl);
 
-		// Retrieve last session
-		QStringList modules = CBTConfig::get(CBTConfig::openModules);
-		QStringList places = CBTConfig::get(CBTConfig::openPlaces);
+        // Retrieve last session
+        QStringList modules = CBTConfig::get(CBTConfig::openModules);
+        QStringList places = CBTConfig::get(CBTConfig::openPlaces);
 
-		if(modules.size() == 0)
-		{
-			modules = CBTConfig::getDefault(CBTConfig::openModules);
-			places = CBTConfig::getDefault(CBTConfig::openPlaces);
-		}
+        if(modules.size() == 0)
+        {
+            modules = CBTConfig::getDefault(CBTConfig::openModules);
+            places = CBTConfig::getDefault(CBTConfig::openPlaces);
+        }
 
-		QStringList moduleNames;
+        QStringList moduleNames;
 
-		foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-			moduleNames << m->name();
+        foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+            moduleNames << m->name();
 
-		for(int i = 0; i < modules.size(); ++i)
-		{
-			if(!moduleNames.contains(modules[i]))
-			{
-				qDebug() << "Remove reference to inexistent module" << modules[i];
-				modules.erase(modules.begin() + i);
-				places.erase(places.begin() + i);
-				--i;
-			}
-		}
+        for(int i = 0; i < modules.size(); ++i)
+        {
+            if(!moduleNames.contains(modules[i]))
+            {
+                qDebug() << "Remove reference to inexistent module" << modules[i];
+                modules.erase(modules.begin() + i);
+                places.erase(places.begin() + i);
+                --i;
+            }
+        }
 
-		if(modules.size() == 0)
-		{
-			foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-				if(m->type() == CSwordModuleInfo::Bible)
-				{
-					modules = QStringList() << m->name();
-					places = QStringList() << CBTConfig::getDefault(CBTConfig::openPlaces)[0];
-					break;
-				}
-		}	
+        if(modules.size() == 0)
+        {
+            foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+                if(m->type() == CSwordModuleInfo::Bible)
+                {
+                    modules = QStringList() << m->name();
+                    places = QStringList() << CBTConfig::getDefault(CBTConfig::openPlaces)[0];
+                    break;
+                }
+        }
 
-		Q_ASSERT(modules.size() > 0);
+        Q_ASSERT(modules.size() > 0);
 
-		// Setup model
-		BtMiniModuleTextModel *m = new BtMiniModuleTextModel(modules, v);
+        // Setup model
+        BtMiniModuleTextModel *m = new BtMiniModuleTextModel(modules, v);
 
-		v->setModel(m);
+        v->setModel(m);
 
-		connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
-		connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
-		connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
+        connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
+        connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
+        connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
 
-		m->setIndicators(b1, b3, b4, b2);
+        m->setIndicators(b1, b3, b4, b2);
 
-		// Restore last session
-		for(int i = 0, c = CBTConfig::get(CBTConfig::openModule); i < modules.size(); ++i)
+        // Restore last session
+        for(int i = 0, c = CBTConfig::get(CBTConfig::openModule); i < modules.size(); ++i)
         {
             QModelIndex index(m->keyIndex(i, places[i]));
-    		if(i == c)
+            if(i == c)
             {
-				v->scrollTo(m->keyIndex(i, places[i]));
+                v->scrollTo(m->keyIndex(i, places[i]));
             }
-		    else if(index.isValid())
+            else if(index.isValid())
             {
-		        v->setCurrentIndex(index);
+                v->setCurrentIndex(index);
             }
-		}
+        }
 
-		connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)), 
-			m, SLOT(modulesReloaded()));
+        connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
+            m, SLOT(modulesReloaded()));
     }
-    
+
     return w;
 }
 
 QWidget * BtMini::searchWidget()
 {
-	static BtMiniWidget *w = 0;
+    static BtMiniWidget *w = 0;
 
-	if(!w)
-	{
-		w = new BtMiniWidget(mainWidget());
+    if(!w)
+    {
+        w = new BtMiniWidget(mainWidget());
 
-		BtMiniView *v = new BtMiniView(w);
-		v->setTopShadowEnabled(true);
+        BtMiniView *v = new BtMiniView(w);
+        v->setTopShadowEnabled(true);
 
-		// Setup controls
-		QLineEdit *le = new QLineEdit(w);
+        // Setup controls
+        QLineEdit *le = new QLineEdit(w);
 
         le->setAlignment(Qt::AlignCenter);
 
-		QFont f(le->font());
-		f.setPixelSize(f.pixelSize() * 1.3);
-		le->setFont(f);
+        QFont f(le->font());
+        f.setPixelSize(f.pixelSize() * 1.3);
+        le->setFont(f);
 
-		BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
 
-		// Put into layout
-		QVBoxLayout *vl = new QVBoxLayout;
+        // Put into layout
+        QVBoxLayout *vl = new QVBoxLayout;
 
-		vl->addWidget(le);
-		vl->addWidget(v);
-		vl->addWidget(p);
+        vl->addWidget(le);
+        vl->addWidget(v);
+        vl->addWidget(p);
 
-		w->setLayout(vl);
+        w->setLayout(vl);
 
-		// Setup model
-		BtMiniModuleTextModel *m = new BtMiniModuleTextModel(QStringList() << "[Search]", v);
+        // Setup model
+        BtMiniModuleTextModel *m = new BtMiniModuleTextModel(QStringList() << "[Search]", v);
 
-		v->setModel(m);
+        v->setModel(m);
 
-		connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
-		connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
+        connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
+        connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
         connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
-	}
+    }
 
-	return w;
+    return w;
 }
 
 /** */
-QWidget * BtMini::installerWidget()
+QWidget * BtMini::installerWidget(bool firstTime)
 {
     static BtMiniWidget *w = 0;
 
     if(!w)
     {
-		bool refresh = true;
+        bool refresh = true;
 
-		switch(BtMiniMenu::execQuery(tr("Update all sources?"), 
-			QStringList() << tr("Yes") << tr("No") << tr("Cancel")))
-		{
-		case 2:
-		case -1:
-			return 0;
-		case 1:
-			refresh = false;
-		}
+        if(!firstTime)
+        {
+            switch(BtMiniMenu::execQuery(tr("Update all sources?"),
+                QStringList() << tr("Yes") << tr("No") << tr("Cancel")))
+            {
+            case 2:
+            case -1:
+                return 0;
+            case 1:
+                refresh = false;
+            }
+        }
 
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadowEnabled(true);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << (firstTime ? BtMiniPanel::Exit :
+                                                                                   BtMiniPanel::Close), w);
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
@@ -402,30 +556,33 @@ QWidget * BtMini::installerWidget()
         vl->addWidget(v);
         vl->addWidget(p);
 
-		w->setLayout(vl);
+        w->setLayout(vl);
+
+        if(firstTime)
+            BtMiniMenu::execQuery(tr("Please, install at\nleast one Bible text\nand restart"));
 
         // Setup model
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
         QStringList        ss(BtInstallBackend::sourceNameList(refresh));
-		BtInstallMgr      *im = new BtInstallMgr(m);
+        BtInstallMgr      *im = new BtInstallMgr(m);
 
-		BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
-		o.limitItems = true;
-		o.perCycle = 5;
-		o.scrollPerItem = true;
-		v->layoutDelegate()->setLevelOption(1, o);
+        BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
+        o.limitItems = true;
+        o.perCycle = 5;
+        o.scrollPerItem = true;
+        v->layoutDelegate()->setLevelOption(1, o);
 
         foreach(QString s, ss)
         {
             sword::InstallSource is = BtInstallBackend::source(s);
-			if(refresh)
-				im->refreshRemoteSource(&is);
-	
-			CSwordBackend *be = BtInstallBackend::backend(is);
+            if(refresh)
+                im->refreshRemoteSource(&is);
 
-			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
-			mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-				"<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+            CSwordBackend *be = BtInstallBackend::backend(is);
+
+            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
+            mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+                "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
             mm->setSourceModel(be->model());
 
             m->addModel(mm, "<center><b>" + s + "</b></center>");
@@ -433,7 +590,7 @@ QWidget * BtMini::installerWidget()
 
         v->setModel(m);
 
-		connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+        connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
     }
 
     return w;
@@ -441,13 +598,13 @@ QWidget * BtMini::installerWidget()
 
 void BtMini::setActiveWidget(QWidget *widget)
 {
-	if(widget)
-	{
-	    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
+    if(widget)
+    {
+        qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
 
-		bool b = widget != worksWidget();
-		findView(worksWidget())->setSleep(b);
-	}
+        bool b = widget != worksWidget();
+        findView(worksWidget())->setSleep(b);
+    }
 }
 
 BtMiniView * BtMini::findView(QWidget *widget)
@@ -466,22 +623,22 @@ BtMiniView * BtMini::findView(QWidget *widget)
 
 void BtMini::installerQuery(const QModelIndex &index)
 {
-	CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(
-		index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
+    CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(
+        index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
 
-	if(m)
-	{
-		// TODO detect module status: installed, obsolete, not installed
+    if(m)
+    {
+        // TODO detect module status: installed, obsolete, not installed
 
-		if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()), 
-			QStringList() << tr("Install") << tr("Cancel")) == 0)
-		{
-			BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
-			
-			QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
-			dialog->show();
+        if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()),
+            QStringList() << tr("Install") << tr("Cancel")) == 0)
+        {
+            BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
 
-			connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+            QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
+            dialog->show();
+
+            connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 
             sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[index.parent().row()]);
             int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
@@ -491,8 +648,8 @@ void BtMini::installerQuery(const QModelIndex &index)
             else
                 CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
                 //BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
-		}
-	}
+        }
+    }
 }
 
 /** Sword debug messages. */
@@ -516,170 +673,139 @@ public:
 /** Debug messages. */
 void BtMiniMessageHandler(QtMsgType type, const char *msg)
 {
-	static QFile f("log.txt");
-	static bool r = f.open(QIODevice::WriteOnly);
+    static QFile f("log.txt");
+    static bool r = f.open(QIODevice::WriteOnly);
 
-	QString s(QString::fromLocal8Bit(msg) + QLatin1Char('\n'));
-	
-	QTextStream t(&f);
-	t << s;
+    QString s(QString::fromLocal8Bit(msg) + QLatin1Char('\n'));
 
-#if defined Q_OS_WINCE || !defined Q_OS_WIN
-	printf(s.toLocal8Bit());
-#elif defined Q_OS_WIN
-	OutputDebugString((wchar_t*)s.utf16());
+    QTextStream t(&f);
+    t << s;
+
+#ifdef ANDROID
+    const int a[] = {ANDROID_LOG_DEBUG, ANDROID_LOG_WARN, ANDROID_LOG_ERROR, ANDROID_LOG_FATAL};
+    __android_log_print(a[qMin((const int)type, 3)], "BtMini", s.toLocal8Bit());
+#elif defined Q_OS_WIN && !(defined Q_OS_WINCE)
+    OutputDebugString((wchar_t*)s.utf16());
+#else
+    printf(s.toLocal8Bit());
 #endif
 }
-
-// presentation mode
-#ifdef Q_OS_WIN32
-//#define PRESENTATION
-#endif
 
 class BtMiniApplication : public QApplication
 {
 public:
-	BtMiniApplication(int argc, char **argv) : QApplication(argc, argv)
-	{
-		mainLoop = false;
+    BtMiniApplication(int argc, char **argv) : QApplication(argc, argv)
+    {
+        mainLoop = false;
+    }
 
-#ifdef PRESENTATION
-		QPixmap bmu("hand01.png");
-		QPixmap bmd("hand02.png");
-
-		cu = QCursor(bmu);
-		cd = QCursor(bmd);
-
-		setOverrideCursor(cu);
-#endif
-	}
-
-	~BtMiniApplication() {;}
+    ~BtMiniApplication() {;}
 
 #ifdef Q_OS_WINCE
-	bool winEventFilter (MSG *msg, long *result)
-	{
-		switch(msg->message)
-		{
-		case WM_PAINT:
-			mainLoop = true;
-			break;
-		case WM_ACTIVATE:
-			{
-				if(mainLoop)
-				{
-					int active = LOWORD(msg->wParam);
-					bool minimized = (BOOL) HIWORD(msg->wParam);
+    bool winEventFilter (MSG *msg, long *result)
+    {
+        switch(msg->message)
+        {
+        case WM_PAINT:
+            mainLoop = true;
+            break;
+        case WM_ACTIVATE:
+            {
+                if(mainLoop)
+                {
+                    int active = LOWORD(msg->wParam);
+                    bool minimized = (BOOL) HIWORD(msg->wParam);
 
-					if(BtMini::mainWidget()->winId() == msg->hwnd)
-						BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
-				}
-			}
-			break;
-		case WM_CLOSE:
-			qDebug("Close");
-			break;
-		case WM_HIBERNATE:
-			qDebug("Low memory");
-			break;
-		//default:
-		//	qDebug() << "msg:" << msg->message;
-		}
-		return false;
-	}
-#elif defined Q_OS_WIN && defined PRESENTATION
-	bool winEventFilter (MSG *msg, long *result)
-	{
-		switch(msg->message)
-		{
-		case WM_LBUTTONDOWN:
-			setOverrideCursor(cd);
-			break;
-		case WM_LBUTTONUP:
-			setOverrideCursor(cu);
-			break;
-		}
-		return false;
-	}
+                    if(BtMini::mainWidget()->winId() == msg->hwnd)
+                        BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
+                }
+            }
+            break;
+        case WM_CLOSE:
+            qDebug("Close");
+            break;
+        case WM_HIBERNATE:
+            qDebug("Low memory");
+            break;
+        //default:
+        //	qDebug() << "msg:" << msg->message;
+        }
+        return false;
+    }
 #endif
 
 public:
-	bool mainLoop;
+    bool mainLoop;
 
-#ifdef PRESENTATION
-	QCursor cu;
-	QCursor cd;
-#endif
 };
 
-/** Application entry. */
+
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_WIN32
-    //_CrtSetBreakAlloc(1324);
-    //_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-#endif
-
-	qInstallMsgHandler(BtMiniMessageHandler);
+    qInstallMsgHandler(BtMiniMessageHandler);
     //QApplication::setGraphicsSystem("opengl");
-    
+
     // TODO set style for main widget
     QApplication::setStyle("mini");
-    
-	// Init application
-	BtMiniApplication app(argc, argv);
-    
-	if(!util::directory::initDirectoryCache())
-	{
-		qFatal("Init Application: Error initializing directory cache!");
-		return -1;
-	}
-	
+
+    // Init application
+    BtMiniApplication app(argc, argv);
+
+    // issue in necessitas sets QPlasticqueStyle when QApplication inits
+#ifdef ANDROID
+    QApplication::setStyle("mini");
+#endif
+
+    if(!util::directory::initDirectoryCache())
+    {
+        qFatal("Init Application: Error initializing directory cache!");
+        return -1;
+    }
+
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
-	app.setApplicationVersion("2.9.1");
+    app.setApplicationVersion("2.9.1");
+#ifdef Q_OS_WINCE
     app.setAutoSipEnabled(true);
+#endif
 
-	CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
+    CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
 
-	// install translators
-	QTranslator qtTranslator;qtTranslator.load("qt_" + QLocale::system().name());
-	app.installTranslator(&qtTranslator);
+    // install translators
+    QString ul(QLocale::system().uiLanguages()[0].toLatin1());
 
-	QTranslator BibleTimeTranslator;
-	BibleTimeTranslator.load( QString("bibletime_ui_").append(QLocale::system().name()), 
-		util::directory::getLocaleDir().canonicalPath());
-	app.installTranslator(&BibleTimeTranslator);
-	
-	QTranslator BtMiniTranslator;
-	BtMiniTranslator.load( QString("bibletimemini_").append(QLocale::system().name()), 
-		util::directory::getLocaleDir().canonicalPath());
-	app.installTranslator(&BtMiniTranslator);
+    qDebug() << "Select interface locale:" << ul;
 
+    foreach(QString s, QStringList() << "bibletime_ui_" << "bibletimemini_")
+    {
+        QTranslator *t = new QTranslator(&app);
+        t->load(s + ul, util::directory::getLocaleDir().canonicalPath());
+        app.installTranslator(t);
+    }
 
-	QString errorMessage;
-	new CDisplayTemplateMgr(errorMessage);
-	if(!errorMessage.isNull())
-	{
-		qFatal(("Init Application: " + errorMessage).toLatin1());
-		return -1;
-	}
-	
+    QString errorMessage;
+    new CDisplayTemplateMgr(errorMessage);
+    if(!errorMessage.isNull())
+    {
+        qFatal(("Init Application: " + errorMessage).toLatin1());
+        return -1;
+    }
+
     // Init Sword
     sword::SWLog::setSystemLog(new BtMiniSwordLog);
     sword::SWLog::getSystemLog()->setLogLevel(CBTConfig::get(CBTConfig::swordDebugLevel));
 
-	sword::StringMgr::setSystemStringMgr(new BTStringMgr);
-	
-	CSwordBackend *backend = CSwordBackend::createInstance();
-	
-	backend->booknameLanguage(CBTConfig::get(CBTConfig::language));
+    sword::StringMgr::setSystemStringMgr(new BTStringMgr);
 
-	CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
-	backend->deleteOrphanedIndices();
-	
-	// Let's run...
+    CSwordBackend *backend = CSwordBackend::createInstance();
+
+    backend->booknameLanguage(CBTConfig::get(CBTConfig::language));
+
+    CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
+    backend->deleteOrphanedIndices();
+
+    // Let's run...
     BtMini::setActiveWidget(BtMini::worksWidget());
-    
+
     return app.exec();
 }

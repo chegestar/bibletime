@@ -45,25 +45,6 @@
 #include <QWebSettings>
 #endif
 
-// vibration
-#ifdef Q_OS_WINCE
-#include  <windows.h>
-#include  <nled.h>
-
-extern "C"
-{
-    BOOL WINAPI NLedSetDevice(UINT nDeviceId, void *pInput);
-};
-
-void __leds(bool on, int id)
-{
-    NLED_SETTINGS_INFO settings;
-    settings.LedNum = id;
-    settings.OffOnBlink = on ? 1 : 0;
-    NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
-}
-#endif
-
 #define SHORT_PRESS_DELAY        13
 #define LONG_PRESS_DELAY         32
 #define SCROLL_SNAPPING_SPEED    0.3f
@@ -2159,20 +2140,12 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
             if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
-            {
-#ifdef Q_OS_WINCE
-                __leds(true, 1), Sleep(30), __leds(false, 1);
-#endif
-            }
+                BtMini::vibrate(30);
         }
         else if(d->_mouseTapping == SHORT_PRESS_DELAY)
         {
             if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0)
-            {
-#ifdef Q_OS_WINCE
-                __leds(true, 1), Sleep(30), __leds(false, 1);
-#endif
-            }
+                BtMini::vibrate(30);
         }
 
         d->_mouseTapping++;

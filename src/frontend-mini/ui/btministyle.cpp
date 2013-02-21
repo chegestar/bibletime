@@ -190,9 +190,9 @@ public:
 
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {
-			QMargins m = widget->contentsMargins();
-			widget->setContentsMargins(m.left()+_menuFrameWidth, m.top()+_menuFrameWidth,
-				m.right()+_menuFrameWidth, m.bottom()+_menuFrameWidth);
+            QMargins m = widget->contentsMargins();
+            widget->setContentsMargins(m.left()+_menuFrameWidth, m.top()+_menuFrameWidth,
+                m.right()+_menuFrameWidth, m.bottom()+_menuFrameWidth);
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 

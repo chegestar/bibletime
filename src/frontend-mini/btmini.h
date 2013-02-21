@@ -49,7 +49,7 @@ public:
     static QWidget * searchWidget();
 
     /** Manage modules, repositories, search indecies, install manager. */
-    static QWidget * installerWidget();
+    static QWidget * installerWidget(bool firstTime = false);
     
     /** */
     static QWidget * settingsWidget();
@@ -70,6 +70,8 @@ public:
         return. This function should throw exception if view not found, no need
         to check pointer. */
     static BtMiniView * findView(QWidget *widget);
+
+    static void vibrate(int miliseconds);
 
 public slots:
 	/** */

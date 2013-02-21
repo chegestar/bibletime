@@ -12,43 +12,43 @@
 <context>
     <name>BtMini</name>
     <message>
-        <location filename="../btmini.cpp" line="382"/>
+        <location filename="../btmini.cpp" line="440"/>
         <source>Update all sources?</source>
         <translation>Обновить источники?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="383"/>
+        <location filename="../btmini.cpp" line="441"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="383"/>
+        <location filename="../btmini.cpp" line="441"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="383"/>
-        <location filename="../btmini.cpp" line="477"/>
+        <location filename="../btmini.cpp" line="441"/>
+        <location filename="../btmini.cpp" line="535"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="476"/>
+        <location filename="../btmini.cpp" line="534"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="477"/>
+        <location filename="../btmini.cpp" line="535"/>
         <source>Install</source>
         <translation>Установить</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="481"/>
+        <location filename="../btmini.cpp" line="539"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="490"/>
+        <location filename="../btmini.cpp" line="548"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
@@ -93,33 +93,33 @@
         <translation>Поиск ...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1037"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1038"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
         <translation>стронг:</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
         <source>Build index for module?</source>
         <translation>Создать индекс для модуля?</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1055"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1056"/>
         <source>Indexing...</source>
         <translation>Индексирование...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1108"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1109"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
     </message>
@@ -163,7 +163,176 @@
     </message>
 </context>
 <context>
-    <name>CInfoDisplay</name>
+    <name>CSwordModuleInfo</name>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="820"/>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="821"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="826"/>
+        <source>unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="824"/>
+        <source>Markup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="829"/>
+        <source>Location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="833"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="838"/>
+        <source>Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="843"/>
+        <source>LCSH</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="847"/>
+        <source>Writable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="848"/>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="848"/>
+        <source>no</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="852"/>
+        <source>Unlock key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="871"/>
+        <source>Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="879"/>
+        <source>Take care, this work contains cult / questionable material!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="882"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="904"/>
+        <source>Distribution license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="905"/>
+        <source>Distribution source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="906"/>
+        <source>Distribution notes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="907"/>
+        <source>Text source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="908"/>
+        <source>Copyright notes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="909"/>
+        <source>Copyright holder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="910"/>
+        <source>Copyright date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="911"/>
+        <source>Copyright contact name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="912"/>
+        <source>Copyright contact address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="913"/>
+        <source>Copyright contact email</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1021"/>
+        <source>Bibles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1023"/>
+        <source>Commentaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1025"/>
+        <source>Books</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1027"/>
+        <source>Cults/Unorthodox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1029"/>
+        <source>Maps and Images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1031"/>
+        <source>Daily Devotionals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1033"/>
+        <source>Lexicons and Dictionaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1035"/>
+        <source>Glossaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1037"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>InfoDisplay::CInfoDisplay</name>
     <message>
         <location filename="../../frontend/cinfodisplay.cpp" line="53"/>
         <source>Select all</source>
@@ -217,199 +386,30 @@
     </message>
 </context>
 <context>
-    <name>CSwordModuleInfo</name>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="808"/>
-        <source>Version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="809"/>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="814"/>
-        <source>unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="812"/>
-        <source>Markup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="817"/>
-        <source>Location</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="821"/>
-        <source>Language</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="826"/>
-        <source>Category</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="831"/>
-        <source>LCSH</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="835"/>
-        <source>Writable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="836"/>
-        <source>yes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="836"/>
-        <source>no</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="840"/>
-        <source>Unlock key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="859"/>
-        <source>Features</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="867"/>
-        <source>Take care, this work contains cult / questionable material!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="870"/>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="892"/>
-        <source>Distribution license</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="893"/>
-        <source>Distribution source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="894"/>
-        <source>Distribution notes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="895"/>
-        <source>Text source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="896"/>
-        <source>Copyright notes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="897"/>
-        <source>Copyright holder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="898"/>
-        <source>Copyright date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="899"/>
-        <source>Copyright contact name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="900"/>
-        <source>Copyright contact address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="901"/>
-        <source>Copyright contact email</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1009"/>
-        <source>Bibles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1011"/>
-        <source>Commentaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1013"/>
-        <source>Books</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1015"/>
-        <source>Cults/Unorthodox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1017"/>
-        <source>Maps and Images</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1019"/>
-        <source>Daily Devotionals</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1021"/>
-        <source>Lexicons and Dictionaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1023"/>
-        <source>Glossaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1025"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="444"/>
         <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="458"/>
         <source>Indexing aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="444"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
         <source>An internal error occurred while building the index: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="458"/>
         <source>An internal error occurred while building the index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="539"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="550"/>
         <source>Search aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="539"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="550"/>
         <source>An internal error occurred while executing your search.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1513,6 +1513,54 @@ Language name ppk</extracomment>
     <message>
         <location filename="../../util/tool.cpp" line="217"/>
         <source>Double click for more information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="130"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="248"/>
+        <source>Commentaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="131"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="254"/>
+        <source>Cults/Unorthodox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="132"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="253"/>
+        <source>Maps and Images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="133"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="252"/>
+        <source>Daily Devotionals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="134"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="250"/>
+        <source>Lexicons and Dictionaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="135"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="247"/>
+        <source>Bibles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="136"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="251"/>
+        <source>Glossaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="137"/>
+        <location filename="../../backend/btmoduletreeitem.cpp" line="249"/>
+        <source>Books</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

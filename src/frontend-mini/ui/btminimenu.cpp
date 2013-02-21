@@ -31,10 +31,11 @@ class BtMiniMenuPrivate
 public:
     BtMiniMenuPrivate()
     {
-        _result = -1;
+        _result    = -1;
 		_eventLoop = 0;
-        _modal = false;
-		_canceled = false;
+        _modal     = false;
+        _canceled  = false;
+        _popup     = false;
     }
     
     ~BtMiniMenuPrivate()
@@ -54,6 +55,7 @@ public:
 	QEventLoop      *_eventLoop;
     bool             _modal;
 	bool             _canceled;
+    bool             _popup;
 
 };
 
@@ -111,6 +113,9 @@ void BtMiniMenu::exec()
 	d_ptr->_eventLoop = &eventLoop;
 
 	show();
+
+    // on Android virtual keyboard didnt hide when action key is pressed
+    setFocus();
 
 	QPointer<QObject> guard = this;
 	
@@ -174,7 +179,7 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
     QVBoxLayout *v = new QVBoxLayout;
 
     const int m = dialog->font().pixelSize() / 4;
-	v->setSpacing(m);
+    v->setSpacing(m);
     v->setContentsMargins(m, m, m, m);
     
     // add menu text
@@ -215,6 +220,8 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
         if(!text.isEmpty())
             v->addLayout(l);
     }
+    else
+        dialog->d_ptr->_popup = true;
     
 	dialog->setLayout(v);
 	
@@ -240,7 +247,7 @@ void BtMiniMenu::paintEvent(QPaintEvent *e)
     QPainter p(this);
     
     // QStyle::PE_PanelMenu on windows is hollow
-#ifdef Q_WS_WIN
+#if defined Q_WS_WIN || defined ANDROID
     QStyleOptionButton opt;
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
@@ -297,7 +304,7 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
         {
             const QPoint p = mapFromGlobal(static_cast<QMouseEvent*>(e)->globalPos());
             const int w = style()->pixelMetric(QStyle::PM_MenuPanelWidth);
-		    if(!rect().adjusted(w, w, -w, -w).contains(p))
+            if(d_ptr->_popup || !rect().adjusted(w, w, -w, -w).contains(p))
 		    {
                 if(e->type() == QEvent::MouseButtonPress && !d_ptr->_modal)
                     cancel();

@@ -41,131 +41,123 @@ kalemas@mail.ru :
 +	localized strong: search keyword
 +	translation
 +	call style to draw view shadow
-	improve BT modularity
+    improve BT modularity
 +		Install manager - information of repos/modules, manage modules
-		Bookmarks
+        Bookmarks
 +		move all model roles to global header
-	selecting items and active item
-	install manager by languages
-	current subview indication
-	footnote display using icon
-	restore original BT paths, or dirs in resources
-	bug, delayed module verses layout stops on missed content
-	crush when search RSTchs on здравству*
-	bug, sometimes on Matt n navigation second level opens as books again
-	bug, sometimes book stay unlocalized in text view in chapter area
-	
-	make commentary context parallel
-		make work array and threads array static
-	current module seem to fail to get text from sword after module installation
+    android
++       use qt-resources system for external read-only resurces
++       allow to run without modules
++       mini-style isnt called
++       "build index..." overlaped with virtual keyboard
++       vibration on long press
++       restore clucene
+-       cant get right language locale
+        not all characters drawn, probably qt font doesnt contain whole set
+    linux
+        no text drawn after tr()
+    design changes
+        cut-off menu overlays, open contex full-size
+        sliding panels for queries
+        hideable bottom panel
+        top area to indicate current location
+    qlabel incorrectly layouted in menus (inner qtextdcumet taller then height)
+    selecting items and active item
+    install manager by languages
+    current subview indication
+    footnote display using icon
+    restore original BT paths, or dirs in resources
+    bug, delayed module verses layout stops on missed content
+    crush when search RSTchs on пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*
+    bug, sometimes on Matt n navigation second level opens as books again
+    bug, sometimes book stay unlocalized in text view in chapter area
 
-	memory leaking on wince
-		crtdebug detect leaking starting from QApplication init
-	QTextDocument issues
-		not load external style sheet
-		font enumeration in font-family dont work
-		process unhandled css construction before passing to QTextDocument
-	replace unistd.h with io.h/direct.h on wince
-	megre linked verses in model
-	new menu look
-	context for word even withot tagging (dictionary lookup)
-	new system for context modules: add/remove from context lookup
-	
-	
+    make commentary context parallel
+        make work array and threads array static
+    current module seem to fail to get text from sword after module installation
+
+    memory leaking on wince
+        crtdebug detect leaking starting from QApplication init
+    QTextDocument issues
+        not load external style sheet
+        font enumeration in font-family dont work
+        process unhandled css construction before passing to QTextDocument
+    replace unistd.h with io.h/direct.h on wince
+    megre linked verses in model
+    new menu look
+    context for word even withot tagging (dictionary lookup)
+    new system for context modules: add/remove from context lookup
+
+
 === known tasks ================================================================
-	dialog looses event filter for qapplication after minimize/maximize
-	keypad support for dialogs and menus
-	Symbian build
-	loading all locales takes too long
-	keypad/volume buttons scrolling
-	qt: window raisement on startup on device
+    dialog looses event filter for qapplication after minimize/maximize
+    keypad support for dialogs and menus
+    Symbian build
+    loading all locales takes too long
+    keypad/volume buttons scrolling
+    qt: window raisement on startup on device
 
 === tasks for future ===========================================================
-	daily devotionals
-	reading plans
-	genbooks
-	map and image modules
-	verse features
-		bookmarks
-			nested bookmarks folders
-			date created (for sorting)
-			place in uri format (sword://Module/Key)
-			static / dynamic
-		verse colors
-	unlock locked modules
+    daily devotionals
+    reading plans
+    genbooks
+    map and image modules
+    verse features
+        bookmarks
+            nested bookmarks folders
+            date created (for sorting)
+            place in uri format (sword://Module/Key)
+            static / dynamic
+        verse colors
+    unlock locked modules
 
-	re-concept interface
+    re-concept interface
 
-	Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
-		maybe need Sword change that every verse in Bibile at every v11n has unique id
-	another platform : android , mac os x ,  openembedded , symbian , maemo , ...
-	multitouch
-	linked lists
-		slide list and stroke down/up to link
-		link neighbor lists: items will be fitted by height, empty verses will be displayed hollow
-	random verse on Home view
-	verse features
-		ratings/favourite
-			no ranges, byte-array
-		readings
-			reading should be as restoreable view
-			get / set (on switch and destroy) place
-			remember module also
-			place, module, date started, date visited
+    Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
+        maybe need Sword change that every verse in Bibile at every v11n has unique id
+    another platform : android , mac os x ,  openembedded , symbian , maemo , ...
+    multitouch
+    linked lists
+        slide list and stroke down/up to link
+        link neighbor lists: items will be fitted by height, empty verses will be displayed hollow
+    random verse on Home view
+    verse features
+        ratings/favourite
+            no ranges, byte-array
+        readings
+            reading should be as restoreable view
+            get / set (on switch and destroy) place
+            remember module also
+            place, module, date started, date visited
 ?		colors
-		reading count
-			created as byte-array for every versification
+        reading count
+            created as byte-array for every versification
 ?			increased when exceed 256-bound
 ?			converted beetwheen v11ns on call
-			or maybe implement this throught history
-			
+            or maybe implement this throught history
+
 ?	sliding, animated backgrounds
 ?	read html / txt / rtf / doc formats
 
-
-=== application name development ===============================================
-Title: specify Bible software, simple, short, memorizeable, apealing.
-
-BibleTime Mini - your time with Bible anywhere
-BibleTime Mobile
-Bibliarium - place to study biblical texts / biblical texts library
-	like a term
-SlideBible
-	modern
-Mobi - Mobile Bible
-
-BibleTouch, BiSlide, BeSlide, Touch Bible,
-Bible Touch, Bible Reader, Sword Reader, DayBible, BibleDay, Contemple, ArcBible
-Priest Bible, iBible, e-Sword, BibleSlide, RoundBible, Round SWord, Sworeader,
-HSReader, Bread, Everyday Bible, Swrod, Everyday Devotionals, Scripture, Gospel,
-Evangel, BeBible, Beeble, Evangeliel, Swread, Glider Bible, Swreeter, Reeter -
-day to day Bible reading suite, read Bibe day after day, Reeder - every day Bible
-reading, Qt Bible Reader, Mobile Bible Reader, Clean Looks, Clean Reads, Ecclesia,
-Humos, Logos, Bible Study, Augustine, Gorium, Librarium, Libra, Biblary,
-Holy Scriptures Library, Time for Bible, Time to read Bible, Place to read Bible,
-Bibliarim, SiBi, Raed, Roombi, Gospel Traveler, Gospel Day, Day Word,
-BibleStudy
-
-Main purpose: every day Bible Reading, nice looking, intuitive interface, comfortable.
-
 === SWORD ======================================================================
-	load locales on demand
+    load locales on demand
 %	av11n mappings
-	load av11n on demand from file
-	make more steps for search
+    load av11n on demand from file
+    make more steps for search
 
 === remarks ====================================================================
 Issues
-	Since sip panel didn't raise sip button it is not able to change software keyboard in the application. 
-		also default keyboard should have enter/return key to launch search. (wince)
-	To enable g-sensor support for runtime orientation change use third party applications like G-Config. (wince)
+    Since sip panel didn't raise sip button it is not able to change software keyboard in the application.
+        also default keyboard should have enter/return key to launch search. (wince)
+    To enable g-sensor support for runtime orientation change use third party applications like G-Config. (wince)
 Qt
-	we get nothing on application deactivation under wince, solved by using winEvent
-	QFont::setPointSize don't work on wince, solved by QFontMetrics::height
-	SIP adjusted to the bottom of screen
-	qt color names not used on device to optimize library size
+    we get nothing on application deactivation under wince, solved by using winEvent
+    QFont::setPointSize don't work on wince, solved by QFontMetrics::height
+    SIP adjusted to the bottom of screen
+    qt color names not used on device to optimize library size
 Sword
-	exception with /MD option and signed c-strings, require /J
+    exception with /MD option and signed c-strings, require /J
 BibleTime
-	set BT_MINI where needed
-	static QDir initialization in directory.cpp causes exception on wince
+    set BT_MINI where needed
+    static QDir initialization in directory.cpp causes exception on wince
+
