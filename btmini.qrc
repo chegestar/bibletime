@@ -1,0 +1,64 @@
+<RCC>
+    <qresource prefix="/bibletime/icons">
+        <file alias="back.svg">pics/icons/back.svg</file>
+        <file alias="bible_add.svg">pics/icons/bible_add.svg</file>
+        <file alias="bible_locked.svg">pics/icons/bible_locked.svg</file>
+        <file alias="bible_remove.svg">pics/icons/bible_remove.svg</file>
+        <file alias="bible.svg">pics/icons/bible.svg</file>
+        <file alias="bibletime.ico">pics/icons/bibletime.ico</file>
+        <file alias="bibletime.png">pics/icons/bibletime.png</file>
+        <file alias="bibletime.svg">pics/icons/bibletime.svg</file>
+        <file alias="book_add.svg">pics/icons/book_add.svg</file>
+        <file alias="book_locked.svg">pics/icons/book_locked.svg</file>
+        <file alias="book.svg">pics/icons/book.svg</file>
+        <file alias="bookmark.svg">pics/icons/bookmark.svg</file>
+        <file alias="books.svg">pics/icons/books.svg</file>
+        <file alias="calendar.svg">pics/icons/calendar.svg</file>
+        <file alias="checkbox.svg">pics/icons/checkbox.svg</file>
+        <file alias="commentary_add.svg">pics/icons/commentary_add.svg</file>
+        <file alias="commentary_locked.svg">pics/icons</file>
+        <file alias="commentary.svg">pics/icons/commentary.svg</file>
+        <file alias="configure.svg">pics/icons/configure.svg</file>
+        <file alias="contents2.svg">pics/icons/contents2.svg</file>
+        <file alias="default.svg">pics/icons/default.svg</file>
+        <file alias="dictionary.svg">pics/icons/dictionary.svg</file>
+        <file alias="displayconfig.svg">pics/icons/displayconfig.svg</file>
+        <file alias="displaytranslit.svg">pics/icons/displaytranslit.svg</file>
+        <file alias="document_magnifier.svg">pics/icons/document_magnifier.svg</file>
+        <file alias="edit_delete.svg">pics/icons/edit_delete.svg</file>
+        <file alias="edit_undo.svg">pics/icons/edit_undo.svg</file>
+        <file alias="exit.svg">pics/icons/exit.svg</file>
+        <file alias="export.svg">pics/icons/export.svg</file>
+        <file alias="file_save.svg">pics/icons/file_save.svg</file>
+        <file alias="fileclose.svg">pics/icons/fileclose.svg</file>
+        <file alias="find.svg">pics/icons/find.svg</file>
+        <file alias="flag.svg">pics/icons/flag.svg</file>
+        <file alias="forward.svg">pics/icons/forward.svg</file>
+        <file alias="info.svg">pics/icons/info.svg</file>
+        <file alias="layer-visible-on.svg">pics/icons/layer-visible-on.svg</file>
+        <file alias="lexicon_add.svg">pics/icons/lexicon_add.svg</file>
+        <file alias="lexicon_locked.svg">pics/icons/lexicon_locked.svg</file>
+        <file alias="lexicon.svg">pics/icons/lexicon.svg</file>
+        <file alias="light_bulb.svg">pics/icons/light_bulb.svg</file>
+        <file alias="map.svg">pics/icons/map.svg</file>
+        <file alias="pencil.svg">pics/icons/pencil.svg</file>
+        <file alias="plus.svg">pics/icons/plus.svg</file>
+        <file alias="pointing_arrow.svg">pics/icons/pointing_arrow.svg</file>
+        <file alias="questionable.svg">pics/icons/questionable.svg</file>
+        <file alias="questionmark.svg">pics/icons/questionmark.svg</file>
+        <file alias="refresh.svg">pics/icons/refresh.svg</file>
+        <file alias="startconfig.svg">pics/icons/startconfig.svg</file>
+        <file alias="stop.svg">pics/icons/stop.svg</file>
+        <file alias="swordconfig.svg">pics/icons/swordconfig.svg</file>
+        <file alias="sync.svg">pics/icons/sync.svg</file>
+        <file alias="unlock.svg">pics/icons/unlock.svg</file>
+    </qresource>
+    <qresource prefix="/bibletime/locale">
+        <file alias="bibletime_ui_ru.qm">i18n/messages/bibletime_ui_ru.qm</file>
+        <file alias="bibletimemini_ru.qm">src/frontend-mini/translations/bibletimemini_ru.qm</file>
+    </qresource>
+    <qresource prefix="/bibletime/display-templates">
+        <file alias="Basic.tmpl">src/display-templates/Basic-Mini.tmpl</file>
+        <file alias="Blue.css">src/display-templates/Blue.css</file>
+    </qresource>
+</RCC>
