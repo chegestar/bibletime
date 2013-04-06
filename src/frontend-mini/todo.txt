@@ -23,7 +23,7 @@ kalemas@mail.ru :
 +   fix font size on non wince targets
 +   long press depend on time, not update interval
 ?   maybe installing a module automatically download and istall sword locale for that language
-    install manager by languages
++   install manager by languages
     qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
 		try to replace with custom control
     logic to take into account device dpi for font size policy
@@ -32,9 +32,10 @@ kalemas@mail.ru :
     settings ui
         font size
         non stop scrolling
+        about info
     linux
         no non ascii characters drawn
-    design changes
+?   design changes
         cut-off menu overlays, open contex full-size
         sliding panels for queries
         hideable bottom panel

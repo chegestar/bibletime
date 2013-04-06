@@ -235,7 +235,7 @@ public:
 
     void showExpanded()
     {
-    #if defined(Q_WS_SIMULATOR)
+    #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
         showFullScreen();
     #elif defined(Q_WS_MAEMO_5)
         showMaximized();
