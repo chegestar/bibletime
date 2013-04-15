@@ -2816,7 +2816,7 @@ shortcut</source>
     <message>
         <location filename="../../src/backend/drivers/cswordmoduleinfo.cpp" line="957"/>
         <source>Cults/Unorthodox</source>
-        <translation>Необщепринятые</translation>
+        <translation>Спорные</translation>
     </message>
     <message>
         <location filename="../../src/backend/drivers/cswordmoduleinfo.cpp" line="959"/>
@@ -2826,7 +2826,7 @@ shortcut</source>
     <message>
         <location filename="../../src/backend/drivers/cswordmoduleinfo.cpp" line="961"/>
         <source>Daily Devotionals</source>
-        <translation>Наставления</translation>
+        <translation>Слово на День</translation>
     </message>
     <message>
         <location filename="../../src/backend/drivers/cswordmoduleinfo.cpp" line="963"/>
@@ -3076,7 +3076,7 @@ Do you want to continue?</source>
         <location filename="../../src/backend/btmoduletreeitem.cpp" line="129"/>
         <location filename="../../src/backend/btmoduletreeitem.cpp" line="244"/>
         <source>Daily Devotionals</source>
-        <translation>Наставления</translation>
+        <translation>Слово на День</translation>
     </message>
     <message>
         <location filename="../../src/backend/btmoduletreeitem.cpp" line="130"/>

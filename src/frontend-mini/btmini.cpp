@@ -26,6 +26,7 @@
 #include <QStyleFactory>
 #include <QTextCodec>
 #include <QTextStream>
+#include <QTime>
 #include <QTimer>
 #include <QTranslator>
 #include <QtDebug>
@@ -656,14 +657,18 @@ void BtMini::installerQuery(const QModelIndex &index)
 
             connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 
-            sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[index.parent().row()]);
+            // find most parent index corresponding to remote source
+            QModelIndex si = index;
+            while(si.parent().isValid())
+                si = si.parent();
+
+            sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[si.row()]);
             int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
 
             if (status != 0 || dialog->wasCanceled())
                 BtMiniMenu::execQuery(QString(tr("Module was not installed")));
             else
                 CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
-                //BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
         }
     }
 }
@@ -693,9 +698,7 @@ void BtMiniMessageHandler(QtMsgType type, const char *msg)
     static bool r = f.open(QIODevice::WriteOnly);
 
     QString s(QString::fromLocal8Bit(msg) + QLatin1Char('\n'));
-
-    QTextStream t(&f);
-    t << s;
+    QTextStream (&f) << s;
 
 #ifdef ANDROID
     const int a[] = {ANDROID_LOG_DEBUG, ANDROID_LOG_WARN, ANDROID_LOG_ERROR, ANDROID_LOG_FATAL};

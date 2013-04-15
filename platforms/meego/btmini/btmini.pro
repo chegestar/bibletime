@@ -1,126 +1,15 @@
-# Add files and directories to ship with the application 
-# by adapting the examples below.
-# file1.source = myfile
-# dir1.source = mydir
-DEPLOYMENTFOLDERS = # file1 dir1
-
-symbian:TARGET.UID3 = 0xE5723167
-
-# Smart Installer package's UID
-# This UID is from the protected range 
-# and therefore the package will fail to install if self-signed
-# By default qmake uses the unprotected range value if unprotected UID is defined for the application
-# and 0x2002CCCF value if protected UID is given to the application
-#symbian:DEPLOYMENT.installer_header = 0x2002CCCF
-
-# Allow network access on Symbian
-symbian:TARGET.CAPABILITY += NetworkServices
-
-# If your application uses the Qt Mobility libraries, uncomment
-# the following lines and add the respective components to the 
-# MOBILITY variable. 
-# CONFIG += mobility
-# MOBILITY +=
-
-#SOURCES += main.cpp mainwindow.cpp
-#HEADERS += mainwindow.h
-#FORMS += mainwindow.ui
-
-DEPLOYMENT.display_name = BibleTime Mini
-
-# Set mem size
-# 80KB
-TARGET.EPOCSTACKSIZE = 0x14000
-# Min: 128KB   Max: 32MB
-TARGET.EPOCHEAPSIZE = 0x020000 0x2000000
-
-VERSION = 0.3.4
-
-packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), 0, 3, 4, TYPE=SA"
-
-vendorinfo = \
-"%{\"Crosswire\"}" \
-":\"Crosswire\""
-
-# Add the vendor name to the deployment
-my_deployment.pkg_prerules = packageheader vendorinfo
-DEPLOYMENT += my_deployment
 
 
 
+CONFIG += clucene
 
-
-DEFINES += BT_MINI BT_NO_CLUCENE NO_DUMMY_DECL
+DEFINES += BT_MINI
 
 INCLUDEPATH += . \
     ../../../../sword/include \
-#   ../../../../sword/include/internal/regex \
+    ../../../../sword/include/internal/regex \
     ../../../../bt/src/frontend-mini \
     ../../../../bt/src
-
-
-HEADERS += \
-    ../../../../bt/src/frontend-mini/btmini.h \
-#   ../../../../bt/src/frontend-mini/ui/btministyle.cpp \
-    ../../../../bt/src/frontend-mini/models/btminimoduletextmodel.h \
-    ../../../../bt/src/frontend-mini/models/btminimodulenavigationmodel.h \
-    ../../../../bt/src/frontend-mini/models/btminimodelsmodel.h \
-    ../../../../bt/src/frontend-mini/ui/btminipanel.h \
-    ../../../../bt/src/frontend-mini/ui/btminimenu.h \
-    ../../../../bt/src/frontend-mini/view/btminiview.h \
-    ../../../../bt/src/frontend-mini/view/btminilayoutdelegate.h \
-    ../../../../bt/src/backend/cswordmodulesearch.h \
-    ../../../../bt/src/backend/btmoduletreeitem.h \
-    ../../../../bt/src/backend/btinstallbackend.h \
-    ../../../../bt/src/backend/managers/referencemanager.h \
-    ../../../../bt/src/backend/managers/cswordbackend.h \
-    ../../../../bt/src/backend/managers/clanguagemgr.h \
-    ../../../../bt/src/backend/managers/cdisplaytemplatemgr.h \
-    ../../../../bt/src/backend/managers/btstringmgr.h \
-    ../../../../bt/src/util/directory.h \
-    ../../../../bt/src/util/cresmgr.h \
-    ../../../../bt/src/backend/config/cbtconfig.h \
-    ../../../../bt/src/backend/bookshelfmodel/btbookshelftreemodel.h \
-    ../../../../bt/src/frontend/bookshelfmanager/btinstallmgr.h \
-    ../../../../bt/src/frontend/bookshelfmanager/installpage/btinstallthread.h \
-    ../../../../bt/src/frontend/cinfodisplay.h \
-    ../../../../bt/src/frontend/displaywindow/btactioncollection.h \
-    ../../../../bt/src/frontend/crossrefrendering.h \
-    ../../../../bt/src/backend/keys/cswordversekey.h \
-    ../../../../bt/src/backend/keys/cswordldkey.h \
-    ../../../../bt/src/backend/keys/cswordkey.h \
-    ../../../../bt/src/backend/keys/cswordtreekey.h \
-    ../../../../bt/src/backend/drivers/cswordmoduleinfo.h \
-    ../../../../bt/src/backend/drivers/cswordlexiconmoduleinfo.h \
-    ../../../../bt/src/backend/drivers/cswordcommentarymoduleinfo.h \
-    ../../../../bt/src/backend/drivers/cswordbiblemoduleinfo.h \
-    ../../../../bt/src/backend/rendering/ctextrendering.h \
-    ../../../../bt/src/backend/rendering/chtmlexportrendering.h \
-    ../../../../bt/src/backend/rendering/centrydisplay.h \
-    ../../../../bt/src/backend/rendering/cdisplayrendering.h \
-    ../../../../bt/src/backend/rendering/cplaintextexportrendering.h \
-    ../../../../bt/src/backend/bookshelfmodel/moduleitem.h \
-    ../../../../bt/src/backend/bookshelfmodel/languageitem.h \
-    ../../../../bt/src/backend/bookshelfmodel/item.h \
-    ../../../../bt/src/backend/bookshelfmodel/categoryitem.h \
-    ../../../../bt/src/util/tool.h \
-    ../../../../bt/src/util/dialogutil.h \
-    ../../../../bt/src/util/btsignal.h \
-    ../../../../bt/src/backend/rendering/cchapterdisplay.h \
-    ../../../../bt/src/backend/rendering/cbookdisplay.h \
-    ../../../../bt/src/backend/filters/thmltohtml.h \
-    ../../../../bt/src/backend/filters/teitohtml.h \
-    ../../../../bt/src/backend/filters/plaintohtml.h \
-    ../../../../bt/src/backend/filters/osistohtml.h \
-    ../../../../bt/src/backend/filters/gbftohtml.h \
-    ../../../../bt/src/backend/bookshelfmodel/btbookshelfmodel.h \
-    ../../../../bt/src/backend/filters/thmltoplain.h \
-    ../../../../bt/src/backend/drivers/cswordbookmoduleinfo.h \
-    ../../../../bt/src/backend/bookshelfmodel/indexingitem.h \
-    ../../../../bt/src/backend/keys/cswordtreekey.h \
-    ../../../../bt/src/frontend/crossrefrendering.h \
-    ../../../../bt/src/backend/filters/osismorphsegmentation.h \
-
 
 SOURCES += \
     ../../../../sword/src/modules/common/zipcomprs.cpp \
@@ -140,9 +29,8 @@ SOURCES += \
     ../../../../sword/src/utilfuns/zlib/compress.c \
     ../../../../sword/src/utilfuns/zlib/adler32.c \
     ../../../../sword/src/mgr/ftplibftpt.cpp \
-    ../../../../sword/src/utilfuns/symbian/ftplib.c \
-#   ../../../../sword/src/utilfuns/ftplib.c \
-#   ../../../../sword/src/utilfuns/regex.c \
+    ../../../../sword/src/utilfuns/ftplib.c \
+    ../../../../sword/src/utilfuns/regex.c \
     ../../../../sword/src/frontend/swdisp.cpp \
     ../../../../sword/src/frontend/swlog.cpp \
     ../../../../sword/src/keys/swkey.cpp \
@@ -330,11 +218,239 @@ SOURCES += \
     ../../../../bt/src/frontend/crossrefrendering.cpp \
     ../../../../bt/src/backend/filters/osismorphsegmentation_bt.cpp
 
+
+HEADERS += \
+    ../../../../bt/src/frontend-mini/models/btminimoduletextmodel.h \
+    ../../../../bt/src/frontend-mini/models/btminimodulenavigationmodel.h \
+    ../../../../bt/src/frontend-mini/models/btminimodelsmodel.h \
+    ../../../../bt/src/frontend-mini/ui/btminipanel.h \
+    ../../../../bt/src/frontend-mini/ui/btminimenu.h \
+    ../../../../bt/src/frontend-mini/view/btminiview.h \
+    ../../../../bt/src/frontend-mini/view/btminilayoutdelegate.h \
+    ../../../../bt/src/backend/cswordmodulesearch.h \
+    ../../../../bt/src/backend/btmoduletreeitem.h \
+    ../../../../bt/src/backend/btinstallbackend.h \
+    ../../../../bt/src/backend/managers/referencemanager.h \
+    ../../../../bt/src/backend/managers/cswordbackend.h \
+    ../../../../bt/src/backend/managers/clanguagemgr.h \
+    ../../../../bt/src/backend/managers/cdisplaytemplatemgr.h \
+    ../../../../bt/src/backend/managers/btstringmgr.h \
+    ../../../../bt/src/util/directory.h \
+    ../../../../bt/src/util/cresmgr.h \
+    ../../../../bt/src/backend/config/cbtconfig.h \
+    ../../../../bt/src/backend/bookshelfmodel/btbookshelftreemodel.h \
+    ../../../../bt/src/frontend/bookshelfmanager/btinstallmgr.h \
+    ../../../../bt/src/frontend/bookshelfmanager/installpage/btinstallthread.h \
+    ../../../../bt/src/frontend/cinfodisplay.h \
+    ../../../../bt/src/frontend/displaywindow/btactioncollection.h \
+    ../../../../bt/src/frontend/crossrefrendering.h \
+    ../../../../bt/src/backend/keys/cswordversekey.h \
+    ../../../../bt/src/backend/keys/cswordldkey.h \
+    ../../../../bt/src/backend/keys/cswordkey.h \
+    ../../../../bt/src/backend/keys/cswordtreekey.h \
+    ../../../../bt/src/backend/drivers/cswordmoduleinfo.h \
+    ../../../../bt/src/backend/drivers/cswordlexiconmoduleinfo.h \
+    ../../../../bt/src/backend/drivers/cswordcommentarymoduleinfo.h \
+    ../../../../bt/src/backend/drivers/cswordbiblemoduleinfo.h \
+    ../../../../bt/src/backend/rendering/ctextrendering.h \
+    ../../../../bt/src/backend/rendering/chtmlexportrendering.h \
+    ../../../../bt/src/backend/rendering/centrydisplay.h \
+    ../../../../bt/src/backend/rendering/cdisplayrendering.h \
+    ../../../../bt/src/backend/rendering/cplaintextexportrendering.h \
+    ../../../../bt/src/backend/bookshelfmodel/moduleitem.h \
+    ../../../../bt/src/backend/bookshelfmodel/languageitem.h \
+    ../../../../bt/src/backend/bookshelfmodel/item.h \
+    ../../../../bt/src/backend/bookshelfmodel/categoryitem.h \
+    ../../../../bt/src/util/tool.h \
+    ../../../../bt/src/util/dialogutil.h \
+    ../../../../bt/src/util/btsignal.h \
+    ../../../../bt/src/backend/rendering/cchapterdisplay.h \
+    ../../../../bt/src/backend/rendering/cbookdisplay.h \
+    ../../../../bt/src/backend/filters/thmltohtml.h \
+    ../../../../bt/src/backend/filters/teitohtml.h \
+    ../../../../bt/src/backend/filters/plaintohtml.h \
+    ../../../../bt/src/backend/filters/osistohtml.h \
+    ../../../../bt/src/backend/filters/gbftohtml.h \
+    ../../../../bt/src/backend/bookshelfmodel/btbookshelfmodel.h \
+    ../../../../bt/src/backend/filters/thmltoplain.h \
+    ../../../../bt/src/backend/drivers/cswordbookmoduleinfo.h \
+    ../../../../bt/src/backend/bookshelfmodel/indexingitem.h \
+    ../../../../bt/src/backend/keys/cswordtreekey.h \
+    ../../../../bt/src/frontend/crossrefrendering.h \
+    ../../../../bt/src/backend/filters/osismorphsegmentation.h \
+    ../../../../bt/src/frontend-mini/btmini.h \
+    ../../../../bt/src/frontend-mini/ui/btministyle.cpp
+
 RESOURCES += \
     ../../../../bt/src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc
 
 
+
+
+
+
+clucene {
+DEFINES += _UCS2 _CL_DISABLE_MULTITHREADING
+
+symbian {
+DEFINES += __GNUC__
+}
+
+INCLUDEPATH += ../../../../clucene/src
+
+# clucene, could be turned off when porting on new plaftorm
+SOURCES += \
+    ../../../../clucene/src/CLucene/analysis/AnalysisHeader.cpp \
+    ../../../../clucene/src/CLucene/analysis/Analyzers.cpp \
+    ../../../../clucene/src/CLucene/util/BitSet.cpp \
+    ../../../../clucene/src/CLucene/search/BooleanQuery.cpp \
+    ../../../../clucene/src/CLucene/search/BooleanScorer.cpp \
+    ../../../../clucene/src/CLucene/index/CompoundFile.cpp \
+    ../../../../clucene/src/CLucene/debug/condition.cpp \
+    ../../../../clucene/src/CLucene/search/ConjunctionScorer.cpp \
+    ../../../../clucene/src/CLucene/document/Document.cpp \
+    ../../../../clucene/src/CLucene/index/DocumentWriter.cpp \
+    ../../../../clucene/src/CLucene/util/Equators.cpp \
+    ../../../../clucene/src/CLucene/debug/error.cpp \
+    ../../../../clucene/src/CLucene/search/ExactPhraseScorer.cpp \
+    ../../../../clucene/src/CLucene/search/Explanation.cpp \
+    ../../../../clucene/src/CLucene/util/FastCharStream.cpp \
+    ../../../../clucene/src/CLucene/document/Field.cpp \
+    ../../../../clucene/src/CLucene/search/FieldCache.cpp \
+    ../../../../clucene/src/CLucene/search/FieldCacheImpl.cpp \
+    ../../../../clucene/src/CLucene/search/FieldDocSortedHitQueue.cpp \
+    ../../../../clucene/src/CLucene/index/FieldInfos.cpp \
+    ../../../../clucene/src/CLucene/search/FieldSortedHitQueue.cpp \
+    ../../../../clucene/src/CLucene/index/FieldsReader.cpp \
+    ../../../../clucene/src/CLucene/index/FieldsWriter.cpp \
+    ../../../../clucene/src/CLucene/util/fileinputstream.cpp \
+    ../../../../clucene/src/CLucene/search/FilteredTermEnum.cpp \
+    ../../../../clucene/src/CLucene/store/FSDirectory.cpp \
+    ../../../../clucene/src/CLucene/search/FuzzyQuery.cpp \
+    ../../../../clucene/src/CLucene/config/gunichartables.cpp \
+    ../../../../clucene/src/CLucene/search/HitQueue.cpp \
+    ../../../../clucene/src/CLucene/search/Hits.cpp \
+    ../../../../clucene/src/CLucene/store/IndexInput.cpp \
+    ../../../../clucene/src/CLucene/store/IndexOutput.cpp \
+    ../../../../clucene/src/CLucene/index/IndexReader.cpp \
+    ../../../../clucene/src/CLucene/search/IndexSearcher.cpp \
+    ../../../../clucene/src/CLucene/index/IndexWriter.cpp \
+    ../../../../clucene/src/CLucene/queryParser/Lexer.cpp \
+    ../../../../clucene/src/CLucene/store/Lock.cpp \
+    ../../../../clucene/src/CLucene/debug/memtracking.cpp \
+    ../../../../clucene/src/CLucene/util/Misc.cpp \
+    ../../../../clucene/src/CLucene/index/MultiReader.cpp \
+    ../../../../clucene/src/CLucene/search/MultiTermQuery.cpp \
+    ../../../../clucene/src/CLucene/search/PhrasePositions.cpp \
+    ../../../../clucene/src/CLucene/search/PhraseQuery.cpp \
+    ../../../../clucene/src/CLucene/search/PhraseScorer.cpp \
+    ../../../../clucene/src/CLucene/search/PrefixQuery.cpp \
+    ../../../../clucene/src/CLucene/queryParser/QueryParser.cpp \
+    ../../../../clucene/src/CLucene/queryParser/QueryParserBase.cpp \
+    ../../../../clucene/src/CLucene/queryParser/QueryToken.cpp \
+    ../../../../clucene/src/CLucene/store/RAMDirectory.cpp \
+    ../../../../clucene/src/CLucene/search/RangeQuery.cpp \
+    ../../../../clucene/src/CLucene/util/Reader.cpp \
+    ../../../../clucene/src/CLucene/config/repl_tcscasecmp.cpp \
+    ../../../../clucene/src/CLucene/config/repl_tcslwr.cpp \
+    ../../../../clucene/src/CLucene/search/SearchHeader.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentInfos.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentMergeInfo.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentMergeQueue.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentMerger.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentReader.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentTermDocs.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentTermEnum.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentTermPositions.cpp \
+    ../../../../clucene/src/CLucene/index/SegmentTermVector.cpp \
+    ../../../../clucene/src/CLucene/search/Similarity.cpp \
+    ../../../../clucene/src/CLucene/search/SloppyPhraseScorer.cpp \
+    ../../../../clucene/src/CLucene/search/Sort.cpp \
+    ../../../../clucene/src/CLucene/analysis/standard/StandardAnalyzer.cpp \
+    ../../../../clucene/src/CLucene/analysis/standard/StandardFilter.cpp \
+    ../../../../clucene/src/CLucene/analysis/standard/StandardTokenizer.cpp \
+    ../../../../clucene/src/CLucene/StdHeader.cpp \
+    ../../../../clucene/src/CLucene/util/StringBuffer.cpp \
+    ../../../../clucene/src/CLucene/util/StringIntern.cpp \
+    ../../../../clucene/src/CLucene/index/Term.cpp \
+    ../../../../clucene/src/CLucene/index/TermInfo.cpp \
+    ../../../../clucene/src/CLucene/index/TermInfosReader.cpp \
+    ../../../../clucene/src/CLucene/index/TermInfosWriter.cpp \
+    ../../../../clucene/src/CLucene/search/TermQuery.cpp \
+    ../../../../clucene/src/CLucene/search/TermScorer.cpp \
+    ../../../../clucene/src/CLucene/index/TermVectorReader.cpp \
+    ../../../../clucene/src/CLucene/index/TermVectorWriter.cpp \
+    ../../../../clucene/src/CLucene/util/ThreadLocal.cpp \
+    ../../../../clucene/src/CLucene/config/threads.cpp \
+    ../../../../clucene/src/CLucene/queryParser/TokenList.cpp \
+    ../../../../clucene/src/CLucene/store/TransactionalRAMDirectory.cpp \
+    ../../../../clucene/src/CLucene/config/utf8.cpp \
+    ../../../../clucene/src/CLucene/search/WildcardQuery.cpp \
+    ../../../../clucene/src/CLucene/search/WildcardTermEnum.cpp \
+    ../../../../clucene/src/CLucene/config/repl_tcstoll.cpp \
+    ../../../../clucene/src/CLucene/config/repl_lltot.cpp \
+    ../../../../clucene/src/CLucene/config/repl_tprintf.cpp
+}
+else {
+DEFINES += BT_NO_LUCENE
+}
+
+
+
+
+
+
+
+# Add files and directories to ship with the application
+# by adapting the examples below.
+# file1.source = myfile
+# dir1.source = mydir
+DEPLOYMENTFOLDERS = # file1 dir1
+
+symbian:TARGET.UID3 = 0xE70439DE
+
+# Smart Installer package's UID
+# This UID is from the protected range
+# and therefore the package will fail to install if self-signed
+# By default qmake uses the unprotected range value if unprotected UID is defined for the application
+# and 0x2002CCCF value if protected UID is given to the application
+#symbian:DEPLOYMENT.installer_header = 0x2002CCCF
+
+# Allow network access on Symbian
+symbian:TARGET.CAPABILITY += NetworkServices
+
+# If your application uses the Qt Mobility libraries, uncomment
+# the following lines and add the respective components to the
+# MOBILITY variable.
+# CONFIG += mobility
+# MOBILITY +=
+
+#SOURCES += main.cpp mainwindow.cpp
+#HEADERS += mainwindow.h
+#FORMS += mainwindow.ui
+
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)
 qtcAddDeployment()
+
+OTHER_FILES += \
+    qtc_packaging/debian_harmattan/rules \
+    qtc_packaging/debian_harmattan/README \
+    qtc_packaging/debian_harmattan/manifest.aegis \
+    qtc_packaging/debian_harmattan/copyright \
+    qtc_packaging/debian_harmattan/control \
+    qtc_packaging/debian_harmattan/compat \
+    qtc_packaging/debian_harmattan/changelog
+
+contains(MEEGO_EDITION,harmattan) {
+    desktopfile.files = btmini.desktop
+    desktopfile.path = /usr/share/applications
+    INSTALLS += desktopfile
+}
+
+contains(MEEGO_EDITION,harmattan) {
+    icon.files = btmini.png
+    icon.path = /usr/share/icons/hicolor/80x80/apps
+    INSTALLS += icon
+}
