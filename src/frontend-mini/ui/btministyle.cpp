@@ -24,10 +24,13 @@ class BtMiniStyle : public QCommonStyle
     Q_OBJECT
 
 public:
-    BtMiniStyle()
+    BtMiniStyle(bool night = false)
     {
         Q_INIT_RESOURCE(btministyle);
+
+        _night = night;
     }
+
     ~BtMiniStyle()
     {
         if(_menuFrame)
@@ -48,20 +51,20 @@ public:
         case PE_PanelButtonCommand:
         case PE_PanelMenu:
             return;
-		case PE_CustomBase + 1:
-			{
-				QRect r(opt->rect.adjusted(0, 0, 0, opt->fontMetrics.height() - opt->rect.height()));
+        case PE_CustomBase + 1:
+            {
+                QRect r(opt->rect.adjusted(0, 0, 0, opt->fontMetrics.height() - opt->rect.height()));
 
-				QLinearGradient g(r.topLeft(), r.bottomLeft());
+                QLinearGradient g(r.topLeft(), r.bottomLeft());
 
-				g.setColorAt(0.0, QColor(0, 0, 0, 100));
-				g.setColorAt(1.0, QColor(0, 0, 0, 0));
+                g.setColorAt(0.0, QColor(0, 0, 0, 100));
+                g.setColorAt(1.0, QColor(0, 0, 0, 0));
 
-				p->setPen(Qt::NoPen);
-				p->setBrush(g);
-				p->drawRect(r);
-			}
-			return;
+                p->setPen(Qt::NoPen);
+                p->setBrush(g);
+                p->drawRect(r);
+            }
+            return;
         }
         QCommonStyle::drawPrimitive(element, opt, p, widget);
     }
@@ -72,14 +75,14 @@ public:
         switch(element)
         {
         case CE_ScrollBarSlider:
-			{
-				int s = opt->rect.width() / 3;
-				p->setBrush(Qt::white);
-				p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
-				p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
-				p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));
-				return;
-			}
+            {
+                int s = opt->rect.width() / 3;
+                p->setBrush(Qt::white);
+                p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
+                p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
+                p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));
+                return;
+            }
         case CE_PushButtonBevel:
             break;
         case CE_PushButton:
@@ -115,11 +118,11 @@ public:
 
                             drawControl(CE_ScrollBarSlider, &to, p, widget);
                         }
-					}
+                    }
 
-					QCommonStyle::drawComplexControl(cc, option, p, widget);
+                    QCommonStyle::drawComplexControl(cc, option, p, widget);
 
-					//drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), option, p);
+                    //drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), option, p);
                 }
             }
             return;
@@ -220,12 +223,12 @@ public:
         }
 
 #ifdef Q_WS_WINCE
-		// FIX on wince some why font size is not correct if not set explicitly
-		{
-			QFont f(widget->font());
-			f.setPixelSize(f.pixelSize());
-			widget->setFont(f);
-		}
+        // FIX on wince some why font size is not correct if not set explicitly
+        {
+            QFont f(widget->font());
+            f.setPixelSize(f.pixelSize());
+            widget->setFont(f);
+        }
 #endif
     }
 
@@ -253,18 +256,18 @@ public:
         return QCommonStyle::hitTestComplexControl(cc, option, point, widget);
     }
 
-	QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget = 0) const
-	{
-		switch(element)
-		{
-		case SE_ProgressBarContents:
-		case SE_ProgressBarGroove:
-		case SE_ProgressBarLabel:
-			return option->rect;
-		}
+    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget = 0) const
+    {
+        switch(element)
+        {
+        case SE_ProgressBarContents:
+        case SE_ProgressBarGroove:
+        case SE_ProgressBarLabel:
+            return option->rect;
+        }
 
-		return QCommonStyle::subElementRect(element, option, widget);
-	}
+        return QCommonStyle::subElementRect(element, option, widget);
+    }
 
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *option,
         SubControl sc, const QWidget *widget) const
@@ -292,10 +295,10 @@ public:
                             const float vv = scrollbar->sliderPosition;
                             const float sp = qRound((vh - sh) * (vv / hh));
 
-							if(sh >= scrollbar->rect.height())
-								return QRect();
+                            if(sh >= scrollbar->rect.height())
+                                return QRect();
 
-                            return scrollbar->rect.adjusted(0, sp, 
+                            return scrollbar->rect.adjusted(0, sp,
                                     0, sp + sh - scrollbar->rect.height());
                         }
                     case SC_ScrollBarGroove:
@@ -319,20 +322,20 @@ public:
         }
 
         return QCommonStyle::subControlRect(cc, option, sc, widget);
-	}
+    }
 
-	QSize sizeFromContents(ContentsType ct, const QStyleOption *opt, const QSize &csz, const QWidget *widget) const
-	{
-		switch(ct)
-		{
-		case CT_PushButton:
-			{
-				QSize s = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
-				return QSize(s.width(), s.height() * 1.4);
-			}
-		}
-		return QCommonStyle::sizeFromContents(ct, opt, csz, widget);
-	}
+    QSize sizeFromContents(ContentsType ct, const QStyleOption *opt, const QSize &csz, const QWidget *widget) const
+    {
+        switch(ct)
+        {
+        case CT_PushButton:
+            {
+                QSize s = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
+                return QSize(s.width(), s.height() * 1.4);
+            }
+        }
+        return QCommonStyle::sizeFromContents(ct, opt, csz, widget);
+    }
 
 
 public slots:
@@ -362,17 +365,26 @@ private:
 
     QPixmap *_menuFrame;
     int      _menuFrameWidth;
+
+    bool     _night;
 };
 
 class BtMiniStylePlugin : public QStylePlugin
 {
+    Q_OBJECT
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "btministyle.json")
+#endif
+
 public:
     BtMiniStylePlugin() {;}
     ~BtMiniStylePlugin() {;}
 
     QStyle * create(const QString &key)
     {
-        return new BtMiniStyle();
+        if (key.toLower() == "mini")
+            return new BtMiniStyle();
+        return 0;
     }
 
     QStringList	keys() const
@@ -381,13 +393,27 @@ public:
     }
 };
 
-//#ifdef Q_OS_WIN
-//#include "btministyle.moc"
-//#else
+
 #include "moc_btministyle.cpp"
-//#endif
+
 
 // HACK declare static plugin
+#if QT_VERSION < 0x050000
 QObject * qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)
+#else
+static QT_PREPEND_NAMESPACE(QObject) *qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)
+
+static const char *qt_plugin_query_metadata_BtMiniStylePlugin()
+{
+    return (const char *)qt_pluginMetaData;
+}
+
+const QStaticPlugin qt_static_plugin_BtMiniStylePlugin()
+{
+    QStaticPlugin plugin = { qt_plugin_instance_BtMiniStylePlugin, qt_plugin_query_metadata_BtMiniStylePlugin};
+    return plugin;
+}
+#endif
 
 Q_IMPORT_PLUGIN(BtMiniStylePlugin)
+

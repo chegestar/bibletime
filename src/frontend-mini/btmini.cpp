@@ -57,6 +57,7 @@
 #include "btmini.h"
 #include "models/btminimoduletextmodel.h"
 #include "models/btminimodelsmodel.h"
+#include "models/btminisettingsmodel.h"
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
 #include "view/btminiview.h"
@@ -120,8 +121,6 @@ void BtMini::vibrate(int milliseconds)
 
     Sleep(milliseconds);
 
-    NLED_SETTINGS_INFO settings;
-    settings.LedNum = 1;
     settings.OffOnBlink = false;
     NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
 #endif
@@ -241,9 +240,9 @@ public:
     #elif defined(Q_WS_MAEMO_5)
         showMaximized();
     #elif defined(Q_OS_WINCE)
-        w->resize(Application::desktop()->size());
-        w->show();
-        w->showFullScreen();
+        resize(QApplication::desktop()->size());
+        show();
+        showFullScreen();
     #else
         show();
     #endif
@@ -331,7 +330,8 @@ QWidget * BtMini::mainWidget()
         w = new BtMiniMainWidget;
 
         QFont f = w->font();
-        f.setPixelSize(qMin(size.width(), size.height())/14.0f);
+        f.setPixelSize(qMin(size.width(), size.height()) / 14.0f *
+                       CBTConfig::get(CBTConfig::fontScale) / 100);
         w->setFont(f);
 
         qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
@@ -373,8 +373,14 @@ QWidget * BtMini::worksWidget()
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-
         v->setTopShadowEnabled(true);
+
+        QFont f(v->font());
+        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        f.setWeight(QFont::Normal);
+        v->setFont(f);
+
+        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
 
         if(CBTConfig::get(CBTConfig::useRenderCaching))
             v->setRenderCaching(true);
@@ -395,7 +401,7 @@ QWidget * BtMini::worksWidget()
         b2->setMaximumSize(maxSize, maxSize);
         b2->setIconSize(iconSize);
 
-        QFont f = w->font();
+        f = w->font();
         f.setPixelSize(f.pixelSize() * 0.75);
         f.setWeight(QFont::DemiBold);
         b3->setFont(f);
@@ -404,8 +410,8 @@ QWidget * BtMini::worksWidget()
         b3->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         b4->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
-            BtMiniPanel::Search << BtMiniPanel::Installer << BtMiniPanel::Exit, w);
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
+			BtMiniPanel::Installer << BtMiniPanel::Settings << BtMiniPanel::Exit, w);
 
         // Put into layout
         QHBoxLayout *hl = new QHBoxLayout;
@@ -504,12 +510,18 @@ QWidget * BtMini::searchWidget()
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadowEnabled(true);
 
+        QFont f(v->font());
+        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        v->setFont(f);
+
+        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
+
         // Setup controls
         QLineEdit *le = new QLineEdit(w);
 
         le->setAlignment(Qt::AlignCenter);
 
-        QFont f(le->font());
+        f = le->font();
         f.setPixelSize(f.pixelSize() * 1.3);
         le->setFont(f);
 
@@ -564,6 +576,10 @@ QWidget * BtMini::installerWidget(bool firstTime)
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadowEnabled(true);
 
+        QFont f(v->font());
+        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        v->setFont(f);
+
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << (firstTime ? BtMiniPanel::Exit :
                                                                                    BtMiniPanel::Close), w);
 
@@ -608,6 +624,41 @@ QWidget * BtMini::installerWidget(bool firstTime)
         v->setModel(m);
 
         connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+    }
+
+    return w;
+}
+
+
+QWidget *BtMini::settingsWidget()
+{
+    static QWidget *w = 0;
+
+    if(!w)
+    {
+        w = new BtMiniWidget(mainWidget());
+
+        BtMiniView *v = new BtMiniView(w);
+        v->setTopShadowEnabled(true);
+
+        QFont f(v->font());
+        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        v->setFont(f);
+
+        BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
+
+        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
+
+        v->setModel(m);
+
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+
+        QVBoxLayout *vl = new QVBoxLayout;
+
+        vl->addWidget(v);
+        vl->addWidget(p);
+
+        w->setLayout(vl);
     }
 
     return w;

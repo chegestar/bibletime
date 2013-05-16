@@ -36,6 +36,7 @@ public:
         _modal     = false;
         _canceled  = false;
         _popup     = false;
+        _isInput   = false;
     }
     
     ~BtMiniMenuPrivate()
@@ -61,11 +62,15 @@ public:
     bool             _modal;
 	bool             _canceled;
     bool             _popup;
+    bool             _isInput;
+    QString          _inputPattern;
+    int              _inputMin;
+    int              _inputMax;
 
 };
 
 BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
-    , QWidget(BtMiniMenuPrivate::parentWidget(), Qt::FramelessWindowHint)
+    , QWidget(BtMiniMenuPrivate::parentWidget()/*, Qt::FramelessWindowHint*/)
 {
 	//setWindowModality(Qt::ApplicationModal);
     //setModal(false);
@@ -173,8 +178,28 @@ QWidget * BtMiniMenu::buttonAt(int id) const
 
 void BtMiniMenu::buttonTrigger()
 {
-    d_ptr->_result = d_ptr->_buttons.indexOf(qobject_cast<QWidget*>(sender()));
-    hide();
+    if(d_ptr->_isInput)
+    {
+        QPushButton *b = qobject_cast<QPushButton*>(sender());
+        if(b)
+        {
+            if(b->text() == " + " && d_ptr->_result < d_ptr->_inputMax)
+                d_ptr->_result++;
+
+            if(b->text() == " - " && d_ptr->_result > d_ptr->_inputMin)
+                d_ptr->_result--;
+
+            QList<QLabel *> l = sender()->parent()->findChildren<QLabel *>("indicator");
+
+            if(l.size() == 1)
+                l[0]->setText(d_ptr->_inputPattern.arg(d_ptr->_result));
+        }
+    }
+    else
+    {
+        d_ptr->_result = d_ptr->_buttons.indexOf(qobject_cast<QWidget*>(sender()));
+        hide();
+    }
 }
 
 BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
@@ -191,7 +216,14 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
     if(!text.isEmpty())
     {
         QLabel *l = new QLabel(text, dialog);
-		l->setWordWrap(true);
+        l->setWordWrap(true);
+
+        QFont f(l->font());
+        f.setWeight(QFont::Normal);
+        l->setFont(f);
+        l->setMinimumHeight(f.pixelSize() * 2);
+
+
 		
 		//l->setMinimumWidth(1);
 		//l->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred, QSizePolicy::Label));
@@ -245,6 +277,74 @@ int BtMiniMenu::execMenu(QStringList actions)
     QScopedPointer<BtMiniMenu> dialog(createQuery(QString(), actions));
     dialog->exec();
     return dialog->d_ptr->_result;
+}
+
+int BtMiniMenu::execInput(QString caption, QString pattern, int currentValue, int minValue, int maxValue)
+{
+    QScopedPointer<BtMiniMenu> dialog(new BtMiniMenu);
+
+    dialog->d_ptr->_isInput = true;
+    dialog->d_ptr->_result = currentValue;
+    dialog->d_ptr->_inputPattern = pattern;
+    dialog->d_ptr->_inputMin = minValue;
+    dialog->d_ptr->_inputMax = maxValue;
+
+    QVBoxLayout *vl = new QVBoxLayout;
+
+    const int m = dialog->font().pixelSize() / 4;
+    vl->setSpacing(m);
+    vl->setContentsMargins(m, m, m, m);
+
+    // add caption
+    QLabel *l = new QLabel(caption, dialog.data());
+    l->setWordWrap(true);
+
+    QFont f(l->font());
+    f.setWeight(QFont::Normal);
+    f.setPixelSize(f.pixelSize() * 0.66);
+    l->setFont(f);
+
+    vl->addWidget(l, 0, Qt::AlignCenter);
+
+    // add indicator
+    QLabel *l2 = new QLabel(pattern.arg(currentValue), dialog.data());
+
+    l2->setObjectName("indicator");
+
+    f = l2->font();
+    f.setWeight(QFont::Bold);
+    f.setPixelSize(f.pixelSize() * 1.2);
+    l2->setFont(f);
+
+    vl->addWidget(l2, Qt::AlignCenter);
+
+    // add controls
+    QHBoxLayout *hl = new QHBoxLayout;
+
+    QPushButton *b1 = new QPushButton(" - ", dialog.data());
+    b1->setAutoRepeat(true);
+    connect(b1, SIGNAL(clicked()), dialog.data(), SLOT(buttonTrigger()));
+    hl->addWidget(b1, 0);
+
+    QPushButton *b2 = new QPushButton(tr("Ok"), dialog.data());
+    connect(b2, SIGNAL(clicked()), dialog.data(), SLOT(hide()));
+    hl->addWidget(b2, 0);
+
+    QPushButton *b3 = new QPushButton(" + ", dialog.data());
+    b3->setAutoRepeat(true);
+    connect(b3, SIGNAL(clicked()), dialog.data(), SLOT(buttonTrigger()));
+    hl->addWidget(b3, 0);
+
+    vl->addLayout(hl);
+
+    dialog->setLayout(vl);
+
+    dialog->exec();
+
+    if(dialog->wasCanceled())
+        return currentValue;
+    else
+        return dialog->d_ptr->_result;
 }
 
 void BtMiniMenu::paintEvent(QPaintEvent *e)
@@ -333,7 +433,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
 	const int m = dialog->font().pixelSize() / 4;
 	vl->setSpacing(m);
-	vl->setContentsMargins(m, m, m, m);
+    vl->setContentsMargins(m, m, m, m);
 
     QLabel *l = new QLabel(text, dialog);
     l->setWordWrap(true);

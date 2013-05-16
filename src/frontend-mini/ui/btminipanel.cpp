@@ -68,41 +68,44 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 
     foreach(Activity a, activities)
     {
+        QString bt;
+
         switch(a)
         {
 		case Close:
 			{
-				QPushButton *b = new QPushButton(QString(tr("Close")), this);
-				connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-				d->addActivity(a, b);
-				l->addWidget(b);
+                bt = tr("Close");
 			}
             break;
         case Exit:
             {
-                QPushButton *b = new QPushButton(QString(tr("Exit")), this);
-                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-                d->addActivity(a, b);
-                l->addWidget(b);
+                bt = tr("Exit");
             }
             break;
         case Installer:
             {
-                QPushButton *b = new QPushButton(QString(tr("Install")), this);
-                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-                d->addActivity(a, b);
-                l->addWidget(b);
+                bt = tr("Install");
             }
             break;
         case Search:
             {
-                QPushButton *b = new QPushButton(QString(tr("Find")), this);
-                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-                d->addActivity(a, b);
-                l->addWidget(b);
+                bt = tr("Find");
             }
             break;
+        case Settings:
+            {
+                bt = tr("Settings");
+            }
+            break;
+        default:
+            Q_ASSERT(false);
         }
+
+        QPushButton *b = new QPushButton(bt, this);
+        connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
+        d->addActivity(a, b);
+        l->addWidget(b);
+        l->setStretchFactor(b, bt.size() + 3);
     }
 
     setLayout(l);
@@ -148,6 +151,9 @@ void BtMiniPanel::controlActivated()
         break;
     case Installer:
         BtMini::setActiveWidget(BtMini::installerWidget());
+        break;
+    case Settings:
+        BtMini::setActiveWidget(BtMini::settingsWidget());
         break;
     default:
         Q_ASSERT(false);

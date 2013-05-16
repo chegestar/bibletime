@@ -32,12 +32,7 @@
 #include "text/btstatictext.h"
 #endif
 
-#ifndef QT_NO_WEBKIT
-// actually not supported
-//#define USE_WEBKIT
-#endif
-
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebHitTestResult>
@@ -321,7 +316,7 @@ private:
 public:
     BtMiniViewItem()
     {
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
         _wp              = 0;
 #endif
         _selected        = false;
@@ -346,7 +341,7 @@ public:
 	/** Clear item text. */
 	void clear()
 	{
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
 		if(_wp)
 			delete _wp, _wp = 0;
 #endif
@@ -392,7 +387,7 @@ public:
 		return true;
 	}
     
-    void setText(const QString &text, QWidget *widget = 0)
+    void setText(const QString &text, QWidget *widget = 0, bool useWebKit = false)
     {
 		_scale = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
 
@@ -404,43 +399,6 @@ public:
 			resize(size());
 			return;
 		}
-
-#ifdef USE_WEBKIT
-        if(text.size() > 64)
-        {
-            QWebPage *wp = new QWebPage(widget);
-            
-            if(wp == 0)
-            {
-                qDebug("BtMiniViewItem::setText Can't allocate QWebPage");
-                return;
-            }
-
-            wp->settings()->setFontFamily(QWebSettings::StandardFont, widget->font().family());
-            wp->settings()->setFontSize(QWebSettings::DefaultFontSize, widget->font().pixelSize());
-            wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, widget->font().pixelSize());
-            
-            wp->setPreferredContentsSize(QSize(_width, 1));
-            wp->mainFrame()->setHtml(text);
-
-            wp->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-            wp->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-
-            _height = wp->mainFrame()->contentsSize().height();
-
-            wp->setPreferredContentsSize(QSize(_width, _height));
-            wp->setViewportSize(QSize(_width, _height));
-
-            wp->moveToThread(QApplication::instance()->thread());
-
-            qSwap(_wp, wp);
-
-            if(wp)
-                delete wp;
-
-            return;
-        }
-#endif
 
         QString ct = text;
 
@@ -493,6 +451,43 @@ public:
                 }
             }
         }
+
+#ifdef BT_MINI_WEBKIT
+        if(useWebKit)
+        {
+            QWebPage *wp = new QWebPage(widget);
+            
+            if(wp == 0)
+            {
+                qDebug("BtMiniViewItem::setText Can't allocate QWebPage");
+                return;
+            }
+
+            wp->settings()->setFontFamily(QWebSettings::StandardFont, widget->font().family());
+            wp->settings()->setFontSize(QWebSettings::DefaultFontSize, widget->font().pixelSize());
+            wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, widget->font().pixelSize());
+
+            wp->setPreferredContentsSize(QSize(_width, 1));
+            wp->mainFrame()->setHtml(ct);
+
+            wp->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+            wp->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+
+            _height = wp->mainFrame()->contentsSize().height();
+
+            wp->setPreferredContentsSize(QSize(_width, _height));
+            wp->setViewportSize(QSize(_width, _height));
+
+            wp->moveToThread(QApplication::instance()->thread());
+
+            qSwap(_wp, wp);
+
+            if(wp)
+                delete wp;
+
+            return;
+        }
+#endif
 
 #ifdef BT_STATIC_TEXT
         if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
@@ -555,7 +550,7 @@ public:
         }
 #endif
 
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
         if(_wp)
         {
             _wp->setPreferredContentsSize(QSize(w, 1));
@@ -578,7 +573,7 @@ public:
 
     QSize contentsSize() const
     {
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
         if(_wp)
             return _wp->mainFrame()->contentsSize();
 #endif
@@ -610,7 +605,7 @@ public:
             p.rx() += _scale * 1.66;
         }
 
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
         if(_wp)
         {
             painter->save();
@@ -668,7 +663,7 @@ public:
     QIcon            _icon;
     quint16          _scale;
 
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
     QWebPage        *_wp;
 #endif
 
@@ -937,7 +932,7 @@ public:
 	
 	/** If user just opened view or scrolled to an index, necessary to determine when resize
 		thread computed items from center or top. */
-	float                   _viualCenter;
+    float                   _viualCenter;
 
 
 private:
@@ -984,6 +979,7 @@ public:
 		_cachedSurface    = 0;
 
 		_sleep            = false;
+        _webKitEnabled    = false;
     }
 
     ~BtMiniViewPrivate()
@@ -1334,8 +1330,8 @@ public:
 			item->setIcon(icon);
 
 		// text
-		item->setText(o.preText + index.data(o.useThread ? BtMini::PreviewRole :
-			Qt::DisplayRole).toString() + o.postText, q);
+        item->setText(o.preText + index.data(o.useThread ? BtMini::PreviewRole :
+            Qt::DisplayRole).toString() + o.postText, q, _webKitEnabled);
 
 		// threaded processing
 		if(o.useThread)
@@ -1672,15 +1668,8 @@ public:
 					int i = _subViews[v]->indexItem(done.first);
 					if(i != -1)
 					{
-						QRect r(_subViews[v]->itemXy(i), _subViews[v]->_items[i]->size());
-
-						// TODO obtain subView options
-
-						_subViews[v]->_items[i]->setText(done.second, q);
-						areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(), 
-							_subViews[v]->_viualCenter);
-
-						wd = true;
+                        setItemText(v, i, done.second);
+                        wd = true;
 					}
 				}
 			}
@@ -1742,6 +1731,19 @@ public:
 			_subViews.erase(_subViews.begin() + subview);
 		}
 	}
+
+    void setItemText(int v, int i, QString text)
+    {
+        Q_Q(BtMiniView);
+
+        QRect r(_subViews[v]->itemXy(i), _subViews[v]->_items[i]->size());
+
+        // TODO obtain subView options
+
+        _subViews[v]->_items[i]->setText(text, q, _webKitEnabled);
+        areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(),
+            _subViews[v]->_viualCenter);
+    }
 
 public:
 	class BtMiniViewThread : public QThread
@@ -1878,6 +1880,8 @@ public:
 	bool                          _useRenderCaching;
 	QPixmap                      *_cachedSurface;
 	QRect                         _cachedRect;
+
+    bool                          _webKitEnabled;
 
     Q_DECLARE_PUBLIC(BtMiniView);
     BtMiniView * const             q_ptr;
@@ -2289,26 +2293,44 @@ void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 {
     Q_D(BtMiniView);
 
-    for(int i = 0; i < d->_subViews.size(); ++i)
+    Q_ASSERT(topLeft == bottomRight);
+
+    if(d->_ld->plainMode())
     {
-		BtMiniSubView *v = d->_subViews[i];
-
-		// module changed
-        if(v->modelParentIndex() == topLeft)
+        for(int i = 0; i < d->_subViews.size(); ++i)
         {
-			d->clearSubView(i);
+            BtMiniSubView *v = d->_subViews[i];
 
-			QModelIndex index = topLeft.child(qMin(model()->rowCount(topLeft) - 1, v->modelIndex().row()), 0);
+            // module changed
+            if(v->modelParentIndex() == topLeft)
+            {
+                d->clearSubView(i);
 
-            v->setModelIndex(index);
+                QModelIndex index = topLeft.child(qMin(model()->rowCount(topLeft) - 1, v->modelIndex().row()), 0);
 
-			if(d->currentSubView() == v)
-				emit currentChanged(index);
+                v->setModelIndex(index);
 
-			scheduleDelayedItemsLayout();
+                if(d->currentSubView() == v)
+                    emit currentChanged(index);
 
-            return;
+                scheduleDelayedItemsLayout();
+
+                return;
+            }
         }
+    }
+    else
+    {
+        for(int i = 0; i < d->_subViews.size(); ++i)
+        {
+            if(d->_subViews[i]->modelParentIndex() == topLeft.parent())
+            {
+                int ii = d->_subViews[i]->indexItem(topLeft);
+                if(ii >= 0)
+                    d->setItemText(i, ii, topLeft.data().toString());
+            }
+        }
+        return;
     }
 
     Q_ASSERT(false);
@@ -2772,7 +2794,7 @@ void BtMiniView::paintEvent(QPaintEvent *e)
     }
 
 //    painter.setPen(Qt::black);
-//    painter.drawText(viewport()->rect(), QString("Hi Привет"));
+//    painter.drawText(viewport()->rect(), QString("Hi � џСЂ� ё� І� µС‚"));
 //    painter.drawText(viewport()->rect(), tr("Hello World!"));
 }
 
@@ -2933,7 +2955,7 @@ QString BtMiniView::currentContents() const
             {
                 const QPoint pp(vp - v->itemXy(i));
 
-#ifdef USE_WEBKIT
+#ifdef BT_MINI_WEBKIT
                 QWebPage *wp(v->_items[i]->_wp);
                 if(wp)
                 {
@@ -3118,13 +3140,24 @@ void BtMiniView::setSleep(bool sleep)
 
 	if(sleep)
 	{
+        // stop cinetic scrolling
 		d->_mousePower = QPointF();
 
+        // stop streads
 		foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
 			t->_stop = true;
 
-		d->clearSubView(d->_currentSubView, false, true);
-	}
+        // clear unnecessary items
+        if(d->_currentSubView < d->_subViews.size())
+            d->clearSubView(d->_currentSubView, false, true);
+    }
+}
+
+void BtMiniView::setWebKitEnabled(bool enable)
+{
+    Q_D(BtMiniView);
+
+    d->_webKitEnabled = enable;
 }
 
 QSize BtMiniView::sizeHint() const

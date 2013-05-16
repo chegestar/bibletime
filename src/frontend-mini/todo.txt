@@ -32,7 +32,7 @@ kalemas@mail.ru :
     settings ui
         font size
         non stop scrolling
-        about info
+        about info: bugs, faq
     linux
         no non ascii characters drawn
 ?   design changes

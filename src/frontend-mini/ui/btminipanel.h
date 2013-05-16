@@ -27,6 +27,7 @@ public:
         Search,
         Installer,
         Exit,
+        Settings,
 		Close
     };
 

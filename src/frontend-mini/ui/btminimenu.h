@@ -34,6 +34,8 @@ public:
 	static int execQuery(QString text, QStringList actions = QStringList());
 	
 	static int execMenu(QStringList actions);
+
+    static int execInput(QString caption, QString pattern, int currentValue, int minValue, int maxValue);
 	
 	QWidget * buttonAt(int id) const;
 

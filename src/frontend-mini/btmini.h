@@ -53,15 +53,6 @@ public:
     
     /** */
     static QWidget * settingsWidget();
-
-    /** */
-    static QWidget * aboutWidget();
-
-    /** User data: bookmarks, history, favorites. */
-    static QWidget * bookmarksWidget();
-
-    /** Raised if user tapped on verse. */
-    static QWidget * contextWidget();
     
     /** The only way to switch interface states. Works with functions above. */
     static void setActiveWidget(QWidget *widget);
