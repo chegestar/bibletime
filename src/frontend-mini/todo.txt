@@ -24,15 +24,17 @@ kalemas@mail.ru :
 +   long press depend on time, not update interval
 ?   maybe installing a module automatically download and istall sword locale for that language
 +   install manager by languages
-    qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
++   qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
 		try to replace with custom control
     logic to take into account device dpi for font size policy
         android hd2 - 239 dpi
         win64 17" 1600x900 - 96 dpi
-    settings ui
++   settings ui
         font size
         non stop scrolling
         about info: bugs, faq
+		per-chapter rendering
+		threading
     linux
         no non ascii characters drawn
 ?   design changes

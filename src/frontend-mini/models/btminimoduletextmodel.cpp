@@ -470,7 +470,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 		{
 			const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
 
-			// there was issue with VerseKey::freshtext simoultaneous call
+			// there was issue with VerseKey::freshtext at simoultaneous call
 			static CSwordVerseKey vk(list->_module);
 			vk.setModule(list->_module);
 			vk.setIndex(index.row() + list->_firstEntry);
@@ -733,6 +733,8 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
         menu.setFont(f);
 
         BtMiniView *view = new BtMiniView(&menu);
+
+        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
         
         BtMiniModuleTextModel *m = d->fromContentsInfo(contents, &menu);
 

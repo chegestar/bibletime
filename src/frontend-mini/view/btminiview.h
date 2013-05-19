@@ -14,8 +14,6 @@
 
 #include <QAbstractItemView>
 
-//#include "btmini.h"
-
 class BtMiniLayoutDelegate;
 class BtMiniViewPrivate;
 
@@ -80,6 +78,8 @@ public:
 	/** View does not update subviews during sleeping. */
 	void setSleep(bool sleep);
 
+    /** Enable WebKit html rendering. Default off. */
+    void setWebKitEnabled(bool enable);
 
 public slots:
     /** Reimplemented from QAbstractItemView. */
