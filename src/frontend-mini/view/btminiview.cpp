@@ -1,4 +1,4 @@
-/*********
+﻿/*********
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
@@ -190,10 +190,10 @@ private:
 			painter->setClipping(true);
 			painter->setClipRect(clipping.translated(point));
 
-			painter->eraseRect(clipping.translated(point));
+            //painter->eraseRect(clipping.translated(point));
 
 			for(int i=0; i < _data.size(); ++i)
-			{
+            {
 				painter->setFont(_data[i].font);
 				painter->setPen(_data[i].color);
 				painter->translate(0, _data[i].size.height());
@@ -207,6 +207,8 @@ private:
 		/** Set width and prepare to display. */
 		inline void resize(int width, int height)
 		{
+            Q_UNUSED(height);
+
 			_size.setWidth(width);
 			layout();
 		}
@@ -389,66 +391,84 @@ public:
     
     void setText(const QString &text, QWidget *widget = 0, bool useWebKit = false)
     {
+        clear();
+
+        if(text.isEmpty())
+            return;
+
 		_scale = widget == 0 ? QApplication::font().pixelSize() : widget->font().pixelSize();
 
-		clear();
+        QString ct(text);
 
-		if(isTextAcceptable(text, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
+        // FIX for dark theme
+        QColor tc = widget->style()->standardPalette().color(QPalette::WindowText);
+        if(tc != Qt::black)
+        {
+            int i = ct.indexOf("<body>");
+            if(i >= 0)
+                i += 6;
+            else
+                i = 0;
+
+            int ii = ct.indexOf("</body>");
+            if(ii == -1)
+                ii = ct.size();
+
+            Q_ASSERT(i < ii);
+
+            ct = ct.insert(ii, "</font>").insert(i, QString("<font color=\"%1\">").arg(tc.name()));
+        }
+
+        if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
-			_ti = new TextItem(text, widget->font());
+            _ti = new TextItem(ct, widget->font());
 			resize(size());
 			return;
 		}
 
-        QString ct = text;
+        Q_ASSERT(_width > 0);
 
-        if(!text.isEmpty())
+        // HACK correct css to work with QTextDocument
+        int cssStart = ct.indexOf("<style type=\"text/css\">");
+        if(cssStart >= 0)
         {
-            Q_ASSERT(_width > 0);
+            int contentStart = ct.indexOf("#content", cssStart);
+            int cssEnd = ct.indexOf("</style>");
 
-            // HACK correct css to work with QTextDocument
-            int cssStart = ct.indexOf("<style type=\"text/css\">");
-
-            if(cssStart >= 0)
+            // fix default font size to widget font size
+            if(contentStart >= 0 && contentStart < cssEnd)
             {
-                int contentStart = ct.indexOf("#content", cssStart);
-                int cssEnd = ct.indexOf("</style>");
+                int fontSize = ct.indexOf("font-size:", contentStart);
 
-                // fix default font size to widget font size
-                if(contentStart >= 0 && contentStart < cssEnd)
+                if(fontSize >= 0 && fontSize < ct.indexOf("}", contentStart))
                 {
-                    int fontSize = ct.indexOf("font-size:", contentStart);
+                    int column = ct.indexOf(":", fontSize) + 1;
+                    ct.replace(column, ct.indexOf(";", fontSize) - column,
+                        QString("%1px").arg(widget->font().pixelSize()));
+                }
+            }
 
-                    if(fontSize >= 0 && fontSize < ct.indexOf("}", contentStart))
+            // fix percent font-size
+            for(int i = cssStart; i < cssEnd; )
+            {
+                    int fontSize = ct.indexOf("font-size:", i);
+
+                    if(fontSize == -1)
+                            break;
+
+                    for(int ii = fontSize + 10; ; ++ii)
                     {
-                        int column = ct.indexOf(":", fontSize) + 1;
-                        ct.replace(column, ct.indexOf(";", fontSize) - column,
-                            QString("%1px").arg(widget->font().pixelSize()));
+                            if(ct[ii] == '\n')
+                                    break;
+                            else if(ct[ii] == '%')
+                            {
+                                    int fs = fontSize + 10;
+                                    int v = ct.mid(fs, ii - fs).toInt();
+                                    ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
+                            }
                     }
-                }
 
-                // fix percent font-size
-                for(int i = cssStart; i < cssEnd; )
-                {
-                        int fontSize = ct.indexOf("font-size:", i);
-
-                        if(fontSize == -1)
-                                break;
-
-                        for(int ii = fontSize + 10; ; ++ii)
-                        {
-                                if(ct[ii] == '\n')
-                                        break;
-                                else if(ct[ii] == '%')
-                                {
-                                        int fs = fontSize + 10;
-                                        int v = ct.mid(fs, ii - fs).toInt();
-                                        ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
-                                }
-                        }
-
-                        i = fontSize + 10;
-                }
+                    i = fontSize + 10;
             }
         }
 
@@ -466,6 +486,10 @@ public:
             wp->settings()->setFontFamily(QWebSettings::StandardFont, widget->font().family());
             wp->settings()->setFontSize(QWebSettings::DefaultFontSize, widget->font().pixelSize());
             wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, widget->font().pixelSize());
+
+            QPalette p(widget->palette());
+            p.setBrush(QPalette::Base, Qt::transparent);
+            wp->setPalette(p);
 
             wp->setPreferredContentsSize(QSize(_width, 1));
             wp->mainFrame()->setHtml(ct);
@@ -617,8 +641,8 @@ public:
         if(_doc)
         {
             painter->translate(p);
-			_doc->drawContents(painter, clipping.translated(point.x() - p.x(), 0));
-			painter->translate(-p);
+            _doc->drawContents(painter, clipping.translated(point.x() - p.x(), 0));
+            painter->translate(-p);
         }
 
         if(_ti)
@@ -863,8 +887,7 @@ public:
 
         Q_ASSERT(!r.contains(point));
 
-        for(int i = _cachedTopItem.first, x = 0, y = 0,
-            y2 = _cachedTopItem.second; i < _items.size(); ++i)
+        for(int i = _cachedTopItem.first; i < _items.size(); ++i)
         {
             if(_items[i]->_newLine)
                 r.moveTo(0, r.bottom() + 1);
@@ -978,8 +1001,9 @@ public:
 		_useRenderCaching = false;
 		_cachedSurface    = 0;
 
-		_sleep            = false;
-        _webKitEnabled    = false;
+        _sleep               = false;
+        _webKitEnabled       = false;
+        _continuousScrolling = false;
     }
 
     ~BtMiniViewPrivate()
@@ -1882,6 +1906,7 @@ public:
 	QRect                         _cachedRect;
 
     bool                          _webKitEnabled;
+    bool                          _continuousScrolling;
 
     Q_DECLARE_PUBLIC(BtMiniView);
     BtMiniView * const             q_ptr;
@@ -1896,29 +1921,12 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
 	f.setPixelSize(f.pixelSize() * 1.1);
 	setFont(f);
 		
-	// Get global size factor
-    {
-        QWidget *w = this;
-        while(w->parentWidget())
-            w = w->parentWidget();
+    // Get global size factor, required for scrolling and long-tapping
+    for(QWidget *w = this; w != 0; w = w->parentWidget())
+        if(!w->parentWidget())
+            d->_sizeFactor = w->font().pixelSize();
 
-		d->_sizeFactor = w->font().pixelSize();
-
-        const int b = style()->pixelMetric(QStyle::PM_MenuPanelWidth) * 2;
-        
-        //if(w->width() < w->height())
-        //{
-        //    setMinimumWidth(qMin(w->width() - b, (int)(w->width() * 0.8)));
-        //    setMinimumHeight(w->height()*0.7);
-        //}
-        //else
-        //{
-        //    setMinimumWidth(w->width()*0.7);
-        //    setMinimumHeight(qMin(w->width() - b, (int)(w->width() * 0.8)));
-        //}
-
-		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    }
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
 	setAttribute(Qt::WA_InputMethodEnabled, false);
 
@@ -2133,8 +2141,15 @@ void BtMiniView::timerEvent(QTimerEvent *e)
     // update kinetic scrolling
     if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
     {
-        d->_mousePower *= SCROLL_ATTENUATION;
-        scroll(d->_mousePower.x(), d->_mousePower.y());
+        if(!d->_continuousScrolling)
+        {
+            d->_mousePower *= SCROLL_ATTENUATION;
+            scroll(d->_mousePower.x(), d->_mousePower.y());
+        }
+        else
+        {
+            scroll(d->_mousePower.x() * 0.02, d->_mousePower.y() * 0.02);
+        }
     }
 
     // update long press
@@ -2782,19 +2797,24 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 
 		int mt = d->_mouseTapping - 6;
         float f = 1.3f;
+
+        QColor c(palette().color(QPalette::WindowText));
         
         for(int i = qMax(0, mt - 3), e = mt; i <= e; ++i)
         {
             QPoint p(z.center() + (QPointF(qCos(i / f), qSin(i / f)) * (z.width() / 2)).toPoint());
             QRect r(p.x()-(m*0.25), p.y()-(m*0.25), m*0.5, m*0.5);
 
-            painter.setBrush(QColor(0, 0, 0, (255 * 0.8) / (mt - i + 1)));
+            QColor cc(c);
+            cc.setAlpha((255 * 0.8) / (mt - i + 1));
+
+            painter.setBrush(cc);
             painter.drawEllipse(r);
         }
     }
 
 //    painter.setPen(Qt::black);
-//    painter.drawText(viewport()->rect(), QString("Hi � џСЂ� ё� І� µС‚"));
+//    painter.drawText(viewport()->rect(), QString("Hi � џСЂ� ё� І� µС‚"));
 //    painter.drawText(viewport()->rect(), tr("Hello World!"));
 }
 
@@ -2869,10 +2889,9 @@ QRegion BtMiniView::visualRegionForSelection(const QItemSelection &selection) co
     return QRegion();
 }
 
-void BtMiniView::setTopShadowEnabled(bool mode)
+void BtMiniView::setTopShadow(bool enable)
 {
-    Q_D(BtMiniView);
-    d->_enableTopShadow = mode;
+    d_ptr->_enableTopShadow = enable;
 }
 
 void BtMiniView::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
@@ -3160,7 +3179,21 @@ void BtMiniView::setWebKitEnabled(bool enable)
     d->_webKitEnabled = enable;
 }
 
+void BtMiniView::setContinuousScrolling(bool enable)
+{
+    Q_D(BtMiniView);
+
+    d->_continuousScrolling = enable;
+
+}
+
 QSize BtMiniView::sizeHint() const
 {
 	return QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+}
+
+
+bool BtMiniView::topShadow()
+{
+    return d_ptr->_enableTopShadow;
 }

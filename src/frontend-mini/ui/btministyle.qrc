@@ -5,5 +5,6 @@
         <file alias="arrow-right.png">resources/arrow-right.png</file>
         <file alias="arrow-left-inactive.png">resources/arrow-left-inactive.png</file>
         <file alias="arrow-right-inactive.png">resources/arrow-right-inactive.png</file>
+        <file alias="menu-night-frame.png">resources/menu-night-frame.png</file>
     </qresource>
 </RCC>

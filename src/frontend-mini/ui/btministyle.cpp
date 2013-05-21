@@ -9,6 +9,7 @@
 *
 **********/
 
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QCommonStyle>
 #include <QLayout>
@@ -77,7 +78,7 @@ public:
         case CE_ScrollBarSlider:
             {
                 int s = opt->rect.width() / 3;
-                p->setBrush(Qt::white);
+                p->setBrush(standardPalette().color(QPalette::Background));
                 p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
                 p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
                 p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));
@@ -103,7 +104,7 @@ public:
                 if(const QStyleOptionSlider *scrollbar = qstyleoption_cast<const QStyleOptionSlider *>(option))
                 {
                     p->setPen(Qt::NoPen);
-                    p->setBrush(QColor(127, 196, 255));
+                    p->setBrush(_night ? QColor("#2c6799") : QColor(127, 196, 255));
                     p->drawRect(scrollbar->rect);
 
                     if(scrollbar->subControls & SC_ScrollBarSlider)
@@ -167,14 +168,31 @@ public:
 
 	QPalette standardPalette() const
 	{
-		static QPalette defaultPalette(Qt::white);
+        static bool b = true;
+        static QPalette defaultPalette(Qt::white);
 
-	    defaultPalette.setColor(QPalette::Window, Qt::white);
-		defaultPalette.setColor(QPalette::Button, Qt::white);
-	    defaultPalette.setColor(QPalette::WindowText, QColor("#000000"));
-	    defaultPalette.setColor(QPalette::ButtonText, QColor("#000000"));
-	    defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-	    defaultPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
+        if(b)
+        {
+            if(_night)
+            {
+                defaultPalette.setColor(QPalette::Window, QColor(33, 33, 33));
+                defaultPalette.setColor(QPalette::Button, QColor(33, 33, 33));
+                defaultPalette.setColor(QPalette::WindowText, Qt::white);
+                defaultPalette.setColor(QPalette::ButtonText, Qt::white);
+                defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+                defaultPalette.setColor(QPalette::HighlightedText, Qt::white);
+            }
+            else
+            {
+                defaultPalette.setColor(QPalette::Window, Qt::white);
+                defaultPalette.setColor(QPalette::Button, Qt::white);
+                defaultPalette.setColor(QPalette::WindowText, Qt::black);
+                defaultPalette.setColor(QPalette::ButtonText, Qt::black);
+                defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+                defaultPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
+            }
+            b = false;
+        }
 
 	    return defaultPalette;
 	}
@@ -182,11 +200,14 @@ public:
 
 	void polish(QWidget *widget)
     {
+        // FIX initialization in constructor cause crash
         static bool initialized = false;
-
         if(!initialized)
         {
-            _menuFrame = new QPixmap(":/style-mini/menu-frame.png");
+            if(_night)
+                _menuFrame = new QPixmap(":/style-mini/menu-night-frame.png");
+            else
+                _menuFrame = new QPixmap(":/style-mini/menu-frame.png");
             _menuFrameWidth = _menuFrame->width()/3;
 
             initialized = true;
@@ -200,12 +221,21 @@ public:
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 
-        if(QString(widget->metaObject()->className()) == "QWidget")
-		{
-			widget->setAutoFillBackground(true);
-			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
-				w->setPalette(standardPalette());
-		}
+        if(QString(widget->metaObject()->className()) == "BtMiniView")
+        {
+            QAbstractItemView *l = qobject_cast<QAbstractItemView*>(widget);
+            if(l)
+            {
+                l->viewport()->setAutoFillBackground(false);
+            }
+        }
+
+//        if(QString(widget->metaObject()->className()) == "QWidget")
+//		{
+//			widget->setAutoFillBackground(true);
+//			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
+//				w->setPalette(standardPalette());
+//		}
 
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
@@ -213,10 +243,20 @@ public:
 			widget->setAutoFillBackground(true);
 
             QPalette p = widget->palette();
-            p.setColor(QPalette::Window, QColor(102, 102, 102));
-            p.setColor(QPalette::Button, QColor(102, 102, 102));
-            p.setColor(QPalette::WindowText, Qt::white);
-            p.setColor(QPalette::ButtonText, Qt::white);
+            if(_night)
+            {
+                p.setColor(QPalette::Window, Qt::black);
+                p.setColor(QPalette::Button, Qt::black);
+                p.setColor(QPalette::WindowText, Qt::white);
+                p.setColor(QPalette::ButtonText, Qt::white);
+            }
+            else
+            {
+                p.setColor(QPalette::Window, QColor(102, 102, 102));
+                p.setColor(QPalette::Button, QColor(102, 102, 102));
+                p.setColor(QPalette::WindowText, Qt::white);
+                p.setColor(QPalette::ButtonText, Qt::white);
+            }
 
 			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
 				w->setPalette(p);
@@ -373,7 +413,7 @@ class BtMiniStylePlugin : public QStylePlugin
 {
     Q_OBJECT
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "btministyle.json")
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface")
 #endif
 
 public:
@@ -384,12 +424,14 @@ public:
     {
         if (key.toLower() == "mini")
             return new BtMiniStyle();
+        if (key.toLower() == "mini-night")
+            return new BtMiniStyle(true);
         return 0;
     }
 
     QStringList	keys() const
     {
-        return QStringList("mini");
+        return QStringList() << "mini" << "mini-night";
     }
 };
 
@@ -401,11 +443,85 @@ public:
 #if QT_VERSION < 0x050000
 QObject * qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)
 #else
+
+#ifdef QT_NO_DEBUG
+static const unsigned char qt_pluginMetaData_BtMiniStyle[] = {
+    'Q', 'T', 'M', 'E', 'T', 'A', 'D', 'A', 'T', 'A', ' ', ' ',
+    0x71, 0x62, 0x6a, 0x73, 0x01, 0x00, 0x00, 0x00,
+    0xec, 0x00, 0x00, 0x00, 0x0b, 0x00, 0x00, 0x00,
+    0xd8, 0x00, 0x00, 0x00, 0x1b, 0x03, 0x00, 0x00,
+    0x03, 0x00, 0x49, 0x49, 0x44, 0x00, 0x00, 0x00,
+    0x28, 0x00, 0x6f, 0x72, 0x67, 0x2e, 0x71, 0x74,
+    0x2d, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+    0x2e, 0x51, 0x74, 0x2e, 0x51, 0x53, 0x74, 0x79,
+    0x6c, 0x65, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72,
+    0x79, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x66, 0x61,
+    0x63, 0x65, 0x00, 0x00, 0x9b, 0x0a, 0x00, 0x00,
+    0x09, 0x00, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e,
+    0x61, 0x6d, 0x65, 0x00, 0x11, 0x00, 0x42, 0x74,
+    0x4d, 0x69, 0x6e, 0x69, 0x53, 0x74, 0x79, 0x6c,
+    0x65, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x00,
+    0x5a, 0x00, 0xa0, 0x00, 0x07, 0x00, 0x76, 0x65,
+    0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00, 0x00, 0x00,
+    0x11, 0x00, 0x00, 0x00, 0x05, 0x00, 0x64, 0x65,
+    0x62, 0x75, 0x67, 0x00, 0x95, 0x12, 0x00, 0x00,
+    0x08, 0x00, 0x4d, 0x65, 0x74, 0x61, 0x44, 0x61,
+    0x74, 0x61, 0x00, 0x00, 0x44, 0x00, 0x00, 0x00,
+    0x03, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00,
+    0x14, 0x03, 0x00, 0x00, 0x04, 0x00, 0x4b, 0x65,
+    0x79, 0x73, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00,
+    0x04, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
+    0x04, 0x00, 0x6d, 0x69, 0x6e, 0x69, 0x00, 0x00,
+    0x0a, 0x00, 0x6d, 0x69, 0x6e, 0x69, 0x2d, 0x6e,
+    0x69, 0x67, 0x68, 0x74, 0x8b, 0x01, 0x00, 0x00,
+    0x8b, 0x02, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
+    0x0c, 0x00, 0x00, 0x00, 0x84, 0x00, 0x00, 0x00,
+    0x44, 0x00, 0x00, 0x00, 0x78, 0x00, 0x00, 0x00,
+    0x68, 0x00, 0x00, 0x00
+};
+
+#else // QT_NO_DEBUG
+static const unsigned char qt_pluginMetaData_BtMiniStyle[] = {
+    'Q', 'T', 'M', 'E', 'T', 'A', 'D', 'A', 'T', 'A', ' ', ' ',
+    0x71, 0x62, 0x6a, 0x73, 0x01, 0x00, 0x00, 0x00,
+    0xec, 0x00, 0x00, 0x00, 0x0b, 0x00, 0x00, 0x00,
+    0xd8, 0x00, 0x00, 0x00, 0x1b, 0x03, 0x00, 0x00,
+    0x03, 0x00, 0x49, 0x49, 0x44, 0x00, 0x00, 0x00,
+    0x28, 0x00, 0x6f, 0x72, 0x67, 0x2e, 0x71, 0x74,
+    0x2d, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+    0x2e, 0x51, 0x74, 0x2e, 0x51, 0x53, 0x74, 0x79,
+    0x6c, 0x65, 0x46, 0x61, 0x63, 0x74, 0x6f, 0x72,
+    0x79, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x66, 0x61,
+    0x63, 0x65, 0x00, 0x00, 0x95, 0x0a, 0x00, 0x00,
+    0x08, 0x00, 0x4d, 0x65, 0x74, 0x61, 0x44, 0x61,
+    0x74, 0x61, 0x00, 0x00, 0x44, 0x00, 0x00, 0x00,
+    0x03, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00,
+    0x14, 0x03, 0x00, 0x00, 0x04, 0x00, 0x4b, 0x65,
+    0x79, 0x73, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00,
+    0x04, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
+    0x04, 0x00, 0x6d, 0x69, 0x6e, 0x69, 0x00, 0x00,
+    0x0a, 0x00, 0x6d, 0x69, 0x6e, 0x69, 0x2d, 0x6e,
+    0x69, 0x67, 0x68, 0x74, 0x8b, 0x01, 0x00, 0x00,
+    0x8b, 0x02, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
+    0x1b, 0x15, 0x00, 0x00, 0x09, 0x00, 0x63, 0x6c,
+    0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x00,
+    0x11, 0x00, 0x42, 0x74, 0x4d, 0x69, 0x6e, 0x69,
+    0x53, 0x74, 0x79, 0x6c, 0x65, 0x50, 0x6c, 0x75,
+    0x67, 0x69, 0x6e, 0x00, 0x31, 0x00, 0x00, 0x00,
+    0x05, 0x00, 0x64, 0x65, 0x62, 0x75, 0x67, 0x00,
+    0x5a, 0x00, 0xa0, 0x00, 0x07, 0x00, 0x76, 0x65,
+    0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00, 0x00, 0x00,
+    0x0c, 0x00, 0x00, 0x00, 0x44, 0x00, 0x00, 0x00,
+    0x98, 0x00, 0x00, 0x00, 0xbc, 0x00, 0x00, 0x00,
+    0xc8, 0x00, 0x00, 0x00
+};
+#endif // QT_NO_DEBUG
+
 static QT_PREPEND_NAMESPACE(QObject) *qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)
 
 static const char *qt_plugin_query_metadata_BtMiniStylePlugin()
 {
-    return (const char *)qt_pluginMetaData;
+    return (const char *)qt_pluginMetaData_BtMiniStyle;
 }
 
 const QStaticPlugin qt_static_plugin_BtMiniStylePlugin()
@@ -416,4 +532,3 @@ const QStaticPlugin qt_static_plugin_BtMiniStylePlugin()
 #endif
 
 Q_IMPORT_PLUGIN(BtMiniStylePlugin)
-

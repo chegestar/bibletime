@@ -217,7 +217,7 @@ public:
         case ScreenOrientationAuto:
             attribute = static_cast<Qt::WidgetAttribute>(130);
             break;
-    #else // QT_VERSION < 0x040702
+    #elif QT_VERSION < 0x050000
         case ScreenOrientationLockPortrait:
             attribute = Qt::WA_LockPortraitOrientation;
             break;
@@ -228,7 +228,7 @@ public:
         case ScreenOrientationAuto:
             attribute = Qt::WA_AutoOrientation;
             break;
-    #endif // QT_VERSION < 0x040702
+    #endif
         };
         setAttribute(attribute, true);
     }
@@ -373,7 +373,7 @@ QWidget * BtMini::worksWidget()
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-        v->setTopShadowEnabled(true);
+        v->setTopShadow(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
@@ -508,7 +508,7 @@ QWidget * BtMini::searchWidget()
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-        v->setTopShadowEnabled(true);
+        v->setTopShadow(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
@@ -574,7 +574,7 @@ QWidget * BtMini::installerWidget(bool firstTime)
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-        v->setTopShadowEnabled(true);
+        v->setTopShadow(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
@@ -639,7 +639,7 @@ QWidget *BtMini::settingsWidget()
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-        v->setTopShadowEnabled(true);
+        v->setTopShadow(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
@@ -743,12 +743,20 @@ public:
 };
 
 /** Debug messages. */
+#if QT_VERSION < 0x050000
 void BtMiniMessageHandler(QtMsgType type, const char *msg)
+#else
+void BtMiniMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#endif
 {
     static QFile f("log.txt");
     static bool r = f.open(QIODevice::WriteOnly);
 
+#if QT_VERSION < 0x050000
     QString s(QString::fromLocal8Bit(msg) + QLatin1Char('\n'));
+#else
+    QString s(msg + '\n');
+#endif
     QTextStream (&f) << s;
 
 #ifdef ANDROID
@@ -812,7 +820,12 @@ public:
 
 int main(int argc, char *argv[])
 {
+#if QT_VERSION < 0x050000
     qInstallMsgHandler(BtMiniMessageHandler);
+#else
+    qInstallMessageHandler(BtMiniMessageHandler);
+#endif
+
     //QApplication::setGraphicsSystem("opengl");
 
     // TODO set style for main widget

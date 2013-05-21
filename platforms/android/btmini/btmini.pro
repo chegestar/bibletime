@@ -1,169 +1,176 @@
+# Configuration
+VERSION = 0.3.4
 
 CONFIG += clucene
+CONFIG += webkit
 
-#QT += widgets
+#CLUCENE_PATH = ../../../../clucene/src
+CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
 
+SWORD_PATH = ../../../../sword
+
+# Base section, nothing platform specific
 DEFINES += BT_MINI
 
 INCLUDEPATH += . \
-    ../../../../sword/include \
-    ../../../../sword/include/internal/regex \
+    $${SWORD_PATH}/include \
     ../../../../bt/src/frontend-mini \
     ../../../../bt/src
 
 SOURCES += \
-    ../../../../sword/src/modules/common/zipcomprs.cpp \
-    ../../../../sword/src/utilfuns/zlib/untgz.c \
-    ../../../../sword/src/utilfuns/zlib/gzio.c \
-    ../../../../sword/src/utilfuns/zlib/zutil.c \
-    ../../../../sword/src/utilfuns/zlib/uncompr.c \
-    ../../../../sword/src/utilfuns/zlib/trees.c \
-    ../../../../sword/src/utilfuns/zlib/infutil.c \
-    ../../../../sword/src/utilfuns/zlib/inftrees.c \
-    ../../../../sword/src/utilfuns/zlib/inflate.c \
-    ../../../../sword/src/utilfuns/zlib/inffast.c \
-    ../../../../sword/src/utilfuns/zlib/infcodes.c \
-    ../../../../sword/src/utilfuns/zlib/infblock.c \
-    ../../../../sword/src/utilfuns/zlib/deflate.c \
-    ../../../../sword/src/utilfuns/zlib/crc32.c \
-    ../../../../sword/src/utilfuns/zlib/compress.c \
-    ../../../../sword/src/utilfuns/zlib/adler32.c \
-    ../../../../sword/src/mgr/ftplibftpt.cpp \
-    ../../../../sword/src/utilfuns/ftplib.c \
-    ../../../../sword/src/utilfuns/regex.c \
-    ../../../../sword/src/frontend/swdisp.cpp \
-    ../../../../sword/src/frontend/swlog.cpp \
-    ../../../../sword/src/keys/swkey.cpp \
-    ../../../../sword/src/keys/listkey.cpp \
-    ../../../../sword/src/keys/strkey.cpp \
-    ../../../../sword/src/keys/treekey.cpp \
-    ../../../../sword/src/keys/treekeyidx.cpp \
-    ../../../../sword/src/keys/versekey.cpp \
-    ../../../../sword/src/keys/versetreekey.cpp \
-    ../../../../sword/src/mgr/swconfig.cpp \
-    ../../../../sword/src/mgr/swmgr.cpp \
-    ../../../../sword/src/mgr/swfiltermgr.cpp \
-    ../../../../sword/src/mgr/encfiltmgr.cpp \
-    ../../../../sword/src/mgr/markupfiltmgr.cpp \
-    ../../../../sword/src/mgr/filemgr.cpp \
-    ../../../../sword/src/mgr/versificationmgr.cpp \
-    ../../../../sword/src/mgr/ftptrans.cpp \
-    ../../../../sword/src/mgr/swlocale.cpp \
-    ../../../../sword/src/mgr/localemgr.cpp \
-    ../../../../sword/src/mgr/swcacher.cpp \
-    ../../../../sword/src/mgr/swsearchable.cpp \
-    ../../../../sword/src/mgr/installmgr.cpp \
-    ../../../../sword/src/mgr/stringmgr.cpp \
-    ../../../../sword/src/modules/swmodule.cpp \
-    ../../../../sword/src/modules/comments/swcom.cpp \
-    ../../../../sword/src/modules/comments/hrefcom/hrefcom.cpp \
-    ../../../../sword/src/modules/comments/rawcom/rawcom.cpp \
-    ../../../../sword/src/modules/comments/rawcom4/rawcom4.cpp \
-    ../../../../sword/src/modules/comments/rawfiles/rawfiles.cpp \
-    ../../../../sword/src/modules/comments/zcom/zcom.cpp \
-    ../../../../sword/src/modules/common/rawstr.cpp \
-    ../../../../sword/src/modules/common/rawstr4.cpp \
-    ../../../../sword/src/modules/common/swcomprs.cpp \
-    ../../../../sword/src/modules/common/lzsscomprs.cpp \
-    ../../../../sword/src/modules/common/rawverse.cpp \
-    ../../../../sword/src/modules/common/rawverse4.cpp \
-    ../../../../sword/src/modules/common/swcipher.cpp \
-    ../../../../sword/src/modules/common/zverse.cpp \
-    ../../../../sword/src/modules/common/zstr.cpp \
-    ../../../../sword/src/modules/common/entriesblk.cpp \
-    ../../../../sword/src/modules/common/sapphire.cpp \
-    ../../../../sword/src/modules/filters/swbasicfilter.cpp \
-    ../../../../sword/src/modules/filters/swoptfilter.cpp \
-    ../../../../sword/src/modules/filters/gbfhtml.cpp \
-    ../../../../sword/src/modules/filters/gbfxhtml.cpp \
-    ../../../../sword/src/modules/filters/gbfhtmlhref.cpp \
-    ../../../../sword/src/modules/filters/gbfwebif.cpp \
-    ../../../../sword/src/modules/filters/gbfplain.cpp \
-    ../../../../sword/src/modules/filters/gbfrtf.cpp \
-    ../../../../sword/src/modules/filters/gbfstrongs.cpp \
-    ../../../../sword/src/modules/filters/gbffootnotes.cpp \
-    ../../../../sword/src/modules/filters/gbfheadings.cpp \
-    ../../../../sword/src/modules/filters/gbfredletterwords.cpp \
-    ../../../../sword/src/modules/filters/gbfmorph.cpp \
-    ../../../../sword/src/modules/filters/gbfwordjs.cpp \
-    ../../../../sword/src/modules/filters/thmlstrongs.cpp \
-    ../../../../sword/src/modules/filters/thmlfootnotes.cpp \
-    ../../../../sword/src/modules/filters/thmlheadings.cpp \
-    ../../../../sword/src/modules/filters/thmlmorph.cpp \
-    ../../../../sword/src/modules/filters/thmllemma.cpp \
-    ../../../../sword/src/modules/filters/thmlscripref.cpp \
-    ../../../../sword/src/modules/filters/thmlvariants.cpp \
-    ../../../../sword/src/modules/filters/thmlgbf.cpp \
-    ../../../../sword/src/modules/filters/thmlrtf.cpp \
-    ../../../../sword/src/modules/filters/thmlhtml.cpp \
-    ../../../../sword/src/modules/filters/thmlxhtml.cpp \
-    ../../../../sword/src/modules/filters/thmlhtmlhref.cpp \
-    ../../../../sword/src/modules/filters/thmlwebif.cpp \
-    ../../../../sword/src/modules/filters/thmlwordjs.cpp \
-    ../../../../sword/src/modules/filters/teiplain.cpp \
-    ../../../../sword/src/modules/filters/teirtf.cpp \
-    ../../../../sword/src/modules/filters/teihtmlhref.cpp \
-    ../../../../sword/src/modules/filters/teixhtml.cpp \
-    ../../../../sword/src/modules/filters/gbfthml.cpp \
-    ../../../../sword/src/modules/filters/gbfosis.cpp \
-    ../../../../sword/src/modules/filters/thmlosis.cpp \
-    ../../../../sword/src/modules/filters/thmlplain.cpp \
-    ../../../../sword/src/modules/filters/osisosis.cpp \
-    ../../../../sword/src/modules/filters/osisheadings.cpp \
-    ../../../../sword/src/modules/filters/osisfootnotes.cpp \
-    ../../../../sword/src/modules/filters/osishtmlhref.cpp \
-    ../../../../sword/src/modules/filters/osisxhtml.cpp \
-    ../../../../sword/src/modules/filters/osiswebif.cpp \
-    ../../../../sword/src/modules/filters/osismorph.cpp \
-    ../../../../sword/src/modules/filters/osisstrongs.cpp \
-    ../../../../sword/src/modules/filters/osisplain.cpp \
-    ../../../../sword/src/modules/filters/osisrtf.cpp \
-    ../../../../sword/src/modules/filters/osislemma.cpp \
-    ../../../../sword/src/modules/filters/osisredletterwords.cpp \
-    ../../../../sword/src/modules/filters/osisscripref.cpp \
-    ../../../../sword/src/modules/filters/osisvariants.cpp \
-    ../../../../sword/src/modules/filters/osiswordjs.cpp \
-    ../../../../sword/src/modules/filters/osismorphsegmentation.cpp \
-    ../../../../sword/src/modules/filters/osisruby.cpp \
-    ../../../../sword/src/modules/filters/latin1utf8.cpp \
-    ../../../../sword/src/modules/filters/latin1utf16.cpp \
-    ../../../../sword/src/modules/filters/utf8utf16.cpp \
-    ../../../../sword/src/modules/filters/utf16utf8.cpp \
-    ../../../../sword/src/modules/filters/utf8html.cpp \
-    ../../../../sword/src/modules/filters/utf8latin1.cpp \
-    ../../../../sword/src/modules/filters/utf8cantillation.cpp \
-    ../../../../sword/src/modules/filters/utf8hebrewpoints.cpp \
-    ../../../../sword/src/modules/filters/utf8arabicpoints.cpp \
-    ../../../../sword/src/modules/filters/utf8greekaccents.cpp \
-    ../../../../sword/src/modules/filters/cipherfil.cpp \
-    ../../../../sword/src/modules/filters/rtfhtml.cpp \
-    ../../../../sword/src/modules/filters/plainfootnotes.cpp \
-    ../../../../sword/src/modules/filters/plainhtml.cpp \
-    ../../../../sword/src/modules/filters/greeklexattribs.cpp \
-    ../../../../sword/src/modules/filters/unicodertf.cpp \
-    ../../../../sword/src/modules/filters/papyriplain.cpp \
-    ../../../../sword/src/modules/genbook/swgenbook.cpp \
-    ../../../../sword/src/modules/genbook/rawgenbook/rawgenbook.cpp \
-    ../../../../sword/src/modules/lexdict/swld.cpp \
-    ../../../../sword/src/modules/lexdict/rawld/rawld.cpp \
-    ../../../../sword/src/modules/lexdict/rawld4/rawld4.cpp \
-    ../../../../sword/src/modules/lexdict/zld/zld.cpp \
-    ../../../../sword/src/modules/texts/swtext.cpp \
-    ../../../../sword/src/modules/texts/rawtext/rawtext.cpp \
-    ../../../../sword/src/modules/texts/rawtext4/rawtext4.cpp \
-    ../../../../sword/src/modules/texts/ztext/ztext.cpp \
-    ../../../../sword/src/utilfuns/swobject.cpp \
-    ../../../../sword/src/utilfuns/utilstr.cpp \
-    ../../../../sword/src/utilfuns/utilxml.cpp \
-    ../../../../sword/src/utilfuns/swunicod.cpp \
-    ../../../../sword/src/utilfuns/swversion.cpp \
-    ../../../../sword/src/utilfuns/swbuf.cpp \
-    ../../../../sword/src/utilfuns/ftpparse.c \
-    ../../../../sword/src/utilfuns/url.cpp \
-    ../../../../sword/src/utilfuns/roman.cpp \
+    $${SWORD_PATH}/src/modules/common/zipcomprs.cpp \
+    $${SWORD_PATH}/src/utilfuns/zlib/untgz.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/gzio.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/zutil.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/uncompr.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/trees.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/infutil.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/inftrees.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/inflate.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/inffast.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/infcodes.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/infblock.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/deflate.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/crc32.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/compress.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/adler32.c \
+    $${SWORD_PATH}/src/mgr/ftplibftpt.cpp \
+    $${SWORD_PATH}/src/utilfuns/ftplib.c \
+    $${SWORD_PATH}/src/utilfuns/regex.c \
+    $${SWORD_PATH}/src/frontend/swdisp.cpp \
+    $${SWORD_PATH}/src/frontend/swlog.cpp \
+    $${SWORD_PATH}/src/keys/swkey.cpp \
+    $${SWORD_PATH}/src/keys/listkey.cpp \
+    $${SWORD_PATH}/src/keys/strkey.cpp \
+    $${SWORD_PATH}/src/keys/treekey.cpp \
+    $${SWORD_PATH}/src/keys/treekeyidx.cpp \
+    $${SWORD_PATH}/src/keys/versekey.cpp \
+    $${SWORD_PATH}/src/keys/versetreekey.cpp \
+    $${SWORD_PATH}/src/mgr/swconfig.cpp \
+    $${SWORD_PATH}/src/mgr/swmgr.cpp \
+    $${SWORD_PATH}/src/mgr/swfiltermgr.cpp \
+    $${SWORD_PATH}/src/mgr/encfiltmgr.cpp \
+    $${SWORD_PATH}/src/mgr/markupfiltmgr.cpp \
+    $${SWORD_PATH}/src/mgr/filemgr.cpp \
+    $${SWORD_PATH}/src/mgr/versificationmgr.cpp \
+    $${SWORD_PATH}/src/mgr/ftptrans.cpp \
+    $${SWORD_PATH}/src/mgr/swlocale.cpp \
+    $${SWORD_PATH}/src/mgr/localemgr.cpp \
+    $${SWORD_PATH}/src/mgr/swcacher.cpp \
+    $${SWORD_PATH}/src/mgr/swsearchable.cpp \
+    $${SWORD_PATH}/src/mgr/installmgr.cpp \
+    $${SWORD_PATH}/src/mgr/stringmgr.cpp \
+    $${SWORD_PATH}/src/modules/swmodule.cpp \
+    $${SWORD_PATH}/src/modules/comments/swcom.cpp \
+    $${SWORD_PATH}/src/modules/comments/hrefcom/hrefcom.cpp \
+    $${SWORD_PATH}/src/modules/comments/rawcom/rawcom.cpp \
+    $${SWORD_PATH}/src/modules/comments/rawcom4/rawcom4.cpp \
+    $${SWORD_PATH}/src/modules/comments/rawfiles/rawfiles.cpp \
+    $${SWORD_PATH}/src/modules/comments/zcom/zcom.cpp \
+    $${SWORD_PATH}/src/modules/common/rawstr.cpp \
+    $${SWORD_PATH}/src/modules/common/rawstr4.cpp \
+    $${SWORD_PATH}/src/modules/common/swcomprs.cpp \
+    $${SWORD_PATH}/src/modules/common/lzsscomprs.cpp \
+    $${SWORD_PATH}/src/modules/common/rawverse.cpp \
+    $${SWORD_PATH}/src/modules/common/rawverse4.cpp \
+    $${SWORD_PATH}/src/modules/common/swcipher.cpp \
+    $${SWORD_PATH}/src/modules/common/zverse.cpp \
+    $${SWORD_PATH}/src/modules/common/zstr.cpp \
+    $${SWORD_PATH}/src/modules/common/entriesblk.cpp \
+    $${SWORD_PATH}/src/modules/common/sapphire.cpp \
+    $${SWORD_PATH}/src/modules/filters/swbasicfilter.cpp \
+    $${SWORD_PATH}/src/modules/filters/swoptfilter.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfxhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfhtmlhref.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfwebif.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfplain.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfrtf.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfstrongs.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbffootnotes.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfheadings.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfredletterwords.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfmorph.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfwordjs.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlstrongs.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlfootnotes.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlheadings.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlmorph.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmllemma.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlscripref.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlvariants.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlgbf.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlrtf.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlxhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlhtmlhref.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlwebif.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlwordjs.cpp \
+    $${SWORD_PATH}/src/modules/filters/teiplain.cpp \
+    $${SWORD_PATH}/src/modules/filters/teirtf.cpp \
+    $${SWORD_PATH}/src/modules/filters/teihtmlhref.cpp \
+    $${SWORD_PATH}/src/modules/filters/teixhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfthml.cpp \
+    $${SWORD_PATH}/src/modules/filters/gbfosis.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlosis.cpp \
+    $${SWORD_PATH}/src/modules/filters/thmlplain.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisosis.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisheadings.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisfootnotes.cpp \
+    $${SWORD_PATH}/src/modules/filters/osishtmlhref.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisxhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/osiswebif.cpp \
+    $${SWORD_PATH}/src/modules/filters/osismorph.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisstrongs.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisplain.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisrtf.cpp \
+    $${SWORD_PATH}/src/modules/filters/osislemma.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisredletterwords.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisscripref.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisvariants.cpp \
+    $${SWORD_PATH}/src/modules/filters/osiswordjs.cpp \
+    $${SWORD_PATH}/src/modules/filters/osismorphsegmentation.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisruby.cpp \
+    $${SWORD_PATH}/src/modules/filters/latin1utf8.cpp \
+    $${SWORD_PATH}/src/modules/filters/latin1utf16.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8utf16.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf16utf8.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8html.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8latin1.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8cantillation.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8hebrewpoints.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8arabicpoints.cpp \
+    $${SWORD_PATH}/src/modules/filters/utf8greekaccents.cpp \
+    $${SWORD_PATH}/src/modules/filters/cipherfil.cpp \
+    $${SWORD_PATH}/src/modules/filters/rtfhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/plainfootnotes.cpp \
+    $${SWORD_PATH}/src/modules/filters/plainhtml.cpp \
+    $${SWORD_PATH}/src/modules/filters/greeklexattribs.cpp \
+    $${SWORD_PATH}/src/modules/filters/unicodertf.cpp \
+    $${SWORD_PATH}/src/modules/filters/papyriplain.cpp \
+    $${SWORD_PATH}/src/modules/genbook/swgenbook.cpp \
+    $${SWORD_PATH}/src/modules/genbook/rawgenbook/rawgenbook.cpp \
+    $${SWORD_PATH}/src/modules/lexdict/swld.cpp \
+    $${SWORD_PATH}/src/modules/lexdict/rawld/rawld.cpp \
+    $${SWORD_PATH}/src/modules/lexdict/rawld4/rawld4.cpp \
+    $${SWORD_PATH}/src/modules/lexdict/zld/zld.cpp \
+    $${SWORD_PATH}/src/modules/texts/swtext.cpp \
+    $${SWORD_PATH}/src/modules/texts/rawtext/rawtext.cpp \
+    $${SWORD_PATH}/src/modules/texts/rawtext4/rawtext4.cpp \
+    $${SWORD_PATH}/src/modules/texts/ztext/ztext.cpp \
+    $${SWORD_PATH}/src/utilfuns/swobject.cpp \
+    $${SWORD_PATH}/src/utilfuns/utilstr.cpp \
+    $${SWORD_PATH}/src/utilfuns/utilxml.cpp \
+    $${SWORD_PATH}/src/utilfuns/swunicod.cpp \
+    $${SWORD_PATH}/src/utilfuns/swversion.cpp \
+    $${SWORD_PATH}/src/utilfuns/swbuf.cpp \
+    $${SWORD_PATH}/src/utilfuns/ftpparse.c \
+    $${SWORD_PATH}/src/utilfuns/url.cpp \
+    $${SWORD_PATH}/src/utilfuns/roman.cpp \
     ../../../../bt/src/frontend-mini/models/btminimoduletextmodel.cpp \
     ../../../../bt/src/frontend-mini/models/btminimodulenavigationmodel.cpp \
     ../../../../bt/src/frontend-mini/models/btminimodelsmodel.cpp \
+    ../../../../bt/src/frontend-mini/models/btminisettingsmodel.cpp \
     ../../../../bt/src/frontend-mini/ui/btministyle.cpp \
     ../../../../bt/src/frontend-mini/ui/btminipanel.cpp \
     ../../../../bt/src/frontend-mini/ui/btminimenu.cpp \
@@ -223,6 +230,7 @@ HEADERS += \
     ../../../../bt/src/frontend-mini/models/btminimoduletextmodel.h \
     ../../../../bt/src/frontend-mini/models/btminimodulenavigationmodel.h \
     ../../../../bt/src/frontend-mini/models/btminimodelsmodel.h \
+    ../../../../bt/src/frontend-mini/models/btminisettingsmodel.h \
     ../../../../bt/src/frontend-mini/ui/btminipanel.h \
     ../../../../bt/src/frontend-mini/ui/btminimenu.h \
     ../../../../bt/src/frontend-mini/view/btminiview.h \
@@ -280,18 +288,185 @@ HEADERS += \
     ../../../../bt/src/backend/filters/osismorphsegmentation.h \
     ../../../../bt/src/frontend-mini/btmini.h \
     ../../../../bt/src/frontend-mini/ui/btministyle.cpp \
-    CLucene/clucene-config.h
-
-win32 {
-LIBS += -lws2_32
-}
 
 RESOURCES += \
     ../../../../bt/src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc
 
 OTHER_FILES += ../../../src/frontend-mini/todo.txt \
+    android/res/layout/splash.xml \
+    android/res/values/strings.xml \
+    android/res/values-de/strings.xml \
+    android/res/values-el/strings.xml \
+    android/res/values-es/strings.xml \
+    android/res/values-et/strings.xml \
+    android/res/values-fa/strings.xml \
+    android/res/values-fr/strings.xml \
+    android/res/values-id/strings.xml \
+    android/res/values-it/strings.xml \
+    android/res/values-ja/strings.xml \
+    android/res/values-ms/strings.xml \
+    android/res/values-nb/strings.xml \
+    android/res/values-nl/strings.xml \
+    android/res/values-pl/strings.xml \
+    android/res/values-pt-rBR/strings.xml \
+    android/res/values-ro/strings.xml \
+    android/res/values-rs/strings.xml \
+    android/res/values-ru/strings.xml \
+    android/res/values-zh-rCN/strings.xml \
+    android/res/values-zh-rTW/strings.xml \
+    android/src/org/kde/necessitas/ministro/IMinistro.aidl \
+    android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
+    android/src/org/kde/necessitas/origo/QtApplication.java \
+    android/version.xml \
     android/AndroidManifest.xml \
+    android/res/drawable/icon.png \
+    android/res/drawable/logo.png \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png \
+    android/res/values/libs.xml
+
+# BtMini translations
+TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
+
+# BibleTime translations
+TRANSLATIONS += ../../../i18n/messages/bibletime_ui_ru.ts
+
+
+# WebKit
+webkit {
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += webkitwidgets
+}
+else {
+    QT += webkit
+}
+DEFINES += BT_MINI_WEBKIT
+}
+
+
+# Clucene
+clucene {
+DEFINES += _UCS2 _CL_DISABLE_MULTITHREADING
+
+INCLUDEPATH += $${CLUCENE_PATH}
+
+SOURCES += \
+    $${CLUCENE_PATH}/CLucene/analysis/AnalysisHeader.cpp \
+    $${CLUCENE_PATH}/CLucene/analysis/Analyzers.cpp \
+    $${CLUCENE_PATH}/CLucene/util/BitSet.cpp \
+    $${CLUCENE_PATH}/CLucene/search/BooleanQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/search/BooleanScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/index/CompoundFile.cpp \
+    $${CLUCENE_PATH}/CLucene/debug/condition.cpp \
+    $${CLUCENE_PATH}/CLucene/search/ConjunctionScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/document/Document.cpp \
+    $${CLUCENE_PATH}/CLucene/index/DocumentWriter.cpp \
+    $${CLUCENE_PATH}/CLucene/util/Equators.cpp \
+    $${CLUCENE_PATH}/CLucene/debug/error.cpp \
+    $${CLUCENE_PATH}/CLucene/search/ExactPhraseScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/search/Explanation.cpp \
+    $${CLUCENE_PATH}/CLucene/util/FastCharStream.cpp \
+    $${CLUCENE_PATH}/CLucene/document/Field.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FieldCache.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FieldCacheImpl.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FieldDocSortedHitQueue.cpp \
+    $${CLUCENE_PATH}/CLucene/index/FieldInfos.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FieldSortedHitQueue.cpp \
+    $${CLUCENE_PATH}/CLucene/index/FieldsReader.cpp \
+    $${CLUCENE_PATH}/CLucene/index/FieldsWriter.cpp \
+    $${CLUCENE_PATH}/CLucene/util/fileinputstream.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FilteredTermEnum.cpp \
+    $${CLUCENE_PATH}/CLucene/store/FSDirectory.cpp \
+    $${CLUCENE_PATH}/CLucene/search/FuzzyQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/config/gunichartables.cpp \
+    $${CLUCENE_PATH}/CLucene/search/HitQueue.cpp \
+    $${CLUCENE_PATH}/CLucene/search/Hits.cpp \
+    $${CLUCENE_PATH}/CLucene/store/IndexInput.cpp \
+    $${CLUCENE_PATH}/CLucene/store/IndexOutput.cpp \
+    $${CLUCENE_PATH}/CLucene/index/IndexReader.cpp \
+    $${CLUCENE_PATH}/CLucene/search/IndexSearcher.cpp \
+    $${CLUCENE_PATH}/CLucene/index/IndexWriter.cpp \
+    $${CLUCENE_PATH}/CLucene/queryParser/Lexer.cpp \
+    $${CLUCENE_PATH}/CLucene/store/Lock.cpp \
+    $${CLUCENE_PATH}/CLucene/debug/memtracking.cpp \
+    $${CLUCENE_PATH}/CLucene/util/Misc.cpp \
+    $${CLUCENE_PATH}/CLucene/index/MultiReader.cpp \
+    $${CLUCENE_PATH}/CLucene/search/MultiTermQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/search/PhrasePositions.cpp \
+    $${CLUCENE_PATH}/CLucene/search/PhraseQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/search/PhraseScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/search/PrefixQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/queryParser/QueryParser.cpp \
+    $${CLUCENE_PATH}/CLucene/queryParser/QueryParserBase.cpp \
+    $${CLUCENE_PATH}/CLucene/queryParser/QueryToken.cpp \
+    $${CLUCENE_PATH}/CLucene/store/RAMDirectory.cpp \
+    $${CLUCENE_PATH}/CLucene/search/RangeQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/util/Reader.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_tcscasecmp.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_tcslwr.cpp \
+    $${CLUCENE_PATH}/CLucene/search/SearchHeader.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentInfos.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentMergeInfo.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentMergeQueue.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentMerger.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentReader.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentTermDocs.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentTermEnum.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentTermPositions.cpp \
+    $${CLUCENE_PATH}/CLucene/index/SegmentTermVector.cpp \
+    $${CLUCENE_PATH}/CLucene/search/Similarity.cpp \
+    $${CLUCENE_PATH}/CLucene/search/SloppyPhraseScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/search/Sort.cpp \
+    $${CLUCENE_PATH}/CLucene/analysis/standard/StandardAnalyzer.cpp \
+    $${CLUCENE_PATH}/CLucene/analysis/standard/StandardFilter.cpp \
+    $${CLUCENE_PATH}/CLucene/analysis/standard/StandardTokenizer.cpp \
+    $${CLUCENE_PATH}/CLucene/StdHeader.cpp \
+    $${CLUCENE_PATH}/CLucene/util/StringBuffer.cpp \
+    $${CLUCENE_PATH}/CLucene/util/StringIntern.cpp \
+    $${CLUCENE_PATH}/CLucene/index/Term.cpp \
+    $${CLUCENE_PATH}/CLucene/index/TermInfo.cpp \
+    $${CLUCENE_PATH}/CLucene/index/TermInfosReader.cpp \
+    $${CLUCENE_PATH}/CLucene/index/TermInfosWriter.cpp \
+    $${CLUCENE_PATH}/CLucene/search/TermQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/search/TermScorer.cpp \
+    $${CLUCENE_PATH}/CLucene/index/TermVectorReader.cpp \
+    $${CLUCENE_PATH}/CLucene/index/TermVectorWriter.cpp \
+    $${CLUCENE_PATH}/CLucene/util/ThreadLocal.cpp \
+    $${CLUCENE_PATH}/CLucene/config/threads.cpp \
+    $${CLUCENE_PATH}/CLucene/queryParser/TokenList.cpp \
+    $${CLUCENE_PATH}/CLucene/store/TransactionalRAMDirectory.cpp \
+    $${CLUCENE_PATH}/CLucene/config/utf8.cpp \
+    $${CLUCENE_PATH}/CLucene/search/WildcardQuery.cpp \
+    $${CLUCENE_PATH}/CLucene/search/WildcardTermEnum.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_tcstoll.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_lltot.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_tprintf.cpp
+}
+else {
+DEFINES += BT_NO_CLUCENE
+}
+
+
+# Platforms section
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+
+!symbian {
+	INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
+}
+
+win32 {
+INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
+
+SOURCES += $${SWORD_PATH}/src/utilfuns/win32/dirent.cpp
+
+LIBS += -lws2_32
+}
+
+OTHER_FILES += android/AndroidManifest.xml \
     android/res/drawable/icon.png \
     android/res/drawable/logo.png \
     android/res/drawable-hdpi/icon.png \
@@ -325,117 +500,8 @@ OTHER_FILES += ../../../src/frontend-mini/todo.txt \
     android/src/org/kde/necessitas/origo/QtApplication.java \
     android/version.xml
 
-TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
 
-
-# clucene, could be turned off when porting on new plaftorm
-clucene {
-DEFINES += _UCS2 _CL_DISABLE_MULTITHREADING
-
-symbian {
-DEFINES += __GNUC__
-}
-
-INCLUDEPATH += ../../../../clucene/src
-
-SOURCES += \
-    ../../../../clucene/src/CLucene/analysis/AnalysisHeader.cpp \
-    ../../../../clucene/src/CLucene/analysis/Analyzers.cpp \
-    ../../../../clucene/src/CLucene/util/BitSet.cpp \
-    ../../../../clucene/src/CLucene/search/BooleanQuery.cpp \
-    ../../../../clucene/src/CLucene/search/BooleanScorer.cpp \
-    ../../../../clucene/src/CLucene/index/CompoundFile.cpp \
-    ../../../../clucene/src/CLucene/debug/condition.cpp \
-    ../../../../clucene/src/CLucene/search/ConjunctionScorer.cpp \
-    ../../../../clucene/src/CLucene/document/Document.cpp \
-    ../../../../clucene/src/CLucene/index/DocumentWriter.cpp \
-    ../../../../clucene/src/CLucene/util/Equators.cpp \
-    ../../../../clucene/src/CLucene/debug/error.cpp \
-    ../../../../clucene/src/CLucene/search/ExactPhraseScorer.cpp \
-    ../../../../clucene/src/CLucene/search/Explanation.cpp \
-    ../../../../clucene/src/CLucene/util/FastCharStream.cpp \
-    ../../../../clucene/src/CLucene/document/Field.cpp \
-    ../../../../clucene/src/CLucene/search/FieldCache.cpp \
-    ../../../../clucene/src/CLucene/search/FieldCacheImpl.cpp \
-    ../../../../clucene/src/CLucene/search/FieldDocSortedHitQueue.cpp \
-    ../../../../clucene/src/CLucene/index/FieldInfos.cpp \
-    ../../../../clucene/src/CLucene/search/FieldSortedHitQueue.cpp \
-    ../../../../clucene/src/CLucene/index/FieldsReader.cpp \
-    ../../../../clucene/src/CLucene/index/FieldsWriter.cpp \
-    ../../../../clucene/src/CLucene/util/fileinputstream.cpp \
-    ../../../../clucene/src/CLucene/search/FilteredTermEnum.cpp \
-    ../../../../clucene/src/CLucene/store/FSDirectory.cpp \
-    ../../../../clucene/src/CLucene/search/FuzzyQuery.cpp \
-    ../../../../clucene/src/CLucene/config/gunichartables.cpp \
-    ../../../../clucene/src/CLucene/search/HitQueue.cpp \
-    ../../../../clucene/src/CLucene/search/Hits.cpp \
-    ../../../../clucene/src/CLucene/store/IndexInput.cpp \
-    ../../../../clucene/src/CLucene/store/IndexOutput.cpp \
-    ../../../../clucene/src/CLucene/index/IndexReader.cpp \
-    ../../../../clucene/src/CLucene/search/IndexSearcher.cpp \
-    ../../../../clucene/src/CLucene/index/IndexWriter.cpp \
-    ../../../../clucene/src/CLucene/queryParser/Lexer.cpp \
-    ../../../../clucene/src/CLucene/store/Lock.cpp \
-    ../../../../clucene/src/CLucene/debug/memtracking.cpp \
-    ../../../../clucene/src/CLucene/util/Misc.cpp \
-    ../../../../clucene/src/CLucene/index/MultiReader.cpp \
-    ../../../../clucene/src/CLucene/search/MultiTermQuery.cpp \
-    ../../../../clucene/src/CLucene/search/PhrasePositions.cpp \
-    ../../../../clucene/src/CLucene/search/PhraseQuery.cpp \
-    ../../../../clucene/src/CLucene/search/PhraseScorer.cpp \
-    ../../../../clucene/src/CLucene/search/PrefixQuery.cpp \
-    ../../../../clucene/src/CLucene/queryParser/QueryParser.cpp \
-    ../../../../clucene/src/CLucene/queryParser/QueryParserBase.cpp \
-    ../../../../clucene/src/CLucene/queryParser/QueryToken.cpp \
-    ../../../../clucene/src/CLucene/store/RAMDirectory.cpp \
-    ../../../../clucene/src/CLucene/search/RangeQuery.cpp \
-    ../../../../clucene/src/CLucene/util/Reader.cpp \
-    ../../../../clucene/src/CLucene/config/repl_tcscasecmp.cpp \
-    ../../../../clucene/src/CLucene/config/repl_tcslwr.cpp \
-    ../../../../clucene/src/CLucene/search/SearchHeader.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentInfos.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentMergeInfo.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentMergeQueue.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentMerger.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentReader.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentTermDocs.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentTermEnum.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentTermPositions.cpp \
-    ../../../../clucene/src/CLucene/index/SegmentTermVector.cpp \
-    ../../../../clucene/src/CLucene/search/Similarity.cpp \
-    ../../../../clucene/src/CLucene/search/SloppyPhraseScorer.cpp \
-    ../../../../clucene/src/CLucene/search/Sort.cpp \
-    ../../../../clucene/src/CLucene/analysis/standard/StandardAnalyzer.cpp \
-    ../../../../clucene/src/CLucene/analysis/standard/StandardFilter.cpp \
-    ../../../../clucene/src/CLucene/analysis/standard/StandardTokenizer.cpp \
-    ../../../../clucene/src/CLucene/StdHeader.cpp \
-    ../../../../clucene/src/CLucene/util/StringBuffer.cpp \
-    ../../../../clucene/src/CLucene/util/StringIntern.cpp \
-    ../../../../clucene/src/CLucene/index/Term.cpp \
-    ../../../../clucene/src/CLucene/index/TermInfo.cpp \
-    ../../../../clucene/src/CLucene/index/TermInfosReader.cpp \
-    ../../../../clucene/src/CLucene/index/TermInfosWriter.cpp \
-    ../../../../clucene/src/CLucene/search/TermQuery.cpp \
-    ../../../../clucene/src/CLucene/search/TermScorer.cpp \
-    ../../../../clucene/src/CLucene/index/TermVectorReader.cpp \
-    ../../../../clucene/src/CLucene/index/TermVectorWriter.cpp \
-    ../../../../clucene/src/CLucene/util/ThreadLocal.cpp \
-    ../../../../clucene/src/CLucene/config/threads.cpp \
-    ../../../../clucene/src/CLucene/queryParser/TokenList.cpp \
-    ../../../../clucene/src/CLucene/store/TransactionalRAMDirectory.cpp \
-    ../../../../clucene/src/CLucene/config/utf8.cpp \
-    ../../../../clucene/src/CLucene/search/WildcardQuery.cpp \
-    ../../../../clucene/src/CLucene/search/WildcardTermEnum.cpp \
-    ../../../../clucene/src/CLucene/config/repl_tcstoll.cpp \
-    ../../../../clucene/src/CLucene/config/repl_lltot.cpp \
-    ../../../../clucene/src/CLucene/config/repl_tprintf.cpp
-}
-else {
-DEFINES += BT_NO_CLUCENE
-}
-
-
-# meego platform
+# MeeGo platform
 unix {
 include(deployment.pri)
 qtcAddDeployment()
@@ -452,5 +518,29 @@ OTHER_FILES += \
 contains(MEEGO_EDITION,harmattan) {
     target.path = /opt/btmini/bin
     INSTALLS += target
+}
+}
+
+# Symbian platform
+symbian {
+TARGET.UID3 = 0xE5723167
+TARGET.CAPABILITY += NetworkServices
+TARGET.EPOCSTACKSIZE = 0x14000
+TARGET.EPOCHEAPSIZE = 0x020000 0x2000000
+
+DEPLOYMENT.display_name = BibleTime Mini
+
+packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), 0, 3, 4, TYPE=SA"
+
+vendorinfo = \
+"%{\"Crosswire\"}" \
+":\"Crosswire\""
+
+mini_deployment.pkg_prerules = packageheader vendorinfo
+
+DEPLOYMENT += mini_deployment
+
+clucene {
+DEFINES += __GNUC__ NO_DUMMY_DECL
 }
 }

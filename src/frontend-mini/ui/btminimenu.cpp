@@ -35,7 +35,7 @@ public:
 		_eventLoop = 0;
         _modal     = false;
         _canceled  = false;
-        _popup     = false;
+        _isPopup   = false;
         _isInput   = false;
     }
     
@@ -61,7 +61,7 @@ public:
 	QEventLoop      *_eventLoop;
     bool             _modal;
 	bool             _canceled;
-    bool             _popup;
+    bool             _isPopup;
     bool             _isInput;
     QString          _inputPattern;
     int              _inputMin;
@@ -69,14 +69,16 @@ public:
 
 };
 
+// FramelessWindowHint needed for Windows styles
 BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
-    , QWidget(BtMiniMenuPrivate::parentWidget()/*, Qt::FramelessWindowHint*/)
+    , QWidget(BtMiniMenuPrivate::parentWidget(), Qt::FramelessWindowHint)
 {
 	//setWindowModality(Qt::ApplicationModal);
     //setModal(false);
     //setAutoFillBackground(false);
 	//setAttribute(Qt::WA_MouseNoMask);
 	//setAttribute(Qt::WA_NoMousePropagation);
+    //setAutoFillBackground(true);
 
 	if(parentWidget())
 	{
@@ -124,7 +126,7 @@ void BtMiniMenu::exec()
 
 	show();
 
-    // on Android virtual keyboard didnt hide when action key is pressed
+    // FIX on Android, virtual keyboard didnt hide when action key is pressed
     setFocus();
 
 	QPointer<QObject> guard = this;
@@ -221,17 +223,9 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
         QFont f(l->font());
         f.setWeight(QFont::Normal);
         l->setFont(f);
+
+        // FIX QLabel sometimes vertical cut when multiline
         l->setMinimumHeight(f.pixelSize() * 2);
-
-
-		
-		//l->setMinimumWidth(1);
-		//l->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred, QSizePolicy::Label));
-
-		//QSizePolicy p(l->sizePolicy());
-		//p.setHorizontalPolicy(QSizePolicy::Expanding);
-		//p.setVerticalPolicy(QSizePolicy::Expanding);
-		//l->setSizePolicy(p);
 
         v->addWidget(l, 0, Qt::AlignCenter);
     }
@@ -258,7 +252,7 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
             v->addLayout(l);
     }
     else
-        dialog->d_ptr->_popup = true;
+        dialog->d_ptr->_isPopup = true;
     
 	dialog->setLayout(v);
 	
@@ -310,6 +304,7 @@ int BtMiniMenu::execInput(QString caption, QString pattern, int currentValue, in
     QLabel *l2 = new QLabel(pattern.arg(currentValue), dialog.data());
 
     l2->setObjectName("indicator");
+    l2->setAlignment(Qt::AlignCenter);
 
     f = l2->font();
     f.setWeight(QFont::Bold);
@@ -351,8 +346,8 @@ void BtMiniMenu::paintEvent(QPaintEvent *e)
 {
     QPainter p(this);
     
-    // QStyle::PE_PanelMenu on windows is hollow
-#if defined Q_WS_WIN || defined ANDROID || defined __unix__
+    // FIX QStyle::PE_PanelMenu on windows is hollow
+#if defined Q_OS_WIN || defined ANDROID || defined __unix__
     QStyleOptionButton opt;
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
@@ -409,7 +404,7 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
         {
             const QPoint p = mapFromGlobal(static_cast<QMouseEvent*>(e)->globalPos());
             const int w = style()->pixelMetric(QStyle::PM_MenuPanelWidth);
-            if(d_ptr->_popup || !rect().adjusted(w, w, -w, -w).contains(p))
+            if(d_ptr->_isPopup || !rect().adjusted(w, w, -w, -w).contains(p))
 		    {
                 if(e->type() == QEvent::MouseButtonPress && !d_ptr->_modal)
                     cancel();

@@ -14,6 +14,8 @@
 
 #include <QAbstractItemView>
 
+//#include "btmini.h"
+
 class BtMiniLayoutDelegate;
 class BtMiniViewPrivate;
 
@@ -23,6 +25,7 @@ class BtMiniViewPrivate;
 class BtMiniView : public QAbstractItemView
 {
     Q_OBJECT
+    Q_PROPERTY(bool topShadow READ topShadow WRITE setTopShadow)
 
 public:
     BtMiniView(QWidget *parent = 0);
@@ -60,7 +63,8 @@ public:
     void setRenderCaching(bool mode);
 
     /** */
-    void setTopShadowEnabled(bool mode);
+    void setTopShadow(bool enable);
+    bool topShadow();
 
     /** This function does not take ownership of delegate. Also layout delegate can be
         attached automatically if model has a children of BtMiniLayoutDelegate type.
@@ -78,8 +82,9 @@ public:
 	/** View does not update subviews during sleeping. */
 	void setSleep(bool sleep);
 
-    /** Enable WebKit html rendering. Default off. */
     void setWebKitEnabled(bool enable);
+
+    void setContinuousScrolling(bool enable);
 
 public slots:
     /** Reimplemented from QAbstractItemView. */
@@ -111,7 +116,10 @@ signals:
 
     /** Emitted when user press item or slide view. */
     void currentChanged(const QModelIndex &index);
-    
+
+protected slots:
+    /** Reimplemented from QAbstractItemView. */
+    void        dataChanged(const QModelIndex &from, const QModelIndex &to);
 
 protected:
     /** Reimplemented from QWidget. */
@@ -125,7 +133,6 @@ protected:
 	void keyPressEvent(QKeyEvent *e);
 
     /** Reimplemented from QAbstractItemView. */
-    void        dataChanged(const QModelIndex &, const QModelIndex &);
     int         horizontalOffset() const;
     bool        isIndexHidden(const QModelIndex &index) const;
     QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers);

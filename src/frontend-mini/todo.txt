@@ -25,16 +25,15 @@ kalemas@mail.ru :
 ?   maybe installing a module automatically download and istall sword locale for that language
 +   install manager by languages
 +   qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
-		try to replace with custom control
-    logic to take into account device dpi for font size policy
+	logic to take into account device dpi for font size policy
         android hd2 - 239 dpi
         win64 17" 1600x900 - 96 dpi
 +   settings ui
-        font size
-        non stop scrolling
-        about info: bugs, faq
-		per-chapter rendering
-		threading
++       font size
++       non stop scrolling
++       about info: bugs, faq
+		restrict v11n mode feature: off, kjv, synodal, vulg, ...
+		chapter mode
     linux
         no non ascii characters drawn
 ?   design changes
@@ -50,13 +49,15 @@ kalemas@mail.ru :
     crush when search RSTchs on ���������*
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
+	unlock locked modules
++   Symbian build
+
 
     make commentary context parallel computed
         make work array and threads array static
     current module seem to fail to get text from sword after module installation
 
-    memory leaking on wince
-        crtdebug detect leaking starting from QApplication init
+    memory leaking on wince, crtdebug detect leaking starting from QApplication init
     QTextDocument issues
         not load external style sheet
         font enumeration in font-family dont work
@@ -73,14 +74,13 @@ kalemas@mail.ru :
     ? maybe make scroll bar transprent and overlapping view
     ? ability to turn on auto sctolling feature: limit fading from initial speed on touch raise, round small speeds
     ? scrolling like book pages, good because eyes always move all around the screen
-    night mode in style
++   night mode in style
     bookmarks would be named as Cuttings or Clippings
     notes - based on personal commentary module with av11n mapping support remark, should be created by app
 
 === known tasks ================================================================
     dialog looses event filter for qapplication after minimize/maximize
     keypad support for dialogs and menus
-    Symbian build
     loading all locales takes too long
     keypad/volume buttons scrolling
     qt: window raisement on startup on device
@@ -97,8 +97,7 @@ kalemas@mail.ru :
             place in uri format (sword://Module/Key)
             static / dynamic
         verse colors
-    unlock locked modules
-
+    
     re-concept interface
 
     Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
@@ -129,7 +128,7 @@ kalemas@mail.ru :
 
 === SWORD ======================================================================
     load locales on demand
-%    av11n mappings
+%   av11n mappings
     load av11n on demand from file
     make more steps for search
 

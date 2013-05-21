@@ -9,6 +9,10 @@
 *
 **********/
 
+#include <QDesktopServices>
+#include <QStyleFactory>
+#include <QUrl>
+
 #include <QtDebug>
 
 #include "backend/config/cbtconfig.h"
@@ -17,13 +21,19 @@
 #include "view/btminilayoutdelegate.h"
 #include "ui/btminimenu.h"
 
+#define BT_MINI_FORUM_URL "http://sourceforge.net/p/bibletimemini/discussion"
+
 enum BtMiniSettingsIds
 {
     BtMiniFontSize = 1,
     BtMiniFontTextSize,
+    BtMiniThreads,
     BtMiniContinuousScrolling,
+#ifdef BT_MINI_WEBKIT
     BtMiniUseWebKit,
-    BtMiniStyle
+#endif
+    BtMiniStyle,
+    BtMiniForum = BtMiniStyle + 4
 };
 
 
@@ -34,9 +44,11 @@ public:
     BtMiniSettingsModelPrivate()
     {
         QString tbs = "<table width=\"100%\" cellpadding=\"5\"><tr><td>";
+
         _strings << "<body><font size=\"50%\"><center>Settings</center></font></body>";
         _strings << tbs + "Font size:</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
         _strings << tbs + "Font size for text:</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
+        _strings << tbs + "Multi-threading:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
         _strings << tbs + "Continuous scrolling:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
 #ifdef BT_MINI_WEBKIT
         _strings << tbs + "Use WebKit:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
@@ -45,8 +57,12 @@ public:
         _strings << "<body><font size=\"50%\"><i>Note: settings will be applied after application restart.</i></font></body>";
         //_strings << "<table width=\"100%\" bgcolor=\"#9cd2ff\"><tr><td><font size=\"50%\"><center>About</center></font></td></tr></table>";
         _strings << "<body><font size=\"50%\"><center>About</center></font></body>";
-        _strings << "Please send feedback to <i>kalemas@mail.ru</i>";
-        //_strings << "<body><font size=\"50%\"><center>About</center></font><br/>Please send feedback to <i>kalemas@mail.ru</i></body>";
+        //_strings << "Please send feedback to <i>kalemas@mail.ru</i>";
+        _strings << "This app version is:<br/><center>0.0.0-beta</center>";
+        _strings << "You could post feedback, report an issue or get help throught forum:"
+                    "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>";
+
+        Q_ASSERT(BtMiniForum == _strings.size() - 1);
     }
 
     ~BtMiniSettingsModelPrivate()
@@ -58,8 +74,7 @@ public:
 };
 
 BtMiniSettingsModel::BtMiniSettingsModel(QObject *parent)
-    : QAbstractItemModel(parent)
-    , d_ptr(new BtMiniSettingsModelPrivate())
+    : QAbstractItemModel(parent) , d_ptr(new BtMiniSettingsModelPrivate())
 {
     ;
 }
@@ -117,11 +132,19 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
         case BtMiniFontTextSize:
             s = s.arg(CBTConfig::get(CBTConfig::fontTextScale));
             break;
-        case BtMiniStyle:
-            s = s.arg("day");
-            break;
+#ifdef BT_MINI_WEBKIT
         case BtMiniUseWebKit:
             s = s.arg(CBTConfig::get(CBTConfig::useWebKit) ? "on" : "off");
+            break;
+#endif
+        case BtMiniContinuousScrolling:
+            s = s.arg(CBTConfig::get(CBTConfig::miniContinuousScrolling) ? "on" : "off");
+            break;
+        case BtMiniStyle:
+            s = s.arg(CBTConfig::get(CBTConfig::miniStyle));
+            break;
+        case BtMiniThreads:
+            s = s.arg(CBTConfig::get(CBTConfig::threadedTextRetrieving) ? "on" : "off");
             break;
         default:
             ;
@@ -150,11 +173,6 @@ QVariant BtMiniSettingsModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-//bool BtMiniSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
-//{
-//    return false;
-//}
-
 void BtMiniSettingsModel::clicked(const QModelIndex &index)
 {
     Q_D(const BtMiniSettingsModel);
@@ -162,29 +180,55 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     switch(index.row())
     {
     case BtMiniFontSize:
-        {
-            CBTConfig::set(CBTConfig::fontScale, BtMiniMenu::execInput(
-                "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontScale), 1, 1000));
-            emit dataChanged(index, index);
-        }
+        CBTConfig::set(CBTConfig::fontScale, BtMiniMenu::execInput(
+            "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontScale), 1, 1000));
+        emit dataChanged(index, index);
         break;
+
     case BtMiniFontTextSize:
-        {
-            CBTConfig::set(CBTConfig::fontTextScale, BtMiniMenu::execInput(
-                "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontTextScale), 1, 1000));
-            emit dataChanged(index, index);
-        }
+        CBTConfig::set(CBTConfig::fontTextScale, BtMiniMenu::execInput(
+            "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontTextScale), 1, 1000));
+        emit dataChanged(index, index);
         break;
-    case BtMiniContinuousScrolling:
-        ;
-        break;
+
+#ifdef BT_MINI_WEBKIT
     case BtMiniUseWebKit:
+        CBTConfig::set(CBTConfig::useWebKit, !CBTConfig::get(CBTConfig::useWebKit));
+        emit dataChanged(index, index);
+        break;
+#endif
+
+    case BtMiniContinuousScrolling:
+        CBTConfig::set(CBTConfig::miniContinuousScrolling, !CBTConfig::get(CBTConfig::miniContinuousScrolling));
+        emit dataChanged(index, index);
+        break;
+
+    case BtMiniStyle:
         {
-            CBTConfig::set(CBTConfig::useWebKit, !CBTConfig::get(CBTConfig::useWebKit));
+            QStringList ss(QStyleFactory::keys());
+            int i = ss.indexOf(CBTConfig::get(CBTConfig::miniStyle));
+            QString s;
+            if(i >= 0 && i < ss.size() - 1)
+                s = ss[i + 1];
+            else
+                s = ss[0];
+            CBTConfig::set(CBTConfig::miniStyle, s);
+            //emit dataChanged(index, index, QVector<int>());
             emit dataChanged(index, index);
         }
         break;
+
+    case BtMiniForum:
+        if(BtMiniMenu::execQuery("Follow link?", QStringList() << "Yes" << "No") == 0)
+            QDesktopServices::openUrl(QUrl(BT_MINI_FORUM_URL));
+        break;
+
+    case BtMiniThreads:
+        CBTConfig::set(CBTConfig::threadedTextRetrieving, !CBTConfig::get(CBTConfig::threadedTextRetrieving));
+        emit dataChanged(index, index);
+        break;
+
     default:
-        ;
+        ; //qDebug() << "clicked" << index.data();
     }
 }
