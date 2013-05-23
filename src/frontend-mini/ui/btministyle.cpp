@@ -78,7 +78,7 @@ public:
         case CE_ScrollBarSlider:
             {
                 int s = opt->rect.width() / 3;
-                p->setBrush(standardPalette().color(QPalette::Background));
+                p->setBrush(_night ? Qt::black : Qt::white);
                 p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
                 p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
                 p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));

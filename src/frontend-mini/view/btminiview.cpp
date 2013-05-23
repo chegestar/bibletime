@@ -634,7 +634,7 @@ public:
         {
             painter->save();
             painter->translate(p);
-            _wp->mainFrame()->render(painter, clipping);
+            _wp->mainFrame()->render(painter, QWebFrame::ContentsLayer, clipping);
             painter->restore();
         }
 #endif
@@ -1929,6 +1929,7 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
 	setAttribute(Qt::WA_InputMethodEnabled, false);
+    //setAttribute(Qt::WA_OpaquePaintEvent, true);
 
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setSelectionMode(QAbstractItemView::SingleSelection);

@@ -68,6 +68,8 @@ import android.view.WindowManager.LayoutParams;
 import android.view.accessibility.AccessibilityEvent;
 import dalvik.system.DexClassLoader;
 
+// BtMini
+import android.os.Vibrator;
 //@ANDROID-11
 //QtCreator import android.app.Fragment;
 //QtCreator import android.view.ActionMode;
@@ -111,7 +113,7 @@ public class QtActivity extends Activity
                                                              // and must be separated with "\t"
                                                              // e.g "-param1\t-param2=value2\t-param3\tvalue3"
 
-    private static final String ENVIRONMENT_VARIABLES="QT_USE_ANDROID_NATIVE_STYLE=1\t";
+    private static final String ENVIRONMENT_VARIABLES="QT_USE_ANDROID_NATIVE_STYLE=0\t";
                                                              // use this variable to add any environment variables to your application.
                                                              // the env vars must be separated with "\t"
                                                              // e.g. "ENV_VAR1=1\tENV_VAR2=2\t"
@@ -122,6 +124,9 @@ public class QtActivity extends Activity
     private ActivityInfo m_activityInfo = null; // activity info object, used to access the libs and the strings
     private DexClassLoader m_classLoader = null; // loader object
     private String[] m_qtLibs = null; // required qt libs
+
+    // BtMini
+    private static Context context;
 
     // this function is used to load and start the loader
     private void loadApplication(Bundle loaderParams)
@@ -564,6 +569,9 @@ public class QtActivity extends Activity
                 setContentView(m_activityInfo.metaData.getInt("android.app.splash_screen"));
             startApp(true);
         }
+
+        // BtMini
+        QtActivity.context = this.getApplicationContext();
     }
     //---------------------------------------------------------------------------
 
@@ -1278,4 +1286,13 @@ public class QtActivity extends Activity
 //QtCreator     //---------------------------------------------------------------------------
 //@ANDROID-12
 
+    // BtMini
+    public static void vibrate(long miliseconds)
+    {
+        if(QtActivity.context != null)
+        {
+            Vibrator v = (Vibrator) QtActivity.context.getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(miliseconds);
+        }
+    }
 }

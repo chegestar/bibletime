@@ -374,6 +374,8 @@ QWidget * BtMini::worksWidget()
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
+        v->setContinuousScrolling(CBTConfig::get(CBTConfig::miniContinuousScrolling));
+        v->setWebKitEnabled(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
@@ -828,22 +830,22 @@ int main(int argc, char *argv[])
 
     //QApplication::setGraphicsSystem("opengl");
 
-    // TODO set style for main widget
-    QApplication::setStyle("mini");
-
-    // Init application
-    BtMiniApplication app(argc, argv);
-
-    // issue in necessitas sets QPlastiqueStyle when QApplication inits
-#ifdef ANDROID
-    QApplication::setStyle("mini");
-#endif
-
     if(!util::directory::initDirectoryCache())
     {
         qFatal("Init Application: Error initializing directory cache!");
         return -1;
     }
+
+    // TODO set style for main widget
+    QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
+
+    // Init application
+    BtMiniApplication app(argc, argv);
+
+    // FIX in necessitas sets QPlastiqueStyle when QApplication inits
+#ifdef ANDROID
+    QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
+#endif
 
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
