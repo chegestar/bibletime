@@ -54,6 +54,7 @@ kalemas@mail.ru :
     multi column mode
     fix webkit word context
     apply settings without restart
+    slider bigger in dark theme
 
 
     make commentary context parallel computed

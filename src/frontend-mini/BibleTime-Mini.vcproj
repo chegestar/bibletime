@@ -106,7 +106,7 @@
 			IntermediateDirectory="..\..\$(ConfigurationName)\$(PlatformName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -126,13 +126,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
-				Optimization="2"
-				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="false"
+				Optimization="3"
+				FavorSizeOrSpeed="0"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(OutDir)\GeneratedFiles&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\qtmain&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;.;.\..\..\..\sword\include;.\..\..\..\sword\src\utilfuns\wince;.\..;&quot;.\..\..\$(ConfigurationName)\GeneratedFiles&quot;;..\..\..\clucene\src;&quot;$(QTDIR)\include\QtSvg&quot;;&quot;$(QTDIR)\include\QtXml&quot;;&quot;$(QTDIR)\src\3rdparty\harfbuzz\src&quot;"
 				PreprocessorDefinitions="UNDER_CE;WINCE;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;_WIN32_WCE=0x501;ARMV4I;_ARMV4I_;armv4i;_ARM_;ARM;_M_ARM;__arm__;QT_THREAD_SUPPORT;QT_NO_DEBUG;QT_CORE_LIB;QT_GUI_LIB;Q_OS_WINCE_WM;QT_SVG_LIB;QT_XML_LIB;BT_MINI;BT_MINI_VERSION#\&quot;0.9.0\&quot;"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
+				DefaultCharIsUnsigned="false"
 				TreatWChar_tAsBuiltInType="false"
 				RuntimeTypeInfo="true"
 				WarningLevel="3"
@@ -156,7 +157,7 @@
 				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;..\..\..\build\wince\sword\Release"
 				GenerateDebugInformation="false"
 				SubSystem="8"
-				LinkTimeCodeGeneration="0"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="16"
 			/>
 			<Tool
@@ -184,7 +185,7 @@
 				ForceDirty="-1"
 				RemoteDirectory="\Internal Storage\Program Files\BibleTime Mini"
 				RegisterOutput="0"
-				AdditionalFiles="bibletimemini_ru.qm|$(InputDir)\translations|\Internal Storage\Program Files\BibleTime Mini\bibletime\locale|0;Basic.tmpl|$(InputDir)\..\..\$(ConfigurationName)\bibletime\display-templates|\Internal Storage\Program Files\BibleTime Mini\bibletime\display-templates|0"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -1321,98 +1322,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\btmini.qrc"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Rcc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
-						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\ui\btministyle.qrc"
 				>
 				<FileConfiguration
@@ -1479,74 +1388,6 @@
 			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}"
 			SourceControlFiles="false"
 			>
-			<File
-				RelativePath="..\..\$(ConfigurationName)\GeneratedFiles\qrc_btmini.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
 			<File
 				RelativePath="..\..\$(ConfigurationName)\GeneratedFiles\qrc_btministyle.cpp"
 				>
