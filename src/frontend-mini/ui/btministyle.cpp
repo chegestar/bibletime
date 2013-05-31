@@ -33,17 +33,17 @@ public:
 
         if(_night)
         {
-            _palette.setColor(QPalette::Text, Qt::white);
+            _palette.setColor(QPalette::Text, QColor(255, 255, 255));
             _palette.setColor(QPalette::Base, QColor(22, 22, 22));
             _palette.setColor(QPalette::Link, QColor("#62a4db"));
 
             _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-            _palette.setColor(QPalette::HighlightedText, Qt::white);
+            _palette.setColor(QPalette::HighlightedText, QColor(255, 255, 255));
         }
         else
         {
-            _palette.setColor(QPalette::Text, Qt::black);
-            _palette.setColor(QPalette::Base, Qt::white);
+            _palette.setColor(QPalette::Text, QColor(0, 0, 0));
+            _palette.setColor(QPalette::Base, QColor(255, 255, 255));
             _palette.setColor(QPalette::Link, QColor(127, 196, 255));
 
             _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
@@ -80,11 +80,14 @@ public:
             return;
         case PE_CustomBase + 1:
             {
-                QRect r(opt->rect.adjusted(0, 0, 0, opt->fontMetrics.height() - opt->rect.height()));
+                const int h = opt->fontMetrics.height();
+                const int m = _night ? 200 : 100;
+
+                QRect r(opt->rect.adjusted(0, 0, 0, h - opt->rect.height()));
 
                 QLinearGradient g(r.topLeft(), r.bottomLeft());
 
-                g.setColorAt(0.0, QColor(0, 0, 0, 100));
+                g.setColorAt(0.0, QColor(0, 0, 0, m));
                 g.setColorAt(1.0, QColor(0, 0, 0, 0));
 
                 p->setPen(Qt::NoPen);
@@ -103,11 +106,11 @@ public:
         {
         case CE_ScrollBarSlider:
             {
-                int s = opt->rect.width() / 3;
-                p->setBrush(_night ? Qt::black : Qt::white);
-                p->drawRect(opt->rect.adjusted(s, s / 2, -s, -s / 2));
-                p->drawEllipse(opt->rect.adjusted(s, 0, -s, s - opt->rect.height()));
-                p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - s, -s, 0));
+                const int s = opt->rect.width() / (_night ? 3.6 : 3);
+                p->setBrush(_night ? QColor(0, 0, 0) : QColor(255, 255, 255));
+                p->drawRect(opt->rect.adjusted(s, (opt->rect.width() - s - s) / 2, -s, (opt->rect.width() - s - s) / -2));
+                p->drawEllipse(opt->rect.adjusted(s, 0, -s, (opt->rect.width() - s * 2) - opt->rect.height()));
+                p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - (opt->rect.width() - s * 2), -s, 0));
                 return;
             }
         case CE_PushButtonBevel:
@@ -134,6 +137,11 @@ public:
                     p->setBrush(_palette.color(QPalette::Link));
                     p->drawRect(scrollbar->rect);
 
+                    // top shadow ?
+                    if(widget && widget->parentWidget() &&
+                       widget->parentWidget()->property("topShadow").toBool())
+                        drawPrimitive((PrimitiveElement)(PE_CustomBase + 1), option, p, widget);
+
                     if(scrollbar->subControls & SC_ScrollBarSlider)
                     {
                         QStyleOptionSlider to = *scrollbar;
@@ -141,7 +149,7 @@ public:
                         to.rect = subControlRect(cc, &to, SC_ScrollBarSlider, widget);
                         if(to.rect.isValid())
                         {
-                            if(!(scrollbar->activeSubControls & SC_ScrollBarSlider))
+                            if(!(scrollbar->activeSubControls& SC_ScrollBarSlider))
                                 to.state &= ~(State_Sunken | State_MouseOver);
 
                             drawControl(CE_ScrollBarSlider, &to, p, widget);
@@ -211,6 +219,14 @@ public:
             initialized = true;
         }
 
+        // FIX on Symbian palettes are not applied
+#ifdef Q_OS_SYMBIAN
+        if(!widget->parentWidget())
+            widget->setPalette(_palette);
+        else
+            widget->setPalette(widget->palette());
+#endif
+
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {
             QMargins m = widget->contentsMargins();
@@ -237,17 +253,17 @@ public:
             QPalette p = widget->palette();
             if(_night)
             {
-                p.setColor(QPalette::Window, Qt::black);
-                p.setColor(QPalette::Button, Qt::black);
-                p.setColor(QPalette::WindowText, Qt::white);
-                p.setColor(QPalette::ButtonText, Qt::white);
+                p.setColor(QPalette::Window, QColor(0, 0, 0));
+                p.setColor(QPalette::Button, QColor(0, 0, 0));
+                p.setColor(QPalette::WindowText, QColor(255, 255, 255));
+                p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
             }
             else
             {
                 p.setColor(QPalette::Window, QColor(102, 102, 102));
                 p.setColor(QPalette::Button, QColor(102, 102, 102));
-                p.setColor(QPalette::WindowText, Qt::white);
-                p.setColor(QPalette::ButtonText, Qt::white);
+                p.setColor(QPalette::WindowText, QColor(255, 255, 255));
+                p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
             }
 
 			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
@@ -323,6 +339,9 @@ public:
                             int sh = (int)(vh * (vh / (hh + vh)));
                             sh = qMax(scrollbar->rect.width(), sh);
                             //sh = qMin(scrollbar->rect.height() / 3 * 2, sh);
+
+                            if(_night)
+                                sh += (scrollbar->rect.height() - sh) * 0.33;
                             
                             const float vv = scrollbar->sliderPosition;
                             const float sp = qRound((vh - sh) * (vv / hh));
@@ -369,9 +388,12 @@ public:
         return QCommonStyle::sizeFromContents(ct, opt, csz, widget);
     }
 
-
+#if QT_VERSION < 0x050000
 public slots:
     QIcon standardIconImplementation(StandardPixmap icon, const QStyleOption *option = 0, const QWidget *widget = 0) const
+#else
+	QIcon standardIcon(StandardPixmap icon, const QStyleOption *option = 0, const QWidget *widget = 0) const
+#endif
     {
         switch(icon)
         {

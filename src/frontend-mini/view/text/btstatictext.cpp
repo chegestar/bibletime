@@ -743,13 +743,13 @@ void BtStaticTextPrivate::paintText(const QPointF &topLeftPosition, QPainter *p)
         textLayout.draw(p, topLeftPosition);
     } else {
         QTextDocument document;
-#ifndef QT_NO_CSSPARSER
-        QColor color = p->pen().color();
-        document.setDefaultStyleSheet(QString::fromLatin1("body { color: #%1%2%3 }")
-                                      .arg(QString::number(color.red(), 16), 2, QLatin1Char('0'))
-                                      .arg(QString::number(color.green(), 16), 2, QLatin1Char('0'))
-                                      .arg(QString::number(color.blue(), 16), 2, QLatin1Char('0')));
-#endif
+//#ifndef QT_NO_CSSPARSER
+//        QColor color = p->pen().color();
+//        document.setDefaultStyleSheet(QString::fromLatin1("body { color: #%1%2%3 }")
+//                                      .arg(QString::number(color.red(), 16), 2, QLatin1Char('0'))
+//                                      .arg(QString::number(color.green(), 16), 2, QLatin1Char('0'))
+//                                      .arg(QString::number(color.blue(), 16), 2, QLatin1Char('0')));
+//#endif
         document.setDefaultFont(font);
         document.setDocumentMargin(0.0);        
 #ifndef QT_NO_TEXTHTMLPARSER
@@ -766,7 +766,7 @@ void BtStaticTextPrivate::paintText(const QPointF &topLeftPosition, QPainter *p)
         p->save();
         p->translate(topLeftPosition);
         QAbstractTextDocumentLayout::PaintContext ctx;
-        ctx.palette.setColor(QPalette::Text, p->pen().color());
+        //ctx.palette.setColor(QPalette::Text, p->pen().color());
         document.documentLayout()->draw(p, ctx);
         p->restore();
 

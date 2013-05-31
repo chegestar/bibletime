@@ -37,7 +37,7 @@
 #include <QWebFrame>
 #include <QWebHitTestResult>
 #include <QWebPage>
-#include <QWebSettings>.
+#include <QWebSettings>
 #endif
 
 #define SHORT_PRESS_DELAY        20
@@ -296,7 +296,7 @@ private:
 			{
 				font    = QFont();
 				font.setStyleStrategy(QFont::NoAntialias);
-				color   = Qt::black;
+                color   = QApplication::palette().color(QPalette::Text);
 				center  = false;
 				newLine = false;
 			}
@@ -402,19 +402,21 @@ public:
 
         // FIX for dark theme
         QColor tc = widget->palette().color(QPalette::WindowText);
-        if(tc != Qt::black)
+        if(tc != QColor(0, 0, 0))
         {
-            int i = ct.indexOf("<body>");
-            if(i >= 0)
-                i += 6;
-            else
-                i = 0;
+//            int i = qMax(i = ct.indexOf("<body>"), ct.indexOf("<body "));
+//            if(i >= 0)
+//                i = ct.indexOf('>', i) + 1;
+//            else
+//                i = 0;
 
-            int ii = ct.indexOf("</body>");
-            if(ii == -1)
-                ii = ct.size();
+//            int ii = ct.indexOf("</body>");
+//            if(ii == -1)
+//                ii = ct.size();
 
-            Q_ASSERT(i < ii);
+//            Q_ASSERT(i < ii);
+
+            int i = 0, ii = ct.size();
 
             ct = ct.insert(ii, "</font>").insert(i, QString("<font color=\"%1\">").arg(tc.name()));
         }
@@ -2308,7 +2310,12 @@ bool BtMiniView::isIndexHidden(const QModelIndex &index) const
     return false;
 }
 
+#if QT_VERSION < 0x050000
 void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+#else
+void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                             const QVector<int> &roles)
+#endif
 {
     Q_D(BtMiniView);
 

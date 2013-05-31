@@ -30,6 +30,8 @@ public:
     static BtMiniMenu * createQuery(QString text, QStringList actions = QStringList());
     
     static BtMiniMenu * createProgress(QString text);
+
+    static int execTip(QString text);
     
     /** Return id of pressed button and -1 if menu was canceled. */
 	static int execQuery(QString text, QStringList actions = QStringList());

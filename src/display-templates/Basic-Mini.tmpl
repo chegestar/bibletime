@@ -60,8 +60,6 @@
     border-right: 2px solid gray;
     }
 
-    /* Settings which apply to all entries in all modules */
-
     .entry {
     padding: 2px;
     text-align: justify;
@@ -80,7 +78,6 @@
     text-align:right !important;
     }
 
-    /* Keep the values the same as in .entry (take the border into account!) */
     .currententry {
     padding: 2px;
     /*vertical-align: middle;*/
@@ -99,7 +96,6 @@
     background-color: #edefff !important;
     }
 
-    /* Space between the columns of modules displayed side by side */
     td.entry + td.entry {
     margin-left: 5px;
     }
@@ -167,12 +163,10 @@
 
     #infodisplay > p, #infodisplay * > p, #infodisplay > .para, #infodisplay * > .para { /* We only format the first p child in a special way */
     text-align:justify !important;
-    color: #000000;
     margin:0px;
     padding:0px;
     }
-
-    /*Required for cross references*/
+    
     #infodisplay .entry {
     padding:2px;
     text-align:justify !important;
@@ -182,15 +176,14 @@
     #infodisplay .entry[dir=rtl] {
     text-align: right !important;
     }
-    #infodisplay .entry .entry { /*No smaller font size for nested entries*/
+    #infodisplay .entry .entry {
     margin:0px;
     }
-    #infodisplay .entry .entry[dir=rtl] { /*No smaller font size for nested entries*/
+    #infodisplay .entry .entry[dir=rtl] {
     text-align: right !important;
     }
 
     #infodisplay .rangeheading {
-    color: #000000;
     font-weight:bold;
     margin-left:-10px;
     }

@@ -904,22 +904,35 @@ void BtMiniModuleTextModel::openPlaceSelection()
     BtMiniMenu menu;
 
     QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.9);
+    f.setPixelSize(f.pixelSize() * 0.85);
     menu.setFont(f);
 
     BtMiniView *view = new BtMiniView(&menu);
-
     view->setInteractive(true);
+    view->setTopShadow(true);
 
     QVBoxLayout *l = new QVBoxLayout;
+
+    QLabel *c = new QLabel("", view);
+    f.setPixelSize(f.pixelSize() * 0.75);
+    f.setWeight(QFont::Normal);
+    c->setFont(f);
+    c->setMargin(f.pixelSize() / 3);
+    c->setAlignment(Qt::AlignCenter);
+
+    l->addWidget(c, Qt::AlignCenter);
     l->addWidget(view);
     menu.setLayout(l);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
 
+    m->setIndicator(c);
+    QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
+
     view->setModel(m);
 
-	// setup current place and scroll to proper place
+
+    // setup current place and scroll to proper place
 	QModelIndex pi = m->keyToIndex(cp);
 	view->setCurrentIndex(pi);
 	while(pi.parent() != QModelIndex())

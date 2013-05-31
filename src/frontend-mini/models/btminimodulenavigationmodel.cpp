@@ -9,6 +9,7 @@
 *
 **********/
 
+#include <QLabel>
 #include <QMutex>
 #include <QtDebug>
 
@@ -28,8 +29,9 @@ class BtMiniModuleNavigationModelPrivate
 public:
 	BtMiniModuleNavigationModelPrivate() : _key(0), _parentKey(0)
     {
-        _bm = 0;
-		_lm = 0;
+        _bm        = 0;
+        _lm        = 0;
+        _indicator = 0;
     }
     
     ~BtMiniModuleNavigationModelPrivate()
@@ -100,6 +102,8 @@ public:
 	mutable QModelIndex      _parentIndex;
 
     BtMiniLayoutDelegate    *_ld;
+
+    QLabel                  *_indicator;
 };
 
 BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObject *parent)
@@ -355,4 +359,27 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
 	}
 
 	return QModelIndex();
+}
+
+
+void BtMiniModuleNavigationModel::setIndicator(QWidget *w)
+{
+    d_ptr->_indicator = qobject_cast<QLabel*>(w);
+    updateIndicator(QModelIndex());
+}
+
+void BtMiniModuleNavigationModel::updateIndicator(QModelIndex index)
+{
+    Q_D(BtMiniModuleNavigationModel);
+
+    if(d->_indicator && d->_bm)
+    {
+        if(!index.isValid() || !index.parent().isValid())
+            d->_indicator->setText(tr("Select Book:"));
+        else if(!index.parent().parent().isValid())
+            d->_indicator->setText(index.parent().data().toString());
+        else
+            d->_indicator->setText(index.parent().parent().data().toString() + " " +
+                                   index.parent().data().toString());
+    }
 }

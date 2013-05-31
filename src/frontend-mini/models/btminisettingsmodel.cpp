@@ -35,7 +35,9 @@ enum BtMiniSettingsIds
 #ifdef BT_MINI_WEBKIT
     BtMiniUseWebKit,
 #endif
+#ifndef BT_NO_CLUCENE
     BtMiniSearchType,
+#endif
     BtMiniStyle,
     BtMiniForum = BtMiniStyle + 4
 };
@@ -49,29 +51,43 @@ public:
     {
         QString tbs = "<table width=\"100%\" cellpadding=\"5\"><tr><td>";
 
-        _strings << "<body><font size=\"50%\"><center>Settings</center></font></body>";
-        _strings << tbs + "Font size:</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
-        _strings << tbs + "Font size for text:</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
-        _strings << tbs + "Multi-threading:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << tbs + "Continuous scrolling:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _strings << "<body><font size=\"50%\"><center>" + BtMiniSettingsModel::tr("Settings") +
+                    "</center></font></body>";
+        _strings << tbs + BtMiniSettingsModel::tr("Font size:") +
+                    "</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
+        _strings << tbs + BtMiniSettingsModel::tr("Font size for text:") +
+                    "</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
+        _strings << tbs + BtMiniSettingsModel::tr("Multi-threading:") +
+                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _strings << tbs + BtMiniSettingsModel::tr("Continuous scrolling:") +
+                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
 #ifdef BT_MINI_WEBKIT
-        _strings << tbs + "Use WebKit:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _strings << tbs + BtMiniSettingsModel::tr("Use WebKit:") +
+                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
 #endif
-        _strings << tbs + "Search type:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << tbs + "Ui style:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << "<body><font size=\"50%\"><i>Note: most of settings will be applied after application restart.</i></font></body>";
-        _strings << "<body><font size=\"50%\"><center>About</center></font></body>";
-        _strings << "<body><b>BibleTime Mini</b> - spend your time with Bible on mobile!<br/>"
-                    "<table width=\"100%\"><tr><td>Current version:</td><td align=\"right\"><b>"
-                    BT_MINI_VERSION "</b></td></tr></table>"
-                    "<table width=\"100%\"><tr><td>Built on:</td><td align=\"right\">" __DATE__ "</td></tr></table><br/><br/>"
-                    "It is cross-platform open-source Bible study application designed for mobile devices.<br/><br/>"
-                    "Underlying frameworks:"
+#ifndef BT_NO_CLUCENE
+        _strings << tbs + BtMiniSettingsModel::tr("Search type:") +
+                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+#endif
+        _strings << tbs + BtMiniSettingsModel::tr("Ui style:") +
+                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _strings << "<body><font size=\"50%\"><i>" + BtMiniSettingsModel::tr(
+                    "Note: most of settings will be applied after application restart.") + "</i></font></body>";
+        _strings << "<body><font size=\"50%\"><center>" +
+                    BtMiniSettingsModel::tr("About") + "</center></font></body>";
+        _strings << "<body>" + BtMiniSettingsModel::tr("<b>BibleTime Mini</b> - spend your time with Bible on mobile!") +
+                    "<br/><table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Current version:") +
+                    "</td><td align=\"right\"><b>" BT_MINI_VERSION "</b></td></tr></table>"
+                    "<table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Built on:") + "</td><td align=\"right\">"
+                    __DATE__ "</td></tr></table><br/><br/>" +
+                    BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +
+                    "<br/><br/>" +
+                    BtMiniSettingsModel::tr("Underlying frameworks:") +
                     "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.9.1</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" VERSION "</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table><br/>"
                     "</body>";
-        _strings << "You could post feedback, report an issue or get help throught forum:"
+        _strings << BtMiniSettingsModel::tr("You could post feedback, report an issue or get help throught forum:") +
                     "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>";
 
         Q_ASSERT(BtMiniForum == _strings.size() - 1);
@@ -150,34 +166,36 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
             break;
 #ifdef BT_MINI_WEBKIT
         case BtMiniUseWebKit:
-            s = s.arg(CBTConfig::get(CBTConfig::useWebKit) ? "on" : "off");
+            s = s.arg(CBTConfig::get(CBTConfig::useWebKit) ? tr("on") : tr("off"));
             break;
 #endif
         case BtMiniContinuousScrolling:
-            s = s.arg(CBTConfig::get(CBTConfig::miniContinuousScrolling) ? "on" : "off");
+            s = s.arg(CBTConfig::get(CBTConfig::miniContinuousScrolling) ? tr("on") : tr("off"));
             break;
         case BtMiniStyle:
             s = s.arg(CBTConfig::get(CBTConfig::miniStyle));
             break;
         case BtMiniThreads:
-            s = s.arg(CBTConfig::get(CBTConfig::threadedTextRetrieving) ? "on" : "off");
+            s = s.arg(CBTConfig::get(CBTConfig::threadedTextRetrieving) ? tr("on") : tr("off"));
             break;
+#ifndef BT_NO_CLUCENE
         case BtMiniSearchType:
             switch(CBTConfig::get(CBTConfig::searchType))
             {
                 case CSwordModuleSearch::AndType:
-                    s = s.arg("AND");
+                    s = s.arg(tr("AND"));
                 break;
                 case CSwordModuleSearch::OrType:
-                    s = s.arg("OR");
+                    s = s.arg(tr("OR"));
                 break;
                 case CSwordModuleSearch::FullType:
-                    s = s.arg("Full syntax");
+                    s = s.arg(tr("Full syntax"));
                 break;
                 default:
                     s = s.arg("Unknown");
             }
             break;
+#endif
         default:
             ;
         }
@@ -213,13 +231,13 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     {
     case BtMiniFontSize:
         CBTConfig::set(CBTConfig::fontScale, BtMiniMenu::execInput(
-            "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontScale), 1, 1000));
+            tr("Select size:"), "<b>%1%</b>", CBTConfig::get(CBTConfig::fontScale), 1, 1000));
         emit dataChanged(index, index);
         break;
 
     case BtMiniFontTextSize:
         CBTConfig::set(CBTConfig::fontTextScale, BtMiniMenu::execInput(
-            "Select size:", "<b>%1%</b>", CBTConfig::get(CBTConfig::fontTextScale), 1, 1000));
+            tr("Select size:"), "<b>%1%</b>", CBTConfig::get(CBTConfig::fontTextScale), 1, 1000));
         emit dataChanged(index, index);
         break;
 
@@ -251,7 +269,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         break;
 
     case BtMiniForum:
-        if(BtMiniMenu::execQuery("Follow link?", QStringList() << "Yes" << "No") == 0)
+        if(BtMiniMenu::execQuery(tr("Follow link?"), QStringList() << tr("Yes") << tr("No")) == 0)
             QDesktopServices::openUrl(QUrl(BT_MINI_FORUM_URL));
         break;
 
@@ -260,10 +278,14 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         emit dataChanged(index, index);
         break;
 
+#ifndef BT_NO_CLUCENE
     case BtMiniSearchType:
         CBTConfig::set(CBTConfig::searchType, (CBTConfig::get(CBTConfig::searchType) + 1)
                        % (CSwordModuleSearch::FullType + 1));
         emit dataChanged(index, index);
+		break;
+#endif
+
     default:
         ; //qDebug() << "clicked" << index.data();
     }

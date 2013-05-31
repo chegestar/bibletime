@@ -14,8 +14,6 @@
 
 #include <QAbstractItemView>
 
-//#include "btmini.h"
-
 class BtMiniLayoutDelegate;
 class BtMiniViewPrivate;
 
@@ -124,7 +122,11 @@ signals:
 
 protected slots:
     /** Reimplemented from QAbstractItemView. */
-    void        dataChanged(const QModelIndex &from, const QModelIndex &to);
+#if QT_VERSION < 0x050000
+    void dataChanged(const QModelIndex &from, const QModelIndex &to);
+#else
+    void dataChanged(const QModelIndex &from, const QModelIndex &to, const QVector<int> & roles = QVector<int> ());
+#endif
 
 protected:
     /** Reimplemented from QWidget. */

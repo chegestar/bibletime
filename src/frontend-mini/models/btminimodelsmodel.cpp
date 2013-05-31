@@ -9,7 +9,7 @@
 *
 **********/
 
-#include <QPushButton>
+#include <QLabel>
 #include <QtDebug>
 
 #include "btminimodelsmodel.h"
@@ -22,7 +22,7 @@ public:
 
     QVector<QPair<QAbstractItemModel*, QString> >  _models;
     mutable QVector<QModelIndex>                   _mapping;
-    QPushButton                                   *_indicator;
+    QLabel                                        *_indicator;
 
 };
 
@@ -169,7 +169,7 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 
 void BtMiniModelsModel::setIndicator(QWidget *w)
 {
-    d_ptr->_indicator = qobject_cast<QPushButton*>(w);
+    d_ptr->_indicator = qobject_cast<QLabel*>(w);
     updateIndicators(QModelIndex());
 }
 
@@ -178,7 +178,7 @@ void BtMiniModelsModel::updateIndicators(QModelIndex index)
     if(d_ptr->_indicator)
     {
         if(!index.isValid() || !index.parent().isValid())
-            d_ptr->_indicator->setText("Select repository:");
+            d_ptr->_indicator->setText(tr("Select repository:"));
         else
             d_ptr->_indicator->setText(index.parent().data().toString().remove(QRegExp("<[^>]*>")));
     }

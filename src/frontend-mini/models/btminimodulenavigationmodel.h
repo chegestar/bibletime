@@ -45,6 +45,13 @@ public:
     /** Convert given model index to Sword key. */
     QString indexToKey(const QModelIndex &index) const;
 
+    /** */
+    void setIndicator(QWidget *w);
+
+public slots:
+    /** */
+    void updateIndicator(QModelIndex index);
+
 protected:
 
 private:

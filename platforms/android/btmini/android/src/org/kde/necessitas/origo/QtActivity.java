@@ -70,6 +70,7 @@ import dalvik.system.DexClassLoader;
 
 // BtMini
 import android.os.Vibrator;
+
 //@ANDROID-11
 //QtCreator import android.app.Fragment;
 //QtCreator import android.view.ActionMode;

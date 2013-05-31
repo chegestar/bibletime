@@ -25,6 +25,10 @@ kalemas@mail.ru :
 ?   maybe installing a module automatically download and istall sword locale for that language
 +   install manager by languages
 +   qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
+    TIPS!
+        on text view: context and how to add parallel views
+    on Symbian with S60 style menus are hollow
+
 	logic to take into account device dpi for font size policy
         android hd2 - 239 dpi
         win64 17" 1600x900 - 96 dpi

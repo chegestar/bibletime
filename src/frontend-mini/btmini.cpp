@@ -21,6 +21,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QStandardItemModel>
+#include <QStringListModel>
 #include <QStackedWidget>
 #include <QStyle>
 #include <QStyleFactory>
@@ -321,10 +322,12 @@ QWidget * BtMini::mainWidget()
 
     if(!w)
     {
-#if defined  Q_OS_WINCE || defined (ANDROID) || defined (Q_OS_UNIX)
-        QSize size(QApplication::desktop()->size());
-#else
+#if defined  Q_OS_WIN32
         QSize size(480, 640);
+		bool expand = false;
+#else
+		QSize size(QApplication::desktop()->size());
+		bool expand = true;
 #endif
 
         w = new BtMiniMainWidget;
@@ -338,14 +341,17 @@ QWidget * BtMini::mainWidget()
         qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
                     w->physicalDpiX() << w->physicalDpiY();
 
-#if defined  Q_OS_WINCE || defined (ANDROID) || defined (Q_OS_UNIX)
-        w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
-        w->showExpanded();
-#else
-        w->resize(size);
-        w->show();
-        w->raise();
-#endif
+		if(expand)
+		{
+			w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
+			w->showExpanded();
+		}
+		else
+		{
+			w->resize(size);
+			w->show();
+			w->raise();
+		}
     }
 
     return w;
@@ -371,7 +377,7 @@ QWidget * BtMini::worksWidget()
     static BtMiniWidget *w = 0;
 
     if(!w)
-    {
+    {	
         if(!haveBible())
             return installerWidget(true);
 
@@ -588,48 +594,47 @@ QWidget * BtMini::installerWidget(bool firstTime)
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
 
-        QPushButton *pb = new QPushButton(firstTime ? "No Bible installed" : "", w);
-        changeFontSize(pb, 0.8);
+        QLabel *lb = new QLabel(firstTime ? tr("No Bible installed") : "", w);
+        changeFontSize(lb, 0.9);
+        lb->setAlignment(Qt::AlignCenter);
+        lb->setMargin(lb->font().pixelSize() / 3);
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
 
-        vl->addWidget(pb);
+        vl->addWidget(lb, Qt::AlignCenter);
         vl->addWidget(v);
         vl->addWidget(p);
 
         w->setLayout(vl);
 
-        if(firstTime)
-            if(BtMiniMenu::execQuery(tr("Remote sources will be updated..."),
-                                  QStringList() << "Ok" << "Exit") == 1)
-            {
-                BtMini::mainWidget()->close();
-                return 0;
-            }
+        if(firstTime && BtMiniMenu::execQuery(tr("Remote sources will be updated..."),
+            QStringList() << tr("Ok") << tr("Exit")) == 1)
+		{
+            QTimer::singleShot(100, QApplication::instance(), SLOT(quit()));
+			return 0;
+		}
 
         // Setup model
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
 
-        m->setIndicator(pb);
+        m->setIndicator(lb);
         QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
 
         QStringList        ss(BtInstallBackend::sourceNameList(refresh));
         BtInstallMgr      *im = new BtInstallMgr(m);
 
-        //BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
-        //o.limitItems = true;
-        //o.perCycle = 5;
-        //o.scrollPerItem = true;
-        //v->layoutDelegate()->setLevelOption(1, o);
-
         foreach(QString s, ss)
         {
             sword::InstallSource is = BtInstallBackend::source(s);
-            if(refresh)
+            
+			if(refresh)
                 im->refreshRemoteSource(&is);
 
             CSwordBackend *be = BtInstallBackend::backend(is);
+			
+			if(be->moduleList().size() == 0)
+				continue;
 
             BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(false), m);
             mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
@@ -856,8 +861,6 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(BtMiniMessageHandler);
 #endif
 
-    //QApplication::setGraphicsSystem("opengl");
-
     // Init application
     BtMiniApplication app(argc, argv);
 
@@ -867,26 +870,19 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // TODO set style for main widget
     QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
-
-
-    // FIX in necessitas sets QPlastiqueStyle when QApplication inits
-#ifdef ANDROID
-    QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
-#endif
 
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
-    app.setApplicationVersion("2.9.1");
-#ifdef Q_OS_WINCE
+    app.setApplicationVersion(BT_MINI_VERSION);
+
+//#ifdef Q_OS_WINCE
     app.setAutoSipEnabled(true);
-#endif
+//#endif
 
     CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
 
     // install translators
-    //QString ul(QLocale::system().uiLanguages()[0].toLatin1().replace('-', '_'));
     QString ul(QLocale::system().name());
 
     qDebug() << "Select interface locale:" << ul;

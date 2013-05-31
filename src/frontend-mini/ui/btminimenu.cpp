@@ -78,7 +78,9 @@ BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
     //setAutoFillBackground(false);
 	//setAttribute(Qt::WA_MouseNoMask);
 	//setAttribute(Qt::WA_NoMousePropagation);
-    //setAutoFillBackground(true);
+
+    // FIX on Symbian menus are hollow
+    setAutoFillBackground(true);
 
 	if(parentWidget())
 	{
@@ -447,6 +449,11 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 	dialog->d_ptr->_modal = true;
 
     return dialog;
+}
+
+int BtMiniMenu::execTip(QString text)
+{
+    ;
 }
 
 void BtMiniMenu::setValue(int percent)

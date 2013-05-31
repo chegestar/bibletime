@@ -12,50 +12,63 @@
 <context>
     <name>BtMini</name>
     <message>
-        <location filename="../btmini.cpp" line="537"/>
+        <location filename="../btmini.cpp" line="599"/>
         <source>Update all sources?</source>
         <translation>Обновить источники?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="538"/>
+        <location filename="../btmini.cpp" line="600"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="538"/>
+        <location filename="../btmini.cpp" line="600"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="538"/>
-        <location filename="../btmini.cpp" line="637"/>
+        <location filename="../btmini.cpp" line="600"/>
+        <location filename="../btmini.cpp" line="753"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="565"/>
-        <source>Please, install at
-least one Bible text
-and restart</source>
+        <location filename="../btmini.cpp" line="619"/>
+        <source>No Bible installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="636"/>
+        <location filename="../btmini.cpp" line="633"/>
+        <source>Remote sources will be updated...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="634"/>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="634"/>
+        <source>Exit</source>
+        <translation type="unfinished">Выход</translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="752"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="637"/>
+        <location filename="../btmini.cpp" line="753"/>
         <source>Install</source>
-        <translation>Установить</translation>
+        <translation type="unfinished">Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="641"/>
+        <location filename="../btmini.cpp" line="759"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="650"/>
+        <location filename="../btmini.cpp" line="773"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
@@ -67,66 +80,87 @@ and restart</source>
 <context>
     <name>BtMiniMenu</name>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="342"/>
+        <location filename="../ui/btminimenu.cpp" line="324"/>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/btminimenu.cpp" line="442"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
 </context>
 <context>
+    <name>BtMiniModelsModel</name>
+    <message>
+        <location filename="../models/btminimodelsmodel.cpp" line="181"/>
+        <source>Select repository:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BtMiniModuleNavigationModel</name>
+    <message>
+        <location filename="../models/btminimodulenavigationmodel.cpp" line="378"/>
+        <source>Select Book:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>BtMiniModuleTextModel</name>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="788"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="782"/>
         <source>Add Left</source>
         <translation>Добавить Слева</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="788"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="782"/>
         <source>Add Right</source>
         <translation>Добавить Справа</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="791"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="785"/>
         <source>Clear</source>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="970"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="977"/>
         <source>No Module</source>
         <translation>Нет Модуля</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1032"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1039"/>
         <source>Search ...</source>
         <translation>Поиск ...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1038"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1045"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
         <translation>стронг:</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
         <source>Build index for module?</source>
         <translation>Создать индекс для модуля?</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1052"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1056"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1063"/>
         <source>Indexing...</source>
         <translation>Индексирование...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1109"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1116"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
     </message>
@@ -134,47 +168,184 @@ and restart</source>
 <context>
     <name>BtMiniPanel</name>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="75"/>
+        <location filename="../ui/btminipanel.cpp" line="77"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="83"/>
+        <location filename="../ui/btminipanel.cpp" line="82"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="91"/>
+        <location filename="../ui/btminipanel.cpp" line="87"/>
         <source>Install</source>
-        <translation>Установка</translation>
+        <translation type="unfinished">Загрузка</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="99"/>
+        <location filename="../ui/btminipanel.cpp" line="92"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="140"/>
+        <location filename="../ui/btminipanel.cpp" line="97"/>
+        <source>Settings</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <location filename="../ui/btminipanel.cpp" line="143"/>
         <source>Exit?</source>
         <translation>Выйти?</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="140"/>
+        <location filename="../ui/btminipanel.cpp" line="143"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="140"/>
+        <location filename="../ui/btminipanel.cpp" line="143"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
 </context>
 <context>
+    <name>BtMiniSettingsModel</name>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="54"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="56"/>
+        <source>Font size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="58"/>
+        <source>Font size for text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="60"/>
+        <source>Multi-threading:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="62"/>
+        <source>Continuous scrolling:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="65"/>
+        <source>Use WebKit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="69"/>
+        <source>Search type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="72"/>
+        <source>Ui style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="74"/>
+        <source>Note: most of settings will be applied after application restart.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="77"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="78"/>
+        <source>&lt;b&gt;BibleTime Mini&lt;/b&gt; - spend your time with Bible on mobile!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="79"/>
+        <source>Current version:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="81"/>
+        <source>Built on:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="83"/>
+        <source>It is cross-platform open-source Bible study application designed for mobile devices.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="85"/>
+        <source>Underlying frameworks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="90"/>
+        <source>You could post feedback, report an issue or get help throught forum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="169"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="173"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="179"/>
+        <source>on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="169"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="173"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="179"/>
+        <source>off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="186"/>
+        <source>AND</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="189"/>
+        <source>OR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="192"/>
+        <source>Full syntax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="234"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="240"/>
+        <source>Select size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <source>Follow link?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <source>Yes</source>
+        <translation type="unfinished">Да</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <source>No</source>
+        <translation type="unfinished">Нет</translation>
+    </message>
+</context>
+<context>
     <name>BtMiniView</name>
     <message>
-        <location filename="../view/btminiview.cpp" line="2774"/>
         <source>Hello World!</source>
-        <translation type="unfinished">Привет Мир!</translation>
+        <translation type="obsolete">Привет Мир!</translation>
     </message>
 </context>
 <context>
@@ -452,42 +623,42 @@ and restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="460"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="484"/>
         <source>Old testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="461"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="485"/>
         <source>Moses/Pentateuch/Torah</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="462"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="486"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="463"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="487"/>
         <source>Prophets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="464"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="488"/>
         <source>New testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="465"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="489"/>
         <source>Gospels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="466"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="490"/>
         <source>Letters/Epistles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="467"/>
+        <location filename="../../backend/config/cbtconfig.cpp" line="491"/>
         <source>Paul&apos;s Epistles</source>
         <translation type="unfinished"></translation>
     </message>
