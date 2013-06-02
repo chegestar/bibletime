@@ -439,14 +439,15 @@ DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
 DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 }
 
-# Android
+# Android platform
 android {
 }
 
 # MeeGo platform
 unix {
 contains(MEEGO_EDITION,harmattan) {
-include(deployment.pri)
+
+include(../../common/btmini/deployment.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
@@ -458,12 +459,16 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog
 
-target.path = /opt/btmini/bin
-INSTALLS += target
+#target.path = /opt/btmini/bin
+#INSTALLS += target
 
-icon.files = btmini.png
-icon.path = /usr/share/icons/hicolor/80x80/apps
-INSTALLS += icon
+#icon.files = btmini.png
+#icon.path = /usr/share/icons/hicolor/80x80/apps
+#INSTALLS += icon
+
+#desktopfile.files = btmini.desktop
+#desktopfile.path = /usr/share/applications
+#INSTALLS += desktopfile
 }
 }
 
@@ -494,13 +499,13 @@ clucene {
 DEFINES += __GNUC__ NO_DUMMY_DECL
 }
 
-# following is valid for Symbian^3 build system
+# following is valid for Symbian^3 build system but not for S60
 DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
 DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
 
 SOURCES += ftplib.c
 
-include(deployment.pri)
+include(../../common/btmini/deployment.pri)
 qtcAddDeployment()
 }
 

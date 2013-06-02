@@ -77,7 +77,7 @@ public:
                     BtMiniSettingsModel::tr("About") + "</center></font></body>";
         _strings << "<body>" + BtMiniSettingsModel::tr("<b>BibleTime Mini</b> - spend your time with Bible on mobile!") +
                     "<br/><table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Current version:") +
-                    "</td><td align=\"right\"><b>" BT_MINI_VERSION "</b></td></tr></table>"
+                    "</td><td align=\"right\"><b>" "0.9.1" /*BT_MINI_VERSION*/ "</b></td></tr></table>"
                     "<table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Built on:") + "</td><td align=\"right\">"
                     __DATE__ "</td></tr></table><br/><br/>" +
                     BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +

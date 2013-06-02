@@ -39,7 +39,7 @@ symbian {
                 source = $$replace(source, \\\\, /)
                 target = $$OUT_PWD/$$eval($${deploymentfolder}.target)
                 target = $$replace(target, \\\\, /)
-                copyCommand += btmini -d \"$$target\" || mkdir -p \"$$target\" && cp -r \"$$source\" \"$$target\"
+                copyCommand += test -d \"$$target\" || mkdir -p \"$$target\" && cp -r \"$$source\" \"$$target\"
             }
         }
     }

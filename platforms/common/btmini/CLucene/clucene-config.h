@@ -126,18 +126,6 @@
 #define _CL_HAVE_STD   
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* Disable multithreading */
 /* #undef _CL_DISABLE_MULTITHREADING */
 
@@ -242,7 +230,7 @@
 
 
 /* Define to 1 if you have the <tchar.h> header file. */
-#ifdef _WIN32
+#if defined _WIN32 && !defined __SYMBIAN32__
 #define _CL_HAVE_TCHAR_H
 #endif
 
@@ -375,6 +363,12 @@
 
 /* If not already defined, then define as a datatype of *exactly* 8 bits. */
 /* #undef uint8_t */
- 
+
+/* Fix for PATH_MAX */
+#ifdef __SYMBIAN32__
+//#include <sys/cdefs.h>
+//#include <sys/syslimits.h>
+#define PATH_MAX 256
+#endif
 
 #endif

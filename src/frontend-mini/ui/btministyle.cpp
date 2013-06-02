@@ -30,6 +30,7 @@ public:
         Q_INIT_RESOURCE(btministyle);
 
         _night = night;
+        _menuFrame = 0;
 
         if(_night)
         {

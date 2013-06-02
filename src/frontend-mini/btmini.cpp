@@ -236,13 +236,14 @@ public:
 
     void showExpanded()
     {
-    #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-        showFullScreen();
-    #elif defined(Q_WS_MAEMO_5)
-        showMaximized();
-    #elif defined(Q_OS_WINCE)
+    #if defined(Q_OS_WINCE)
         resize(QApplication::desktop()->size());
         show();
+        showFullScreen();
+    #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+        showFullScreen();
+    #elif defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
+        //showMaximized();
         showFullScreen();
     #else
         show();
@@ -874,7 +875,7 @@ int main(int argc, char *argv[])
 
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
-    app.setApplicationVersion(BT_MINI_VERSION);
+    app.setApplicationVersion("0.9.1" /*BT_MINI_VERSION*/);
 
 //#ifdef Q_OS_WINCE
     app.setAutoSipEnabled(true);
