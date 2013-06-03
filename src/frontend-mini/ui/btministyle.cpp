@@ -134,14 +134,8 @@ public:
                 if(const QStyleOptionSlider *scrollbar = qstyleoption_cast<const QStyleOptionSlider *>(option))
                 {
                     p->setPen(Qt::NoPen);
-                    // "#2c6799"
-                    p->setBrush(_palette.color(QPalette::Link));
+                    p->setBrush(_palette.color(QPalette::Link)); // "#2c6799"
                     p->drawRect(scrollbar->rect);
-
-                    // top shadow ?
-                    if(widget && widget->parentWidget() &&
-                       widget->parentWidget()->property("topShadow").toBool())
-                        drawPrimitive((PrimitiveElement)(PE_CustomBase + 1), option, p, widget);
 
                     if(scrollbar->subControls & SC_ScrollBarSlider)
                     {
@@ -158,6 +152,11 @@ public:
                     }
 
                     QCommonStyle::drawComplexControl(cc, option, p, widget);
+
+                    // top shadow
+                    if(widget && widget->parentWidget() && widget->parentWidget()->parentWidget() &&
+                       widget->parentWidget()->parentWidget()->property("topShadow").toBool())
+                        drawPrimitive((PrimitiveElement)(PE_CustomBase + 1), option, p, widget);
 
                     //drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), option, p);
                 }

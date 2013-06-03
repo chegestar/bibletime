@@ -1,5 +1,9 @@
-CONFIG += webkit clucene
+#CONFIG += webkit clucene
 
-clucene:DEFINES += _WIN32
+#clucene:DEFINES += _WIN32
 
 include(../../common/btmini/common.pro)
+
+
+
+

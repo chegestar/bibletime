@@ -84,6 +84,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
         return -1;
     }
 
+#if QT_VERSION < 0x050000
     jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity");
     if (!jniBtMiniClass)
     {
@@ -97,6 +98,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
         qCritical("Jni can't get method");
         return -1;
     }
+#endif
 
     return JNI_VERSION_1_6;
 }
@@ -127,6 +129,7 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef ANDROID
+#if QT_VERSION < 0x050000
     JNIEnv  *p_env;
 
     if (jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
@@ -140,6 +143,7 @@ void BtMini::vibrate(int milliseconds)
     p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
 
     jniBtMiniVm->DetachCurrentThread();
+#endif
 #endif
 }
 
@@ -875,7 +879,7 @@ int main(int argc, char *argv[])
 
     app.setApplicationName("BibleTime Mini");
     app.setOrganizationName("Crosswire");
-    app.setApplicationVersion("0.9.1" /*BT_MINI_VERSION*/);
+    app.setApplicationVersion(BT_MINI_VERSION);
 
 //#ifdef Q_OS_WINCE
     app.setAutoSipEnabled(true);

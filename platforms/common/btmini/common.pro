@@ -312,7 +312,9 @@ DEFINES += BT_MINI_WEBKIT
 
 # Clucene
 clucene {
-DEFINES += _UCS2 _CL_DISABLE_MULTITHREADING
+DEFINES += _CL_DISABLE_MULTITHREADING
+
+!symbian:DEFINES += _UCS2
 
 INCLUDEPATH += $${CLUCENE_PATH} \
 	../../common/btmini
@@ -406,8 +408,7 @@ SOURCES += \
     $${CLUCENE_PATH}/CLucene/search/WildcardQuery.cpp \
     $${CLUCENE_PATH}/CLucene/search/WildcardTermEnum.cpp \
     $${CLUCENE_PATH}/CLucene/config/repl_tcstoll.cpp \
-    $${CLUCENE_PATH}/CLucene/config/repl_lltot.cpp \
-    $${CLUCENE_PATH}/CLucene/config/repl_tprintf.cpp
+    $${CLUCENE_PATH}/CLucene/config/repl_lltot.cpp
 }
 else {
 DEFINES += BT_NO_CLUCENE
@@ -421,8 +422,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
 !symbian {
 INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
+
 SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
     $${SWORD_PATH}/src/utilfuns/ftplib.c \
+
+clucene:SOURCES += $${CLUCENE_PATH}/CLucene/config/repl_tprintf.cpp
 }
 
 win32 {
@@ -458,24 +462,11 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog
-
-#target.path = /opt/btmini/bin
-#INSTALLS += target
-
-#icon.files = btmini.png
-#icon.path = /usr/share/icons/hicolor/80x80/apps
-#INSTALLS += icon
-
-#desktopfile.files = btmini.desktop
-#desktopfile.path = /usr/share/applications
-#INSTALLS += desktopfile
 }
 }
 
 # Symbian platform
 symbian {
-DEPLOYMENTFOLDERS = # file1 dir1
-
 TARGET.UID3 = 0xE5723167
 
 TARGET.CAPABILITY += NetworkServices
@@ -495,9 +486,7 @@ mini_deployment.pkg_prerules = packageheader vendorinfo
 
 DEPLOYMENT += mini_deployment
 
-clucene {
-DEFINES += __GNUC__ NO_DUMMY_DECL
-}
+clucene:DEFINES += __GNUC__ NO_DUMMY_DECL
 
 # following is valid for Symbian^3 build system but not for S60
 DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
@@ -515,3 +504,6 @@ DEFINES += BT_STATIC_TEXT
 
 SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
 }
+
+# show translations in project explorer
+OTHER_FILES += $${TRANSLATIONS}

@@ -78,9 +78,7 @@ BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
     //setAutoFillBackground(false);
 	//setAttribute(Qt::WA_MouseNoMask);
 	//setAttribute(Qt::WA_NoMousePropagation);
-
-    // FIX on Symbian menus are hollow
-    setAutoFillBackground(true);
+    //setAutoFillBackground(true);
 
 	if(parentWidget())
 	{
