@@ -197,6 +197,7 @@ public:
     };
     void setOrientation(ScreenOrientation orientation)
     {
+#if QT_VERSION < 0x050000
         #if defined(Q_OS_SYMBIAN)
             // If the version of Qt on the device is < 4.7.2, that attribute won't work
             if (orientation != ScreenOrientationAuto) {
@@ -222,7 +223,7 @@ public:
         case ScreenOrientationAuto:
             attribute = static_cast<Qt::WidgetAttribute>(130);
             break;
-    #elif QT_VERSION < 0x050000
+    #else
         case ScreenOrientationLockPortrait:
             attribute = Qt::WA_LockPortraitOrientation;
             break;
@@ -236,6 +237,7 @@ public:
     #endif
         };
         setAttribute(attribute, true);
+#endif
     }
 
     void showExpanded()
@@ -244,10 +246,9 @@ public:
         resize(QApplication::desktop()->size());
         show();
         showFullScreen();
-    #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+    #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
         showFullScreen();
-    #elif defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
-        //showMaximized();
+    #elif defined (Q_OS_ANDROID)
         showFullScreen();
     #else
         show();
@@ -602,7 +603,7 @@ QWidget * BtMini::installerWidget(bool firstTime)
         QLabel *lb = new QLabel(firstTime ? tr("No Bible installed") : "", w);
         changeFontSize(lb, 0.9);
         lb->setAlignment(Qt::AlignCenter);
-        lb->setMargin(lb->font().pixelSize() / 3);
+        lb->setMargin(lb->font().pixelSize() / 2);
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;

@@ -111,11 +111,21 @@ public:
 				_displayOptions.verseNumbers = true;
 			}
 
-			if(_module->type() == CSwordModuleInfo::Lexicon)
+            if(_module->type() == CSwordModuleInfo::Lexicon)
 			{
 				CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(_module);
 				_maxEntries = lm->entries().size();
 			}
+
+            if(_module->type() == CSwordModuleInfo::GenericBook)
+            {
+                CSwordBookModuleInfo *bm = qobject_cast<CSwordBookModuleInfo*>(_module);
+
+                sword::TreeKeyIdx tk(*bm->tree());
+                tk.setPosition(sword::BOTTOM);
+
+                _maxEntries = tk.getOffset();
+            }
 		}
 
 		/** Set list contents to specified text. */
@@ -175,7 +185,7 @@ public:
     /** Parents count. */
     inline int indexDepth(const QModelIndex &index) const
     {
-        return index.isValid() ? (index.internalId() <= _lists.size() ? 1 : 2) : 0;
+        return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 0;
     }
 
     /** List for index. */
@@ -470,6 +480,11 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 		{
 			const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
 
+            if(list->_module->type() == CSwordModuleInfo::GenericBook)
+            {
+                return "gb";
+            }
+
 			// there was issue with VerseKey::freshtext at simoultaneous call
 			static CSwordVerseKey vk(list->_module);
 			vk.setModule(list->_module);
@@ -581,7 +596,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						CDisplayRendering render(l->_displayOptions, l->_filterOptions);
 						CTextRendering::KeyTreeItem::Settings settings(false, CTextRendering::KeyTreeItem::Settings::SimpleKey);
 						CTextRendering::KeyTree tree;
-						CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
+                        CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
 
 						QList<const CSwordModuleInfo*> modules;
 						modules << l->_module;
@@ -591,6 +606,27 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
 						qDeleteAll(tree);
 					}
+                    else if(l->_module && l->_module->type() == CSwordModuleInfo::GenericBook)
+                    {
+                        sword::TreeKeyIdx key(*(reinterpret_cast<CSwordBookModuleInfo*>(l->_module)->tree()));
+                        key.setIndex(index.internalId());
+
+                        using namespace Rendering;
+
+                        CDisplayRendering render(l->_displayOptions, l->_filterOptions);
+                        CTextRendering::KeyTreeItem::Settings settings;
+                        CTextRendering::KeyTree tree;
+
+                        QList<const CSwordModuleInfo*> modules;
+                        modules << l->_module;
+
+                        QString keyName = key.key();
+
+                        tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
+                        r += render.renderKeyTree(tree);
+
+                        qDeleteAll(tree);
+                    }
 
 					if(l->_hasContents)
 						r += l->_contents.toString();
@@ -917,7 +953,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
     f.setPixelSize(f.pixelSize() * 0.75);
     f.setWeight(QFont::Normal);
     c->setFont(f);
-    c->setMargin(f.pixelSize() / 3);
+    c->setMargin(f.pixelSize() / 2);
     c->setAlignment(Qt::AlignCenter);
 
     l->addWidget(c, Qt::AlignCenter);

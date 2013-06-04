@@ -192,7 +192,7 @@ public:
                     const QWidget *w = widget;
                     while(w->parentWidget())
                         w = w->parentWidget();
-                    v = w->font().pixelSize() * 1.65;
+                    v = w->font().pixelSize() * 1.9;
                 }
 
                 return v;
