@@ -347,19 +347,19 @@ void BtMiniMenu::paintEvent(QPaintEvent *e)
     QPainter p(this);
     
     // FIX QStyle::PE_PanelMenu on windows is hollow
-#if defined Q_OS_WIN || defined ANDROID || defined __unix__
+//#if defined Q_OS_WIN || defined ANDROID || defined __unix__ || defined Q_OS_SYMBIAN
     QStyleOptionButton opt;
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
-#else
-    QStyleOptionMenuItem opt;
-    opt.initFrom(this);
-    opt.state = QStyle::State_None;
-    opt.checkType = QStyleOptionMenuItem::NotCheckable;
-    opt.maxIconWidth = 0;
-    opt.tabWidth = 0;
-    style()->drawPrimitive(QStyle::PE_PanelMenu, &opt, &p, this);
-#endif
+//#else
+//    QStyleOptionMenuItem opt;
+//    opt.initFrom(this);
+//    opt.state = QStyle::State_None;
+//    opt.checkType = QStyleOptionMenuItem::NotCheckable;
+//    opt.maxIconWidth = 0;
+//    opt.tabWidth = 0;
+//    style()->drawPrimitive(QStyle::PE_PanelMenu, &opt, &p, this);
+//#endif
 
     if(const int fw = style()->pixelMetric(QStyle::PM_MenuPanelWidth, 0, this))
     {

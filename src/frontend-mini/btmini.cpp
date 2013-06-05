@@ -790,7 +790,11 @@ void BtMiniMessageHandler(QtMsgType type, const char *msg)
 void BtMiniMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 #endif
 {
+#ifdef Q_OS_SYMBIAN
+    static QFile f("c:\\btlog.txt");
+#else
     static QFile f("log.txt");
+#endif
     static bool r = f.open(QIODevice::WriteOnly);
 
 #if QT_VERSION < 0x050000

@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.1
+VERSION = 0.9.2
 
 CLUCENE_PATH = ../../../../clucene/src
 #CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
@@ -314,8 +314,6 @@ DEFINES += BT_MINI_WEBKIT
 clucene {
 DEFINES += _CL_DISABLE_MULTITHREADING
 
-!symbian:DEFINES += _UCS2
-
 INCLUDEPATH += $${CLUCENE_PATH} \
 	../../common/btmini
 
@@ -408,7 +406,8 @@ SOURCES += \
     $${CLUCENE_PATH}/CLucene/search/WildcardQuery.cpp \
     $${CLUCENE_PATH}/CLucene/search/WildcardTermEnum.cpp \
     $${CLUCENE_PATH}/CLucene/config/repl_tcstoll.cpp \
-    $${CLUCENE_PATH}/CLucene/config/repl_lltot.cpp
+    $${CLUCENE_PATH}/CLucene/config/repl_lltot.cpp \
+    $${CLUCENE_PATH}/CLucene/config/repl_tprintf.cpp
 }
 else {
 DEFINES += BT_NO_CLUCENE
@@ -426,9 +425,10 @@ INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
 SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
     $${SWORD_PATH}/src/utilfuns/ftplib.c \
 
-clucene:SOURCES += $${CLUCENE_PATH}/CLucene/config/repl_tprintf.cpp
+clucene:DEFINES += _UCS2
 }
 
+# Windows platform
 win32 {
 INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
 
@@ -471,12 +471,14 @@ TARGET.UID3 = 0xE5723167
 
 TARGET.CAPABILITY += NetworkServices
 
-TARGET.EPOCSTACKSIZE = 0x14000
-TARGET.EPOCHEAPSIZE = 0x020000 0x2000000
+#TARGET.EPOCSTACKSIZE = 0x200000
+TARGET.EPOCHEAPSIZE = 0x040000 0x4000000
 
 DEPLOYMENT.display_name = BibleTime Mini
 
-packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), 0, 9, 1, TYPE=SA"
+packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), $$replace(VERSION, ([.]\\d+), ""), \
+    $$replace(VERSION, (^\\d+.)|(.\\d+$), ""), $$replace(VERSION, (\\d+[.]), ""), TYPE=SA"
+
 
 vendorinfo = \
 "%{\"Crosswire\"}" \
@@ -486,11 +488,19 @@ mini_deployment.pkg_prerules = packageheader vendorinfo
 
 DEPLOYMENT += mini_deployment
 
-clucene:DEFINES += __GNUC__ NO_DUMMY_DECL
-
-# following is valid for Symbian^3 build system but not for S60
+# version
 DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+greaterThan(S60_VERSION, 5.0) {
 DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
+}
+else {
+DEFINES += BT_MINI_VERSION=\"\\\"$${VERSION}\\\"\"
+}
+
+# icon
+ICON += btmini.svg
+DEPLOYMENT += ICON
+
 
 SOURCES += ftplib.c
 

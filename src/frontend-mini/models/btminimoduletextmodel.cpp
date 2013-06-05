@@ -620,7 +620,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                         QList<const CSwordModuleInfo*> modules;
                         modules << l->_module;
 
-                        QString keyName = key.key();
+                        QString keyName = key.getText();
 
                         tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
                         r += render.renderKeyTree(tree);
@@ -1055,7 +1055,7 @@ void BtMiniModuleTextModel::startSearch()
 	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
 	CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm);
 
-	//qDebug() << "Start search" << cm << d->_searchText;
+    qDebug() << "Start search" << cm << d->_searchText;
 
 	sword::ListKey results;
 	sword::ListKey scope;
