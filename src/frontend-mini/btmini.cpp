@@ -328,7 +328,7 @@ QWidget * BtMini::mainWidget()
 
     if(!w)
     {
-#if defined  Q_OS_WIN32
+#if defined  Q_OS_WIN32 || defined Q_OS_LINUX
         QSize size(480, 640);
 		bool expand = false;
 #else
@@ -668,7 +668,7 @@ QWidget *BtMini::settingsWidget()
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
-        v->setTopShadow(true);
+        //v->setTopShadow(true);
 
         QFont f(v->font());
         f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);

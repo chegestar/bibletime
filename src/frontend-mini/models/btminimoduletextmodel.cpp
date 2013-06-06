@@ -21,6 +21,8 @@
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/config/cbtconfig.h"
 #include "backend/cswordmodulesearch.h"
+#include "backend/keys/cswordldkey.h"
+#include "backend/keys/cswordtreekey.h"
 #include "backend/drivers/cswordbiblemoduleinfo.h"
 #include "backend/drivers/cswordlexiconmoduleinfo.h"
 #include "backend/drivers/cswordbookmoduleinfo.h"
@@ -122,9 +124,14 @@ public:
                 CSwordBookModuleInfo *bm = qobject_cast<CSwordBookModuleInfo*>(_module);
 
                 sword::TreeKeyIdx tk(*bm->tree());
+                tk.root();
+                tk.firstChild();
+
+                Q_ASSERT(tk.getOffset() == 4);
+
                 tk.setPosition(sword::BOTTOM);
 
-                _maxEntries = tk.getOffset();
+                _maxEntries = tk.getOffset() / 4;
             }
 		}
 
@@ -144,9 +151,24 @@ public:
 			_hasScope = list.Count() > 0;
 			_scopeMap.clear();
 
-			for(int i = 0; i < list.Count(); ++i)
-				_scopeMap.append(list.GetElement(i)->getIndex());
-		}
+            if(_module->type() == CSwordModuleInfo::Lexicon)
+            {
+                CSwordLexiconModuleInfo *mi = qobject_cast<CSwordLexiconModuleInfo*>(_module);
+
+                for(int i = 0; i < list.Count(); ++i)
+                {
+                    CSwordLDKey k(list.GetElement(i), mi);
+                    _scopeMap.append(mi->entries().indexOf(k.key()));
+                }
+            }
+            else
+            {
+                for(int i = 0; i < list.Count(); ++i)
+                    _scopeMap.append(list.GetElement(i)->getIndex());
+            }
+
+            Q_ASSERT(!_scopeMap.contains(-1));
+        }
 
 		QString             _name;
 
@@ -478,32 +500,42 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 	{
 	case BtMini::PreviewRole:
 		{
-			const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
+            const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
+
 
             if(list->_module->type() == CSwordModuleInfo::GenericBook)
             {
-                return "gb";
+                CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(list->_module);
+                CSwordTreeKey k(b->tree(), b);
+
+                k.setIndex(index.row() * 4);
+
+                return QString("<word-breaks/><font color='#aaaaaa'><center>%1</center></font><font size='1'><br>"
+                               "&nbsp;</br></font>").arg(k.key().replace('/', ' '));
             }
+            else
+            {
 
-			// there was issue with VerseKey::freshtext at simoultaneous call
-			static CSwordVerseKey vk(list->_module);
-			vk.setModule(list->_module);
-			vk.setIndex(index.row() + list->_firstEntry);
-			int v = vk.getVerse();
-			
-			if(v == 0)
-				return QString();
+                // there was issue with VerseKey::freshtext at simoultaneous call
+                static CSwordVerseKey vk(list->_module);
+                vk.setModule(list->_module);
+                vk.setIndex(index.row() + list->_firstEntry);
+                int v = vk.getVerse();
 
-			QString r("<font color='#aaaaaa'>");
+                if(v == 0)
+                    return QString();
 
-			if(v == 1)
-				r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
-				"<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
+                QString r("<font color='#aaaaaa'>");
 
-			if(v > 0)
-				r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
+                if(v == 1)
+                    r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
+                    "<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
 
-			return r + "</font>";
+                if(v > 0)
+                    r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
+
+                return r + "</font>";
+            }
 		}
 
 	case Qt::DisplayRole:
@@ -582,9 +614,6 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
 							if(v == key.getVerseMax())
 								r += "<font size='1'><br>&nbsp;</font>";
-	                        
-							if(d->_isSearch && !d->_searchText.isEmpty())
-								r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
 						}
 						else
 							Q_ASSERT(!d->_isSearch);
@@ -601,15 +630,19 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						QList<const CSwordModuleInfo*> modules;
 						modules << l->_module;
 
-						tree.append(new Rendering::CTextRendering::KeyTreeItem(lm->entries()[index.row()], modules, settings));
+                        int i = l->_hasScope ? l->_scopeMap[index.row()] : index.row();
+
+                        tree.append(new Rendering::CTextRendering::KeyTreeItem(lm->entries()[i], modules, settings));
 						r += render.renderKeyTree(tree);
 
-						qDeleteAll(tree);
+                        qDeleteAll(tree);
 					}
                     else if(l->_module && l->_module->type() == CSwordModuleInfo::GenericBook)
                     {
-                        sword::TreeKeyIdx key(*(reinterpret_cast<CSwordBookModuleInfo*>(l->_module)->tree()));
-                        key.setIndex(index.internalId());
+                        CSwordBookModuleInfo *b = reinterpret_cast<CSwordBookModuleInfo*>(l->_module);
+                        CSwordTreeKey key(b->tree(), b);
+
+                        key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() * 4);
 
                         using namespace Rendering;
 
@@ -620,13 +653,14 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                         QList<const CSwordModuleInfo*> modules;
                         modules << l->_module;
 
-                        QString keyName = key.getText();
-
-                        tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
+                        tree.append(new Rendering::CTextRendering::KeyTreeItem(key.key(), modules, settings));
                         r += render.renderKeyTree(tree);
 
                         qDeleteAll(tree);
                     }
+
+                    if(d->_isSearch && !d->_searchText.isEmpty())
+                        r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
 
 					if(l->_hasContents)
 						r += l->_contents.toString();
@@ -642,13 +676,20 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
 			if(l->_module)
 			{
-				if(l->_module->type() == CSwordModuleInfo::Lexicon)
+                if(l->_module->type() == CSwordModuleInfo::GenericBook)
+                {
+                    CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(l->_module);
+                    CSwordTreeKey key(b->tree(), b);
+
+                    key.setIndex(index.row() * 4);
+                    return key.key();
+                }
+                else if(l->_module->type() == CSwordModuleInfo::Lexicon)
 				{
 					CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
 					return lm->entries()[index.row()];
-				}
-
-				if(d->indexDepth(index) == 2)
+                }
+                else if(d->indexDepth(index) == 2)
 					return d->indexToVerseKey(index).key();
 			}
 		}
@@ -689,40 +730,51 @@ QVariant BtMiniModuleTextModel::headerData(int section, Qt::Orientation orientat
     return QVariant();
 }
 
-QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString key) const
+QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString keyName) const
 {
     Q_D(const BtMiniModuleTextModel);
 
-    if(key.isEmpty())
+    if(keyName.isEmpty())
         return QModelIndex();
 
 	Q_ASSERT(!d->_lists[i]._hasScope);
 
 	const BtMiniModuleTextModelPrivate::List *l = &d->_lists[i];
 
-	// handle lexicons
 	if(l->_module->type() == CSwordModuleInfo::Lexicon)
 	{
 		CSwordLexiconModuleInfo *li = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
-		int i = li->entries().indexOf(key);
+        int i = li->entries().indexOf(keyName);
 		if(i >= 0)
-			return createIndex(i, 0, (void*)l);
-		
-		return QModelIndex();
+            return createIndex(i, 0, (void*)l);
 	}
+    else if(l->_module->type() == CSwordModuleInfo::GenericBook)
+    {
+        CSwordBookModuleInfo *m = qobject_cast<CSwordBookModuleInfo*>(l->_module);
+        CSwordTreeKey k(m->tree(), m);
+        k.setKey(keyName);
 
-	BtMiniSwordMutex.lock();
+        CSwordTreeKey p(k);
+        p.root();
 
-    CSwordVerseKey verse(l->_module);
-    verse.setKey(key);
-    const int r = verse.getIndex() - l->_firstEntry;
-	
-	BtMiniSwordMutex.unlock();
+        if(p != k)
+            return createIndex(k.getIndex() / 4, 0, (void*)l);
+    }
+    else
+    {
+        BtMiniSwordMutex.lock();
 
-    if(r < 0 || r >= l->_maxEntries)
-        return QModelIndex();
+        CSwordVerseKey verse(l->_module);
+        verse.setKey(keyName);
+        const int r = verse.getIndex() - l->_firstEntry;
 
-    return createIndex(r, 0, (void*)l);
+        BtMiniSwordMutex.unlock();
+
+        if(r >= 0 && r < l->_maxEntries)
+            return createIndex(r, 0, (void*)l);
+    }
+
+    return QModelIndex();
 }
 
 void BtMiniModuleTextModel::setIndicators(QWidget *left, QWidget *module, QWidget *place, QWidget *right)
@@ -945,27 +997,33 @@ void BtMiniModuleTextModel::openPlaceSelection()
 
     BtMiniView *view = new BtMiniView(&menu);
     view->setInteractive(true);
-    view->setTopShadow(true);
+
+    BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
+    view->setModel(m);
 
     QVBoxLayout *l = new QVBoxLayout;
 
-    QLabel *c = new QLabel("", view);
-    f.setPixelSize(f.pixelSize() * 0.75);
-    f.setWeight(QFont::Normal);
-    c->setFont(f);
-    c->setMargin(f.pixelSize() / 2);
-    c->setAlignment(Qt::AlignCenter);
+    CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(cm);
 
-    l->addWidget(c, Qt::AlignCenter);
+    if(mi && mi->type() != CSwordModuleInfo::Lexicon)
+    {
+        view->setTopShadow(true);
+
+        QLabel *c = new QLabel("", view);
+        f.setPixelSize(f.pixelSize() * 0.75);
+        f.setWeight(QFont::Normal);
+        c->setFont(f);
+        c->setMargin(f.pixelSize() / 2);
+        c->setAlignment(Qt::AlignCenter);
+
+        m->setIndicator(c);
+        QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
+
+        l->addWidget(c, Qt::AlignCenter);
+    }
+
     l->addWidget(view);
     menu.setLayout(l);
-
-    BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
-
-    m->setIndicator(c);
-    QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
-
-    view->setModel(m);
 
 
     // setup current place and scroll to proper place
@@ -994,13 +1052,18 @@ void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
 		QString place(index.data(BtMini::PlaceRole).toString());
 
         // Shorten text
-		if(!place.isEmpty() && (d->indexList(index)->_module->type() == CSwordModuleInfo::Bible ||
-			d->indexList(index)->_module->type() == CSwordModuleInfo::Commentary))
+        if(!place.isEmpty())
         {
-            CSwordVerseKey key(d->indexToVerseKey(index));			
-			QMutexLocker locker(&BtMiniSwordMutex);
+            if(d->indexList(index)->_module->type() == CSwordModuleInfo::Bible ||
+                d->indexList(index)->_module->type() == CSwordModuleInfo::Commentary)
+            {
+                CSwordVerseKey key(d->indexToVerseKey(index));
+                QMutexLocker locker(&BtMiniSwordMutex);
 
-            place = QString::fromLocal8Bit(key.getShortText());
+                place = QString::fromLocal8Bit(key.getShortText());
+            }
+            else if(d->indexList(index)->_module->type() == CSwordModuleInfo::GenericBook)
+                place = place.replace("/", " "). replace("Book ", "").replace("Section ", "");
         }
 
         d->_placeIndicator->setEnabled(!place.isEmpty());
@@ -1121,7 +1184,7 @@ void BtMiniModuleTextModel::startSearch()
 
 			searcher.startSearch();
 
-			results = searcher.results()[m];
+            results = searcher.results()[m];
 		}
 	}
 

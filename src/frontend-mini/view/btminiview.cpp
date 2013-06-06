@@ -403,23 +403,7 @@ public:
         // FIX for dark theme
         QColor tc = widget->palette().color(QPalette::WindowText);
         if(tc != QColor(0, 0, 0))
-        {
-//            int i = qMax(i = ct.indexOf("<body>"), ct.indexOf("<body "));
-//            if(i >= 0)
-//                i = ct.indexOf('>', i) + 1;
-//            else
-//                i = 0;
-
-//            int ii = ct.indexOf("</body>");
-//            if(ii == -1)
-//                ii = ct.size();
-
-//            Q_ASSERT(i < ii);
-
-            int i = 0, ii = ct.size();
-
-            ct = ct.insert(ii, "</font>").insert(i, QString("<font color=\"%1\">").arg(tc.name()));
-        }
+            ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
 
         if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
@@ -1832,7 +1816,7 @@ public:
 				_view->_mutex.unlock();
 
 #if defined(Q_OS_WIN32) && defined(QT_DEBUG)
-                //msleep(2000);
+                msleep(5000);
 #endif
 				QString text(index.data().toString());
 
@@ -2811,14 +2795,15 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 
         painter.setPen(Qt::NoPen);
 
-		int mt = d->_mouseTapping - 6;
-        float f = 1.3f;
+        int mt = d->_mouseTapping - 10;
+        float f = 2.8f;
 
         QColor c(palette().color(QPalette::WindowText));
         
         for(int i = qMax(0, mt - 3), e = mt; i <= e; ++i)
         {
-            QPoint p(z.center() + (QPointF(qCos(i / f), qSin(i / f)) * (z.width() / 2)).toPoint());
+            double a = (i - (1 % 6)) / f;
+            QPoint p(z.center() + (QPointF(qCos(a), qSin(a)) * (z.width() / 2)).toPoint());
             QRect r(p.x()-(m*0.25), p.y()-(m*0.25), m*0.5, m*0.5);
 
             QColor cc(c);

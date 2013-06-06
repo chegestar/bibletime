@@ -1,8 +1,7 @@
 # Configuration
-VERSION = 0.9.2
+VERSION = 0.9.3
 
 CLUCENE_PATH = ../../../../clucene/src
-#CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
 
 SWORD_PATH = ../../../../sword
 
@@ -298,6 +297,113 @@ TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
 TRANSLATIONS += ../../../i18n/messages/bibletime_ui_ru.ts
 
 
+
+# Platforms section, can turn off/on options below
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+
+!symbian {
+INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
+
+SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
+    $${SWORD_PATH}/src/utilfuns/ftplib.c \
+}
+
+# Windows platform
+win32 {
+INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
+
+SOURCES += $${SWORD_PATH}/src/utilfuns/win32/dirent.cpp
+
+LIBS += -lws2_32
+}
+
+# iOS Platform
+mac {
+DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
+}
+
+# Android platform
+android {
+}
+
+# MeeGo platform
+unix {
+contains(MEEGO_EDITION,harmattan) {
+
+include(../../common/btmini/deployment.pri)
+qtcAddDeployment()
+
+OTHER_FILES += \
+    qtc_packaging/debian_harmattan/rules \
+    qtc_packaging/debian_harmattan/README \
+    qtc_packaging/debian_harmattan/manifest.aegis \
+    qtc_packaging/debian_harmattan/copyright \
+    qtc_packaging/debian_harmattan/control \
+    qtc_packaging/debian_harmattan/compat \
+    qtc_packaging/debian_harmattan/changelog
+}
+}
+
+# Symbian platform
+symbian {
+TARGET.UID3 = 0xE5723167
+
+TARGET.CAPABILITY += NetworkServices
+
+#TARGET.EPOCSTACKSIZE = 0x200000
+TARGET.EPOCHEAPSIZE = 0x040000 0x4000000
+
+DEPLOYMENT.display_name = BibleTime Mini
+
+packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), $$replace(VERSION, ([.]\\d+), ""), \
+    $$replace(VERSION, (^\\d+.)|(.\\d+$), ""), $$replace(VERSION, (\\d+[.]), ""), TYPE=SA"
+
+
+vendorinfo = \
+"%{\"Crosswire\"}" \
+":\"Crosswire\""
+
+mini_deployment.pkg_prerules = packageheader vendorinfo
+
+DEPLOYMENT += mini_deployment
+
+# version
+DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+greaterThan(S60_VERSION, 5.0) {
+DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
+}
+else {
+DEFINES += BT_MINI_VERSION=\"\\\"$${VERSION}\\\"\"
+
+# seems that on S60 webkit is not supported, maybe wrong packageing?
+CONFIG -= webkit
+}
+
+# icon
+ICON += btmini.svg
+DEPLOYMENT += ICON
+
+
+SOURCES += ftplib.c
+
+include(../../common/btmini/deployment.pri)
+qtcAddDeployment()
+}
+
+# Windows Mobile Platform
+wince {
+DEFINES += BT_STATIC_TEXT
+
+SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
+}
+
+
+
+# Options section
+
 # WebKit
 webkit {
 greaterThan(QT_MAJOR_VERSION, 4) {
@@ -313,6 +419,8 @@ DEFINES += BT_MINI_WEBKIT
 # Clucene
 clucene {
 DEFINES += _CL_DISABLE_MULTITHREADING
+
+!symbian:DEFINES += _UCS2
 
 INCLUDEPATH += $${CLUCENE_PATH} \
 	../../common/btmini
@@ -421,14 +529,10 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
 !symbian {
 INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
-
 SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
     $${SWORD_PATH}/src/utilfuns/ftplib.c \
-
-clucene:DEFINES += _UCS2
 }
 
-# Windows platform
 win32 {
 INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
 
@@ -467,18 +571,18 @@ OTHER_FILES += \
 
 # Symbian platform
 symbian {
+DEPLOYMENTFOLDERS = # file1 dir1
+
 TARGET.UID3 = 0xE5723167
 
 TARGET.CAPABILITY += NetworkServices
 
-#TARGET.EPOCSTACKSIZE = 0x200000
-TARGET.EPOCHEAPSIZE = 0x040000 0x4000000
+TARGET.EPOCSTACKSIZE = 0x14000
+TARGET.EPOCHEAPSIZE = 0x020000 0x2000000
 
 DEPLOYMENT.display_name = BibleTime Mini
 
-packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), $$replace(VERSION, ([.]\\d+), ""), \
-    $$replace(VERSION, (^\\d+.)|(.\\d+$), ""), $$replace(VERSION, (\\d+[.]), ""), TYPE=SA"
-
+packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), 0, 9, 1, TYPE=SA"
 
 vendorinfo = \
 "%{\"Crosswire\"}" \
@@ -488,19 +592,13 @@ mini_deployment.pkg_prerules = packageheader vendorinfo
 
 DEPLOYMENT += mini_deployment
 
-# version
+clucene {
+DEFINES += __GNUC__ NO_DUMMY_DECL
+}
+
+# following is valid for Symbian^3 build system but not for S60
 DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
-greaterThan(S60_VERSION, 5.0) {
 DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
-}
-else {
-DEFINES += BT_MINI_VERSION=\"\\\"$${VERSION}\\\"\"
-}
-
-# icon
-ICON += btmini.svg
-DEPLOYMENT += ICON
-
 
 SOURCES += ftplib.c
 
@@ -514,6 +612,3 @@ DEFINES += BT_STATIC_TEXT
 
 SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
 }
-
-# show translations in project explorer
-OTHER_FILES += $${TRANSLATIONS}

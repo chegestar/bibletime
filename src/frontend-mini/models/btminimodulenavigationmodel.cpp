@@ -16,6 +16,8 @@
 #include "backend/managers/cswordbackend.h"
 #include "backend/drivers/cswordbiblemoduleinfo.h"
 #include "backend/drivers/cswordlexiconmoduleinfo.h"
+#include "backend/drivers/cswordbookmoduleinfo.h"
+#include "backend/keys/cswordtreekey.h"
 
 #include "btmini.h"
 #include "btminimodulenavigationmodel.h"
@@ -31,6 +33,7 @@ public:
     {
         _bm        = 0;
         _lm        = 0;
+        _gm        = 0;
         _indicator = 0;
     }
     
@@ -95,6 +98,7 @@ public:
 
 	CSwordBibleModuleInfo   *_bm;
 	CSwordLexiconModuleInfo *_lm;
+    CSwordBookModuleInfo    *_gm;
     QString                  _module;
 
 	mutable CSwordVerseKey   _key;
@@ -120,21 +124,38 @@ BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObjec
     o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
     o.perCycle = 0;
     o.perLine = 1;
-    o.preText = "<b><center>";
-    o.postText = "</center></b>";
 
-	if(d->_lm && d->_lm->entries().size() > 100)
-	{
-		o.scrollPerItem = true;
-		o.limitItems    = true;
-		o.perCycle      = 5;
-	}
+    if(!d->_gm)
+    {
+        o.preText = "<b><center>";
+        o.postText = "</center></b>";
+    }
+    else
+    {
+        o.preText = "<word-breaks/><b> ";
+        o.postText = "</b>";
+    }
+
+    if(d->_lm)
+    {
+        if(d->_lm->entries().size() > 100)
+        {
+            o.scrollPerItem = true;
+            o.limitItems    = true;
+            o.perCycle      = 5;
+        }
+
+        if(d->_lm->category() == CSwordModuleInfo::DailyDevotional)
+            o.perLine = 2;
+    }
 
     d->_ld->setLevelOption(0, o);
 
-    o.perLine = 3;
-
-    d->_ld->setLevelOption(1, o);
+    if(!d->_gm)
+    {
+        o.perLine = 3;
+        d->_ld->setLevelOption(1, o);
+    }
 }
 
 BtMiniModuleNavigationModel::~BtMiniModuleNavigationModel()
@@ -169,6 +190,10 @@ void BtMiniModuleNavigationModel::setModule(QString &module)
 	{
 		d->_lm = qobject_cast<CSwordLexiconModuleInfo*>(mi);
 	}
+    else if(mi->type() == CSwordModuleInfo::GenericBook)
+    {
+        d->_gm = qobject_cast<CSwordBookModuleInfo*>(mi);
+    }
 }
 
 int BtMiniModuleNavigationModel::columnCount(const QModelIndex &parent) const
@@ -198,6 +223,22 @@ int BtMiniModuleNavigationModel::rowCount(const QModelIndex &parent) const
 	if(d->_lm && !parent.isValid())
 		return d->_lm->entries().size();
 
+    if(d->_gm)
+    {
+        CSwordTreeKey key(d->_gm->tree(), d->_gm);
+
+        key.setIndex(!parent.isValid() ? 0 : parent.internalId());
+
+        if(!key.hasChildren())
+            return 0;
+
+        key.firstChild();
+
+        for(int i = 0; ; ++i)
+            if(!key.nextSibling())
+                return i + 1;
+    }
+
     return 0;
 }
 
@@ -208,11 +249,31 @@ QModelIndex BtMiniModuleNavigationModel::index(int row, int column, const QModel
 	if(d->_bm)
 	{
 	    d->setupVerseKey(parent, row);
-        return createIndex(row, column, (int)d->_key.getIndex());
+        return createIndex(row, column, (quint32)d->_key.getIndex());
 	}
 
 	if(d->_lm)
 		return createIndex(row, column);
+
+    if(d->_gm)
+    {
+        CSwordTreeKey key(d->_gm->tree(), d->_gm);
+
+        key.setIndex(!parent.isValid() ? 0 : parent.internalId());
+
+        Q_ASSERT(key.hasChildren());
+
+        key.firstChild();
+
+        for(int i = 0; ; ++i)
+        {
+            if(row == i)
+                return createIndex(row, 0, (quint32)key.getIndex());
+
+            if(!key.nextSibling())
+                Q_ASSERT(false);
+        }
+    }
 
 	return QModelIndex();
 }
@@ -241,12 +302,12 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 			d->_key.setVerse(0);
             d->_key.normalize();
 
-	#ifdef QT_DEBUG
+#ifdef QT_DEBUG
 			if(d->_bm->books()->indexOf(d->_key.book()) == -1)
 			{
 				qDebug() << d->_bm->books() << d->_key.book();
 			}
-	#endif
+#endif
 
 			row = d->_bm->books()->indexOf(d->_key.book());
 		}
@@ -258,11 +319,35 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 
 		Q_ASSERT(row >= 0);
 
-        return createIndex(row, 0, (int)d->_key.getIndex());
+        return createIndex(row, 0, (quint32)d->_key.getIndex());
 	}
 
-	if(d->_ld)
+    if(d->_lm)
 		return QModelIndex();
+
+    if(d->_gm)
+    {
+        CSwordTreeKey key(d->_gm->tree(), d->_gm);
+        key.setIndex(index.internalId());
+
+        CSwordTreeKey r(key);
+        r.root();
+
+        if(!key.parent() || key == r)
+            return QModelIndex();
+
+        CSwordTreeKey p(key);
+        while(p.previousSibling())
+            ;
+
+        for(int i = 0; ; ++i)
+        {
+            if(p == key)
+                return createIndex(i, 0, (quint32)key.getIndex());
+
+            p.nextSibling();
+        }
+    }
 
 	return QModelIndex();
 }
@@ -307,6 +392,17 @@ QVariant BtMiniModuleNavigationModel::data(const QModelIndex &index, int role) c
 		}
 	}
 
+    if(d->_gm)
+    {
+        CSwordTreeKey key(d->_gm->tree(), d->_gm);
+        key.setIndex(index.internalId());
+
+        if(role == BtMini::PlaceRole)
+            return key.key();
+        if(role == Qt::DisplayRole)
+            return key.key().split("/").last();
+    }
+
     return QVariant();
 }
 
@@ -348,7 +444,7 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
 		else if(d->_key.getVerse() == 0)
 			row = d->_key.getChapter() - 1;
 
-        return createIndex(row, 0, (int)d->_key.getIndex());
+        return createIndex(row, 0, (quint32)d->_key.getIndex());
 	}
 
 	if(d->_lm)
@@ -357,6 +453,23 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
 		if(i >= 0)
 			return createIndex(i, 0);
 	}
+
+    if(d->_gm)
+    {
+        CSwordTreeKey k(d->_gm->tree(), d->_gm);
+        k.setKey(key);
+
+        CSwordTreeKey p(k);
+        while(p.previousSibling())
+            ;
+
+        for(int i = 0; ; ++i)
+        {
+            if(k == p)
+                return createIndex(i, 0, (quint32)k.getIndex());
+            p.nextSibling();
+        }
+    }
 
 	return QModelIndex();
 }
@@ -372,14 +485,28 @@ void BtMiniModuleNavigationModel::updateIndicator(QModelIndex index)
 {
     Q_D(BtMiniModuleNavigationModel);
 
-    if(d->_indicator && d->_bm)
+    if(d->_indicator)
     {
-        if(!index.isValid() || !index.parent().isValid())
-            d->_indicator->setText(tr("Select Book:"));
-        else if(!index.parent().parent().isValid())
-            d->_indicator->setText(index.parent().data().toString());
+        if(d->_bm)
+        {
+            if(!index.isValid() || !index.parent().isValid())
+                d->_indicator->setText(tr("Select Book:"));
+            else if(!index.parent().parent().isValid())
+                d->_indicator->setText(index.parent().data().toString());
+            else
+                d->_indicator->setText(index.parent().parent().data().toString() + " " +
+                                       index.parent().data().toString());
+        }
+        else if(d->_gm)
+        {
+            if(!index.isValid() || !index.parent().isValid())
+                d->_indicator->setText(tr("Select Section:"));
+            else if(index.parent().isValid())
+                d->_indicator->setText(index.parent().data().toString().split('/').last());
+        }
         else
-            d->_indicator->setText(index.parent().parent().data().toString() + " " +
-                                   index.parent().data().toString());
+            return;
+
+
     }
 }

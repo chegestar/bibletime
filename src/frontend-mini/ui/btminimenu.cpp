@@ -451,7 +451,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
 int BtMiniMenu::execTip(QString text)
 {
-    ;
+    return 0;
 }
 
 void BtMiniMenu::setValue(int percent)

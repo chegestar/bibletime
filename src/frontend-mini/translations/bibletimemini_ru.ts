@@ -258,7 +258,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="77"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">О Программе</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="78"/>
@@ -295,14 +295,14 @@
         <location filename="../models/btminisettingsmodel.cpp" line="173"/>
         <location filename="../models/btminisettingsmodel.cpp" line="179"/>
         <source>on</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">да</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="169"/>
         <location filename="../models/btminisettingsmodel.cpp" line="173"/>
         <location filename="../models/btminisettingsmodel.cpp" line="179"/>
         <source>off</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">нет</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="186"/>
