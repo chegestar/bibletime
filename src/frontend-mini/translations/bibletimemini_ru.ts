@@ -180,7 +180,7 @@
     <message>
         <location filename="../ui/btminipanel.cpp" line="87"/>
         <source>Install</source>
-        <translation type="unfinished">Загрузка</translation>
+        <translation>Загрузка</translation>
     </message>
     <message>
         <location filename="../ui/btminipanel.cpp" line="92"/>

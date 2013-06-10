@@ -32,17 +32,6 @@
 #include <QTranslator>
 #include <QtDebug>
 
-#ifdef Q_OS_WIN
-#include <windows.h>
-#ifdef Q_OS_WIN32
-//#include <crtdbg.h>
-#endif
-#endif
-
-#ifdef ANDROID
-#include <android/log.h>
-#endif
-
 #include <swlog.h>
 
 #include "backend/config/cbtconfig.h"
@@ -63,6 +52,27 @@
 #include "ui/btminipanel.h"
 #include "view/btminiview.h"
 #include "view/btminilayoutdelegate.h"
+
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#ifdef Q_OS_WIN32
+//#include <crtdbg.h>
+#endif
+#endif
+
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
+#ifdef Q_OS_SYMBIAN
+#include <hwrmvibra.h>
+#endif
+
+
+#ifdef Q_OS_IOS
+#import <AudioToolbox/AudioToolbox.h>
+#endif
 
 
 // Vibration
@@ -86,6 +96,9 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 
 #if QT_VERSION < 0x050000
     jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity");
+#else
+    jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity");
+#endif
     if (!jniBtMiniClass)
     {
         qCritical("Jni can't get class");
@@ -98,7 +111,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
         qCritical("Jni can't get method");
         return -1;
     }
-#endif
 
     return JNI_VERSION_1_6;
 }
@@ -129,12 +141,11 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef ANDROID
-#if QT_VERSION < 0x050000
     JNIEnv  *p_env;
 
     if (jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
     {
-        qCritical("Jni cant attach to thread");
+        qCritical("Jni can't attach to thread");
         return;
     }
 
@@ -144,6 +155,14 @@ void BtMini::vibrate(int milliseconds)
 
     jniBtMiniVm->DetachCurrentThread();
 #endif
+
+#ifdef Q_OS_SYMBIAN
+    static QScopedPointer<CHWRMVibra*> v(CHWRMVibra::NewL());
+    TRAPD(err, v.data()->StartVibraL(milliseconds, 50));
+#endif
+
+#ifdef Q_OS_IOS
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 #endif
 }
 
@@ -246,9 +265,9 @@ public:
         resize(QApplication::desktop()->size());
         show();
         showFullScreen();
-    #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
-        showFullScreen();
     #elif defined (Q_OS_ANDROID)
+        showMaximized();
+    #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
         showFullScreen();
     #else
         show();
@@ -564,6 +583,8 @@ QWidget * BtMini::searchWidget()
         connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
         connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
         connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
+        connect(v, SIGNAL(longPressed(const QModelIndex &)), findView(worksWidget()), SLOT(scrollTo(const QModelIndex &)));
+        connect(v, SIGNAL(longPressed(const QModelIndex &)), p->findChild<QPushButton*>("Close"), SIGNAL(clicked()));
     }
 
     return w;

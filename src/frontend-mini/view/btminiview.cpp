@@ -1064,6 +1064,7 @@ public:
         QVector<QModelIndex> parents;
 
         Q_CHECK_PTR(q->model());
+        Q_ASSERT(!index.isValid() || q->model() == index.model());
 
         if(!index.isValid())
             parents << q->model()->index(0, 0);
@@ -2239,6 +2240,14 @@ void BtMiniView::scroll(float horizontal, float vertical)
 void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 {
     Q_D(BtMiniView);
+
+    if(index.model() != model())
+    {
+        //qDebug() << "scrollTo: different moodels" << index.model() << model();
+
+        scrollTo(index.data(d->_ld->levelOption(d->_currentSubView).searchRole));
+        return;
+    }
     
     d->activateIndex(index, false, hint);
 
@@ -2257,6 +2266,8 @@ void BtMiniView::scrollTo(QVariant data)
 
     if(list.size() == 1)
         scrollTo(list[0]);
+    else
+        qDebug() << "scrollTo: unable to" << data;
 }
 
 QModelIndex BtMiniView::indexAt(const QPoint &point) const

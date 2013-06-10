@@ -1,13 +1,15 @@
 # Configuration
 VERSION = 0.9.3
 
-CLUCENE_PATH = ../../../../clucene/src
+CONFIG += webkit clucene
 
-SWORD_PATH = ../../../../sword
 
 # Base section, nothing platform specific
 DEFINES += BT_MINI
 DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
+
+CLUCENE_PATH = ../../../../clucene/src
+SWORD_PATH = ../../../../sword
 
 INCLUDEPATH += . \
     $${SWORD_PATH}/include \
@@ -284,9 +286,8 @@ HEADERS += \
     ../../../src/frontend-mini/btmini.h \
     ../../../src/frontend-mini/ui/btministyle.cpp \
 
-RESOURCES += \
-    ../../../src/frontend-mini/ui/btministyle.qrc \
-    ../../../btmini.qrc
+RESOURCES += ../../../btmini.qrc \
+    ../../../src/frontend-mini/ui/btministyle.qrc
 
 OTHER_FILES += ../../../src/frontend-mini/todo.txt
 
@@ -299,9 +300,7 @@ TRANSLATIONS += ../../../i18n/messages/bibletime_ui_ru.ts
 
 
 # Platforms section, can turn off/on options below
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-}
+greaterThan(QT_MAJOR_VERSION, 4):QT += widgets
 
 !symbian {
 INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
@@ -327,6 +326,7 @@ DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 
 # Android platform
 android {
+greaterThan(QT_MAJOR_VERSION, 4):CONFIG -= webkit
 }
 
 # MeeGo platform
@@ -349,18 +349,35 @@ OTHER_FILES += \
 
 # Symbian platform
 symbian {
+# version
+DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+greaterThan(S60_VERSION, 5.0) {
+DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
+}
+else {
+DEFINES += BT_MINI_VERSION=\"\\\"$${VERSION}\\\"\"
+
+CONFIG -= webkit # seems that on S60 webkit is not supported, maybe wrong packaging?
+}
+
+SOURCES += ftplib.c
+
+LIBS += -lhwrmvibraclient
+
+
+# icon
+ICON += btmini.svg
+DEPLOYMENT += ICON
+
 TARGET.UID3 = 0xE5723167
-
 TARGET.CAPABILITY += NetworkServices
-
 #TARGET.EPOCSTACKSIZE = 0x200000
 TARGET.EPOCHEAPSIZE = 0x040000 0x4000000
 
 DEPLOYMENT.display_name = BibleTime Mini
 
-packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, (0xE5723167), $$replace(VERSION, ([.]\\d+), ""), \
+packageheader = "$${LITERAL_HASH}{\"BibleTime Mini\"}, ($${TARGET.UID3}), $$replace(VERSION, ([.]\\d+), ""), \
     $$replace(VERSION, (^\\d+.)|(.\\d+$), ""), $$replace(VERSION, (\\d+[.]), ""), TYPE=SA"
-
 
 vendorinfo = \
 "%{\"Crosswire\"}" \
@@ -370,28 +387,10 @@ mini_deployment.pkg_prerules = packageheader vendorinfo
 
 DEPLOYMENT += mini_deployment
 
-# version
-DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
-greaterThan(S60_VERSION, 5.0) {
-DEFINES += BT_MINI_VERSION=\"$${VERSION}\"
-}
-else {
-DEFINES += BT_MINI_VERSION=\"\\\"$${VERSION}\\\"\"
-
-# seems that on S60 webkit is not supported, maybe wrong packageing?
-CONFIG -= webkit
-}
-
-# icon
-ICON += btmini.svg
-DEPLOYMENT += ICON
-
-
-SOURCES += ftplib.c
-
 include(../../common/btmini/deployment.pri)
 qtcAddDeployment()
 }
+
 
 # Windows Mobile Platform
 wince {
@@ -419,7 +418,6 @@ DEFINES += BT_MINI_WEBKIT
 # Clucene
 clucene {
 DEFINES += _CL_DISABLE_MULTITHREADING
-
 !symbian:DEFINES += _UCS2
 
 INCLUDEPATH += $${CLUCENE_PATH} \

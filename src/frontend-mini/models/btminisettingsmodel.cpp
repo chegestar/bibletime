@@ -20,6 +20,8 @@
 #include "backend/config/cbtconfig.h"
 #include "backend/cswordmodulesearch.h"
 
+#include "btmini.h"
+#include "view/btminiview.h"
 #include "btminisettingsmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "ui/btminimenu.h"
@@ -249,8 +251,12 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 #endif
 
     case BtMiniContinuousScrolling:
-        CBTConfig::set(CBTConfig::miniContinuousScrolling, !CBTConfig::get(CBTConfig::miniContinuousScrolling));
-        emit dataChanged(index, index);
+        {
+            bool b = !CBTConfig::get(CBTConfig::miniContinuousScrolling);
+            CBTConfig::set(CBTConfig::miniContinuousScrolling, b);
+            BtMini::findView(BtMini::worksWidget())->setContinuousScrolling(b);
+            emit dataChanged(index, index);
+        }
         break;
 
     case BtMiniStyle:
@@ -263,7 +269,6 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
             else
                 s = ss[0];
             CBTConfig::set(CBTConfig::miniStyle, s);
-            //emit dataChanged(index, index, QVector<int>());
             emit dataChanged(index, index);
         }
         break;

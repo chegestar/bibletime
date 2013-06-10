@@ -151,6 +151,9 @@ public:
 			_hasScope = list.Count() > 0;
 			_scopeMap.clear();
 
+            if(!_module)
+                return;
+
             if(_module->type() == CSwordModuleInfo::Lexicon)
             {
                 CSwordLexiconModuleInfo *mi = qobject_cast<CSwordLexiconModuleInfo*>(_module);
@@ -681,13 +684,13 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                     CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(l->_module);
                     CSwordTreeKey key(b->tree(), b);
 
-                    key.setIndex(index.row() * 4);
+                    key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() * 4);
                     return key.key();
                 }
                 else if(l->_module->type() == CSwordModuleInfo::Lexicon)
 				{
 					CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
-					return lm->entries()[index.row()];
+                    return lm->entries()[l->_hasScope ? l->_scopeMap[index.row()] : index.row()];
                 }
                 else if(d->indexDepth(index) == 2)
 					return d->indexToVerseKey(index).key();

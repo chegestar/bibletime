@@ -32,16 +32,15 @@ kalemas@mail.ru :
 +   GenBooks support
     TIPS!
         on text view: context and how to add parallel views
-    on Symbian with S60 style menus are hollow
++   on Symbian with S60 style menus are hollow
 
+    Settings
 	logic to take into account device dpi for font size policy
         android hd2 - 239 dpi
         win64 17" 1600x900 - 96 dpi
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...
         chapter mode
-    linux
-        no non ascii characters drawn
 ?   design changes
         cut-off menu overlays, open contex full-size
         sliding panels for queries
@@ -52,7 +51,6 @@ kalemas@mail.ru :
     footnote display using icon
 ?   restore original BT paths, or dirs in resources
     bug, delayed module verses layout stops on missed content
-    crush when search RSTchs on ���������*
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
 	unlock locked modules

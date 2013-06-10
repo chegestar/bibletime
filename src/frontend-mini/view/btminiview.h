@@ -36,11 +36,6 @@ public:
     const QModelIndex currentIndex() const;
     QModelIndex       indexAt(const QPoint &point) const;
     QRect             visualRect(const QModelIndex &index) const;
-
-    /** Reimplemented from QAbstractItemView. This function will activate target subview
-        fill it with items and then center view on \param index. Specified index will be 
-        also current. */
-    void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     
     /** Return content under pointer, used for word/strong lookup. Will throw if pointer
         isn't down. */
@@ -109,6 +104,11 @@ public slots:
 	    then scroll to the first occurrence. Only active subview is used. Role for 
 	    match() can be set using setSearchRole(). */
 	void scrollTo(QVariant data);
+
+    /** Reimplemented from QAbstractItemView. This function will activate target subview
+        fill it with items and then center view on \param index. Specified index will be
+        also current. */
+    void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 
 signals:
     /** Emitted when user have long pressed item.*/
