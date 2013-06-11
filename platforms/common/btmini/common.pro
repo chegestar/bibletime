@@ -284,7 +284,7 @@ HEADERS += \
     ../../../src/frontend/crossrefrendering.h \
     ../../../src/backend/filters/btosismorphsegmentation.h \
     ../../../src/frontend-mini/btmini.h \
-    ../../../src/frontend-mini/ui/btministyle.cpp \
+#    ../../../src/frontend-mini/ui/btministyle.cpp \
 
 RESOURCES += ../../../btmini.qrc \
     ../../../src/frontend-mini/ui/btministyle.qrc

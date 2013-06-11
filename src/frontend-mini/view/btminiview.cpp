@@ -3124,11 +3124,11 @@ BtMiniLayoutDelegate * BtMiniView::layoutDelegate()
     return d->_ld;
 }
 
-const BtMiniLayoutDelegate * BtMiniView::layoutDelegate() const
-{
-    Q_D(const BtMiniView);
-    return d->_ld;
-}
+//const BtMiniLayoutDelegate * BtMiniView::layoutDelegate() const
+//{
+//    Q_D(const BtMiniView);
+//    return d->_ld;
+//}
 
 void BtMiniView::setRenderCaching(bool mode)
 {

@@ -17,12 +17,15 @@
 #include <QPointer>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QStandardItemModel>
 #include <QStyle>
 #include <QStyleOptionButton>
 #include <QStyleOptionFrame>
 #include <QStyleOptionMenuItem>
 #include <QtDebug>
 
+#include "view/btminiview.h"
+#include "view/btminilayoutdelegate.h"
 #include "btminimenu.h"
 
 
@@ -85,7 +88,6 @@ BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
 		setMaximumSize(parentWidget()->size());
 
 		QFont f(parentWidget()->font());
-		f.setBold(true);
 		f.setPixelSize(f.pixelSize() * 1.3);
 		setFont(f);
 	}
@@ -243,6 +245,11 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
         foreach(QString string, actions)
         {
             QPushButton *b = new QPushButton(string, dialog);
+
+            QFont f = b->font();
+            f.setBold(true);
+            b->setFont(f);;
+
             connect(b, SIGNAL(clicked()), dialog, SLOT(buttonTrigger()));
             dialog->d_ptr->_buttons.append(b);
             l->addWidget(b);
@@ -316,16 +323,21 @@ int BtMiniMenu::execInput(QString caption, QString pattern, int currentValue, in
     // add controls
     QHBoxLayout *hl = new QHBoxLayout;
 
+    f.setWeight(QFont::Bold);
+
     QPushButton *b1 = new QPushButton(" - ", dialog.data());
     b1->setAutoRepeat(true);
+    b1->setFont(f);
     connect(b1, SIGNAL(clicked()), dialog.data(), SLOT(buttonTrigger()));
     hl->addWidget(b1, 0);
 
     QPushButton *b2 = new QPushButton(tr("Ok"), dialog.data());
+    b2->setFont(f);
     connect(b2, SIGNAL(clicked()), dialog.data(), SLOT(hide()));
     hl->addWidget(b2, 0);
 
     QPushButton *b3 = new QPushButton(" + ", dialog.data());
+    b3->setFont(f);
     b3->setAutoRepeat(true);
     connect(b3, SIGNAL(clicked()), dialog.data(), SLOT(buttonTrigger()));
     hl->addWidget(b3, 0);
@@ -440,6 +452,9 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
     vl->addWidget(pb, 0, Qt::AlignCenter);
 
     QPushButton *b = new QPushButton(tr("Cancel"), dialog);
+    QFont f(b->font());
+    f.setWeight(QFont::Normal);
+    b->setFont(f);
     connect(b, SIGNAL(clicked()), dialog, SLOT(cancel()));
     vl->addWidget(b, 0, Qt::AlignCenter);
 
@@ -451,7 +466,47 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
 int BtMiniMenu::execTip(QString text)
 {
-    return 0;
+    BtMiniMenu menu;
+
+    QFont f(menu.font());
+    f.setBold(true);
+    menu.setFont(f);
+
+    QVBoxLayout *vl = new QVBoxLayout;
+
+    BtMiniView *v = new BtMiniView(&menu);
+    f = v->font();
+    f.setBold(false);
+    f.setPixelSize(f.pixelSize() * 0.66);
+    v->setFont(f);
+
+    BtMiniLevelOption lo = v->layoutDelegate()->levelOption();
+    lo.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
+    v->layoutDelegate()->setLevelOption(lo);
+
+    QStandardItemModel *m = new QStandardItemModel(v);
+    QStandardItem i(text);
+    m->appendRow(&i);
+    v->setModel(m);
+
+    vl->addWidget(v);
+
+    QHBoxLayout *hl = new QHBoxLayout;
+    QPushButton *b1 = new QPushButton(tr("Ok"), &menu);
+    connect(b1, SIGNAL(clicked()), &menu, SLOT(buttonTrigger()));
+    menu.d_ptr->_buttons.append(b1);
+    hl->addWidget(b1, b1->text().size() + 8);
+    QPushButton *b2 = new QPushButton(tr("Don't show"), &menu);
+    connect(b2, SIGNAL(clicked()), &menu, SLOT(buttonTrigger()));
+    menu.d_ptr->_buttons.append(b2);
+    hl->addWidget(b2, b2->text().size() + 8);
+
+    vl->addLayout(hl);
+
+    menu.setLayout(vl);
+    menu.exec();
+
+    return menu.d_ptr->_result;
 }
 
 void BtMiniMenu::setValue(int percent)

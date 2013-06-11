@@ -43,7 +43,7 @@ public:
     static QWidget * mainWidget();
     
     /** Module text view. */
-    static QWidget * worksWidget();
+    static QWidget * worksWidget(bool showTip = true);
 
     /** */
     static QWidget * searchWidget();

@@ -20,7 +20,6 @@
 #include <QLineEdit>
 #include <QPainter>
 #include <QPushButton>
-#include <QStandardItemModel>
 #include <QStringListModel>
 #include <QStackedWidget>
 #include <QStyle>
@@ -157,8 +156,20 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef Q_OS_SYMBIAN
-    static QScopedPointer<CHWRMVibra*> v(CHWRMVibra::NewL());
+    static bool initiated = false;
+    static QScopedPointer<CHWRMVibra> v;
+    if(initiated == false)
+    {
+        TRAPD(err, v.reset(CHWRMVibra::NewL()));
+        if(err != KErrNone)
+            qDebug() << "Can not create Vibra, leave:" << err;
+
+        initiated = true;
+    }
+
     TRAPD(err, v.data()->StartVibraL(milliseconds, 50));
+    if(err != KErrNone)
+        qDebug() << "Can not vibrate, leave:" << err;
 #endif
 
 #ifdef Q_OS_IOS
@@ -355,11 +366,17 @@ QWidget * BtMini::mainWidget()
 		bool expand = true;
 #endif
 
+#ifdef Q_OS_SYMBIAN
+        double factor = 14.0;
+#else
+        // desktop 96 dpi, 16 factor is good
+        double factor = 16.0;
+#endif
+
         w = new BtMiniMainWidget;
 
-        // desktop 96 dpi, 16 factor is good
         QFont f = w->font();
-        f.setPixelSize(qMin(size.width(), size.height()) / 16.0f *
+        f.setPixelSize(qMin(size.width(), size.height()) / factor *
                        CBTConfig::get(CBTConfig::fontScale) / 100);
         w->setFont(f);
 
@@ -397,7 +414,7 @@ void changeFontSize(QWidget *w, double factor)
     w->setFont(f);
 }
 
-QWidget * BtMini::worksWidget()
+QWidget * BtMini::worksWidget(bool showTip)
 {
     static BtMiniWidget *w = 0;
 
@@ -405,7 +422,6 @@ QWidget * BtMini::worksWidget()
     {	
         if(!haveBible())
             return installerWidget(true);
-
 
         w = new BtMiniWidget(mainWidget());
 
@@ -533,6 +549,14 @@ QWidget * BtMini::worksWidget()
 
         connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
             m, SLOT(modulesReloaded()));
+
+        // tips
+        if(showTip && CBTConfig::get(CBTConfig::showTipAtStartup))
+        {
+            if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString() +
+                                BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString()) == 1)
+                CBTConfig::set(CBTConfig::showTipAtStartup, false);
+        }
     }
 
     return w;
@@ -548,21 +572,14 @@ QWidget * BtMini::searchWidget()
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-
-        QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
-        v->setFont(f);
-
         v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
+        changeFontSize(v, CBTConfig::get(CBTConfig::fontTextScale) / 100);
 
         // Setup controls
         QLineEdit *le = new QLineEdit(w);
-
         le->setAlignment(Qt::AlignCenter);
-
-        f = le->font();
-        f.setPixelSize(f.pixelSize() * 1.3);
-        le->setFont(f);
+        le->setPlaceholderText(tr("type here"));
+        changeFontSize(le, 1.2);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
 
@@ -769,18 +786,22 @@ void BtMini::installerQuery(const QModelIndex &index)
             int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
 
             if (status != 0 || dialog->wasCanceled())
+            {
                 BtMiniMenu::execQuery(QString(tr("Module was not installed")));
+                qDebug() << "Failed to install" << m->name() << status;
+            }
             else
                 CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
 
             // Bible installed, can switch to reader
             if(!hb && haveBible())
             {
+                // refresh panel
                 delete installerWidget()->findChild<BtMiniPanel*>();
                 installerWidget()->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
                     BtMiniPanel::Close, installerWidget()));
 
-                setActiveWidget(worksWidget());
+                setActiveWidget(worksWidget(false));
             }
         }
     }

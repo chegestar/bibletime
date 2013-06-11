@@ -41,7 +41,9 @@ enum BtMiniSettingsIds
     BtMiniSearchType,
 #endif
     BtMiniStyle,
-    BtMiniForum = BtMiniStyle + 4
+    BtMiniTips = BtMiniStyle + 2,
+    BtMiniNews,
+    BtMiniForum = BtMiniNews + 3
 };
 
 
@@ -75,6 +77,10 @@ public:
                     "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
         _strings << "<body><font size=\"50%\"><i>" + BtMiniSettingsModel::tr(
                     "Note: most of settings will be applied after application restart.") + "</i></font></body>";
+        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
+                    "</td> <td align=\"right\"> > </td></tr></table></b>";
+        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("News and Updates:") +
+                    "</td> <td align=\"right\"> > </td></tr></table></b>";
         _strings << "<body><font size=\"50%\"><center>" +
                     BtMiniSettingsModel::tr("About") + "</center></font></body>";
         _strings << "<body>" + BtMiniSettingsModel::tr("<b>BibleTime Mini</b> - spend your time with Bible on mobile!") +
@@ -87,7 +93,7 @@ public:
                     BtMiniSettingsModel::tr("Underlying frameworks:") +
                     "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.9.1</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" VERSION "</td></tr></table>"
-                    "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table><br/>"
+                    "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
                     "</body>";
         _strings << BtMiniSettingsModel::tr("You could post feedback, report an issue or get help throught forum:") +
                     "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>";
@@ -127,6 +133,15 @@ int BtMiniSettingsModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const BtMiniSettingsModel);
 
+    qDebug() <<parent.data();
+
+    if(parent.internalId() == 0)
+    {
+        if(parent.row() == BtMiniTips ||
+           parent.row() == BtMiniNews)
+            return 1;
+    }
+
     if(parent.isValid())
         return 0;
 
@@ -137,7 +152,8 @@ QModelIndex BtMiniSettingsModel::index(int row, int column, const QModelIndex &p
 {
     Q_D(const BtMiniSettingsModel);
 
-    Q_ASSERT(!parent.isValid());
+    if(parent.isValid())
+        return createIndex(row, 0, parent.row());
 
     return createIndex(row, 0);
 }
@@ -146,6 +162,9 @@ QModelIndex BtMiniSettingsModel::parent(const QModelIndex &index) const
 {
     Q_D(const BtMiniSettingsModel);
 
+    if(index.internalId() != 0)
+        return createIndex(index.internalId(), 0);
+
     return QModelIndex();
 }
 
@@ -153,10 +172,13 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
 {
     Q_D(const BtMiniSettingsModel);
 
-    Q_ASSERT(!index.parent().isValid());
-
     if (role == Qt::DisplayRole)
     {
+        if(index.internalId() == BtMiniTips)
+            return standardData(tipWorks);
+        if(index.internalId() == BtMiniNews)
+            return standardData(news);
+
         QString s(d->_strings[index.row()]);
         switch(index.row())
         {
@@ -223,6 +245,37 @@ Qt::ItemFlags BtMiniSettingsModel::flags(const QModelIndex &index) const
 QVariant BtMiniSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     return QVariant();
+}
+
+QVariant BtMiniSettingsModel::standardData(StandardData data)
+{
+    switch (data) {
+    case tipWorks:
+        return QString("<body>" + tr("<b><center>Usefull tips:</center></b><br/>") +
+            tr("Many views in BibleTime Mini recognizes <b>short pressing</b> by finger and <b>long pressing</b>. "
+               "Try to press screen on word you interested in for a second (device should vibrate ones), "
+               "information (context) view for that word should open. Same for footnotes and cross-references.<br/>"
+               "Try to press Text view for several seconds before device vibrates twice, service menu should open. "
+               "Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.<br/>") +
+            tr("<b>Context view.</b> It is consist of two views: word context, and commentary context. Try to slide left/right "
+               "to observe them. Default modules used for this context could be configurated in Module selection window "
+               "by long pressping.<br/>") +
+            tr("<b>Search.</b> BibleTime Mini uses CLucene indexed search, this means that you need to wait for some "
+               "time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, "
+               "it takes for 10 minutes and on 600MHz devices same take for about hour). Swittch to Find view and type to "
+               "input box at the top your request. Try to use wildcards \"*\" (like \"take*\"), keywords (like \"strong:G1203\""
+               "or \"footnote:Eve\"), and combine several words.") +
+            QString("</body>"));
+    case tipWorksAddon:
+        return QString(tr("<br/>This information you could access again in <b>Settings</b> under the <b>Handbook</b> item."));
+    case news:
+        return QString(tr("<body><b><center>News and Updates:</center></b><br/>") +
+                    tr("<b>0.9.3</b> - was added support for General Books and search in non Bible "
+                          "modules was fixed.") +
+                       "</body>");
+    default:
+        return QVariant();
+    }
 }
 
 void BtMiniSettingsModel::clicked(const QModelIndex &index)

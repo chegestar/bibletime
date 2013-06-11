@@ -36,6 +36,15 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant      headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    enum StandardData
+    {
+        tipWorks = 0,
+        tipWorksAddon,
+        news
+    };
+
+    static QVariant standardData(StandardData data);
+
 public slots:
     void clicked(const QModelIndex &index);
 

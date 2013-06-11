@@ -13,6 +13,7 @@
 #include <QApplication>
 #include <QCommonStyle>
 #include <QLayout>
+#include <QLineEdit>
 #include <QStyleOption>
 #include <QStylePlugin>
 #include <QPainter>
@@ -157,8 +158,6 @@ public:
                     if(widget && widget->parentWidget() && widget->parentWidget()->parentWidget() &&
                        widget->parentWidget()->parentWidget()->property("topShadow").toBool())
                         drawPrimitive((PrimitiveElement)(PE_CustomBase + 1), option, p, widget);
-
-                    //drawPrimitive((QStyle::PrimitiveElement)(QStyle::PE_CustomBase + 1), option, p);
                 }
             }
             return;
@@ -227,6 +226,12 @@ public:
             widget->setPalette(widget->palette());
 #endif
 
+        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
+        {
+            const int cm = le->font().pixelSize() / 7.0;
+            le->setContentsMargins(cm, cm, cm, cm);
+        }
+
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {
             QMargins m = widget->contentsMargins();
@@ -237,8 +242,7 @@ public:
 
         if(QString(widget->metaObject()->className()) == "BtMiniView")
         {
-            QAbstractItemView *l = qobject_cast<QAbstractItemView*>(widget);
-            if(l)
+            if(QAbstractItemView *l = qobject_cast<QAbstractItemView*>(widget))
             {
                 l->viewport()->setAutoFillBackground(false);
                 l->setAutoFillBackground(false);
