@@ -578,7 +578,7 @@ QWidget * BtMini::searchWidget()
         // Setup controls
         QLineEdit *le = new QLineEdit(w);
         le->setAlignment(Qt::AlignCenter);
-        le->setPlaceholderText(tr("type here"));
+        le->setPlaceholderText(tr("type and press Enter"));
         changeFontSize(le, 1.2);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);

@@ -1254,3 +1254,12 @@ void BtMiniModuleTextModel::modulesReloaded()
 	for(int i = 0; i < d->_lists.size(); ++i)
 		d->_lists[i].setModule(d->_lists[i]._name);
 }
+
+QModelIndexList BtMiniModuleTextModel::match(const QModelIndex &start, int role, const QVariant &value, int hits,
+                      Qt::MatchFlags flags) const
+{
+    if(role == BtMini::PlaceRole)
+        return QModelIndexList() << keyIndex(d_ptr->indexListId(start), value.toString());
+
+    return QAbstractItemModel::match(start, role, value, hits, flags);
+}

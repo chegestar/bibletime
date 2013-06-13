@@ -133,8 +133,6 @@ int BtMiniSettingsModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const BtMiniSettingsModel);
 
-    qDebug() <<parent.data();
-
     if(parent.internalId() == 0)
     {
         if(parent.row() == BtMiniTips ||
@@ -345,6 +343,6 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 #endif
 
     default:
-        ; //qDebug() << "clicked" << index.data();
+        ;
     }
 }

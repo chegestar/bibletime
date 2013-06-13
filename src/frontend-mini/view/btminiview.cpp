@@ -1817,7 +1817,7 @@ public:
 				_view->_mutex.unlock();
 
 #if defined(Q_OS_WIN32) && defined(QT_DEBUG)
-                msleep(5000);
+                //msleep(5000);
 #endif
 				QString text(index.data().toString());
 
@@ -2243,9 +2243,8 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 
     if(index.model() != model())
     {
-        //qDebug() << "scrollTo: different moodels" << index.model() << model();
-
-        scrollTo(index.data(d->_ld->levelOption(d->_currentSubView).searchRole));
+        if(index.isValid())
+            scrollTo(index.data(d->_ld->levelOption(d->_currentSubView).searchRole));
         return;
     }
     

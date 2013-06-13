@@ -1,17 +1,7 @@
 kalemas@mail.ru :
 === tasks ======================================================================
-+    context for highlited word broken
-+    fixed desktop build
-+    scrollbar always shown if more than 5 modules in module selection
-+    lexicon/dictionary support
-+    localized strong: search keyword
-+    translation
-+    call style to draw view shadow
-    improve BT modularity
-+       Install manager - information of repos/modules, manage modules
-        Bookmarks
-+       move all model roles to global header
-    android
+-   improve BT modularity: Bookmarks
+-   android
 +       use qt-resources system for external read-only resurces
 +       allow to run without modules
 +       mini-style isnt called
@@ -30,14 +20,16 @@ kalemas@mail.ru :
 +       non stop scrolling
 +       about info: bugs, faq
 +   GenBooks support
-    TIPS!
-        on text view: context and how to add parallel views
++   TIPS! on text view: context and how to add parallel views
 +   on Symbian with S60 style menus are hollow
++   night mode in style
+
+
 
     Settings
 	logic to take into account device dpi for font size policy
-        android hd2 - 239 dpi
-        win64 17" 1600x900 - 96 dpi
+            android hd2 - 239 dpi
+            win64 17" 1600x900 - 96 dpi
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...
         chapter mode
@@ -54,11 +46,11 @@ kalemas@mail.ru :
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
 	unlock locked modules
-+   Symbian build
     multi column mode
     fix webkit word context
     apply settings without restart
     slider bigger in dark theme
+    fix images
 
 
     make commentary context parallel computed
@@ -82,22 +74,10 @@ kalemas@mail.ru :
     ? maybe make scroll bar transprent and overlapping view
     ? ability to turn on auto sctolling feature: limit fading from initial speed on touch raise, round small speeds
     ? scrolling like book pages, good because eyes always move all around the screen
-+   night mode in style
     bookmarks would be named as Cuttings or Clippings
     notes - based on personal commentary module with av11n mapping support remark, should be created by app
 
-=== known tasks ================================================================
-    dialog looses event filter for qapplication after minimize/maximize
-    keypad support for dialogs and menus
-    loading all locales takes too long
-    keypad/volume buttons scrolling
-    qt: window raisement on startup on device
-
 === tasks for future ===========================================================
-    daily devotionals
-    reading plans
-    genbooks
-    map and image modules
     verse features
         bookmarks
             nested bookmarks folders
@@ -110,12 +90,10 @@ kalemas@mail.ru :
 
     Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
         maybe need Sword change that every verse in Bibile at every v11n has unique id
-    another platform : android , mac os x ,  openembedded , symbian , maemo , ...
     multitouch
     linked lists
         slide list and stroke down/up to link
         link neighbor lists: items will be fitted by height, empty verses will be displayed hollow
-    random verse on Home view
     verse features
         ratings/favourite
             no ranges, byte-array
