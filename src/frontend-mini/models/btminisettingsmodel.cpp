@@ -254,15 +254,20 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
                "Try to press screen on word you interested in for a second (device should vibrate ones), "
                "information (context) view for that word should open. Same for footnotes and cross-references.<br/>"
                "Try to press Text view for several seconds before device vibrates twice, service menu should open. "
-               "Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.<br/>") +
+               "Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.") + "<br/><br/>" +
             tr("<b>Context view.</b> It is consist of two views: word context, and commentary context. Try to slide left/right "
                "to observe them. Default modules used for this context could be configurated in Module selection window "
-               "by long pressping.<br/>") +
-            tr("<b>Search.</b> BibleTime Mini uses CLucene indexed search, this means that you need to wait for some "
+               "by long pressping.<br/>") + "<br/><br/>" +
+            tr("<b>Search.</b> BibleTime Mini uses CLucene indexed search, this means that you have to wait for some "
                "time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, "
-               "it takes for 10 minutes and on 600MHz devices same take for about hour). Swittch to Find view and type to "
-               "input box at the top your request. Try to use wildcards \"*\" (like \"take*\"), keywords (like \"strong:G1203\""
-               "or \"footnote:Eve\"), and combine several words.") +
+               "it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to "
+               "input box at the top your request. Try to use wildcards \"*\" (like \"take*\"), keywords (like \"strong:G1203\" "
+               "or \"footnote:Eve\"), and combine several words. Note, you should have keyboard with Enter key on your keyboard to "
+               "start search, or on some platforms there is way to insert Return Carriage symbol.") + "<br/><br/>" +
+            tr("<b>Default Modules.</b> There are several types of modules: default Bible is used to render cross-references, "
+               "default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in "
+               "context popup. To change default modules, when you open Module Selection popup, make long press on module you "
+               "would like to make default and select corresponding action.") +
             QString("</body>"));
     case tipWorksAddon:
         return QString(tr("<br/>This information you could access again in <b>Settings</b> under the <b>Handbook</b> item."));
