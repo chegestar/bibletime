@@ -73,6 +73,9 @@ import android.view.WindowManager.LayoutParams;
 import android.view.accessibility.AccessibilityEvent;
 import dalvik.system.DexClassLoader;
 
+// BtMini
+import android.os.Vibrator;
+
 //@ANDROID-11
 //QtCreator import android.app.Fragment;
 //QtCreator import android.view.ActionMode;
@@ -145,6 +148,9 @@ public class QtActivity extends Activity
                                                         // * unstable - unstable repository, DO NOT use this repository in production,
                                                         // this repository is used to push Qt snapshots.
     private String[] m_qtLibs = null; // required qt libs
+
+    // BtMini
+    private static Context context;
 
     // this function is used to load and start the loader
     private void loadApplication(Bundle loaderParams)
@@ -687,6 +693,9 @@ public class QtActivity extends Activity
                 setContentView(m_activityInfo.metaData.getInt("android.app.splash_screen"));
             startApp(true);
         }
+
+        // BtMini
+        QtActivity.context = this.getApplicationContext();
     }
     //---------------------------------------------------------------------------
 
@@ -1401,4 +1410,13 @@ public class QtActivity extends Activity
 //QtCreator     //---------------------------------------------------------------------------
 //@ANDROID-12
 
+    // BtMini
+    public static void vibrate(long miliseconds)
+    {
+        if(QtActivity.context != null)
+        {
+            Vibrator v = (Vibrator) QtActivity.context.getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(miliseconds);
+        }
+    }
 }
