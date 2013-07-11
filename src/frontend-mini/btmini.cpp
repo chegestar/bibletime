@@ -358,7 +358,7 @@ QWidget * BtMini::mainWidget()
 
     if(!w)
     {
-#if defined  Q_OS_WIN32 || defined Q_OS_LINUX
+#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
         QSize size(480, 640);
 		bool expand = false;
 #else

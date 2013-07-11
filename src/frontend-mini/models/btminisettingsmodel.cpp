@@ -278,9 +278,10 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
     case news:
         return QString(tr("<body><b><center>News and Updates:</center></b><br/>") +
                        tr("<b>0.9.5</b> - parallel Bible display, make long tap in module selection dialog "
-                             "and press \"") + tr("Add Parallel") + "\".<br/>" +
+                          "and press \"") + tr("Add Parallel") + "\". This feature is not well tested and may not work "
+                          "as expected.<br/>" +
                        tr("<b>0.9.3</b> - was added support for General Books and search in non Bible "
-                             "modules was fixed.") +
+                          "modules was fixed.") +
                        "</body>");
     default:
         return QVariant();

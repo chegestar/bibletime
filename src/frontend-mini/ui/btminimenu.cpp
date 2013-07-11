@@ -408,18 +408,27 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 			setMaximumSize(parentWidget()->size());
 			d_ptr->updateGeometry(this);
 		}
-		break;
+        break;
 	case QEvent::MouseButtonDblClick:
 	case QEvent::MouseButtonPress:
 	case QEvent::MouseButtonRelease:
 	case QEvent::MouseMove:
         {
+            if(d_ptr->_canceled && e->type() == QEvent::MouseButtonRelease)
+            {
+                cancel();
+                return true;
+            }
+
             const QPoint p = mapFromGlobal(static_cast<QMouseEvent*>(e)->globalPos());
             const int w = style()->pixelMetric(QStyle::PM_MenuPanelWidth);
             if(d_ptr->_isPopup || !rect().adjusted(w, w, -w, -w).contains(p))
 		    {
                 if(e->type() == QEvent::MouseButtonPress && !d_ptr->_modal)
-                    cancel();
+                    d_ptr->_canceled = true; // indicate that window shuld be closed on MouseRelease
+                    //cancel();
+
+
 			    return true;
 		    }
         }

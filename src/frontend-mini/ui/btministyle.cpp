@@ -456,6 +456,7 @@ public:
 };
 
 
+// this would not be gereated on first build, temporary include this .cpp file in HEADER pro section
 #include "moc_btministyle.cpp"
 
 
