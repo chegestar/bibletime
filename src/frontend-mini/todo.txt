@@ -1,35 +1,10 @@
 kalemas@mail.ru :
 === tasks ======================================================================
--   improve BT modularity: Bookmarks
--   android
-+       use qt-resources system for external read-only resurces
-+       allow to run without modules
-+       mini-style isnt called
-+       "build index..." overlaped with virtual keyboard
-+       vibration on long press
-+       restore clucene
--       cant get right language locale (necessitas bug)
--       not all characters drawn, probably qt font doesnt contain whole set (necessitas bug)
-+   fix font size on non wince targets
-+   long press depend on time, not update interval
-?   maybe installing a module automatically download and istall sword locale for that language
-+   install manager by languages
-+   qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
-+   settings ui
-+       font size
-+       non stop scrolling
-+       about info: bugs, faq
-+   GenBooks support
-+   TIPS! on text view: context and how to add parallel views
-+   on Symbian with S60 style menus are hollow
-+   night mode in style
+    webkit render: make context work
 
 
 
-    Settings
-	logic to take into account device dpi for font size policy
-            android hd2 - 239 dpi
-            win64 17" 1600x900 - 96 dpi
+
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...
         chapter mode
