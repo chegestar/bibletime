@@ -17,10 +17,12 @@
 
 class BtMiniView;
 class QWidget;
+class BtMiniPrivate;
 
 class BtMini : public QObject
 {
 	Q_OBJECT
+    Q_DISABLE_COPY(BtMini)
 
 	BtMini();
 
@@ -38,21 +40,53 @@ public:
         /** Preview before thread will calculate item DisplayRole (QString). */
         PreviewRole
     };
-    
+
+    /** */
+    enum BtMiniState
+    {
+        Main      = 0x01,
+        Works     = 0x02,
+        Search    = 0x04,
+        Settings  = 0x08,
+        Installer = 0x10,
+        All       = 0xff
+    };
+
+    /** Get window of specified type. */
+    static QWidget * widget(BtMiniState type);
+    static BtMiniView * view(BtMiniState type);
+
+    /** Set flag to recreate widgets on demand. */
+    static void reset(BtMiniState mask);
+
+    /** Switch interface states. */
+    static void activate(BtMiniState type);
+
+    /** Make device vibrate. This should be reimpemented. */
+    static void vibrate(int miliseconds);
+
+
+public slots:
+    /** Install module. This should be moved to BtMiniLogic. */
+    void installerQuery(const QModelIndex &index);
+
+
+    // below are old functions intended to be removed
+public:
     /** Main widget. */
-    static QWidget * mainWidget();
+    static QWidget * mainWidget(bool fontSizeChanged = false);
     
     /** Module text view. */
-    static QWidget * worksWidget(bool showTip = true);
+    static QWidget * worksWidget(bool showTip = true, bool reset = false);
 
     /** */
-    static QWidget * searchWidget();
+    static QWidget * searchWidget(bool reset = false);
 
     /** Manage modules, repositories, search indecies, install manager. */
-    static QWidget * installerWidget(bool firstTime = false);
+    static QWidget * installerWidget(bool firstTime = false, bool reset = false);
     
     /** */
-    static QWidget * settingsWidget();
+    static QWidget * settingsWidget(bool reset = false);
     
     /** The only way to switch interface states. Works with functions above. */
     static void setActiveWidget(QWidget *widget);
@@ -61,13 +95,6 @@ public:
         return. This function should throw exception if view not found, no need
         to check pointer. */
     static BtMiniView * findView(QWidget *widget);
-
-    static void vibrate(int miliseconds);
-
-public slots:
-	/** */
-	void installerQuery(const QModelIndex &index);
-    
 };
 
 #endif

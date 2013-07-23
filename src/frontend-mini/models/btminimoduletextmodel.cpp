@@ -103,10 +103,7 @@ public:
 			_module = module;
 
 			if(!_module)
-            {
-                qDebug() << "Can't find module for list" << _name;
 				return;
-            }
 
 			if(_module->type() == CSwordModuleInfo::Bible ||
 				_module->type() == CSwordModuleInfo::Commentary)

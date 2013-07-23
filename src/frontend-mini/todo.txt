@@ -2,11 +2,11 @@ kalemas@mail.ru :
 === tasks ======================================================================
 +   multi column mode
 +   webkit render: make context work
++   setting options for views without exiting application
     resize subview width
     replace panel with android
-    setting options for views without exiting application
-
-
+    move all logic from models to btminilogic.cpp
+    add abiblity to combine bookshelves in tree model
 
 
     settings ui

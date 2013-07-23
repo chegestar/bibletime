@@ -295,15 +295,40 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     switch(index.row())
     {
     case BtMiniFontSize:
-        btConfig().setValue("mini/fontScale", BtMiniMenu::execInput(
-            tr("Select size:"), "<b>%1%</b>", btConfig().value<int>("mini/fontScale", 100), 1, 1000));
-        emit dataChanged(index, index);
+        {
+            int ov = btConfig().value<int>("mini/fontScale", 100);
+            int nv = BtMiniMenu::execInput(tr("Select size:"), "<b>%1%</b>", ov, 1, 1000);
+
+            if(ov != nv)
+            {
+                btConfig().setValue("mini/fontScale", nv);
+                emit dataChanged(index, index);
+
+				BtMini::mainWidget(true);
+				BtMini::worksWidget(true, true);
+				BtMini::installerWidget(false, true);
+				BtMini::settingsWidget(true);
+				BtMini::searchWidget(true);
+            }
+        }
         break;
 
     case BtMiniFontTextSize:
-        btConfig().setValue("mini/fontTextScale", BtMiniMenu::execInput(
-            tr("Select size:"), "<b>%1%</b>", btConfig().value<int>("mini/fontTextScale" , 100), 1, 1000));
-        emit dataChanged(index, index);
+		{
+			int ov = btConfig().value<int>("mini/fontTextScale", 100);
+			int nv = BtMiniMenu::execInput(tr("Select size:"), "<b>%1%</b>", ov, 1, 1000);
+
+			if(ov != nv)
+			{
+				btConfig().setValue("mini/fontTextScale", nv);
+				emit dataChanged(index, index);
+
+				BtMini::worksWidget(true, true);
+				BtMini::installerWidget(false, true);
+				BtMini::settingsWidget(true);
+				BtMini::searchWidget(true);
+			}
+		}
         break;
 
 #ifdef BT_MINI_WEBKIT

@@ -2,13 +2,13 @@
 
 include(../../common/btmini/common.pro)
 
-qml {
-DEFINES += BT_MINI_QML
+#qml {
+#DEFINES += BT_MINI_QML
 
-OTHER_FILES += main.qml
+#OTHER_FILES += main.qml
 
-RESOURCES += qml.qrc
-}
+#RESOURCES += qml.qrc
+#}
 
 OTHER_FILES += \
     android/AndroidManifest.xml \

@@ -199,7 +199,7 @@ public:
     }
 
     /** Save opened session. */
-    void saveConfig()
+    static void saveConfig()
     {
         BtMiniView *v = BtMini::findView(BtMini::worksWidget());
 
@@ -405,7 +405,32 @@ BtMini & BtMini::instance()
     return bm;
 }
 
-QWidget * BtMini::mainWidget()
+QWidget *BtMini::widget(BtMiniState type)
+{
+    switch(type)
+    {
+    default:
+        Q_ASSERT(false);
+    }
+
+    return 0;
+}
+
+BtMiniView *BtMini::view(BtMiniState type)
+{
+    return findView(widget(type));
+}
+
+void BtMini::reset(BtMiniState type)
+{
+    ;
+}
+
+
+
+
+
+QWidget * BtMini::mainWidget(bool fontSizeChanged)
 {
     static BtMiniMainWidget *w = 0;
 
@@ -419,21 +444,8 @@ QWidget * BtMini::mainWidget()
 		bool expand = true;
 #endif
 
-#ifdef Q_OS_SYMBIAN
-        double factor = 14.0;
-#else
-        // desktop 96 dpi 72 physical, 16 factor is good
-		// htc touch diamond 192, 16 factor, text is little small on screen
-		// htc hd2 android 232, factor 16 is good
-        double factor = 16.0;
-#endif
-
         w = new BtMiniMainWidget;
-
-        QFont f = w->font();
-        f.setPixelSize(qMin(size.width(), size.height()) / factor *
-                       btConfig().value<int>("mini/fontScale", 100) / 100);
-        w->setFont(f);
+		fontSizeChanged = true;
 
         qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
                     w->physicalDpiX() << w->physicalDpiY();
@@ -450,6 +462,23 @@ QWidget * BtMini::mainWidget()
 			w->raise();
 		}
     }
+
+	if(fontSizeChanged)
+	{
+#ifdef Q_OS_SYMBIAN
+		double factor = 14.0;
+#else
+		// desktop 96 dpi 72 physical, 16 factor is good
+		// htc touch diamond 192, 16 factor, text is little small on screen
+		// htc hd2 android 232, factor 16 is good
+		double factor = 16.0;
+#endif
+
+		QFont f = w->font();
+		f.setPixelSize(qMin(w->size().width(), w->size().height()) / factor *
+			btConfig().value<int>("mini/fontScale", 100) / 100);
+		w->setFont(f);
+	}
 
     return w;
 }
@@ -469,9 +498,27 @@ void changeFontSize(QWidget *w, double factor)
     w->setFont(f);
 }
 
-QWidget * BtMini::worksWidget(bool showTip)
+QWidget * BtMini::worksWidget(bool showTip, bool reset)
 {
     static BtMiniWidget *w = 0;
+	static bool recreate = false;
+
+    if(reset)
+    {
+		if(w)
+			recreate = true;
+        return 0;
+    }
+
+	if(recreate)
+	{
+		recreate = false;
+
+		BtMiniMainWidget::saveConfig();
+
+		delete w;
+		w = 0;
+	}
 
     if(!w)
     {	
@@ -630,9 +677,16 @@ QWidget * BtMini::worksWidget(bool showTip)
     return w;
 }
 
-QWidget * BtMini::searchWidget()
+QWidget * BtMini::searchWidget(bool reset)
 {
     static BtMiniWidget *w = 0;
+
+    if(reset)
+    {
+		if(w)
+			delete w;
+        return w = 0;
+    }
 
     if(!w)
     {
@@ -676,9 +730,16 @@ QWidget * BtMini::searchWidget()
 }
 
 /** */
-QWidget * BtMini::installerWidget(bool firstTime)
+QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 {
     static BtMiniWidget *w = 0;
+
+    if(reset)
+    {
+		if(w)
+			delete w;
+        return w = 0;
+    }
 
     if(!w)
     {
@@ -727,11 +788,14 @@ QWidget * BtMini::installerWidget(bool firstTime)
 			return 0;
 		}
 
+        if(refresh)
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
         // Setup model
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
-
         m->setIndicator(lb);
         QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
+        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
 
         QStringList        ss(BtInstallBackend::sourceNameList(refresh));
         BtInstallMgr      *im = new BtInstallMgr(m);
@@ -758,16 +822,27 @@ QWidget * BtMini::installerWidget(bool firstTime)
 
         v->setModel(m);
 
-        connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+        if(refresh)
+            QApplication::restoreOverrideCursor();
     }
 
     return w;
 }
 
 
-QWidget *BtMini::settingsWidget()
+QWidget *BtMini::settingsWidget(bool reset)
 {
     static QWidget *w = 0;
+	static bool recreate = false;
+
+    if(reset)
+	{
+		recreate = true;
+		return 0;
+	}
+
+	if(recreate)
+		delete w, w = 0, recreate = false;
 
     if(!w)
     {
@@ -782,8 +857,6 @@ QWidget *BtMini::settingsWidget()
 
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
 
-        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
-
         v->setModel(m);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
@@ -794,6 +867,8 @@ QWidget *BtMini::settingsWidget()
         vl->addWidget(p);
 
         w->setLayout(vl);
+
+        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
     }
 
     return w;

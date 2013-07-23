@@ -27,6 +27,7 @@
 #include "view/btminiview.h"
 #include "view/btminilayoutdelegate.h"
 #include "btminimenu.h"
+#include "btmini.h"
 
 
 class BtMiniMenuPrivate
@@ -56,7 +57,8 @@ public:
 
     static QWidget * parentWidget()
     {
-        return QApplication::topLevelWidgets()[0];
+        //return QApplication::topLevelWidgets()[0];
+		return BtMini::mainWidget();
     }
     
     QList<QWidget*>  _buttons;
