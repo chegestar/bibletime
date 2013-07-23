@@ -17,7 +17,6 @@
 #include <QMutexLocker>
 #include <QPainter>
 #include <QScrollBar>
-//#include <QStaticText>
 #include <QTextDocument>
 #include <QThread>
 #include <QVariant>
@@ -2989,37 +2988,52 @@ QString BtMiniView::currentContents() const
                 QWebPage *wp(v->_items[i]->_wp);
                 if(wp)
                 {
-                    //QWebHitTestResult r(wp->mainFrame()->hitTestContent(pp));
+                    QList<QWebElement> all;
+                    QList<QWebElement> hits;
 
-                    //qDebug() << r.alternateText() << r.element().attributeNames() << r.linkText();
-                    //qDebug() << r.element().classes() << r.element().toPlainText();
-                    //qDebug() << r.isNull() /*<< r.element().toInnerXml() << r.element().toOuterXml()*/;
-                    //qDebug() << r.linkElement().attributeNames() << r.linkElement().classes() << r.linkElement().toPlainText();
-                    //qDebug() << r.element().parent().classes() << r.element().parent().toPlainText();
+                    all << wp->mainFrame()->documentElement();
 
-                    //qDebug() << r.title() << r.linkText() << r.alternateText();
-
-                    //for(QWebElement e = r.element(); !e.isNull(); e = e.parent())
-                    //    qDebug() << e.tagName() << e.classes() << e.attributeNames() << e.toPlainText();
-
-
-                    //QVariant v = wp->mainFrame()->evaluateJavaScript(QString("document.elementFromPoint(%1, %2);").arg(pp.x()).arg(pp.y()));
-                    //qDebug() << v.toMap().keys();
-
-                    QList<QWebElement> el;
-                    el << wp->mainFrame()->documentElement();
-                    for(int i = 0; i < el.size(); ++i)
+                    for(int i = 0; i < all.size(); ++i)
                     {
-                        QWebElement e = el[i];
-                        
-                        //qDebug() << e.tagName() << e.geometry() << e.classes() << e.attributeNames() << e.toPlainText();
-                        
-                        for(QWebElement c = e.firstChild(); !c.isNull(); c = c.nextSibling())
-                            if(c.geometry().contains(pp) && c.geometry().height() <= e.geometry().height())
-                                el += c;
+                        int siblings = 0;
+                        for(QWebElement c = all[i].firstChild(); !c.isNull(); c = c.nextSibling())
+                        {
+                            all += c;
+                            if(c.geometry().contains(pp))
+                            {
+                                hits += c;
+                                siblings++;
+                            }
+                        }
+
+                        // the problem is that webkit element geometry can't provide exact region
+                        if(siblings > 1)
+                        {
+                            QRect r1(hits.last().geometry());
+                            QRect r2(hits[hits.size() - 2].geometry());
+
+                            // FIX last should be the smallest
+                            if(r1.contains(r2))
+                                hits.swap(hits.size() - 1, hits.size() - 2);
+                            else if(siblings == 2)
+                            {
+                                QRect br(r1.intersected(r2));
+                                br.setWidth(br.width() / 2);
+
+                                if(br.contains(pp))
+                                    hits.removeLast();
+                            }
+                        }
                     }
 
-                    return el[el.size() - 1].toOuterXml();
+                    //qDebug() << "HITS" << pp;
+                    //foreach(QWebElement e, hits)
+                    //    qDebug() << e.tagName() << e.geometry() << e.toOuterXml().replace("\n", " ").left(64);
+
+                    if(hits.size() == 0)
+                        return "";
+
+                    return hits[hits.size() - 1].toOuterXml();
                 }
 #endif
 				int sp;

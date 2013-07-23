@@ -1,7 +1,7 @@
 kalemas@mail.ru :
 === tasks ======================================================================
 +   multi column mode
-    webkit render: make context work
++   webkit render: make context work
     resize subview width
     replace panel with android
     setting options for views without exiting application

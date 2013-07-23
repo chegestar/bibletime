@@ -308,7 +308,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 
 #ifdef BT_MINI_WEBKIT
     case BtMiniUseWebKit:
-        btConfig().setValue("mini/useWebKit", !btConfig().value<int>("mini/useWebKit", false));
+        btConfig().setValue("mini/useWebKit", !btConfig().value<bool>("mini/useWebKit", false));
         emit dataChanged(index, index);
         break;
 #endif
