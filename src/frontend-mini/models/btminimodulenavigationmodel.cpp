@@ -110,7 +110,7 @@ public:
     QLabel                  *_indicator;
 };
 
-BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObject *parent)
+BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString module, QObject *parent)
     : QAbstractItemModel(parent), d_ptr(new BtMiniModuleNavigationModelPrivate)
 {
     Q_D(BtMiniModuleNavigationModel);

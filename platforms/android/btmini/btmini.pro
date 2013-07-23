@@ -1,4 +1,14 @@
+#CONFIG += qml quick
+
 include(../../common/btmini/common.pro)
+
+qml {
+DEFINES += BT_MINI_QML
+
+OTHER_FILES += main.qml
+
+RESOURCES += qml.qrc
+}
 
 OTHER_FILES += \
     android/AndroidManifest.xml \
@@ -29,3 +39,4 @@ OTHER_FILES += \
     android/src/org/qtproject/qt5/android/bindings/QtActivity.java \
     android/src/org/qtproject/qt5/android/bindings/QtApplication.java \
     android/version.xml
+

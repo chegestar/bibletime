@@ -1,6 +1,10 @@
 kalemas@mail.ru :
 === tasks ======================================================================
++   multi column mode
     webkit render: make context work
+    resize subview width
+    replace panel with android
+    setting options for views without exiting application
 
 
 
@@ -21,7 +25,6 @@ kalemas@mail.ru :
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
 	unlock locked modules
-    multi column mode
     fix webkit word context
     apply settings without restart
     slider bigger in dark theme
@@ -47,8 +50,7 @@ kalemas@mail.ru :
     topbar with animated effect when go sublevel
     find way to communicate with scrollbar to display current position and marks
     ? maybe make scroll bar transprent and overlapping view
-    ? ability to turn on auto sctolling feature: limit fading from initial speed on touch raise, round small speeds
-    ? scrolling like book pages, good because eyes always move all around the screen
+    ? scrolling like book pages, good because user's eyes always move all around the screen
     bookmarks would be named as Cuttings or Clippings
     notes - based on personal commentary module with av11n mapping support remark, should be created by app
 

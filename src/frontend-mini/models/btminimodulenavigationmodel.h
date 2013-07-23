@@ -23,7 +23,7 @@ class BtMiniModuleNavigationModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    BtMiniModuleNavigationModel(QString &module, QObject *parent = 0);
+    BtMiniModuleNavigationModel(QString module, QObject *parent = 0);
     ~BtMiniModuleNavigationModel();
     
     /** Reimplemented from QAbstractItemModel. */

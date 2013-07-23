@@ -290,7 +290,7 @@ HEADERS += \
     ../../../src/backend/filters/btosismorphsegmentation.h \
     ../../../src/frontend-mini/btmini.h \
     ../../../src/bibletimeapp.h \
-#    ../../../src/frontend-mini/ui/btministyle.cpp
+    ../../../src/frontend-mini/ui/btministyle.cpp
 
 RESOURCES += ../../../src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc

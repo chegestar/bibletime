@@ -31,10 +31,6 @@
 #include <QTranslator>
 #include <QtDebug>
 
-#if QT_VERSION >= 0x050000
-#include <QAbstractNativeEventFilter>
-#endif
-
 #include <swlog.h>
 
 #include "backend/config/btconfig.h"
@@ -52,29 +48,29 @@
 #include "btmini.h"
 #include "models/btminimoduletextmodel.h"
 #include "models/btminimodelsmodel.h"
+#include "models/btminimodulenavigationmodel.h"
 #include "models/btminisettingsmodel.h"
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
 #include "view/btminiview.h"
 #include "view/btminilayoutdelegate.h"
 
-
+#ifdef BT_MINI_QML
+#include <QtQml>
+#include <QtQuick>
+#endif
+#if QT_VERSION >= 0x050000
+#include <QAbstractNativeEventFilter>
+#endif
 #ifdef Q_OS_WIN
 #include <windows.h>
-#ifdef Q_OS_WIN32
-//#include <crtdbg.h>
 #endif
-#endif
-
 #ifdef ANDROID
 #include <android/log.h>
 #endif
-
 #ifdef Q_OS_SYMBIAN
 #include <hwrmvibra.h>
 #endif
-
-
 #ifdef Q_OS_IOS
 #import <AudioToolbox/AudioToolbox.h>
 #endif
@@ -494,7 +490,7 @@ QWidget * BtMini::worksWidget(bool showTip)
         f.setWeight(QFont::Normal);
         v->setFont(f);
 
-        v->setWebKitEnabled(btConfig().value<int>("mini/useWebKit", false));
+        v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
 
         if(btConfig().value<int>("mini/useRenderCaching", false))
             v->setRenderCaching(true);
@@ -644,7 +640,7 @@ QWidget * BtMini::searchWidget()
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        v->setWebKitEnabled(btConfig().value<int>("mini/useWebKit", false));
+        v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
         changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
 
         // Setup controls
@@ -986,21 +982,32 @@ int main(int argc, char *argv[])
     sword::StringMgr::setSystemStringMgr(new BtStringMgr);
 
     CSwordBackend *backend = CSwordBackend::createInstance();
-
     backend->booknameLanguage(btConfig().value<QString>("language", systemName));
-
-    CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
+    backend->initModules(CSwordBackend::OtherChange);
     backend->deleteOrphanedIndices();
 
     // Let's run...
+#ifdef BT_MINI_QML
+    QQuickView view;
+    view.setSource(QUrl("qrc:/bibletime/qml/main.qml"));
+    view.connect(view.engine(), SIGNAL(quit()), SLOT(close()));
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+
+    BtMiniModuleNavigationModel mn(btConfig().getDefaultSwordModuleByType("standardBible")->name());
+
+    QQmlContext *ctxt = view.rootContext();
+    ctxt->setContextProperty("navigationModel", &mn);
+    view.show();
+#else
     BtMini::setActiveWidget(BtMini::worksWidget());
+#endif
 
     return app.exec();
 }
 
 
 
-///* HACK declare to resolve dependencies */
+///* HACK declare to resolve dependencies, work for WP7-fully-unlocked devices */
 //void report(const char *msg, ...)
 //{
 //	char buffer[256];
