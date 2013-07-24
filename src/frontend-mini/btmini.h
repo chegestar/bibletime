@@ -65,6 +65,9 @@ public:
     /** Make device vibrate. This should be reimpemented. */
     static void vibrate(int miliseconds);
 
+    /** */
+    static void updateRemoteSources(bool download = true);
+
 
 public slots:
     /** Install module. This should be moved to BtMiniLogic. */
@@ -74,7 +77,7 @@ public slots:
     // below are old functions intended to be removed
 public:
     /** Main widget. */
-    static QWidget * mainWidget(bool fontSizeChanged = false);
+    static QWidget * mainWidget(bool fontSizeChanged = false, QString newStyle = QString());
     
     /** Module text view. */
     static QWidget * worksWidget(bool showTip = true, bool reset = false);

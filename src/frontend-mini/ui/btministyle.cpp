@@ -32,6 +32,7 @@ public:
 
         _night = night;
         _menuFrame = 0;
+        _initialized = false;
 
         if(_night)
         {
@@ -209,13 +210,12 @@ public:
 	void polish(QWidget *widget)
     {
         // FIX initialization in constructor cause crash
-        static bool initialized = false;
-        if(!initialized)
+        if(!_initialized)
         {
             _menuFrame = new QPixmap(_night ? ":/style-mini/menu-night-frame.png"
                                             : ":/style-mini/menu-frame.png");
             _menuFrameWidth = _menuFrame->width() / 3;
-            initialized = true;
+            _initialized = true;
         }
 
         // FIX on Symbian palettes are not applied
@@ -226,11 +226,11 @@ public:
             widget->setPalette(widget->palette());
 #endif
 
-//        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
-//        {
-//            const int cm = le->font().pixelSize() / 7.0;
-//            le->setContentsMargins(cm, cm, cm, cm);
-//        }
+        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
+        {
+            const int cm = le->font().pixelSize() / 7.0;
+            le->setContentsMargins(cm, cm, cm, cm);
+        }
 
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {
@@ -427,6 +427,7 @@ private:
     bool     _night;
 
     QPalette _palette;
+    bool     _initialized;
 };
 
 class BtMiniStylePlugin : public QStylePlugin

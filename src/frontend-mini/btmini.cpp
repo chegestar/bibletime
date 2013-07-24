@@ -379,12 +379,12 @@ public:
 protected:
     QSize sizeHint() const
     {
-        return QWidget::sizeHint().boundedTo(BtMini::mainWidget()->size());
+        return QWidget::sizeHint().boundedTo(parentWidget()->size());
     }
 
     QSize minimumSizeHint() const
     {
-        return QWidget::minimumSizeHint().boundedTo(BtMini::mainWidget()->size());
+        return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
     }
 
 };
@@ -430,9 +430,23 @@ void BtMini::reset(BtMiniState type)
 
 
 
-QWidget * BtMini::mainWidget(bool fontSizeChanged)
+QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 {
     static BtMiniMainWidget *w = 0;
+    static QString style;
+
+
+    if(!newStyle.isEmpty())
+    {
+        style = newStyle;
+        return 0;
+    }
+
+    if(!style.isEmpty())
+    {
+        QApplication::setStyle(style);
+        style.clear();
+    }
 
     if(!w)
     {
@@ -478,7 +492,7 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged)
 		f.setPixelSize(qMin(w->size().width(), w->size().height()) / factor *
 			btConfig().value<int>("mini/fontScale", 100) / 100);
 		w->setFont(f);
-	}
+    }
 
     return w;
 }
@@ -502,6 +516,7 @@ QWidget * BtMini::worksWidget(bool showTip, bool reset)
 {
     static BtMiniWidget *w = 0;
 	static bool recreate = false;
+    static bool toolTipShown = false;
 
     if(reset)
     {
@@ -666,11 +681,12 @@ QWidget * BtMini::worksWidget(bool showTip, bool reset)
             m, SLOT(modulesReloaded()));
 
         // tips
-        if(showTip && btConfig().value<int>("mini/showTipAtStartup", true))
+        if(showTip && btConfig().value<int>("mini/showTipAtStartup", true) && !toolTipShown)
         {
             if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString() +
                                 BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString()) == 1)
                 btConfig().setValue<int>("mini/showTipAtStartup", false);
+            toolTipShown = true;
         }
     }
 
@@ -743,21 +759,6 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 
     if(!w)
     {
-        bool refresh = true;
-
-        if(!firstTime)
-        {
-            switch(BtMiniMenu::execQuery(tr("Update all sources?"),
-                QStringList() << tr("Yes") << tr("No") << tr("Cancel")))
-            {
-            case 2:
-            case -1:
-                return 0;
-            case 1:
-                refresh = false;
-            }
-        }
-
         w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
@@ -765,12 +766,13 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
         changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
-            (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
+            BtMiniPanel::Refresh << (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
 
-        QLabel *lb = new QLabel(firstTime ? tr("No Bible installed") : "", w);
+        QLabel *lb = new QLabel(tr("No Remote Sources"), w);
         changeFontSize(lb, 0.9);
         lb->setAlignment(Qt::AlignCenter);
         lb->setMargin(lb->font().pixelSize() / 2);
+        lb->setObjectName("label");
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
@@ -781,49 +783,7 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 
         w->setLayout(vl);
 
-        if(firstTime && BtMiniMenu::execQuery(tr("Remote sources will be updated..."),
-            QStringList() << tr("Ok") << tr("Exit")) == 1)
-		{
-            QTimer::singleShot(100, QApplication::instance(), SLOT(quit()));
-			return 0;
-		}
-
-        if(refresh)
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-        // Setup model
-        BtMiniModelsModel *m = new BtMiniModelsModel(v);
-        m->setIndicator(lb);
-        QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
-        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
-
-        QStringList        ss(BtInstallBackend::sourceNameList(refresh));
-        BtInstallMgr      *im = new BtInstallMgr(m);
-
-        foreach(QString s, ss)
-        {
-            sword::InstallSource is = BtInstallBackend::source(s);
-            
-			if(refresh)
-                im->refreshRemoteSource(&is);
-
-            CSwordBackend *be = BtInstallBackend::backend(is);
-			
-			if(be->moduleList().size() == 0)
-				continue;
-
-            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(false), m);
-            mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-                "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
-            mm->setSourceModel(be->model());
-
-            m->addModel(mm, "<center><b>" + s + "</b></center>");
-        }
-
-        v->setModel(m);
-
-        if(refresh)
-            QApplication::restoreOverrideCursor();
+        updateRemoteSources(false);
     }
 
     return w;
@@ -942,12 +902,60 @@ void BtMini::installerQuery(const QModelIndex &index)
                 // refresh panel
                 delete installerWidget()->findChild<BtMiniPanel*>();
                 installerWidget()->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
-                    BtMiniPanel::Close, installerWidget()));
+                    BtMiniPanel::Refresh << BtMiniPanel::Close, installerWidget()));
 
                 setActiveWidget(worksWidget(false));
             }
         }
     }
+}
+
+void BtMini::updateRemoteSources(bool download)
+{
+    if(download)
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    // Setup model
+    BtMiniView *v = findView(installerWidget());
+    BtMiniModelsModel *m = new BtMiniModelsModel(v);
+    QLabel *l = installerWidget()->findChild<QLabel*>("label");
+    Q_CHECK_PTR(l);
+    m->setIndicator(l);
+
+    QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
+    v->disconnect(SIGNAL(clicked(const QModelIndex &)));
+    QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+
+    QStringList ss(BtInstallBackend::sourceNameList(download));
+    BtInstallMgr *im = new BtInstallMgr(m);
+
+    foreach(QString s, ss)
+    {
+        sword::InstallSource is = BtInstallBackend::source(s);
+
+        if(download)
+            im->refreshRemoteSource(&is);
+
+        CSwordBackend *be = BtInstallBackend::backend(is);
+
+        if(be->moduleList().size() == 0)
+            continue;
+
+        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(false), m);
+        mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+            "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+        mm->setSourceModel(be->model());
+
+        m->addModel(mm, "<center><b>" + s + "</b></center>");
+    }
+
+    v->setModel(m);
+
+    if(ss.size() > 0)
+        m->updateIndicators(QModelIndex());
+
+    if(download)
+        QApplication::restoreOverrideCursor();
 }
 
 /** Sword debug messages. */

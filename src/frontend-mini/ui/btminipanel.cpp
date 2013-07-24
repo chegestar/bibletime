@@ -68,6 +68,11 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 
     foreach(Activity a, activities)
     {
+#ifdef Q_OS_ANDROID
+        if(a == Exit)
+            continue;
+#endif
+
         QString bt;
 
         switch(a)
@@ -86,6 +91,9 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
             break;
         case Settings:
                 bt = "Settings";
+            break;
+        case Refresh:
+                bt = "Refresh";
             break;
         default:
             Q_ASSERT(false);
@@ -149,6 +157,9 @@ void BtMiniPanel::controlActivated()
         break;
     case Settings:
         BtMini::setActiveWidget(BtMini::settingsWidget());
+        break;
+    case Refresh:
+        BtMini::updateRemoteSources();
         break;
     default:
         Q_ASSERT(false);

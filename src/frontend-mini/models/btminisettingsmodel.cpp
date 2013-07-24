@@ -41,7 +41,7 @@ enum BtMiniSettingsIds
     BtMiniSearchType,
 #endif
     BtMiniStyle,
-    BtMiniTips = BtMiniStyle + 2,
+    BtMiniTips = BtMiniStyle + 1,
     BtMiniNews,
     BtMiniForum = BtMiniNews + 3
 };
@@ -75,8 +75,6 @@ public:
 #endif
         _strings << tbs + BtMiniSettingsModel::tr("Ui style:") +
                     "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << "<body><font size=\"50%\"><i>" + BtMiniSettingsModel::tr(
-                    "Note: most of settings will be applied after application restart.") + "</i></font></body>";
         _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
                     "</td> <td align=\"right\"> > </td></tr></table></b>";
         _strings << "<b>" + tbs + BtMiniSettingsModel::tr("News and Updates:") +
@@ -335,6 +333,9 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     case BtMiniUseWebKit:
         btConfig().setValue("mini/useWebKit", !btConfig().value<bool>("mini/useWebKit", false));
         emit dataChanged(index, index);
+
+        BtMini::worksWidget(true, true);
+        BtMini::searchWidget(true);
         break;
 #endif
 
@@ -358,6 +359,12 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
                 s = ss[0];
             btConfig().setValue("mini/miniStyle", s);
             emit dataChanged(index, index);
+
+            BtMini::mainWidget(false, s);
+            BtMini::worksWidget(true, true);
+            BtMini::installerWidget(false, true);
+            BtMini::settingsWidget(true);
+            BtMini::searchWidget(true);
         }
         break;
 
@@ -369,6 +376,8 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     case BtMiniThreads:
         btConfig().setValue("mini/threadedTextRetrieving", !btConfig().value<int>("mini/threadedTextRetrieving", true));
         emit dataChanged(index, index);
+
+        BtMini::worksWidget(true, true);
         break;
 
 #ifndef BT_NO_CLUCENE

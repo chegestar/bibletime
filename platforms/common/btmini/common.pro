@@ -295,7 +295,8 @@ HEADERS += \
 RESOURCES += ../../../src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc
 
-OTHER_FILES += ../../../src/frontend-mini/todo.txt
+OTHER_FILES += ../../../src/frontend-mini/todo.txt \
+    ../../../src/display-templates/Basic-Mini.tmpl
 
 # BtMini translations
 TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts

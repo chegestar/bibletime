@@ -7,6 +7,7 @@ kalemas@mail.ru :
     replace panel with android
     move all logic from models to btminilogic.cpp
     add abiblity to combine bookshelves in tree model
+    adding functionality using default function parameters is bad practice, when you want to change them
 
 
     settings ui

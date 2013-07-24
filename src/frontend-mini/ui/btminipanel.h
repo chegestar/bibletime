@@ -28,7 +28,8 @@ public:
         Installer,
         Exit,
         Settings,
-		Close
+        Close,
+        Refresh
     };
 
     typedef QVector<Activity> Activities;

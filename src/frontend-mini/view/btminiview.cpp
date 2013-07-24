@@ -399,11 +399,6 @@ public:
 
         QString ct(text);
 
-        // FIX for dark theme
-        QColor tc = widget->palette().color(QPalette::WindowText);
-        if(tc != QColor(0, 0, 0))
-            ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
-
         if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
             _ti = new TextItem(ct, widget->font());
@@ -480,6 +475,8 @@ public:
             wp->setPreferredContentsSize(QSize(_width, 1));
             wp->mainFrame()->setHtml(ct);
 
+            wp->mainFrame()->documentElement().setStyleProperty("color", widget->palette().color(QPalette::WindowText).name());
+
             wp->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
             wp->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
 
@@ -498,6 +495,11 @@ public:
             return;
         }
 #endif
+
+        // FIX for dark theme
+        QColor tc = widget->palette().color(QPalette::WindowText);
+        if(tc != QColor(0, 0, 0))
+            ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
 
 #ifdef BT_STATIC_TEXT
         if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
@@ -1030,6 +1032,8 @@ public:
             delete v;
 
         _subViews.clear();
+        _currentSubView = 0;
+        _vx = 0;
     }
 
     /** After this function subview will contain \param index. */

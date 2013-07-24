@@ -170,7 +170,6 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 void BtMiniModelsModel::setIndicator(QWidget *w)
 {
     d_ptr->_indicator = qobject_cast<QLabel*>(w);
-    updateIndicators(QModelIndex());
 }
 
 void BtMiniModelsModel::updateIndicators(QModelIndex index)
