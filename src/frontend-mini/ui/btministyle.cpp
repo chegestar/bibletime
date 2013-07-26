@@ -75,7 +75,24 @@ public:
             if(const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame*>(opt))
             {
                 const int m = _menuFrameWidth;
-                qDrawBorderPixmap(p, frame->rect, QMargins(m, m, m, m), *_menuFrame);
+                //qDrawBorderPixmap(p, frame->rect, QMargins(m, m, m, m), *_menuFrame);
+                //p->drawPixmap(0, 0, _menuFrame->width(), _menuFrame->height(), *_menuFrame);
+
+                p->setBrush(_palette.base());
+                p->setPen(Qt::NoPen);
+                p->drawRect(frame->rect.adjusted(m, m, -m, -m));
+
+                p->drawPixmap(0, 0, m, m, *_menuFrame, 0, 0, m , m);
+                p->drawPixmap(m, 0, frame->rect.width() - m - m, m, *_menuFrame, m, 0, m, m);
+                p->drawPixmap(frame->rect.width() - m, 0, m, m, *_menuFrame, _menuFrame->width() - m, 0, m , m);
+                p->drawPixmap(0, m, m, frame->rect.height() - m - m, *_menuFrame, 0, m, m, m);
+                p->drawPixmap(0, frame->rect.height() - m, m, m, *_menuFrame, 0, _menuFrame->height() - m, m , m);
+                p->drawPixmap(m, frame->rect.height() - m, frame->rect.width() - m - m, m, *_menuFrame, m,
+                              _menuFrame->height() - m, m, m);
+                p->drawPixmap(frame->rect.width() - m, frame->rect.height() - m, m, m, *_menuFrame,
+                              _menuFrame->width() - m, _menuFrame->height() - m, m , m);
+                p->drawPixmap(frame->rect.width() - m, m, m, frame->rect.height() - m - m, *_menuFrame,
+                              _menuFrame->width() - m, m, m, m);
             }
             return;
         case PE_PanelButtonCommand:

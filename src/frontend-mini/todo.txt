@@ -8,6 +8,7 @@ kalemas@mail.ru :
     move all logic from models to btminilogic.cpp
     add abiblity to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
+    refresh modelsmodel instead of recreate, do it in thread
 
 
     settings ui

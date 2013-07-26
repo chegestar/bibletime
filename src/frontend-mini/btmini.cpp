@@ -279,6 +279,7 @@ public:
         show();
         showFullScreen();
     #elif defined (Q_OS_ANDROID)
+        resize(QApplication::desktop()->screenGeometry().size());
         showMaximized();
     #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
         showFullScreen();
@@ -342,12 +343,12 @@ public:
 protected:
     QSize sizeHint() const
     {
-        return QWidget::sizeHint().boundedTo(QApplication::desktop()->size());
+        return QWidget::sizeHint().boundedTo(QApplication::desktop()->screenGeometry().size());
     }
 
     QSize minimumSizeHint() const
     {
-        return QWidget::minimumSizeHint().boundedTo(QApplication::desktop()->size());
+        return QWidget::minimumSizeHint().boundedTo(QApplication::desktop()->screenGeometry().size());
     }
 
     void timerEvent(QTimerEvent *e)
@@ -356,6 +357,12 @@ protected:
             saveConfig();
         else
             QStackedWidget::timerEvent(e);
+    }
+
+    void resizeEvent(QResizeEvent *e)
+    {
+        //qDebug() << "Resize main widget" << e->oldSize() << "to" << e->size() << "desktop" << QApplication::desktop()->screenGeometry();
+        QStackedWidget::resizeEvent(e);
     }
 
 private:
@@ -387,6 +394,11 @@ protected:
         return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
     }
 
+    void resizeEvent(QResizeEvent *e)
+    {
+        //qDebug() << "Resize widget" << e->oldSize() << "to" << e->size() << "desktop";
+        QWidget::resizeEvent(e);
+    }
 };
 
 BtMini::BtMini()

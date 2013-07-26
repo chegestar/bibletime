@@ -904,7 +904,6 @@ void BtMiniModuleTextModel::openModuleSelection()
         return;
 
     CSwordVerseKey place(CSwordBackend::instance()->findModuleByName(cm));
-
     if(cm.size() > 0)
         place.setKey(works->currentIndex().data(BtMini::PlaceRole).toString());
 
@@ -925,7 +924,7 @@ void BtMiniModuleTextModel::openModuleSelection()
 			QModelIndex index = keyIndex(works->currentLevel(), place.key());
 			if(index.isValid())
 				works->scrollTo(index);
-		}
+        }
 	}
 }
 
@@ -1068,8 +1067,10 @@ void BtMiniModuleTextModel::startSearch()
 
 	BtMiniView *works = BtMini::findView(BtMini::worksWidget());
 
-	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
-	CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm);
+    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+    CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm.section(',', 0, 0));
+
+    Q_CHECK_PTR(m);
 
     //qDebug() << "Start search" << cm << d->_searchText;
 
@@ -1144,7 +1145,6 @@ void BtMiniModuleTextModel::startSearch()
 	Q_ASSERT(d->_lists.size() == 1 && d->_lists[0]._name == "[Search]");
 
 	d->_lists[0]._module = results.Count() > 0 ? m : 0;
-	
 	d->_lists[0].setScope(results);
 
 	QModelIndex i = index(0, 0);

@@ -428,11 +428,8 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 		    {
                 if(e->type() == QEvent::MouseButtonPress && !d_ptr->_modal)
                     d_ptr->_canceled = true; // indicate that window shuld be closed on MouseRelease
-                    //cancel();
-
-
 			    return true;
-		    }
+            }
         }
 		break;
     case QEvent::Close:

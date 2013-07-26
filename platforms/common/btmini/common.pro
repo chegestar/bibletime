@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.7
+VERSION = 0.9.8
 
 CONFIG += webkit clucene svg
 
