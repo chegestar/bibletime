@@ -74,41 +74,46 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 #endif
 
         QString bt;
+		QString bo;
 
         switch(a)
         {
 		case Close:
-                bt = "Close";
+                bo = "Close";
+				bt = tr("Close");
             break;
         case Exit:
-                bt = "Exit";
+                bo = "Exit";
+				bt = tr("Exit");
             break;
         case Installer:
-                bt = "Install";
+                bo = "Install";
+				bt = tr("Install");
             break;
         case Search:
-                bt = "Find";
+                bo = "Find";
+				bt = tr("Find");
             break;
         case Settings:
-                bt = "Settings";
+                bo = "Settings";
+				bt = tr("Settings");
             break;
-        case Refresh:
-                bt = "Refresh";
+		case Refresh:
+				bo = "Refresh";
+				bt = tr("Refresh");
             break;
         default:
             Q_ASSERT(false);
         }
 
-        QString br(tr(bt.toLatin1()));
-
-        QPushButton *b = new QPushButton(br, this);
-        b->setObjectName(bt);
+        QPushButton *b = new QPushButton(bt, this);
+        b->setObjectName(bo);
 
         connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
 
         d->addActivity(a, b);
         l->addWidget(b);
-        l->setStretchFactor(b, br.size() + 3);
+        l->setStretchFactor(b, bt.size() + 3);
     }
 
     setLayout(l);

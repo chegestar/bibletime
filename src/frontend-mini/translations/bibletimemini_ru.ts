@@ -2,73 +2,136 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
+    <name>BibleTimeApp</name>
+    <message>
+        <location filename="../../bibletimeapp.cpp" line="67"/>
+        <source>Fatal error!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>BtBookshelfModel</name>
     <message>
-        <location filename="../../backend/bookshelfmodel/btbookshelfmodel.cpp" line="80"/>
+        <location filename="../../backend/bookshelfmodel/btbookshelfmodel.cpp" line="78"/>
         <source>Module</source>
         <translation>Модуль</translation>
     </message>
 </context>
 <context>
+    <name>BtConfig</name>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="44"/>
+        <source>Old testament</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="45"/>
+        <source>Moses/Pentateuch/Torah</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="46"/>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="47"/>
+        <source>Prophets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="48"/>
+        <source>New testament</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="49"/>
+        <source>Gospels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="50"/>
+        <source>Letters/Epistles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="51"/>
+        <source>Paul&apos;s Epistles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="84"/>
+        <source>Error loading configuration!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/config/btconfig.cpp" line="85"/>
+        <source>Failed to load BibleTime&apos;s configuration, because it appears that the configuration file corresponds to a newer version of BibleTime. This is likely caused by BibleTime being downgraded. Loading the new configuration file may result in &lt;b&gt;loss of data&lt;/b&gt;.&lt;br/&gt;&lt;br/&gt;Do you still want to try to load the new configuration file? Press &quot;No&quot; to quit BibleTime immediately.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BtConfigCore</name>
+    <message>
+        <location filename="../../backend/config/btconfigcore.cpp" line="60"/>
+        <source>Default Session</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>BtMini</name>
     <message>
-        <location filename="../btmini.cpp" line="599"/>
         <source>Update all sources?</source>
-        <translation>Обновить источники?</translation>
+        <translation type="obsolete">Обновить источники?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="600"/>
         <source>Yes</source>
-        <translation>Да</translation>
+        <translation type="obsolete">Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="600"/>
         <source>No</source>
-        <translation>Нет</translation>
+        <translation type="obsolete">Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="600"/>
-        <location filename="../btmini.cpp" line="753"/>
+        <location filename="../btmini.cpp" line="884"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="619"/>
-        <source>No Bible installed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../btmini.cpp" line="633"/>
-        <source>Remote sources will be updated...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../btmini.cpp" line="634"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="634"/>
         <source>Exit</source>
-        <translation type="unfinished">Выход</translation>
+        <translation type="obsolete">Выход</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="752"/>
+        <location filename="../btmini.cpp" line="731"/>
+        <source>type and press Enter</source>
+        <translation>введите и нажмите Ввод</translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="783"/>
+        <source>No Remote Sources</source>
+        <translation>Нет удаленных источников</translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="883"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="753"/>
+        <location filename="../btmini.cpp" line="884"/>
         <source>Install</source>
-        <translation type="unfinished">Да</translation>
+        <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="759"/>
+        <location filename="../btmini.cpp" line="890"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="773"/>
+        <location filename="../btmini.cpp" line="905"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
@@ -80,130 +143,151 @@
 <context>
     <name>BtMiniMenu</name>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="324"/>
+        <location filename="../ui/btminimenu.cpp" line="336"/>
+        <location filename="../ui/btminimenu.cpp" line="510"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Да</translation>
     </message>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="442"/>
+        <location filename="../ui/btminimenu.cpp" line="469"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+    <message>
+        <location filename="../ui/btminimenu.cpp" line="514"/>
+        <source>Don&apos;t show</source>
+        <translation>Не показывать</translation>
     </message>
 </context>
 <context>
     <name>BtMiniModelsModel</name>
     <message>
-        <location filename="../models/btminimodelsmodel.cpp" line="181"/>
+        <location filename="../models/btminimodelsmodel.cpp" line="180"/>
         <source>Select repository:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите репозиторий:</translation>
     </message>
 </context>
 <context>
     <name>BtMiniModuleNavigationModel</name>
     <message>
-        <location filename="../models/btminimodulenavigationmodel.cpp" line="378"/>
+        <location filename="../models/btminimodulenavigationmodel.cpp" line="493"/>
         <source>Select Book:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите Книгу:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulenavigationmodel.cpp" line="503"/>
+        <source>Select Section:</source>
+        <translation>Выберите Секцию:</translation>
     </message>
 </context>
 <context>
     <name>BtMiniModuleTextModel</name>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="782"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="821"/>
         <source>Add Left</source>
         <translation>Добавить Слева</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="782"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="821"/>
         <source>Add Right</source>
         <translation>Добавить Справа</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="785"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="824"/>
         <source>Clear</source>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="977"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1028"/>
         <source>No Module</source>
         <translation>Нет Модуля</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1039"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1092"/>
         <source>Search ...</source>
         <translation>Поиск ...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1045"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1098"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
         <translation>стронг:</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
         <source>Build index for module?</source>
         <translation>Создать индекс для модуля?</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1059"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1063"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1115"/>
         <source>Indexing...</source>
         <translation>Индексирование...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1116"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1172"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1175"/>
+        <source>Add Parallel</source>
+        <translation>Параллель</translation>
     </message>
 </context>
 <context>
     <name>BtMiniPanel</name>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="77"/>
+        <location filename="../ui/btminipanel.cpp" line="83"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="82"/>
+        <location filename="../ui/btminipanel.cpp" line="87"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="87"/>
+        <location filename="../ui/btminipanel.cpp" line="91"/>
         <source>Install</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="92"/>
+        <location filename="../ui/btminipanel.cpp" line="95"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="97"/>
+        <location filename="../ui/btminipanel.cpp" line="99"/>
         <source>Settings</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="143"/>
+        <location filename="../ui/btminipanel.cpp" line="103"/>
+        <source>Refresh</source>
+        <translation>Обновить</translation>
+    </message>
+    <message>
+        <location filename="../ui/btminipanel.cpp" line="151"/>
         <source>Exit?</source>
         <translation>Выйти?</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="143"/>
+        <location filename="../ui/btminipanel.cpp" line="151"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../ui/btminipanel.cpp" line="143"/>
+        <location filename="../ui/btminipanel.cpp" line="151"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -211,134 +295,195 @@
 <context>
     <name>BtMiniSettingsModel</name>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="54"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="58"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="56"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="60"/>
         <source>Font size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="58"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="62"/>
         <source>Font size for text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="60"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="64"/>
         <source>Multi-threading:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="62"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="66"/>
         <source>Continuous scrolling:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="65"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="69"/>
         <source>Use WebKit:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="69"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="73"/>
         <source>Search type:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="72"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="76"/>
         <source>Ui style:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="74"/>
-        <source>Note: most of settings will be applied after application restart.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="77"/>
-        <source>About</source>
-        <translation type="unfinished">О Программе</translation>
-    </message>
-    <message>
         <location filename="../models/btminisettingsmodel.cpp" line="78"/>
-        <source>&lt;b&gt;BibleTime Mini&lt;/b&gt; - spend your time with Bible on mobile!</source>
+        <source>Handbook:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="79"/>
-        <source>Current version:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="81"/>
-        <source>Built on:</source>
+        <location filename="../models/btminisettingsmodel.cpp" line="80"/>
+        <source>News and Updates:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="83"/>
-        <source>It is cross-platform open-source Bible study application designed for mobile devices.</source>
+        <source>About</source>
+        <translation>О Программе</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="84"/>
+        <source>&lt;b&gt;BibleTime Mini&lt;/b&gt; - spend your time with Bible on mobile!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="85"/>
+        <source>Current version:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="87"/>
+        <source>Built on:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="89"/>
+        <source>It is cross-platform open-source Bible study application designed for mobile devices.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="91"/>
         <source>Underlying frameworks:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="90"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="96"/>
         <source>You could post feedback, report an issue or get help throught forum:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="169"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="173"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="179"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="189"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="193"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="199"/>
         <source>on</source>
-        <translation type="unfinished">да</translation>
+        <translation>да</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="169"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="173"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="179"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="189"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="193"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="199"/>
         <source>off</source>
-        <translation type="unfinished">нет</translation>
+        <translation>нет</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="186"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="206"/>
         <source>AND</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="189"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="209"/>
         <source>OR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="192"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="212"/>
         <source>Full syntax</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="234"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="240"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="250"/>
+        <source>&lt;b&gt;&lt;center&gt;Usefull tips:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="251"/>
+        <source>Many views in BibleTime Mini recognizes &lt;b&gt;short pressing&lt;/b&gt; by finger and &lt;b&gt;long pressing&lt;/b&gt;. Try to press screen on word you interested in for a second (device should vibrate ones), information (context) view for that word should open. Same for footnotes and cross-references.&lt;br/&gt;Try to press Text view for several seconds before device vibrates twice, service menu should open. Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="256"/>
+        <source>&lt;b&gt;Context view.&lt;/b&gt; It is consist of two views: word context, and commentary context. Try to slide left/right to observe them. Default modules used for this context could be configurated in Module selection window by long pressping.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="259"/>
+        <source>&lt;b&gt;Search.&lt;/b&gt; BibleTime Mini uses CLucene indexed search, this means that you have to wait for some time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to input box at the top your request. Try to use wildcards &quot;*&quot; (like &quot;take*&quot;), keywords (like &quot;strong:G1203&quot; or &quot;footnote:Eve&quot;), and combine several words. Note, you should have keyboard with Enter key on your keyboard to start search, or on some platforms there is way to insert Return Carriage symbol.&lt;br/&gt;Long pressing on item will bring verse to reading window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="266"/>
+        <source>&lt;b&gt;Default Modules.&lt;/b&gt; There are several types of modules: default Bible is used to render cross-references, default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in context popup. To change default modules, when you open Module Selection popup, make long press on module you would like to make default and select corresponding action.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="270"/>
+        <source>&lt;b&gt;Parallel Bible display.&lt;/b&gt; You would open several Bible texts in one view, with respect of different verse markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like to add, then select &quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="279"/>
+        <source>Add Parallel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="275"/>
+        <source>&lt;br/&gt;This information you could access again in &lt;b&gt;Settings&lt;/b&gt; under the &lt;b&gt;Handbook&lt;/b&gt; item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="277"/>
+        <source>&lt;body&gt;&lt;b&gt;&lt;center&gt;News and Updates:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="278"/>
+        <source>&lt;b&gt;0.9.5&lt;/b&gt; - parallel Bible display, make long tap in module selection dialog and press &quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="281"/>
+        <source>&lt;b&gt;0.9.3&lt;/b&gt; - was added support for General Books and search in non Bible modules was fixed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="298"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="317"/>
         <source>Select size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
         <source>Follow link?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
         <source>Yes</source>
-        <translation type="unfinished">Да</translation>
+        <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="272"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
         <source>No</source>
-        <translation type="unfinished">Нет</translation>
+        <translation>Нет</translation>
     </message>
 </context>
 <context>
@@ -349,233 +494,268 @@
     </message>
 </context>
 <context>
-    <name>CSwordModuleInfo</name>
+    <name>CInfoDisplay</name>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="820"/>
-        <source>Version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="821"/>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="826"/>
-        <source>unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="824"/>
-        <source>Markup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="829"/>
-        <source>Location</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="833"/>
-        <source>Language</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="838"/>
-        <source>Category</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="843"/>
-        <source>LCSH</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="847"/>
-        <source>Writable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="848"/>
-        <source>yes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="848"/>
-        <source>no</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="852"/>
-        <source>Unlock key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="871"/>
-        <source>Features</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="879"/>
-        <source>Take care, this work contains cult / questionable material!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="882"/>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="904"/>
-        <source>Distribution license</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="905"/>
-        <source>Distribution source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="906"/>
-        <source>Distribution notes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="907"/>
-        <source>Text source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="908"/>
-        <source>Copyright notes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="909"/>
-        <source>Copyright holder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="910"/>
-        <source>Copyright date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="911"/>
-        <source>Copyright contact name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="912"/>
-        <source>Copyright contact address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="913"/>
-        <source>Copyright contact email</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1021"/>
-        <source>Bibles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1023"/>
-        <source>Commentaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1025"/>
-        <source>Books</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1027"/>
-        <source>Cults/Unorthodox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1029"/>
-        <source>Maps and Images</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1031"/>
-        <source>Daily Devotionals</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1033"/>
-        <source>Lexicons and Dictionaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1035"/>
-        <source>Glossaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1037"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>InfoDisplay::CInfoDisplay</name>
-    <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="53"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="54"/>
         <source>Select all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="57"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="58"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="79"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="80"/>
         <source>&lt;small&gt;This is the Mag viewer area. Hover the mouse over links or other items which include some data and the contents appear in the Mag after a short delay. Move the mouse into Mag rapidly or lock the view by pressing and holding Shift while moving the mouse.&lt;/small&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="178"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="184"/>
         <source>&lt;div class=&quot;moduleinfo&quot;&gt;&lt;h3&gt;%1&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;p&gt;Version: %3&lt;/p&gt;&lt;/div&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="198"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="206"/>
         <source>Abbreviation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="209"/>
-        <location filename="../../frontend/cinfodisplay.cpp" line="309"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="217"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="321"/>
         <source>Cross references</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="365"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="377"/>
         <source>Footnote</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="396"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="408"/>
         <source>Strongs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="478"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="486"/>
         <source>Morphology</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../frontend/cinfodisplay.cpp" line="502"/>
+        <location filename="../../frontend/cinfodisplay.cpp" line="509"/>
         <source>Word lookup</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CSwordBackend</name>
+    <message>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="180"/>
+        <source>KJV</source>
+        <comment>default Bible module</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="181"/>
+        <source>MHC</source>
+        <comment>default commentary module</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="182"/>
+        <source>ISBE</source>
+        <comment>default lexicon module</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="185"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="189"/>
+        <source>StrongsHebrew</source>
+        <comment>default Hebrew strongs lexicon</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="187"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="191"/>
+        <source>StrongsGreek</source>
+        <comment>default Greek morph lexicon</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CSwordModuleInfo</name>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="808"/>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="811"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="817"/>
+        <source>unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="814"/>
+        <source>Markup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="820"/>
+        <source>Location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="824"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="829"/>
+        <source>Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="834"/>
+        <source>LCSH</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="838"/>
+        <source>Writable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="839"/>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="839"/>
+        <source>no</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="843"/>
+        <source>Unlock key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="864"/>
+        <source>Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="872"/>
+        <source>Take care, this work contains cult / questionable material!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="876"/>
+        <source>About</source>
+        <translation type="unfinished">О Программе</translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="898"/>
+        <source>Distribution license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="899"/>
+        <source>Distribution source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="900"/>
+        <source>Distribution notes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="901"/>
+        <source>Text source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="902"/>
+        <source>Copyright notes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="903"/>
+        <source>Copyright holder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="904"/>
+        <source>Copyright date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="905"/>
+        <source>Copyright contact name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="906"/>
+        <source>Copyright contact address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="907"/>
+        <source>Copyright contact email</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="998"/>
+        <source>Bibles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1000"/>
+        <source>Commentaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1002"/>
+        <source>Books</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1004"/>
+        <source>Cults/Unorthodox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1006"/>
+        <source>Maps and Images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1008"/>
+        <source>Daily Devotionals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1010"/>
+        <source>Lexicons and Dictionaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1012"/>
+        <source>Glossaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1014"/>
+        <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="458"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="450"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="460"/>
         <source>Indexing aborted</source>
         <translation type="unfinished"></translation>
     </message>
@@ -585,721 +765,686 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="458"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="461"/>
         <source>An internal error occurred while building the index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="550"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="570"/>
         <source>Search aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="550"/>
-        <source>An internal error occurred while executing your search.</source>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="571"/>
+        <source>An internal error occurred while executing your search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../backend/bookshelfmodel/indexingitem.cpp" line="27"/>
+        <location filename="../../backend/bookshelfmodel/indexingitem.cpp" line="23"/>
         <source>Indexed works</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/bookshelfmodel/indexingitem.cpp" line="30"/>
+        <location filename="../../backend/bookshelfmodel/indexingitem.cpp" line="24"/>
         <source>Unindexed works</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/btinstallbackend.cpp" line="179"/>
+        <location filename="../../backend/btinstallbackend.cpp" line="174"/>
         <source>Can&apos;t write file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/btinstallbackend.cpp" line="179"/>
+        <location filename="../../backend/btinstallbackend.cpp" line="174"/>
         <source>The Sword config file can&apos;t be written!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="484"/>
-        <source>Old testament</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="485"/>
-        <source>Moses/Pentateuch/Torah</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="486"/>
-        <source>History</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="487"/>
-        <source>Prophets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="488"/>
-        <source>New testament</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="489"/>
-        <source>Gospels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="490"/>
-        <source>Letters/Epistles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/config/cbtconfig.cpp" line="491"/>
-        <source>Paul&apos;s Epistles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/filters/osistohtml.cpp" line="391"/>
+        <location filename="../../backend/filters/osistohtml.cpp" line="392"/>
         <source>Added text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/filters/osistohtml.cpp" line="408"/>
+        <location filename="../../backend/filters/osistohtml.cpp" line="409"/>
         <source>Verb tense changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cdisplaytemplatemgr.cpp" line="54"/>
+        <location filename="../../backend/managers/cdisplaytemplatemgr.cpp" line="57"/>
+        <source>CSS base template not found!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../backend/managers/cdisplaytemplatemgr.cpp" line="74"/>
         <source>Default template &quot;%1&quot; not found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="164"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="143"/>
         <source>Names of languages</source>
         <comment>No need to translate - see the longer comment (If there is no longer comment, it doesn&apos;t work yet :)) ------ </comment>
         <extracomment>The string &quot;Names of languages&quot; doesn&apos;t actually need translation. It is put here to help translators notice this help text. ------- The names of the languages should follow the conventions of your language. You can write the names with a capital first letter even if your language uses non-capitalized language names (they look better with capital first letter when they are listed). ------- To find the names of all languages from internet try searching for &quot;names of languages in language_x&quot; but in your own language, e.g. &quot;kielten nimet suomeksi&quot; in Finnish or &quot;names of languages in english&quot; in English. ------- You can find the language codes and names by googling for the standards mentioned below. ------- Preference order for locale codes are: ------- ISO 639-1 ------- ISO 639-2 ------- ISO 639-3 ------- x-E-XXX form is deprecated and no modules in repositories use it. If you find a module with x-E-XXX language, update the module.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="169"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="148"/>
         <source>Afrikaans</source>
         <extracomment>Language name af</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="172"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="151"/>
         <source>Amuzgo, Guerrero</source>
         <extracomment>Language name amu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="174"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="153"/>
         <source>English, Old (ca.450-1100)</source>
         <extracomment>Language name ang</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="176"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="155"/>
         <source>Arabic</source>
         <extracomment>Language name ar</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="179"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="158"/>
         <source>Azerbaijani</source>
         <extracomment>Language name az</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="181"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="160"/>
         <source>Azerbaijani, South</source>
         <extracomment>Language name azb</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="184"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="163"/>
         <source>Bavarian</source>
         <extracomment>Language name bar</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="186"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="165"/>
         <source>Belarusian</source>
         <extracomment>Language name be</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="188"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="167"/>
         <source>Bulgarian</source>
         <extracomment>Language name bg</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="194"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="173"/>
         <source>Breton</source>
         <extracomment>Language name br</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="196"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="175"/>
         <source>Bosnian</source>
         <extracomment>Language name bs</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="198"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="177"/>
         <source>Catalan</source>
         <extracomment>Language name ca</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="201"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="180"/>
         <source>Chinantec, Comaltepec</source>
         <extracomment>Language name cco</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="203"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="182"/>
         <source>Cebuano</source>
         <extracomment>Language name ceb</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="205"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="184"/>
         <source>Chamorro</source>
         <extracomment>Language name ch</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="207"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="186"/>
         <source>Chontal, Highland Oaxaca</source>
         <extracomment>Language name chd</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="209"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="188"/>
         <source>Chinantec, Quiotepec</source>
         <extracomment>Language name chq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="211"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="190"/>
         <source>Chinantec, Ozumacu00edn</source>
         <extracomment>Language name chz</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="214"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="193"/>
         <source>Cakchiquel, Western</source>
         <extracomment>Language name ckw</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="216"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="195"/>
         <source>Chinantec, Lalana</source>
         <extracomment>Language name cnl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="218"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="197"/>
         <source>Chinantec, Tepetotutla</source>
         <extracomment>Language name cnt</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="220"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="199"/>
         <source>Coptic</source>
         <extracomment>Language name cop</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="222"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="201"/>
         <source>Czech</source>
         <extracomment>Language name cs</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="224"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="203"/>
         <source>Chinantec, Sochiapan</source>
         <extracomment>Language name cso</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="226"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="205"/>
         <source>Chol, Tila</source>
         <extracomment>Language name cti</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="228"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="207"/>
         <source>Chatino, Western Highland</source>
         <extracomment>Language name ctp</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="230"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="209"/>
         <source>Church Slavic</source>
         <extracomment>Language name cu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="233"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="212"/>
         <source>Welsh</source>
         <extracomment>Language name cy</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="235"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="214"/>
         <source>Danish</source>
         <extracomment>Language name da</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="237"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="216"/>
         <source>German</source>
         <extracomment>Language name de</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="239"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="218"/>
         <source>Duruma</source>
         <extracomment>Language name dug</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="242"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="221"/>
         <source>Greek, Modern (1453-)</source>
         <extracomment>Language name el</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="244"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="223"/>
         <source>English</source>
         <extracomment>Language name en</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="246"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="225"/>
         <source>American English</source>
         <extracomment>Language name en_US</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="248"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="227"/>
         <source>English, Middle (1100-1500)</source>
         <extracomment>Language name enm</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="250"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="229"/>
         <source>Esperanto</source>
         <extracomment>Language name eo</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="252"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="231"/>
         <source>Spanish</source>
         <extracomment>Language name es</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="254"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="233"/>
         <source>Estonian</source>
         <extracomment>Language name et</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="256"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="235"/>
         <source>Basque</source>
         <extracomment>Language name eu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="258"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="237"/>
         <source>Persian</source>
         <extracomment>Language name fa</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="260"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="239"/>
         <source>Finnish</source>
         <extracomment>Language name fi</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="264"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="243"/>
         <source>French</source>
         <extracomment>Language name fr</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="266"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="245"/>
         <source>Frisian</source>
         <extracomment>Language name fy</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="268"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="247"/>
         <source>Irish</source>
         <extracomment>Language name ga</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="270"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="249"/>
         <source>Gaelic (Scots)</source>
         <extracomment>Language name gd</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="272"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="251"/>
         <source>Geez</source>
         <extracomment>Language name gez</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="277"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="256"/>
         <source>Gothic</source>
         <extracomment>Language name got</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="279"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="258"/>
         <source>Manx</source>
         <extracomment>Language name gv</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="281"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="260"/>
         <source>Greek, Ancient (to 1453)</source>
         <extracomment>Language name grc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="283"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="262"/>
         <source>Hebrew</source>
         <extracomment>Language name he</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="285"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="264"/>
         <source>Hausa</source>
         <extracomment>Language name hau</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="287"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="266"/>
         <source>Hawaiian</source>
         <extracomment>Language name haw</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="289"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="268"/>
         <source>Hindi</source>
         <extracomment>Language name hi</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="292"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="271"/>
         <source>Croatian</source>
         <extracomment>Language name hr</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="294"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="273"/>
         <source>Haitian Creole</source>
         <extracomment>Language name ht</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="296"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="275"/>
         <source>Hungarian</source>
         <extracomment>Language name hu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="298"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="277"/>
         <source>Huave, San Mateo Del Mar</source>
         <extracomment>Language name huv</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="300"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="279"/>
         <source>Armenian</source>
         <extracomment>Language name hy</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="304"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="283"/>
         <source>Indonesian</source>
         <extracomment>Language name id</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="308"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="287"/>
         <source>Icelandic</source>
         <extracomment>Language name is</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="310"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="289"/>
         <source>Italian</source>
         <extracomment>Language name it</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="312"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="291"/>
         <source>Itzu00e1</source>
         <extracomment>Language name itz</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="314"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="293"/>
         <source>Ixil, San Juan Cotzal</source>
         <extracomment>Language name ixl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="317"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="296"/>
         <source>Japanese</source>
         <extracomment>Language name ja</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="319"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="298"/>
         <source>Jacalteco, Eastern</source>
         <extracomment>Language name jac</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="321"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="300"/>
         <source>Javanese, Caribbean</source>
         <extracomment>Language name jvn</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="323"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="302"/>
         <source>Georgian</source>
         <extracomment>Language name ka</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="325"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="304"/>
         <source>Kekchu00ed</source>
         <comment>kek</comment>
         <extracomment>Language name kek</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="333"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="312"/>
         <source>Korean</source>
         <extracomment>Language name ko</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="336"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="315"/>
         <source>Kurdish</source>
         <extracomment>Language name ku</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="340"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="319"/>
         <source>Kirghiz</source>
         <extracomment>Language name ky</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="342"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="321"/>
         <source>Latin</source>
         <extracomment>Language name la</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="344"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="323"/>
         <source>Lacandon</source>
         <extracomment>Language name lac</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="347"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="326"/>
         <source>Lombard</source>
         <extracomment>Language name lmo</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="351"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="330"/>
         <source>Lithuanian</source>
         <extracomment>Language name lt</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="353"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="332"/>
         <source>Latvian</source>
         <extracomment>Language name lv</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="355"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="334"/>
         <source>Malagasy</source>
         <extracomment>Language name mg</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="358"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="337"/>
         <source>Maori</source>
         <extracomment>Language name mi</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="360"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="339"/>
         <source>Mixe, Isthmus</source>
         <extracomment>Language name mir</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="362"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="341"/>
         <source>Mixtec, Coatzospan</source>
         <extracomment>Language name miz</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="364"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="343"/>
         <source>Macedonian</source>
         <extracomment>Language name mk</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="366"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="345"/>
         <source>Mixtec, Silacayoapan</source>
         <extracomment>Language name mks</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="371"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="350"/>
         <source>More</source>
         <extracomment>Language name mos</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="374"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="353"/>
         <source>Malay</source>
         <extracomment>Language name ms</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="376"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="355"/>
         <source>Maltese</source>
         <extracomment>Language name mt</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="378"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="357"/>
         <source>(Multiple languages)</source>
         <extracomment>Language name mul (meaning that the work has multiple languages)</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="380"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="359"/>
         <source>Mam, Central</source>
         <extracomment>Language name mvc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="382"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="361"/>
         <source>Mam, Todos Santos Cuchumatu00e1n</source>
         <extracomment>Language name mvj</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="384"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="363"/>
         <source>Mixe, Juquila</source>
         <extracomment>Language name mxq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="386"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="365"/>
         <source>Mixtec, Jamiltepec</source>
         <extracomment>Language name mxt</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="388"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="367"/>
         <source>Burmese</source>
         <extracomment>Language name my</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="391"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="370"/>
         <source>Norwegian Bokmu00e5l</source>
         <extracomment>Language name nb</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="393"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="372"/>
         <source>Nahuatl, Michoacu00e1n</source>
         <extracomment>Language name ncl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="396"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="375"/>
         <source>Low German; Low Saxon</source>
         <extracomment>Language name nds</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="398"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="377"/>
         <source>Nepali</source>
         <extracomment>Language name ne</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="400"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="379"/>
         <source>Nahuatl, Guerrero</source>
         <extracomment>Language name ngu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="402"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="381"/>
         <source>Nahuatl, Northern Oaxaca</source>
         <extracomment>Language name nhy</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="405"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="384"/>
         <source>Dutch</source>
         <extracomment>Language name nl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="407"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="386"/>
         <source>Norwegian Nynorsk</source>
         <extracomment>Language name nn</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="409"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="388"/>
         <source>Norwegian</source>
         <extracomment>Language name no</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="418"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="397"/>
         <source>Otomi, Queru00e9taro</source>
         <extracomment>Language name otq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="421"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="400"/>
         <source>Papiamento</source>
         <extracomment>Language name pap</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="424"/>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="430"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="403"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="409"/>
         <source>Uma</source>
         <extracomment>Language name ppk
 ----------
@@ -1307,539 +1452,497 @@ Language name ppk</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="426"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="405"/>
         <source>Polish</source>
         <extracomment>Language name pl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="428"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="407"/>
         <source>Potawatomi</source>
         <extracomment>Language name pot</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="432"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="411"/>
         <source>Persian (Dari)</source>
         <extracomment>Language name prs</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="436"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="415"/>
         <source>Portuguese</source>
         <extracomment>Language name pt</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="438"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="417"/>
         <source>Brasilian Portuguese</source>
         <extracomment>Language name pt_BR</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="441"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="420"/>
         <source>Quichu00e9, West Central</source>
         <extracomment>Language name qut</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="445"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="424"/>
         <source>Romanian</source>
         <extracomment>Language name ro</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="447"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="426"/>
         <source>Russian</source>
         <extracomment>Language name ru</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="452"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="431"/>
         <source>Scots</source>
         <extracomment>Language name sco</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="458"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="437"/>
         <source>Slovak</source>
         <extracomment>Language name sk</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="460"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="439"/>
         <source>Slovenian</source>
         <extracomment>Language name sl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="464"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="443"/>
         <source>Somali</source>
         <extracomment>Language name so</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="466"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="445"/>
         <source>Albanian</source>
         <extracomment>Language name sq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="469"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="448"/>
         <source>Sranan</source>
         <extracomment>Language name srn</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="474"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="453"/>
         <source>Swedish</source>
         <extracomment>Language name sv</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="476"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="455"/>
         <source>Swahili</source>
         <extracomment>Language name sw</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="478"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="457"/>
         <source>Syriac</source>
         <extracomment>Language name syr</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="480"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="459"/>
         <source>Tamil</source>
         <extracomment>Language name ta</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="484"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="463"/>
         <source>Thai</source>
         <extracomment>Language name th</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="487"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="466"/>
         <source>Tagalog</source>
         <extracomment>Language name tl</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="489"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="468"/>
         <source>Klingon</source>
         <extracomment>Language name tlh</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="491"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="470"/>
         <source>Tswana</source>
         <extracomment>Language name tn</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="493"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="472"/>
         <source>Turkish</source>
         <extracomment>Language name tr</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="497"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="476"/>
         <source>Tektiteko</source>
         <extracomment>Language name ttc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="500"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="479"/>
         <source>Tahitian</source>
         <extracomment>Language name ty</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="502"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="481"/>
         <source>Tzotzil, Zinacantu00e1n</source>
         <extracomment>Language name tzz</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="505"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="484"/>
         <source>Ukrainian</source>
         <extracomment>Language name uk</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="508"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="487"/>
         <source>Orya</source>
         <extracomment>Language name ury</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="510"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="489"/>
         <source>Uspanteco</source>
         <extracomment>Language name usp</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="513"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="492"/>
         <source>Vietnamese</source>
         <extracomment>Language name vi</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="517"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="496"/>
         <source>Xhosa</source>
         <extracomment>Language name xh</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="519"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="498"/>
         <source>Mixtec, Diuxi-Tilantongo</source>
         <extracomment>Language name xtd</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="521"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="500"/>
         <source>Yiddish</source>
         <extracomment>Language name yi</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="523"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="502"/>
         <source>Yoryba</source>
         <extracomment>Language name yo</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="526"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="505"/>
         <source>Zapotec, San Juan Guelavu00eda</source>
         <extracomment>Language name zab</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="528"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="507"/>
         <source>Zapotec, Mitla</source>
         <extracomment>Language name zaw</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="530"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="509"/>
         <source>Chinese</source>
         <extracomment>Language name zh</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="532"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="511"/>
         <source>Zapotec, Amatlu00e1n</source>
         <extracomment>Language name zpo</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="534"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="513"/>
         <source>Zapotec, Zoogocho</source>
         <extracomment>Language name zpq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="536"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="515"/>
         <source>Zapotec, Yalu00e1lag</source>
         <extracomment>Language name zpu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="538"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="517"/>
         <source>Zapotec, Chichicapan</source>
         <extracomment>Language name zpv</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="540"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="519"/>
         <source>Zapotec, Southern Rincon</source>
         <extracomment>Language name zsr</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="542"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="521"/>
         <source>Zapotec, Quioquitani-Quieru00ed</source>
         <extracomment>Language name ztq</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="544"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="523"/>
         <source>Zapotec, Yatee</source>
         <extracomment>Language name zty</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/clanguagemgr.cpp" line="546"/>
+        <location filename="../../backend/managers/clanguagemgr.cpp" line="525"/>
         <source>Zulu</source>
         <extracomment>Language name zu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="337"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="352"/>
         <source>Footnotes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="339"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="354"/>
         <source>Strong&apos;s numbers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="341"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="356"/>
         <source>Headings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="343"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="358"/>
         <source>Morphological tags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="345"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="360"/>
         <source>Lemmas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="347"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="362"/>
         <source>Hebrew vowel points</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="349"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="364"/>
         <source>Hebrew cantillation marks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="351"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="366"/>
         <source>Greek accents</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="353"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="368"/>
         <source>Red letter words</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="355"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="370"/>
         <source>Textual variants</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="357"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="372"/>
         <source>Scripture cross-references</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/managers/cswordbackend.cpp" line="359"/>
+        <location filename="../../backend/managers/cswordbackend.cpp" line="374"/>
         <source>Morph segmentation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/rendering/chtmlexportrendering.cpp" line="243"/>
-        <source>Export</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../util/tool.cpp" line="34"/>
+        <location filename="../../util/tool.cpp" line="47"/>
         <source>Overwrite File?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="36"/>
+        <location filename="../../util/tool.cpp" line="49"/>
         <source>The file already exists.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="37"/>
+        <location filename="../../util/tool.cpp" line="50"/>
         <source>Do you want to overwrite it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="56"/>
+        <location filename="../../util/tool.cpp" line="70"/>
+        <location filename="../../util/tool.cpp" line="76"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="58"/>
-        <source>The file couldn&apos;t be saved.</source>
+        <location filename="../../util/tool.cpp" line="72"/>
+        <source>Error while writing to file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="59"/>
+        <location filename="../../util/tool.cpp" line="73"/>
+        <source>Please check that enough disk space is available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../util/tool.cpp" line="78"/>
+        <source>The file couldn&apos;t be opened for saving.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../util/tool.cpp" line="79"/>
         <source>Please check permissions etc.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="183"/>
+        <location filename="../../util/tool.cpp" line="202"/>
         <source>Take care, this work contains cult / questionable material!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="193"/>
+        <location filename="../../util/tool.cpp" line="212"/>
         <source>Encrypted - needs unlock key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="199"/>
+        <location filename="../../util/tool.cpp" line="218"/>
         <source>Updated version available!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="204"/>
+        <location filename="../../util/tool.cpp" line="223"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="212"/>
+        <location filename="../../util/tool.cpp" line="231"/>
         <source>Installed version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/tool.cpp" line="217"/>
+        <location filename="../../util/tool.cpp" line="236"/>
         <source>Double click for more information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="130"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="248"/>
-        <source>Commentaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="131"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="254"/>
-        <source>Cults/Unorthodox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="132"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="253"/>
-        <source>Maps and Images</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="133"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="252"/>
-        <source>Daily Devotionals</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="134"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="250"/>
-        <source>Lexicons and Dictionaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="135"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="247"/>
-        <source>Bibles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="136"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="251"/>
-        <source>Glossaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="137"/>
-        <location filename="../../backend/btmoduletreeitem.cpp" line="249"/>
-        <source>Books</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QPushButton</name>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="52"/>
-        <location filename="../../util/dialogutil.cpp" line="81"/>
+        <location filename="../../util/dialogutil.cpp" line="58"/>
+        <location filename="../../util/dialogutil.cpp" line="94"/>
         <source>Yes</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished">Да</translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="57"/>
-        <location filename="../../util/dialogutil.cpp" line="83"/>
+        <location filename="../../util/dialogutil.cpp" line="63"/>
+        <location filename="../../util/dialogutil.cpp" line="96"/>
         <source>No</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished">Нет</translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="70"/>
+        <location filename="../../util/dialogutil.cpp" line="83"/>
         <source>OK</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="71"/>
+        <location filename="../../util/dialogutil.cpp" line="84"/>
         <source>Open</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="72"/>
+        <location filename="../../util/dialogutil.cpp" line="85"/>
         <source>Save</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="73"/>
+        <location filename="../../util/dialogutil.cpp" line="86"/>
         <source>Cancel</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished">Отмена</translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="74"/>
+        <location filename="../../util/dialogutil.cpp" line="87"/>
         <source>Close</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished">Закрыть</translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="75"/>
+        <location filename="../../util/dialogutil.cpp" line="88"/>
         <source>Discard</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="76"/>
+        <location filename="../../util/dialogutil.cpp" line="89"/>
         <source>Apply</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="77"/>
+        <location filename="../../util/dialogutil.cpp" line="90"/>
         <source>Reset</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="78"/>
+        <location filename="../../util/dialogutil.cpp" line="91"/>
         <source>Restore defaults</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="79"/>
+        <location filename="../../util/dialogutil.cpp" line="92"/>
         <source>Help</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="80"/>
+        <location filename="../../util/dialogutil.cpp" line="93"/>
         <source>Save All</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="82"/>
+        <location filename="../../util/dialogutil.cpp" line="95"/>
         <source>Yes to all</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../util/dialogutil.cpp" line="84"/>
+        <location filename="../../util/dialogutil.cpp" line="97"/>
         <source>No to all</source>
         <comment>Dialog Button</comment>
         <translation type="unfinished"></translation>
