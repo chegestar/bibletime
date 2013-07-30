@@ -473,9 +473,6 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
         w = new BtMiniMainWidget;
 		fontSizeChanged = true;
 
-        qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
-                    w->physicalDpiX() << w->physicalDpiY();
-
 		if(expand)
 		{
 			w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
@@ -487,22 +484,27 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 			w->show();
 			w->raise();
 		}
+
+		qDebug() << "Surface:" << w->size();
+        qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
+                    w->physicalDpiX() << w->physicalDpiY();
     }
 
 	if(fontSizeChanged)
 	{
-#ifdef Q_OS_SYMBIAN
-		double factor = 14.0;
-#else
 		// desktop 96 dpi 72 physical, 16 factor is good
 		// htc touch diamond 192, 16 factor, text is little small on screen
-		// htc hd2 android 232, factor 16 is good
+		// htc hd2 android 232 800x480, factor 16 is good
 		double factor = 16.0;
+
+#ifdef Q_OS_SYMBIAN
+        factor *= 0.95;
 #endif
 
+        int minResolution = qMin(w->size().width(), w->size().height());
+
 		QFont f = w->font();
-		f.setPixelSize(qMin(w->size().width(), w->size().height()) / factor *
-			btConfig().value<int>("mini/fontScale", 100) / 100);
+        f.setPixelSize(minResolution / factor * btConfig().value<int>("mini/fontScale", 100) / 100);
 		w->setFont(f);
     }
 

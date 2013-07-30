@@ -1,7 +1,7 @@
 # Configuration
 VERSION = 0.9.8
 
-CONFIG += webkit clucene svg
+CONFIG += webkit clucene svg xml
 
 
 # Base section, nothing platform specific
