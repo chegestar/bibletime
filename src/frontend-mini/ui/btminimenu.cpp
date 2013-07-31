@@ -430,6 +430,14 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
                     d_ptr->_canceled = true; // indicate that window shuld be closed on MouseRelease
 			    return true;
             }
+
+#ifdef Q_OS_ANDROID
+            // FIX events was passed to widgets below
+            foreach(QWidget *w, findChildren<QWidget*>())
+                if(w->geometry().contains(p))
+                    return false;
+            return true;
+#endif
         }
 		break;
     case QEvent::Close:
@@ -443,7 +451,6 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
 void BtMiniMenu::closeMenus()
 {
     foreach(BtMiniMenu *m, BtMiniMenuPrivate::parentWidget()->findChildren<BtMiniMenu*>())
-        //m->close();
         m->cancel();
 }
 
@@ -463,6 +470,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
     QProgressBar *pb = new QProgressBar(dialog);
     pb->setRange(0, 100);
+    pb->setValue(0);
 	pb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     vl->addWidget(pb, 0, Qt::AlignCenter);
 
