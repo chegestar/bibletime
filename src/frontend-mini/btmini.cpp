@@ -9,6 +9,9 @@
 *
 **********/
 
+#include <QtCore/qmath.h>
+#include <QtDebug>
+
 #include <QApplication>
 #include <QBitmap>
 #include <QBoxLayout>
@@ -29,7 +32,6 @@
 #include <QTime>
 #include <QTimer>
 #include <QTranslator>
-#include <QtDebug>
 
 #include <swlog.h>
 
@@ -82,36 +84,31 @@
 
 jmethodID   jniBtMiniVibrateMethodId = 0;
 JavaVM     *jniBtMiniVm;
-jclass      jniBtMiniClass;
+jclass      jniBtMiniClass = 0;
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 {
     JNIEnv  *p_env;
     jniBtMiniVm = vm;
 
-    if (jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
+    if(jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
     {
-        qCritical("Jni can't get environment");
-        return -1;
+        qWarning("Jni can't get environment");
+        return JNI_VERSION_1_6;
     }
 
 #if QT_VERSION < 0x050000
-    jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity");
+    if(!(jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity")))
 #else
-    jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity");
+    if(!(jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity")))
 #endif
-    if (!jniBtMiniClass)
     {
-        qCritical("Jni can't get class");
-        return -1;
+        qWarning("Jni can't get class");
+        return JNI_VERSION_1_6;
     }
 
-    jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V");
-    if (!jniBtMiniVibrateMethodId)
-    {
-        qCritical("Jni can't get method");
-        return -1;
-    }
+    if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
+        qWarning("Jni can't get method");
 
     return JNI_VERSION_1_6;
 }
@@ -129,6 +126,9 @@ extern "C"
 
 void BtMini::vibrate(int milliseconds)
 {
+    if(btConfig().value<bool>("mini/disableVibration", false))
+        return;
+
 #ifdef Q_OS_WINCE
     NLED_SETTINGS_INFO settings;
     settings.LedNum = 1;
@@ -144,14 +144,19 @@ void BtMini::vibrate(int milliseconds)
 #ifdef ANDROID
     JNIEnv  *p_env;
 
-    if (jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
+    if(jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
     {
-        qCritical("Jni can't attach to thread");
+        qWarning("Jni can't attach to thread");
+        return;
+    }
+
+    if(!jniBtMiniClass || !jniBtMiniVibrateMethodId)
+    {
+        qWarning("Have no Jni classes");
         return;
     }
 
     jlong ms = milliseconds;
-
     p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
 
     jniBtMiniVm->DetachCurrentThread();
@@ -178,6 +183,23 @@ void BtMini::vibrate(int milliseconds)
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 #endif
 }
+
+
+bool haveBible()
+{
+    foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+        if(m->type() == CSwordModuleInfo::Bible)
+            return true;
+    return false;
+}
+
+void changeFontSize(QWidget *w, double factor)
+{
+    QFont f(w->font());
+    f.setPixelSize(f.pixelSize() * factor);
+    w->setFont(f);
+}
+
 
 // Main stacked widget
 class BtMiniMainWidget : public QStackedWidget
@@ -440,12 +462,11 @@ void BtMini::reset(BtMiniState type)
 
 
 
-
-
 QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 {
     static BtMiniMainWidget *w = 0;
     static QString style;
+    static qreal sizeFactor = 10.0; // default font size
 
 
     if(!newStyle.isEmpty())
@@ -466,7 +487,7 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
         QSize size(480, 640);
 		bool expand = false;
 #else
-		QSize size(QApplication::desktop()->size());
+        QSize size(QApplication::desktop()->screenGeometry().size());
 		bool expand = true;
 #endif
 
@@ -483,48 +504,54 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 			w->resize(size);
 			w->show();
 			w->raise();
-		}
+        }
 
-		qDebug() << "Surface:" << w->size();
-        qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
-                    w->physicalDpiX() << w->physicalDpiY();
+        /*  device          minimum dimention   logical dpi         physical dpi
+            htc hd2         480                 138                 254
+                factor 30 is ok
+            htc diamond                         192
+                divider 16 - text is little small
+            desktop         480                 96                  72
+                factor 26 is ok
+            nexus 10        1454                200                 321
+                factor 72 is ok
+            nexus 7         800                 133                 214
+                factor 45 is ok
+        */
+
+        //int screenFactor = qMin(QApplication::desktop()->screenGeometry().width() / (float)w->physicalDpiX(),
+        //                        QApplication::desktop()->screenGeometry().height() / (float)w->physicalDpiY());
+        //sizeFactor = qPow(screenFactor, 0.8) * (expand ? 20.0f : 2.0f);
+        //sizeFactor = w->physicalDpiY() / 5.2;
+
+        if(expand)
+        {
+            qreal dpi = (w->physicalDpiX()/2.0 + w->physicalDpiY()/2.0);
+            qreal screenSize = qSqrt(qPow(QApplication::desktop()->screenGeometry().width(), 2) +
+                                     qPow(QApplication::desktop()->screenGeometry().height(), 2)) / dpi;
+            sizeFactor = dpi / (32.0 / screenSize);
+        }
+        else
+            sizeFactor = w->logicalDpiY() / 4.6;
+
+
+        sizeFactor = qMax((qreal)10.0, qMin((qreal)200.0, sizeFactor));
+
+        qDebug() << "Surface:" << w->size() << "  Screen:" << QApplication::desktop()->screenGeometry() <<
+                    "  Dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
+                    w->physicalDpiX() << w->physicalDpiY() << "  Size factor:" << sizeFactor;
     }
 
-	if(fontSizeChanged)
-	{
-		// desktop 96 dpi 72 physical, 16 factor is good
-		// htc touch diamond 192, 16 factor, text is little small on screen
-		// htc hd2 android 232 800x480, factor 16 is good
-		double factor = 16.0;
-
-#ifdef Q_OS_SYMBIAN
-        factor *= 0.95;
-#endif
-
-        int minResolution = qMin(w->size().width(), w->size().height());
-
-		QFont f = w->font();
-        f.setPixelSize(minResolution / factor * btConfig().value<int>("mini/fontScale", 100) / 100);
-		w->setFont(f);
+    if(fontSizeChanged)
+    {
+        QFont f = w->font();
+        f.setPixelSize(sizeFactor * btConfig().value<int>("mini/fontScale", 100) / 100);
+        w->setFont(f);
     }
 
     return w;
 }
 
-bool haveBible()
-{
-    foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-        if(m->type() == CSwordModuleInfo::Bible)
-            return true;
-    return false;
-}
-
-void changeFontSize(QWidget *w, double factor)
-{
-    QFont f(w->font());
-    f.setPixelSize(f.pixelSize() * factor);
-    w->setFont(f);
-}
 
 QWidget * BtMini::worksWidget(bool showTip, bool reset)
 {
