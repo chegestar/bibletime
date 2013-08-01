@@ -33,7 +33,6 @@ Global
 		{8D3A6DD2-0323-4FCA-B7DD-A74E0207C84B}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release
 		{8D3A6DD2-0323-4FCA-B7DD-A74E0207C84B}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Release
 		{6B1A4460-0156-4728-9011-641D269FA7EB}.Debug|Win32.ActiveCfg = Release
-		{6B1A4460-0156-4728-9011-641D269FA7EB}.Debug|Win32.Build.0 = Release
 		{6B1A4460-0156-4728-9011-641D269FA7EB}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release
 		{6B1A4460-0156-4728-9011-641D269FA7EB}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Release
 		{6B1A4460-0156-4728-9011-641D269FA7EB}.Release|Win32.ActiveCfg = Release

@@ -483,35 +483,13 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 
     if(!w)
     {
-#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
-        QSize size(480, 640);
-		bool expand = false;
-#else
-        QSize size(QApplication::desktop()->screenGeometry().size());
-		bool expand = true;
-#endif
-
         w = new BtMiniMainWidget;
-		fontSizeChanged = true;
 
-		if(expand)
-		{
-			w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
-			w->showExpanded();
-		}
-		else
-		{
-			w->resize(size);
-			w->show();
-			w->raise();
-        }
-
-        /*  device          minimum dimention   logical dpi         physical dpi
-            htc hd2         480                 138                 254
+        /*  device          resolution          logical dpi         physical dpi
+            htc hd2         800x480             138                 254
                 factor 30 is ok
             htc diamond                         192
-                divider 16 - text is little small
-            desktop         480                 96                  72
+            desktop         1920x1200           96                  72
                 factor 26 is ok
             nexus 10        1454                200                 321
                 factor 72 is ok
@@ -519,27 +497,31 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
                 factor 45 is ok
         */
 
-        //int screenFactor = qMin(QApplication::desktop()->screenGeometry().width() / (float)w->physicalDpiX(),
-        //                        QApplication::desktop()->screenGeometry().height() / (float)w->physicalDpiY());
-        //sizeFactor = qPow(screenFactor, 0.8) * (expand ? 20.0f : 2.0f);
-        //sizeFactor = w->physicalDpiY() / 5.2;
+#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
+        w->resize(QSize(480, 640));
+        w->show();
+        w->raise();
 
-        if(expand)
-        {
-            qreal dpi = (w->physicalDpiX()/2.0 + w->physicalDpiY()/2.0);
-            qreal screenSize = qSqrt(qPow(QApplication::desktop()->screenGeometry().width(), 2) +
-                                     qPow(QApplication::desktop()->screenGeometry().height(), 2)) / dpi;
-            sizeFactor = dpi / (32.0 / screenSize);
-        }
-        else
-            sizeFactor = w->logicalDpiY() / 4.6;
+        sizeFactor = w->logicalDpiY() / 4.6;
+#else
+        w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
+        w->showExpanded();
 
+        qreal dpi = (w->physicalDpiX()/2.0 + w->physicalDpiY()/2.0);
+        qreal screenSize = qSqrt(qPow(QApplication::desktop()->screenGeometry().width(), 2) +
+                                 qPow(QApplication::desktop()->screenGeometry().height(), 2)) / dpi;
+
+        // average of fixed physical (3mm) font size and screen resolution dependent size
+        sizeFactor = (dpi / (32.0 / screenSize) + (dpi / 8.4)) / 2.0;
+#endif
 
         sizeFactor = qMax((qreal)10.0, qMin((qreal)200.0, sizeFactor));
 
         qDebug() << "Surface:" << w->size() << "  Screen:" << QApplication::desktop()->screenGeometry() <<
                     "  Dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
                     w->physicalDpiX() << w->physicalDpiY() << "  Size factor:" << sizeFactor;
+
+        fontSizeChanged = true;
     }
 
     if(fontSizeChanged)

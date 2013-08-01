@@ -5,11 +5,11 @@ kalemas@mail.ru :
 +   setting options for views without exiting application
     resize subview width
     replace panel with android
-    move all logic from models to btminilogic.cpp
+?   move all logic from models to btminilogic.cpp
     add abiblity to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
-
+	download indexes feature
 
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...

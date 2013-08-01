@@ -455,7 +455,6 @@ public:
 #ifdef BT_MINI_WEBKIT
         if(useWebKit)
         {
-
             QWebPage *wp = new QWebPage(widget);
             
             if(wp == 0)
@@ -623,6 +622,11 @@ public:
             painter->save();
             painter->translate(p);
             _wp->mainFrame()->render(painter, QWebFrame::ContentsLayer, clipping);
+
+			//painter->setBrush(Qt::NoBrush);
+			//painter->setPen(QPen(Qt::black, 1));
+			//painter->drawRect(_wp->mainFrame()->geometry());
+
             painter->restore();
         }
 #endif
