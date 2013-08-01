@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.8
+VERSION = 0.9.9
 
 CONFIG += webkit clucene svg xml
 
@@ -331,6 +331,8 @@ LIBS += -lws2_32
 mac {
 DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
 DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
+
+CONFIG -= webkit
 }
 
 # Android platform
