@@ -333,6 +333,8 @@ DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
 DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 
 CONFIG -= webkit
+
+LIBS += -framework AudioToolbox
 }
 
 # Android platform
