@@ -1033,6 +1033,10 @@ void BtMiniMessageHandler(QtMsgType type, const QMessageLogContext &context, con
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_IOS
+    Q_IMPORT_PLUGIN(QSvgPlugin);
+#endif
+
 #if QT_VERSION < 0x050000
     qInstallMsgHandler(BtMiniMessageHandler);
     BibleTimeApp app(argc, argv);
@@ -1110,38 +1114,3 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
-
-
-
-///* HACK declare to resolve dependencies, work for WP7-fully-unlocked devices */
-//void report(const char *msg, ...)
-//{
-//	char buffer[256];
-//	va_list args;
-//	va_start (args, msg);
-//	vsprintf (buffer,msg, args);
-//	va_end (args);
-
-//	printf(buffer);
-
-//	FILE *fp;
-
-//	fp = fopen("\btlog.txt", "a");
-//	if (fp != NULL)
-//	{
-//		fputs("dummy function ", fp);
-//		fputs(buffer, fp);
-//	}
-
-//	fclose(fp);
-//}
-//int __cdecl atexit(void (__cdecl *)(void))
-//{
-//	report("atexit\n");
-//	return 0;
-//}
-
-//void __cdecl exit (int code)
-//{
-//	report("exit\n");
-//}
