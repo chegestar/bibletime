@@ -5,18 +5,11 @@ kalemas@mail.ru :
 +   setting options for views without exiting application
     resize subview width
     replace panel with android
-    move all logic from models to btminilogic.cpp
+?   move all logic from models to btminilogic.cpp
     add abiblity to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
-		make models accesable just like widgets
-		maybe text model should use columns instead of invisible first row
-	clippings dialog
-		open from bottom panel, contain out of lists just like text widget, each list could be named
-		long tap have item "Setnd to Clippings", send is to currently active list, long tap on entry in 
-		clippings have item "Cut" and "Paste", entry may darken when cutten
-	download index feature
-
+    download indexes feature
 
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...

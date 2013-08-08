@@ -807,6 +807,25 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
         w->setLayout(vl);
 
         updateRemoteSources(false);
+
+        // scroll to proper language
+        QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
+        const CLanguageMgr::Language *l;
+
+        foreach(const CLanguageMgr::Language *ll, CLanguageMgr::instance()->languages()->values())
+            if(ll->englishName() == languageEnglish)
+            {
+                l = ll;
+                break;
+            }
+
+		if(l && l->isValid())
+		{
+			qDebug() << l->translatedName() << l->englishName() << l->abbrev();
+			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, l->translatedName(), 2);
+			if(il.size() == 1)
+				v->scrollTo(il[0].child(0, 0));
+		}
     }
 
     return w;
@@ -899,24 +918,25 @@ void BtMini::installerQuery(const QModelIndex &index)
             BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
 
             QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
-            dialog->show();
+			connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+			dialog->show();
 
-            connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+            //// find most parent index corresponding to remote source
+            //QModelIndex si = index;
+            //while(si.parent().isValid())
+            //    si = si.parent();
+            //sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[si.row()]);
 
-            // find most parent index corresponding to remote source
-            QModelIndex si = index;
-            while(si.parent().isValid())
-                si = si.parent();
+			sword::InstallSource is = BtInstallBackend::source(index.data(BtMini::RepositoryRole).toString());
 
-            sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[si.row()]);
             int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
 
-            if (status != 0 || dialog->wasCanceled())
+            if (status != 0)
             {
                 BtMiniMenu::execQuery(QString(tr("Module was not installed")));
                 qDebug() << "Failed to install" << m->name() << status;
             }
-            else
+            else if(!dialog->wasCanceled())
                 CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
 
             // Bible installed, can switch to reader
@@ -964,12 +984,15 @@ void BtMini::updateRemoteSources(bool download)
         if(be->moduleList().size() == 0)
             continue;
 
-        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(false), m);
+        BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
+        g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
+
+        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g, m);
         mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
             "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
         mm->setSourceModel(be->model());
 
-        m->addModel(mm, "<center><b>" + s + "</b></center>");
+        m->addModel(mm, s);
     }
 
     v->setModel(m);
