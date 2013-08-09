@@ -393,7 +393,7 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 				cid = d->_languages[lid]._children.size() - 1;
 			}
 
-			d->_languages[lid]._children[cid]._children.append(ModuleItem("<font size=\"50%\"><center><b>" + name + "</b></center></font>"));
+			d->_languages[lid]._children[cid]._children.append(ModuleItem("<font size=\"66%\"><center><b>" + name + "</b></center></font>"));
 
 			// add modules
 			for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)

@@ -77,7 +77,7 @@ public:
                     "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
         _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
                     "</td> <td align=\"right\"> > </td></tr></table></b>";
-        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("News and Updates:") +
+        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Changelog") + ":" +
                     "</td> <td align=\"right\"> > </td></tr></table></b>";
         _strings << "<body><font size=\"50%\"><center>" +
                     BtMiniSettingsModel::tr("About") + "</center></font></body>";
@@ -276,12 +276,15 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
     case tipWorksAddon:
         return QString(tr("Following information you could access again in <b>Settings</b> under the <b>Handbook</b> item.<br/>"));
     case news:
-        return QString(tr("<body><b><center>News and Updates:</center></b><br/>") +
-                       tr("<b>0.9.5</b> - parallel Bible display, make long tap in module selection dialog "
-                          "and press \"") + tr("Add Parallel") + "\". This feature is not well tested and may not work "
-                          "as expected.<br/>" +
-                       tr("<b>0.9.3</b> - was added support for General Books and search in non Bible "
-                          "modules was fixed.") +
+        return QString("<body><b><center>" + tr("News and Updates") + ":</center></b><br/>" +
+					   "<b>0.9.11</b> - " + tr("combined module manager by languages, so you could observe all available modules for "
+						  "particular language") + ".<br/>" +
+					   "<b>0.9.8</b> - " + tr("new logic for base font size selection. Tablets should looks better now.<br/>") +
+					   "<b>0.9.5</b> - " + tr("parallel Bible display, make long tap in module selection dialog "
+						  "and press") + " \"" + tr("Add Parallel") + "\". " + tr("This feature is finished and may not work "
+					      "as expected") + ".<br/>" +
+                       "<b>0.9.3</b> - " + tr("was added support for General Books and search in non Bible "
+                          "modules was fixed") + "." +
                        "</body>");
     default:
         return QVariant();
