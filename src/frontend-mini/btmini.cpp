@@ -10,6 +10,8 @@
 **********/
 
 #include <QtCore/qmath.h>
+#include <QtGlobal>
+#include <QtPlugin>
 #include <QtDebug>
 
 #include <QApplication>
@@ -18,7 +20,6 @@
 #include <QDesktopWidget>
 #include <QFile>
 #include <QFontDatabase>
-#include <QtGlobal>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPainter>
