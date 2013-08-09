@@ -808,21 +808,23 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 
         updateRemoteSources(false);
 
-        // scroll to proper language
-        QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
-        const CLanguageMgr::Language *l;
+		// scroll to proper language
+		const CLanguageMgr::Language *sl = 0;
+		QList<const CLanguageMgr::Language *> languges(CLanguageMgr::instance()->languages()->values());
+		QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
 
-        foreach(const CLanguageMgr::Language *ll, CLanguageMgr::instance()->languages()->values())
-            if(ll->englishName() == languageEnglish)
-            {
-                l = ll;
-                break;
-            }
-
-		if(l && l->isValid())
+		foreach(const CLanguageMgr::Language *ll, languges)
 		{
-			qDebug() << l->translatedName() << l->englishName() << l->abbrev();
-			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, l->translatedName(), 2);
+			if(ll->englishName() == languageEnglish)
+			{
+				sl = ll;
+				break;
+			}
+		}
+
+		if(sl && sl->isValid())
+		{
+			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, sl->translatedName(), 2);
 			if(il.size() == 1)
 				v->scrollTo(il[0].child(0, 0));
 		}

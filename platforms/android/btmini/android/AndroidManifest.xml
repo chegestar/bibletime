@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest android:versionCode="6" xmlns:android="http://schemas.android.com/apk/res/android" package="org.qtproject.bibletimemini" android:versionName="0.9.11">
-    <application android:name="org.qtproject.qt5.android.bindings.QtApplication" android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name="org.qtproject.qt5.android.bindings.QtActivity" android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden" android:label="@string/app_name">
+<manifest android:versionCode="7" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.9.12" package="org.qtproject.bibletimemini">
+    <application android:label="@string/app_name" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:icon="@drawable/icon">
+        <activity android:label="@string/app_name" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -31,7 +31,7 @@
             <!-- Splash screen -->
         </activity>
     </application>
-    <supports-screens android:anyDensity="true" android:smallScreens="true" android:normalScreens="true" android:largeScreens="true"/>
+    <supports-screens android:anyDensity="true" android:normalScreens="true" android:smallScreens="true" android:largeScreens="true"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
