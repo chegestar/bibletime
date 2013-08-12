@@ -1129,7 +1129,8 @@ int main(int argc, char *argv[])
     // Let's run...
 #ifdef BT_MINI_QML
     QQuickView view;
-    view.setSource(QUrl("qrc:/bibletime/qml/main.qml"));
+    //view.setSource(QUrl("qrc:/bibletime/qml/metro.qml"));
+    view.setSource(QUrl::fromLocalFile("c:/dev/bt/platforms/qml/btmini/metro.qml"));
     view.connect(view.engine(), SIGNAL(quit()), SLOT(close()));
     view.setResizeMode(QQuickView::SizeRootObjectToView);
 
