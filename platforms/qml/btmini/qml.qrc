@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/bibletime/qml">
-        <file>main.qml</file>
         <file>metro.qml</file>
     </qresource>
 </RCC>
