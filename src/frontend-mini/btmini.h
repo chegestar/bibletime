@@ -37,6 +37,7 @@ public:
         /** Referenced Sword module or key (QString). */
         ModuleRole = Qt::UserRole + 256,
         PlaceRole,
+        PlaceShortRole,
 		RepositoryRole,
         /** Preview before thread will calculate item DisplayRole (QString). */
         PreviewRole

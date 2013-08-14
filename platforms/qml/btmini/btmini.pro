@@ -1,4 +1,8 @@
-QT += widgets quick qml
+CONFIG += qml
+
+include(../../common/btmini/common.pro)
+
+
 OTHER_FILES += metro.qml \
     android/AndroidManifest.xml \
     android/res/layout/splash.xml \
@@ -29,5 +33,6 @@ OTHER_FILES += metro.qml \
     android/src/org/qtproject/qt5/android/bindings/QtApplication.java \
     android/version.xml
 RESOURCES += qml.qrc
-SOURCES += main.cpp
+
+//SOURCES += main.cpp
 

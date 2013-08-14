@@ -7,7 +7,21 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQuickView view;
-    view.setSource(QUrl("qrc:/bibletime/qml/metro.qml"));
+
+    QList<QUrl> files;
+    files << QUrl("file:/sdcard/main.qml");
+    files << QUrl("file:/" + QApplication::applicationDirPath() + "/main.qml");
+    files << QUrl("qrc:/bibletime/qml/metro.qml");
+
+    foreach(QUrl s, files)
+    {
+        if(QFile(s.toLocalFile()).exists() || s.toString().left(4) == "qrc:")
+        {
+            view.setSource(s);
+            break;
+        }
+    }
+
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.show();
 

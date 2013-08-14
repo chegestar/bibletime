@@ -162,6 +162,10 @@ TRANSLATIONS += ../../../i18n/messages/bibletime_ui_ru.ts
 # Platforms section, can turn off/on options below
 greaterThan(QT_MAJOR_VERSION, 4):QT += widgets
 svg:QT += svg xml
+qml {
+DEFINES += BT_MINI_QML
+QT += qml quick
+}
 
 # Windows platform
 windows {

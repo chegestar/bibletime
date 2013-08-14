@@ -10,6 +10,11 @@ kalemas@mail.ru :
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
     download indexes feature
+	
+	install module logic:
+		pressing on a module display dialog 'Dow You want to Install %1?'
+		any existing panel becomes a progress bar with cancel button
+		installation starts in parallel thread, user able to proceed selecting modules
 
     settings ui
         restrict v11n mode feature: off, kjv, synodal, vulg, ...

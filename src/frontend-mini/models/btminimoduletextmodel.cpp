@@ -48,6 +48,7 @@ public:
     BtMiniModuleTextModelPrivate()
     {
 		_isSearch = false;
+        _singleModule = false;
     }
     
     ~BtMiniModuleTextModelPrivate()
@@ -214,7 +215,10 @@ public:
     /** Parents count. */
     inline int indexDepth(const QModelIndex &index) const
     {
-        return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 0;
+        if(_singleModule)
+            return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 1;
+        else
+            return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 0;
     }
 
     /** List for index. */
@@ -318,6 +322,8 @@ public:
 		}
 		else
 		{
+            Q_CHECK_PTR(_lists[i]._module);
+
 			o.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
 			o.limitItems      = true;
 			o.perCycle        = 1;
@@ -424,10 +430,12 @@ public:
 	QString                     _searchText;
 	bool                        _isSearch;
 
+    bool                        _singleModule;
+
 	mutable QMutex              _mutex;
 };
 
-BtMiniModuleTextModel::BtMiniModuleTextModel(QStringList &modules, QObject *parent)
+BtMiniModuleTextModel::BtMiniModuleTextModel(QStringList modules, QObject *parent)
     : QAbstractItemModel(parent), d_ptr(new BtMiniModuleTextModelPrivate)
 {
     Q_D(BtMiniModuleTextModel);
@@ -437,6 +445,16 @@ BtMiniModuleTextModel::BtMiniModuleTextModel(QStringList &modules, QObject *pare
 
     for(int i = 0; i < modules.size(); ++i)
         d->insertModule(i, modules[i]);
+}
+
+BtMiniModuleTextModel::BtMiniModuleTextModel(QObject *parent)
+    : QAbstractItemModel(parent), d_ptr(new BtMiniModuleTextModelPrivate)
+{
+    Q_D(BtMiniModuleTextModel);
+
+    d->_ld = new BtMiniLayoutDelegate(this);
+    d->_ld->setPlainMode(true);
+    d->_singleModule = true;
 }
 
 BtMiniModuleTextModel::~BtMiniModuleTextModel()
@@ -461,7 +479,7 @@ int BtMiniModuleTextModel::rowCount(const QModelIndex &parent) const
         return d->_lists.size();
     case 1:
 		{
-			const BtMiniModuleTextModelPrivate::List *l = &d->_lists[parent.internalId()];
+            const BtMiniModuleTextModelPrivate::List *l = d->indexList(parent);
 
 			if(l->_hasScope)
 				return l->_scopeMap.size();
@@ -621,7 +639,8 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 				}
 			}
         }
-        
+
+    case BtMini::PlaceShortRole:
     case BtMini::PlaceRole:
 		{
 			const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
@@ -642,7 +661,12 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                     return lm->entries()[l->_hasScope ? l->_scopeMap[index.row()] : index.row()];
                 }
                 else if(d->indexDepth(index) == 2)
-					return d->indexToVerseKey(index).key();
+                {
+                    if(role == BtMini::PlaceShortRole)
+                        return d->indexToVerseKey(index).getShortText();
+                    else
+                        return d->indexToVerseKey(index).key();
+                }
 			}
 		}
         break;
@@ -728,6 +752,36 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString keyName) const
     }
 
     return QModelIndex();
+}
+
+int BtMiniModuleTextModel::keyIndex(QString key) const
+{
+    Q_D(const BtMiniModuleTextModel);
+
+    Q_ASSERT(d->_singleModule);
+
+    return keyIndex(0, key).row();
+}
+
+QString BtMiniModuleTextModel::getModule() const
+{
+    Q_D(const BtMiniModuleTextModel);
+    Q_ASSERT(d->_singleModule);
+
+    if(d->_lists.size() == 1)
+        return d->_lists[0]._name;
+    return QString();
+}
+
+void BtMiniModuleTextModel::setModule(QString module)
+{
+    Q_D(BtMiniModuleTextModel);
+    Q_ASSERT(d->_singleModule);
+
+    if(d->_lists.size() == 1)
+        d->setupModule(0, module);
+    else
+        d->insertModule(0, module);
 }
 
 void BtMiniModuleTextModel::setIndicators(QWidget *left, QWidget *module, QWidget *place, QWidget *right)
@@ -1054,6 +1108,14 @@ bool BtMiniModuleTextModel::setData(const QModelIndex &index, const QVariant &va
     }
 }
 
+QHash<int, QByteArray> BtMiniModuleTextModel::roleNames() const
+{
+    QHash<int, QByteArray> rn(QAbstractItemModel::roleNames());
+    rn[BtMini::PlaceRole] = "place";
+    rn[BtMini::PlaceShortRole] = "placeShort";
+    return rn;
+}
+
 void BtMiniModuleTextModel::setSearchText(const QString &text)
 {
 	Q_D(BtMiniModuleTextModel);
@@ -1144,7 +1206,11 @@ void BtMiniModuleTextModel::startSearch()
 
 	Q_ASSERT(d->_lists.size() == 1 && d->_lists[0]._name == "[Search]");
 
-	d->_lists[0]._module = results.Count() > 0 ? m : 0;
+    if(results.Count() > 0)
+        d->_lists[0]._module = m;
+    else
+        d->_lists[0]._module = 0;
+
 	d->_lists[0].setScope(results);
 
 	QModelIndex i = index(0, 0);

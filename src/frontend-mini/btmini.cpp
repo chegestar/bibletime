@@ -92,24 +92,24 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
     JNIEnv  *p_env;
     jniBtMiniVm = vm;
 
-    if(jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
-    {
-        qWarning("Jni can't get environment");
-        return JNI_VERSION_1_6;
-    }
+//    if(jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
+//    {
+//        qWarning("Jni can't get environment");
+//        return JNI_VERSION_1_6;
+//    }
 
-#if QT_VERSION < 0x050000
-    if(!(jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity")))
-#else
-    if(!(jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity")))
-#endif
-    {
-        qWarning("Jni can't get class");
-        return JNI_VERSION_1_6;
-    }
+//#if QT_VERSION < 0x050000
+//    if(!(jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity")))
+//#else
+//    if(!(jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity")))
+//#endif
+//    {
+//        qWarning("Jni can't get class");
+//        return JNI_VERSION_1_6;
+//    }
 
-    if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
-        qWarning("Jni can't get method");
+//    if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
+//        qWarning("Jni can't get method");
 
     return JNI_VERSION_1_6;
 }
@@ -143,24 +143,24 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef ANDROID
-    JNIEnv  *p_env;
+//    JNIEnv  *p_env;
 
-    if(jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
-    {
-        qWarning("Jni can't attach to thread");
-        return;
-    }
+//    if(jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
+//    {
+//        qWarning("Jni can't attach to thread");
+//        return;
+//    }
 
-    if(!jniBtMiniClass || !jniBtMiniVibrateMethodId)
-    {
-        qWarning("Have no Jni classes");
-        return;
-    }
+//    if(!jniBtMiniClass || !jniBtMiniVibrateMethodId)
+//    {
+//        qWarning("Have no Jni classes");
+//        return;
+//    }
 
-    jlong ms = milliseconds;
-    p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
+//    jlong ms = milliseconds;
+//    p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
 
-    jniBtMiniVm->DetachCurrentThread();
+//    jniBtMiniVm->DetachCurrentThread();
 #endif
 
 #ifdef Q_OS_SYMBIAN
@@ -461,7 +461,34 @@ void BtMini::reset(BtMiniState type)
     ;
 }
 
+float fontSizeFactor()
+{
+    /*  device          resolution          logical dpi         physical dpi
+        htc hd2         800x480             138                 254
+            factor 30 is ok
+        htc diamond                         192
+        desktop         1920x1200           96                  72
+            factor 26 is ok
+        nexus 10        1454                200                 321
+            factor 72 is ok
+        nexus 7         800                 133                 214
+            factor 45 is ok
+    */
 
+    qreal sf;
+
+#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
+        sf = QApplication::desktop()->logicalDpiY() / 4.2;
+#else
+        qreal dpi = (QApplication::desktop()->physicalDpiX()/2.0 + QApplication::desktop()->physicalDpiY()/2.0);
+        qreal screenSize = qSqrt(qPow(QApplication::desktop()->screenGeometry().width(), 2) +
+                                 qPow(QApplication::desktop()->screenGeometry().height(), 2)) / dpi;
+
+        // average of fixed physical (3mm) font size and screen resolution dependent size
+        sf = (dpi / (32.0 / screenSize) + (dpi / 8.4)) / 2.0;
+#endif
+    return qMax((qreal)10.0, qMin((qreal)200.0, sf));
+}
 
 QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
 {
@@ -486,37 +513,16 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
     {
         w = new BtMiniMainWidget;
 
-        /*  device          resolution          logical dpi         physical dpi
-            htc hd2         800x480             138                 254
-                factor 30 is ok
-            htc diamond                         192
-            desktop         1920x1200           96                  72
-                factor 26 is ok
-            nexus 10        1454                200                 321
-                factor 72 is ok
-            nexus 7         800                 133                 214
-                factor 45 is ok
-        */
-
 #if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
         w->resize(QSize(480, 640));
         w->show();
         w->raise();
-
-        sizeFactor = w->logicalDpiY() / 4.2;
 #else
         w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
         w->showExpanded();
-
-        qreal dpi = (w->physicalDpiX()/2.0 + w->physicalDpiY()/2.0);
-        qreal screenSize = qSqrt(qPow(QApplication::desktop()->screenGeometry().width(), 2) +
-                                 qPow(QApplication::desktop()->screenGeometry().height(), 2)) / dpi;
-
-        // average of fixed physical (3mm) font size and screen resolution dependent size
-        sizeFactor = (dpi / (32.0 / screenSize) + (dpi / 8.4)) / 2.0;
 #endif
 
-        sizeFactor = qMax((qreal)10.0, qMin((qreal)200.0, sizeFactor));
+        sizeFactor = fontSizeFactor();
 
         qDebug() << "Surface:" << w->size() << "  Screen:" << QApplication::desktop()->screenGeometry() <<
                     "  Dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
@@ -1077,8 +1083,15 @@ int main(int argc, char *argv[])
     app.installNativeEventFilter(BtMiniMainWidget::eventFilterProcessor());
 #endif
 
-
-    //registerMetaTypes();
+#ifdef BT_MINI_QML
+    {
+        QFont f(QApplication::font());
+        f.setPixelSize(fontSizeFactor());
+        QFontInfo fi(f);
+        f.setPointSizeF(fi.pointSizeF());
+        QApplication::setFont(f);
+    }
+#endif
 
     if(!util::directory::initDirectoryCache())
     {
@@ -1093,7 +1106,6 @@ int main(int argc, char *argv[])
 
     app.setStyle(btConfig().value<QString>("mini/miniStyle", "mini"));
     btConfig().setValue("bibletimeVersion", app.applicationVersion());
-
 
     // install translators
     QString systemName(QLocale::system().name());
@@ -1128,16 +1140,37 @@ int main(int argc, char *argv[])
 
     // Let's run...
 #ifdef BT_MINI_QML
+    QList<QUrl> files;
+    files << QUrl("file:/sdcard/main.qml");
+    files << QUrl("file:/" + QApplication::applicationDirPath() + "/main.qml");
+    files << QUrl("qrc:/bibletime/qml/metro.qml");
+
+    qmlRegisterType<BtMiniModuleTextModel>("BibleTime.Mini", 1, 0, "SwordModuleModel");
+
     QQuickView view;
-    //view.setSource(QUrl("qrc:/bibletime/qml/metro.qml"));
-    view.setSource(QUrl::fromLocalFile("c:/dev/bt/platforms/qml/btmini/metro.qml"));
+
+    foreach(QUrl s, files)
+    {
+        if(QFile(s.toLocalFile()).exists() || s.toString().left(4) == "qrc:")
+        {
+            view.setSource(s);
+            break;
+        }
+    }
+
     view.connect(view.engine(), SIGNAL(quit()), SLOT(close()));
     view.setResizeMode(QQuickView::SizeRootObjectToView);
 
-    BtMiniModuleNavigationModel mn(btConfig().getDefaultSwordModuleByType("standardBible")->name());
+    //QQmlContext *ctxt = view.rootContext();
 
-    QQmlContext *ctxt = view.rootContext();
-    ctxt->setContextProperty("navigationModel", &mn);
+    //BtMiniModuleNavigationModel mn(btConfig().getDefaultSwordModuleByType("standardBible")->name());
+    //ctxt->setContextProperty("navigationModel", &mn);
+
+
+    //BtMiniModuleTextModel tm("ESV");
+    //ctxt->setContextProperty("textModel", &tm);
+
+
     view.show();
 #else
     BtMini::setActiveWidget(BtMini::worksWidget());

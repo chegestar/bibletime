@@ -22,23 +22,27 @@ class BtMiniModuleTextModelPrivate;
 class BtMiniModuleTextModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString module READ getModule WRITE setModule)
 
 public:
-    BtMiniModuleTextModel(QStringList &modules, QObject *parent = 0);
+    BtMiniModuleTextModel(QStringList modules, QObject *parent = 0);
+    explicit BtMiniModuleTextModel(QObject *parent = 0);
     ~BtMiniModuleTextModel();
     
     /** Reimplemented from QAbstractItemModel. */
     int             columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant        data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags   flags(const QModelIndex &index) const;
-    bool             hasChildren(const QModelIndex &parent) const;
+    bool            hasChildren(const QModelIndex &parent) const;
     QVariant        headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     QModelIndex     index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
                           Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap )) const;
     QModelIndex     parent(const QModelIndex &index) const;
+    QHash<int, QByteArray> roleNames() const;
     int             rowCount(const QModelIndex &parent = QModelIndex()) const;
     bool            setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
 
     /** */
     QString indexModule(const QModelIndex &index) const;
@@ -48,6 +52,11 @@ public:
 
     /** */
     QModelIndex keyIndex(int i, QString key) const;
+    Q_INVOKABLE int keyIndex(QString key) const;
+
+    /** for qml */
+    QString getModule() const;
+    void setModule(QString module);
 
     /** */
     void setIndicators(QWidget *left, QWidget *module, QWidget *place, QWidget *right);
