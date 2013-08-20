@@ -15,7 +15,7 @@
 
 #include <QtDebug>
 
-#include <config.h>
+#include <swversion.h>
 
 #include "backend/config/btconfig.h"
 #include "backend/cswordmodulesearch.h"
@@ -90,7 +90,7 @@ public:
                     "<br/><br/>" +
                     BtMiniSettingsModel::tr("Underlying frameworks:") +
                     "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.10.dev</td></tr></table>"
-                    "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" VERSION "</td></tr></table>"
+                    "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" SWORD_VERSION_STR "</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
                     "</body>";
         _strings << BtMiniSettingsModel::tr("You could post feedback, report an issue or get help throught forum:") +
