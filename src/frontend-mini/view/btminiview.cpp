@@ -39,8 +39,8 @@
 #include <QWebSettings>
 #endif
 
-#define SHORT_PRESS_DELAY        20
-#define LONG_PRESS_DELAY         50
+#define SHORT_PRESS_DELAY        24
+#define LONG_PRESS_DELAY         53
 #define SCROLL_SNAPPING_SPEED    0.3f
 #define CACHED_SURFACE_OVERLAP   0.5
 #define SCROLL_ATTENUATION       0.93
