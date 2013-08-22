@@ -1,5 +1,6 @@
 CONFIG += qml
 
+
 include(../../common/btmini/btmini.pro)
 
 
@@ -31,8 +32,10 @@ OTHER_FILES += metro.qml \
     android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
     android/src/org/qtproject/qt5/android/bindings/QtActivity.java \
     android/src/org/qtproject/qt5/android/bindings/QtApplication.java \
-    android/version.xml
+    android/version.xml \
+    worker.js \
+
+
 RESOURCES += qml.qrc
 
-//SOURCES += main.cpp
 

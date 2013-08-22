@@ -1113,6 +1113,7 @@ QHash<int, QByteArray> BtMiniModuleTextModel::roleNames() const
     QHash<int, QByteArray> rn(QAbstractItemModel::roleNames());
     rn[BtMini::PlaceRole] = "place";
     rn[BtMini::PlaceShortRole] = "placeShort";
+    rn[BtMini::PreviewRole] = "preview";
     return rn;
 }
 

@@ -151,6 +151,16 @@ Rectangle {
         }
     }
 
+    WorkerScript {
+        id: worker
+
+        source: "worker.js"
+
+        onMessage: {
+            messageObject.item.text = messageObject.result
+        }
+    }
+
     Rectangle {
         width: root.width
         height: root.height - panel.height
@@ -183,8 +193,12 @@ Rectangle {
                     textFormat: Text.RichText
                     width: parent.width
                     font.pixelSize: 32
-                    text: display
+                    text: preview
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                    Component.onCompleted: {
+                        worker.sendMessage( { item: this, index: index } )
+                    }
                 }
 
                 MouseArea {

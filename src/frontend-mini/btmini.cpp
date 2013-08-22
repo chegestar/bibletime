@@ -1142,6 +1142,7 @@ int main(int argc, char *argv[])
 #ifdef BT_MINI_QML
     QList<QUrl> files;
     files << QUrl("file:/sdcard/main.qml");
+    files << QUrl("file:/D:/dev/mini__/platforms/qml/btmini/metro.qml");
     files << QUrl("file:/" + QApplication::applicationDirPath() + "/main.qml");
     files << QUrl("qrc:/bibletime/qml/metro.qml");
 
@@ -1153,6 +1154,7 @@ int main(int argc, char *argv[])
     {
         if(QFile(s.toLocalFile()).exists() || s.toString().left(4) == "qrc:")
         {
+            qDebug() << "Load qml:" << s;
             view.setSource(s);
             break;
         }
