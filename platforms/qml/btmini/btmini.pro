@@ -1,6 +1,6 @@
 CONFIG += qml
 
-include(../../common/btmini/common.pro)
+include(../../common/btmini/btmini.pro)
 
 
 OTHER_FILES += metro.qml \

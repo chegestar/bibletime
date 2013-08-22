@@ -1,3 +1,2 @@
-CONFIG += clucene
 
-include(../../common/btmini/common.pro)
+include(../../common/btmini/btmini.pro)
