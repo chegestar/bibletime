@@ -1,15 +1,15 @@
-CONFIG += qml
 
+DEFINES += LUCENE_USE_INTERNAL_CHAR_FUNCTIONS
 
 include(../../common/btmini/btmini.pro)
 
-
-OTHER_FILES += metro.qml \
-    item.qml \
-
-
 OTHER_FILES += \
     android/AndroidManifest.xml \
+    android/res/drawable/icon.png \
+    android/res/drawable/logo.png \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png \
     android/res/layout/splash.xml \
     android/res/values/libs.xml \
     android/res/values/strings.xml \
@@ -34,12 +34,7 @@ OTHER_FILES += \
     android/res/values-zh-rTW/strings.xml \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \
     android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
-    android/src/org/qtproject/qt5/android/bindings/QtActivity.java \
-    android/src/org/qtproject/qt5/android/bindings/QtApplication.java \
-    android/version.xml \
-    worker.js \
-
-
-RESOURCES += qml.qrc
-
+    android/src/org/kde/necessitas/origo/QtActivity.java \
+    android/src/org/kde/necessitas/origo/QtApplication.java \
+    android/version.xml
 

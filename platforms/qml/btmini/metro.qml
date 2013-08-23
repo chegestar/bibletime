@@ -157,7 +157,7 @@ Rectangle {
         source: "worker.js"
 
         onMessage: {
-            messageObject.item.text = messageObject.result
+            messageObject.item.text = 'Hello'
         }
     }
 
@@ -193,21 +193,20 @@ Rectangle {
                     textFormat: Text.RichText
                     width: parent.width
                     font.pixelSize: 32
-                    text: preview
+                    text: previewUpdate
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                    Component.onCompleted: {
-                        worker.sendMessage( { item: this, index: index } )
-                    }
+//                    Component.onCompleted: {
+//                        worker.sendMessage( { item: this, index: index } )
+//                    }
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: {
-                        placeText.text = placeShort
-                        list.currentIndex = index
-                    }
-                }
+//            delegate: Component {
+//                Loader {
+//                    asynchronous : true
+//                    source: 'item.qml'
+//                }
+//            }
             }
         }
 

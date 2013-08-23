@@ -14,16 +14,18 @@ kalemas@mail.ru :
         install a module
         refresh remote sources
         build search index
+		maybe backend reloading
+        ability for blocking execution (e.g. first text entry)
         make this suitable for main repo
         should know what is current view (text/install), current text, probably via signals/slots
-        i'd preffer to make it in c++ layer
+        i'd prefer to make it in c++ layer
     resize subview width, its primarily for tablets
-    make sword text model and instll model suitable for main repo
+    make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
-    add abiblity to combine bookshelves in tree model
+    add ability to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
     download indexes feature
@@ -41,7 +43,7 @@ kalemas@mail.ru :
 ?   design changes
         cut-off menu overlays, open contex full-size
         sliding panels for queries
-        hideable bottom panel
+        hide able bottom panel
         top area to indicate current location
     selecting items and active item
     current subview indication
@@ -67,15 +69,15 @@ kalemas@mail.ru :
         font enumeration in font-family dont work
         process unhandled css construction before passing to QTextDocument
     replace unistd.h with io.h/direct.h on wince
-    megre linked verses in model
+    merge linked verses in model
     ? new menu look
-    context for word even withot tagging (dictionary lookup)
+    context for word even without tagging (dictionary lookup)
     new system for context modules: add/remove from context lookup
 
     new style of sliding, next view doesn't slide but fade
-    topbar with animated effect when go sublevel
+    topbar with animated effect when go sub level
     find way to communicate with scrollbar to display current position and marks
-    ? maybe make scroll bar transprent and overlapping view
+    ? maybe make scroll bar transparent and overlapping view
     ? scrolling like book pages, good because user's eyes always move all around the screen
     bookmarks would be named as Cuttings or Clippings
     notes - based on personal commentary module with av11n mapping support remark, should be created by app
@@ -109,8 +111,8 @@ kalemas@mail.ru :
         reading count
             created as byte-array for every versification
 ?            increased when exceed 256-bound
-?            converted beetwheen v11ns on call
-            or maybe implement this throught history
+?            converted between v11ns on call
+            or maybe implement this through history
 
 ?    sliding, animated backgrounds
 ?    read html / txt / rtf / doc formats
