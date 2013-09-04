@@ -1694,9 +1694,11 @@ public:
 				}
 			}
 
+#ifdef QT_DEBUG
 			if(!wd)
 				qDebug() << "Can't insert computed index:" << done.first.data(BtMini::ModuleRole) << done.first.data(BtMini::PlaceRole);
 			else
+#endif
 				workDone = true;
 		}
 
@@ -1805,7 +1807,9 @@ public:
 
 		void run()
 		{
+#ifdef QT_DEBUG
 			qDebug() << "thread" << this << "started";
+#endif
 
 			_stop = false;
 
@@ -1823,9 +1827,6 @@ public:
 				QModelIndex index = _view->_modelWork.takeAt(0);
 				_view->_mutex.unlock();
 
-#if defined(Q_OS_WIN32) && defined(QT_DEBUG)
-                //msleep(5000);
-#endif
 				QString text(index.data().toString());
 
 				_view->_mutex.lock();
@@ -1833,7 +1834,9 @@ public:
 				_view->_mutex.unlock();
 			}
 
+#ifdef QT_DEBUG
 			qDebug() << "thread" << this << "stoped";
+#endif
 		}
 
 		bool                        _stop;
