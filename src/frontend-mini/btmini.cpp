@@ -92,24 +92,24 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
     JNIEnv  *p_env;
     jniBtMiniVm = vm;
 
-//    if(jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
-//    {
-//        qWarning("Jni can't get environment");
-//        return JNI_VERSION_1_6;
-//    }
+    if(jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
+    {
+        qWarning("Jni can't get environment");
+        return JNI_VERSION_1_6;
+    }
 
-//#if QT_VERSION < 0x050000
-//    if(!(jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity")))
-//#else
-//    if(!(jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity")))
-//#endif
-//    {
-//        qWarning("Jni can't get class");
-//        return JNI_VERSION_1_6;
-//    }
+#if QT_VERSION < 0x050000
+    if(!(jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity")))
+#else
+    if(!(jniBtMiniClass = (*p_env).FindClass("org/qtproject/qt5/android/bindings/QtActivity")))
+#endif
+    {
+        qWarning("Jni can't get class");
+        return JNI_VERSION_1_6;
+    }
 
-//    if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
-//        qWarning("Jni can't get method");
+    if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
+        qWarning("Jni can't get method");
 
     return JNI_VERSION_1_6;
 }
@@ -143,24 +143,21 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef ANDROID
-//    JNIEnv  *p_env;
+    JNIEnv  *p_env;
 
-//    if(jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
-//    {
-//        qWarning("Jni can't attach to thread");
-//        return;
-//    }
+    if(jniBtMiniVm->AttachCurrentThread(&p_env, 0) < 0)
+    {
+        qWarning("Jni can't attach to thread");
+        return;
+    }
 
-//    if(!jniBtMiniClass || !jniBtMiniVibrateMethodId)
-//    {
-//        qWarning("Have no Jni classes");
-//        return;
-//    }
+    if(!jniBtMiniClass || !jniBtMiniVibrateMethodId)
+        return;
 
-//    jlong ms = milliseconds;
-//    p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
+    jlong ms = milliseconds;
+    p_env->CallStaticVoidMethod(jniBtMiniClass, jniBtMiniVibrateMethodId, ms);
 
-//    jniBtMiniVm->DetachCurrentThread();
+    jniBtMiniVm->DetachCurrentThread();
 #endif
 
 #ifdef Q_OS_SYMBIAN

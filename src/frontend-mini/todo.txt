@@ -3,11 +3,11 @@ kalemas@mail.ru :
 +   multi column mode
 +   webkit render: make context work
 +   setting options for views without exiting application
-    publish to nokia platforms
-        support site
-        single instance for meego
-        check icon on meego
-        signed symbian build with new uid
++   publish to nokia platforms
++       support site
++       single instance for meego
++       check icon on meego
++       signed symbian build with new uid
     prototyping QML user interface
     centralized parallel processing:
         get data from sword
