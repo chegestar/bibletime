@@ -5,26 +5,35 @@ import QtGraphicalEffects 1.0
 Rectangle {
     id: root
 
-    property int size: 1 // tablet = 2, smartphone = 1
+    property int size: 2 // tablet = 2, smartphone = 1
     property bool landscape: root.width > root.height
     property string fontUi: 'Segoe WP'
     property string fontText: 'Book Antiqua'
+    property color accentColor: '#09e'
+    property color baseColor: '#222'
+    property color textColor: 'white'
 
-    width: 480; height: 800
+    color: baseColor
 
     states: [ State { name: 'default' }, State { name: 'navigation' } ]
+
+    Component.onCompleted: {
+        //console.log('available fonts', Qt.fontFamilies())
+
+         size == 1 ? width = 480 : width = 1280
+         height = 800
+    }
 
     // try to load supplied fonts
     FontLoader { source: 'SegoeWP.ttf' }
     FontLoader { source: 'BkAnt.ttf' }
 
-    //Component.onCompleted: { console.log('available fonts', Qt.fontFamilies()) }
-
     ListView {
         id: view
 
         anchors.fill: root
-        anchors.rightMargin: root.landscape ? 50 : 0
+        anchors.rightMargin: root.landscape ? panel.state == 'minimal' ? panel.minimalHeight : panel.defaultHeight : 0
+        anchors.bottomMargin: root.landscape ? 0 : panel.state == 'minimal' ? panel.minimalHeight : panel.defaultHeight
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
         model: [ 'KJV', 'ESV', 'RusSynodal' ]
@@ -44,7 +53,7 @@ Rectangle {
             }
         }
 
-        delegate: Rectangle {
+        delegate: Item {
             id: viewItem
 
             property real size: 1.0
@@ -57,7 +66,8 @@ Rectangle {
 
                 anchors.fill: parent
                 anchors.topMargin: parent.children[1].height
-                model: [ 'Seeing the crowds, he went up on the mountain, and <b>when</b> he sat down, his disciples came to him.',
+                model: [ 'The Sermon on the Mount',
+                    'Seeing the crowds, he went up on the mountain, and <b>when</b> he sat down, his disciples came to him.',
                     'And he opened his mouth and <b>taught them, saying</b>:',
                     '“Blessed are the poor in spirit, for theirs is the kingdom of heaven. Blessed are those who mourn, <i><b>for they</b> shall be comforted</i>.',
                     'Blessed are the meek, for they will inherit the earth.',
@@ -66,34 +76,35 @@ Rectangle {
                     'Blessed are the pure in heart, for they shall see God.',
                     'Blessed are the peacemakers, for they shall be called <b>sons of God</b>. Blessed are those who are persecuted for righteousness\' sake, for utheirs is the kingdom of heaven.',
                     'Blessed are you when others revile you and persecute you and utter <i>all kinds of evil <b>against you</b></i> falsely on my account. Rejoice and be glad, for your reward is great in heaven, for so they persecuted the prophets who were before you.',
-                    'But when you pray, go into your room, close the door and pray to your Father, who is unseen. Then your Father, who sees what is done in secret, will reward you.']
+                    'But when you pray, go into your room, close the door and pray to your Father, who is unseen. Then your Father, who sees what is done in secret, will reward you.',
+                    'Blessed are you when others revile you and persecute you and utter <i>all kinds of evil <b>against you</b></i> falsely on my account. Rejoice and be glad, for your reward is great in heaven, for so they persecuted the prophets who were before you.',
+                    'Blessed are you when others revile you and persecute you and utter <i>all kinds of evil <b>against you</b></i> falsely on my account. Rejoice and be glad, for your reward is great in heaven, for so they persecuted the prophets who were before you.']
 
-                delegate: Rectangle {
+                delegate: Item {
                     width: list.width
                     height: children[0].height
 
                     Text {
                         x: 5
                         width: parent.width - x
-                        text: '<table width="100%"><tr><td width="5%"><sup><b style="color: #888888">' + (index + 1) + '</b></sup></td> <td>' + modelData + '</td><.tr></table>'
+                        text: index == 0 ? '<p>&nbsp;</p><h2><center>' + modelData + '</center></h2>' :
+                                           '<table width="100%"><tr><td width="' + (root.landscape ? '3%' : '5%') + '"><sup><b style="color: #888888">' + index + '</b></sup></td> <td>' +
+                                            modelData + '</td><.tr></table>'
                         font.pixelSize: 28
                         font.family: root.fontText
                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                         textFormat: Text.RichText
+                        color: root.textColor
                     }
-                }
-
-                footer: Item {
-                    width: parent.width
-                    height: root.landscape ? 0 : panel.height
                 }
             }
 
             Rectangle {
                 id: status
 
-                width: root.landscape ? parent.width - (panel.baseHeight / 2) : parent.width
+                width: parent.width
                 height: panel.state == 'minimal' ? 0 : panel.baseHeight
+                color: root.baseColor
                 state: 'default'
 
                 states: [
@@ -116,17 +127,19 @@ Rectangle {
                 Rectangle {
                     width: children[0].width + children[0].x + 20
                     height: parent.height
+                    color: root.baseColor
 
                     Text {
                         x: 20
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: 8
                         text: modelData + ' -  Matt 5:1'
-                        font.pixelSize: 20
+                        font.pixelSize: root.size == 2 ? 24 : 20
                         font.bold: true
                         font.capitalization: Font.AllUppercase
                         font.underline: true
                         font.family: root.fontUi
+                        color: root.textColor
                     }
                 }
 
@@ -145,7 +158,7 @@ Rectangle {
                         Button {
                             width: height; height: panel.baseHeight
                             icon: 'next.svg'
-                            color: 'black'
+                            color: root.textColor
                             rotation: 180
                             enabled: index > 0
 
@@ -167,13 +180,14 @@ Rectangle {
                                 text: 'Switch'
                                 font.pixelSize: panel.baseHeight * 0.4
                                 font.family: root.fontUi
+                                color: root.textColor
                             }
                         }
 
                         Button {
                             width: height; height: panel.baseHeight
                             icon: 'next.svg'
-                            color: 'black'
+                            color: root.textColor
                             enabled: index < view.model.length - 1
 
                             MouseArea {
@@ -198,7 +212,8 @@ Rectangle {
                                 anchors.margins: -25
                                 anchors.topMargin: -6
                                 anchors.bottomMargin: -11
-                                border { color: 'black'; width: 2 }
+                                border { color: root.textColor ; width: 2 }
+                                color: root.baseColor
                             }
 
                             Text {
@@ -206,6 +221,7 @@ Rectangle {
                                 text: 'add left'
                                 font.pixelSize: panel.baseHeight * 0.4
                                 font.family: root.fontUi
+                                color: root.textColor
                             }
                         }
 
@@ -218,7 +234,8 @@ Rectangle {
                                 anchors.margins: -25
                                 anchors.topMargin: -6
                                 anchors.bottomMargin: -11
-                                border { color: 'black'; width: 2 }
+                                border { color: root.textColor ; width: 2 }
+                                color: root.baseColor
                             }
 
                             Text {
@@ -226,6 +243,7 @@ Rectangle {
                                 text: 'clear'
                                 font.pixelSize: panel.baseHeight * 0.4
                                 font.family: root.fontUi
+                                color: root.textColor
                             }
                         }
 
@@ -238,7 +256,8 @@ Rectangle {
                                 anchors.margins: -25
                                 anchors.topMargin: -6
                                 anchors.bottomMargin: -11
-                                border { color: 'black'; width: 2 }
+                                border { color: root.textColor ; width: 2 }
+                                color: root.baseColor
                             }
 
                             Text {
@@ -246,6 +265,7 @@ Rectangle {
                                 text: 'add right'
                                 font.pixelSize: panel.baseHeight * 0.4
                                 font.family: root.fontUi
+                                color: root.textColor
                             }
                         }
                     }
@@ -256,7 +276,7 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     rotation: -90
-                    color: 'black'
+                    color: root.textColor
                     icon: 'settings.svg'
 
                     MouseArea {
@@ -272,8 +292,9 @@ Rectangle {
         id: panel
 
         property color buttonColor: 'white'
-        property int baseHeight: root.size == 2 ? 96 : 72
+        property int baseHeight: root.size == 2 ? root.landscape ? 80 : 70 : 72
         property int minimalHeight: baseHeight * 0.38
+        property int defaultHeight: (root.size == 2 && !root.landscape) ? baseHeight * 1.33 : baseHeight
         property int raisedHeight: root.landscape ? panelItems.width + baseHeight : panelItems.height + baseHeight
         property int currentHeight: baseHeight
 
@@ -283,13 +304,13 @@ Rectangle {
         anchors.right: root.landscape ? parent.right : undefined
         anchors.top: root.landscape ? parent.top : undefined
         anchors.left: root.landscape ? undefined : root.left
-        color: state == 'raised' ? Qt.rgba(1, 0.5, 0, 0.99) : Qt.rgba(1, 0.5, 0, 0.85)
+        color: root.accentColor
         state: 'default'
 
         states: [
             State {
                 name: 'default'
-                PropertyChanges { target: panel; currentHeight: panel.baseHeight; color: Qt.rgba(1, 0.5, 0, 0.85) }
+                PropertyChanges { target: panel; currentHeight: panel.defaultHeight }
             },
             State {
                 name: 'raised'
@@ -307,11 +328,24 @@ Rectangle {
             PropertyAnimation { duration: 200; easing.type: Easing.OutCirc }
         }
 
-        Behavior on color { ColorAnimation { duration: 100 } }
+        //Behavior on color { ColorAnimation { duration: 100 } }
+
+        // gradient
+//        Item {
+//            anchors.fill: parent
+//            clip: true
+//            Rectangle {
+//                anchors.fill: parent
+//                anchors.margins: -panel.baseHeight * 2
+//                rotation: -15
+//                gradient: Gradient {
+//                    GradientStop { position: 0.4; color: root.accentColor }
+//                    GradientStop { position: 1.0; color: root.baseColor }
+//                }
+//            }
+//        }
 
         MouseArea { anchors.fill: parent }
-
-        //Rectangle { anchors.fill: panelFlow; color: 'red' }
 
         Flow {
             id: panelFlow
@@ -323,6 +357,7 @@ Rectangle {
             width: root.landscape ? childrenRect.width : undefined
             height: root.landscape ? undefined : childrenRect.height
             flow: root.landscape ? GridLayout.TopToBottom : GridLayout.LeftToRight
+            spacing: (root.size == 2 && !root.landscape) ? 15 : 0
 
             // hide buttons in minimal
             anchors.topMargin: panel.currentHeight < panel.baseHeight ? root.landscape ? 0 : panel.minimalHeight : 0
@@ -331,7 +366,7 @@ Rectangle {
             Behavior on anchors.leftMargin { PropertyAnimation { duration: 500 } }
 
             Repeater {
-                model: [ 'find', 'settings', 'next' ]
+                model: [ { icon: 'find' }, { icon: 'settings' }, { icon: 'next', script: 'view.incrementCurrentIndex()' } ]
 
                 delegate: Item {
                     width: panel.baseHeight + (root.landscape && root.size == 1 ? text.width : 0)
@@ -342,7 +377,7 @@ Rectangle {
 
                         width: height; height: panel.baseHeight
                         color: panel.buttonColor
-                        icon: modelData + '.svg'
+                        icon: modelData.icon + '.svg'
                     }
 
                     Text {
@@ -352,14 +387,14 @@ Rectangle {
                         x: root.landscape && root.size == 1 ? button.width : (parent.width - width) / 2
                         y: root.landscape && root.size == 1 ? (parent.height - height) / 2 : button.height
 
-                        text: modelData
-                        color: 'white'
+                        text: modelData.icon
+                        color: panel.buttonColor
                         font { family: root.fontUi; pixelSize: panel.baseHeight / 5 }
                     }
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: overlaper.state = 'on'
+                        onClicked: modelData.script == undefined ? overlaper.state = 'on' : eval(modelData.script)
                     }
                 }
             }
@@ -403,12 +438,12 @@ Rectangle {
                     /*if (panel.state == 'raised' && panel.currentHeight == panel.raisedHeight)
                         ;
                     else*/ if(panel.state == 'minimal') {
-                        if(panel.currentHeight < panel.baseHeight)
+                        if(panel.currentHeight < panel.defaultHeight)
                             panel.state = 'default'
                         else
                             panel.state = 'raised'
                     }
-                    else if (panel.currentHeight < panel.baseHeight)
+                    else if (panel.currentHeight < panel.defaultHeight)
                         panel.state = 'minimal'
                     else if(panel.state == 'raised')
                         panel.state = 'default'
@@ -482,7 +517,7 @@ Rectangle {
     Rectangle {
         id: overlaper
         anchors.fill: root
-        color: '#f80'
+        color: root.accentColor
         state: 'off'
         visible: overlaperRotation.angle > -90 && overlaperRotation.angle < 90
 
@@ -504,23 +539,18 @@ Rectangle {
                 SequentialAnimation {
                     ScriptAction { script: if (panel.state == 'raised') panel.state = 'default' }
                     PropertyAnimation { target: fade; property: 'opacity'; from: 0; to: 0.2; duration: 150 }
-                    PropertyAnimation { target: overlaperRotation; property: 'angle'; to: 0; duration: 400; easing.type: Easing.OutCubic }
+                    PropertyAnimation { target: overlaperRotation; property: 'angle'; from: root.landscape ? 90 : -90; to: 0; duration: 400; easing.type: Easing.OutCubic }
                 }
             }
         ]
 
         transform: Rotation {
             id: overlaperRotation
-            angle: root.landscape ? 90 : -90
-            axis { x: root.landscape ? 1 : 0; y: root.landscape ? 0 : 1; z: 0 }
-            origin.x: root.landscape ? root.width / 2 : 0
-            origin.y: root.landscape ? 0 : (root.height / 2)
-        }
 
-        MouseArea {
-            anchors.fill: overlaper
-            enabled: overlaper.state == 'on'
-            onClicked: overlaper.state = 'off'
+            angle: 90
+            axis { x: root.landscape ? 1 : 0; y: root.landscape ? 0 : 1; z: 0 }
+            origin.x: root.landscape ? (root.width / 2) : 0
+            origin.y: root.landscape ? 0 : (root.height / 2)
         }
 
         Flow {
@@ -528,16 +558,108 @@ Rectangle {
             anchors.margins: spacing
             spacing: 10
 
-            Repeater {
-                model: 4
-                delegate: Rectangle { width: 200; height: width }
+
+            Item { width: parent.width; height: 20 }
+
+            Item {
+                width: childrenRect.width
+                height: childrenRect.height
+
+                Text { text: 'Light'; font.pixelSize: 34; color: root.textColor }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if(root.textColor != '#000000') {
+                            root.textColor = 'black'; root.baseColor = 'white'; overlaper.state = 'off'
+                        }
+                    }
+                }
             }
 
-            Text {
-                text: 'Back'
-                font.pixelSize: 34
-                color: 'white'
+            Item { width: 10; height: 10 }
+
+            Item {
+                width: childrenRect.width
+                height: childrenRect.height
+
+                Text { text: 'Dark'; font.pixelSize: 34; color: root.textColor }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (root.textColor != '#ffffff') { root.textColor = 'white'; root.baseColor = 'black'; overlaper.state = 'off'
+                        }
+                    }
+                }
             }
+
+            Item { width: parent.width - x; height: 10 }
+
+            Repeater {
+                model: [ '#f80', '#08f', '09e', '#07a', '#3bf', '#444', '#aaa' ]
+                delegate: Rectangle {
+                    width: color == root.accentColor ? 0 : 100
+                    height: width
+                    color: modelData
+
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: { root.accentColor = parent.color; overlaper.state = 'off' }
+                    }
+                }
+            }
+
+            Item {
+                width: parent.width
+                height: 10
+            }
+
+            Item {
+                width: parent.width
+                height: childrenRect.height
+                visible: root.size != 2
+
+                Text { text: 'Tablet mode'; font.pixelSize: 34; color: root.textColor }
+
+                MouseArea { anchors.fill: parent; onClicked: { root.size = 2; overlaper.state = 'off' } }
+            }
+
+            Item {
+                width: parent.width
+                height: childrenRect.height
+                visible: root.size != 1
+
+                Text { text: 'Smartphone mode'; font.pixelSize: 34; color: root.textColor }
+
+                MouseArea { anchors.fill: parent; onClicked: { root.size = 1; overlaper.state = 'off' } }
+            }
+        }
+
+
+        Item {
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Math.abs(overlaperRotation.angle * (root.landscape ? 10 : 4))
+            width: childrenRect.width
+            height: childrenRect.height
+
+            Text {
+                anchors.verticalCenter: parent.children[1].verticalCenter
+                text: 'back'
+                font.pixelSize: 34
+                color: root.textColor
+            }
+
+            Button {
+                width: 80; height: width
+                anchors.left: parent.children[0].right
+                color: root.textColor
+                icon: 'next.svg'
+            }
+
+            MouseArea { anchors.fill: parent; onClicked: overlaper.state = 'off' }
         }
     }
 }
