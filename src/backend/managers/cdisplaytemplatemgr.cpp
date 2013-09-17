@@ -146,7 +146,9 @@ QString CDisplayTemplateMgr::fillTemplate(const QString & name,
             header.append("<th style=\"width:")
             .append(QString::number(static_cast<int>(100.0 / moduleCount)))
             .append("%;\">")
+#ifndef BT_MINI
             .append(mi->name())
+#endif
             .append("</th>");
         }
 
