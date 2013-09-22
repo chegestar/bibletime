@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.12
+VERSION = 0.9.13
 
 CONFIG += webkit clucene svg xml mini
 
