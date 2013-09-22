@@ -1672,7 +1672,7 @@ public:
 		_mutex.unlock();
 
 		// paste calculated data
-		while(_modelDone.size() > 0)
+		while(_modelDone.size() > 0 && !workDone)
 		{
 			_mutex.lock();
 			QPair<QModelIndex, QString> done = _modelDone.takeAt(0);
