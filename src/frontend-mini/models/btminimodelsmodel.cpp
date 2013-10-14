@@ -12,65 +12,50 @@
 #include <QLabel>
 #include <QtDebug>
 
-#include "btminimodelsmodel.h"
-
-#define INSTALL_MODEL
-
-#ifdef INSTALL_MODEL
 #include "backend/bookshelfmodel/btbookshelfmodel.h"
 #include "backend/drivers/cswordmoduleinfo.h"
 #include "util/geticon.h"
+
 #include "btmini.h"
+#include "btminimodelsmodel.h"
 
-struct ModuleItem
+struct Item
 {
-	ModuleItem() {;}
-	ModuleItem(QModelIndex index, QString repository) : _index(index), _repository(repository) {;}
-	ModuleItem(QString text) : _text(text) {;}
-	ModuleItem(const ModuleItem &copy) : _text(copy._text), _index(copy._index), _repository(copy._repository) {;}
+    Item() {;}
+    Item(QString text, QString repository = QString(), QModelIndex index = QModelIndex(), QIcon icon = QIcon())
+        : _text(text)
+        , _repository(repository)
+        , _index(index)
+        , _icon(icon) {;}
+    Item(const Item &copy)
+        : _text(copy._text)
+        , _index(copy._index)
+        , _repository(copy._repository)
+        , _icon(copy._icon)
+		, _children(copy._children) {;}
+    ~Item() {;}
 
-	QString     _text;
-	QString     _repository;
-    QModelIndex _index;
-
-    bool operator < (const ModuleItem &s2) const
+    bool operator < (const Item &s2) const
     {
-        return _index.data().toString() < s2._index.data().toString();
+        if(_index.isValid())
+            return _index.data().toString() < s2._index.data().toString();
+        return _text < s2._text;
     }
+
+    QString        _text;
+    QModelIndex    _index;
+    QString        _repository;
+    QIcon          _icon;
+    QVector<Item>  _children;
 };
 
-struct CategoryItem
+QDebug operator<<(QDebug dbg, const Item &item)
 {
-	CategoryItem() {;}
-	CategoryItem(QString language, QIcon icon) : _name(language), _icon(icon) {;}
-	CategoryItem(const CategoryItem &copy) : _name(copy._name), _children(copy._children), _icon(copy._icon) { ; }
-
-	QString                    _name;
-	QIcon					   _icon;
-	QVector<ModuleItem>        _children;
-
-	bool operator<(const CategoryItem &s2) const
-	{
-		return _name < s2._name;
-	}
-};
-
-struct LanguageItem
-{
-    LanguageItem() {;}
-    LanguageItem(QString language) : _language(language) {;}
-    LanguageItem(const LanguageItem &copy) : _language(copy._language), _children(copy._children) { ; }
-
-    QString                _language;
-    QVector<CategoryItem>  _children;
-
-    bool operator<(const LanguageItem &s2) const
-    {
-        return _language < s2._language;
-    }
-};
-#endif
-
+	dbg.nospace() << "Item(" << item._text << ", " << item._repository << ", " 
+		<< (item._index.isValid() ? "has index, " : "no index, ") << item._icon << ", " 
+		<< item._children.size() << " children)";
+	return dbg.space();
+}
 
 class BtMiniModelsModelPrivate
 {
@@ -97,17 +82,12 @@ public:
 	int indexLevel(int id, int level) const
 	{
 		return level == 3 ? ((id & 0xfff00000) >> (4*5)) - 1 : 
-			level == 2 ? (((id & 0xff000)) - 1 >> (4*3)) : (id & 0xfff) - 1;
+			level == 2 ? ((((id & 0xff000)) - 1) >> (4*3)) : (id & 0xfff) - 1;
 	}
 
-    QVector<QPair<QAbstractItemModel*, QString> >  _models;
-    mutable QVector<QModelIndex>                   _mapping;
     QLabel                                        *_indicator;
-
-#ifdef INSTALL_MODEL
-    // install model
-    QVector<LanguageItem>                          _languages;
-#endif
+    QVector<Item>                                  _items;
+    QVector<QPair<QAbstractItemModel*, QString> >  _models;
 };
 
 
@@ -131,41 +111,25 @@ int BtMiniModelsModel::rowCount(const QModelIndex &parent) const
 {
 	Q_D(const BtMiniModelsModel);
 
-#ifdef INSTALL_MODEL
-    // install model
     if(!parent.isValid())
-        return d->_languages.size();
+        return d->_items.size();
 	else if(d->indexDepth(parent.internalId()) == 1)
 	{
-		return d->_languages[d->indexLevel(parent.internalId(), 1)]._children.size();
+        return d->_items[d->indexLevel(parent.internalId(), 1)]._children.size();
 	}
 	else if(d->indexDepth(parent.internalId()) == 2)
 	{
-		return d->_languages[d->indexLevel(parent.internalId(), 1)]._children[
+        return d->_items[d->indexLevel(parent.internalId(), 1)]._children[
 			d->indexLevel(parent.internalId(), 2)]._children.size();
 	}
 	else
 		return 0;
-#endif
-
-
-    // models model
-    if(!parent.isValid())
-        return d->_models.size();
-
-	if (parent.internalId() == 0)
-		return d->_models[parent.row()].first->rowCount(QModelIndex());
-
-	QModelIndex mi = d->_mapping[parent.internalId() - 1];
-	return mi.model()->rowCount(mi);
 }
 
 QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &parent) const
 {
 	Q_D(const BtMiniModelsModel);
 
-#ifdef INSTALL_MODEL
-	// install model
 	if(!parent.isValid())
 		return createIndex(row, column, d->index(row));
 	else if(d->indexDepth(parent.internalId()) == 1)
@@ -176,50 +140,17 @@ QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &par
 	{
 		return createIndex(row, column, d->index(d->indexLevel(parent.internalId(), 1), 
 			d->indexLevel(parent.internalId(), 2), row));
-	}
-	else
-		Q_ASSERT(false);
-#endif
+    }
 
-	// models model
-    if (!parent.isValid())
-	{
-		//Q_ASSERT(row < d->_models.size() && row >= 0);
-        return createIndex(row, column);
-	}
+    Q_ASSERT(false);
 
-	QModelIndex mi;
-	
-	if (parent.internalId() == 0)
-	{
-		QAbstractItemModel *m = d->_models[parent.row()].first;
-		mi = m->index(row, column, QModelIndex());
-	}
-	else
-	{
-		QModelIndex pi = d->_mapping[parent.internalId() - 1];
-		mi = pi.child(row, column);
-	}
-
-	Q_ASSERT(mi.isValid());
-
-	int i = d->_mapping.indexOf(mi) + 1;
-
-	if (i == 0)
-	{
-		d->_mapping.append(mi);
-		i = d->_mapping.size();
-	}
-
-	return createIndex(row, column, i);
+	return QModelIndex();
 }
 
 QModelIndex BtMiniModelsModel::parent(const QModelIndex &index) const
 {
 	Q_D(const BtMiniModelsModel);
 
-#ifdef INSTALL_MODEL
-	// install model
 	if(d->indexDepth(index.internalId()) == 1)
 	{
 		return QModelIndex();
@@ -233,86 +164,46 @@ QModelIndex BtMiniModelsModel::parent(const QModelIndex &index) const
 		return createIndex(d->index(d->indexLevel(index.internalId(), 2)), 0, d->index(d->indexLevel(index.internalId(), 1), 
 			d->indexLevel(index.internalId(), 2)));
 	}
-
-#endif
-
-	// models model
-	if (index.internalId() > 0)
-	{
-		QModelIndex mi = d->_mapping[index.internalId() - 1];
-
-		if (mi.parent() == QModelIndex())
-		{
-			for (int i = 0; i < d->_models.size(); ++i)
-				if (mi.model() == d->_models[i].first)
-					return createIndex(i, 0);
-			Q_ASSERT(false);
-		}
-		else
-		{
-			return createIndex(mi.parent().row(), 0, d->_mapping.indexOf(mi.parent()) + 1);
-		}
-	}
-
-    return QModelIndex();
 }
 
 QVariant BtMiniModelsModel::data(const QModelIndex &index, int role) const
 {
-	Q_D(const BtMiniModelsModel);
+    Q_D(const BtMiniModelsModel);
 
     Q_ASSERT(index.model() == this);
 
-#ifdef INSTALL_MODEL
-	// install model
 	if(!index.isValid())
 		return QVariant();
 	if(d->indexDepth(index.internalId()) == 1)
 	{
-		LanguageItem l(d->_languages[d->indexLevel(index.internalId(), 1)]);
+        const Item &l = d->_items[d->indexLevel(index.internalId(), 1)];
 		if(role == Qt::DisplayRole)
-			return l._language;
+            return l._text;
 		if(role == Qt::DecorationRole)
-			return util::getIcon("flag.svg");
-		return QVariant();
+            return util::getIcon("flag.svg");
 	}
 	if(d->indexDepth(index.internalId()) == 2)
 	{
-		CategoryItem c(d->_languages[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)]);
+        const Item &c = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)];
 		if(role == Qt::DisplayRole)
-			return c._name;
+            return c._text;
 		if(role == Qt::DecorationRole)
-			return c._icon;
-		return QVariant();
+            return c._icon;
 	}
 	if(d->indexDepth(index.internalId()) == 3)
 	{
-		ModuleItem m(d->_languages[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)]._children[d->indexLevel(index.internalId(), 3)]);
-		if(m._text.isEmpty())
+        const Item &m = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)]._children[d->indexLevel(index.internalId(), 3)];
+		if(m._index.isValid())
 		{
 			if(role == BtMini::RepositoryRole)
 				return m._repository;
 			return m._index.data(role);
 		}
 		else if(role == Qt::DisplayRole)
-			return m._text;
-		return QVariant();
-	}
-#endif
+            return m._text;
+    }
 
-	// models model
-    if(index.internalId() == 0)
-	{
-		if (role == Qt::DisplayRole)
-	        return d->_models[index.row()].second;
-		else
-			return QVariant();
-	}
-	else
-	{
-		QModelIndex mi = d->_mapping[index.internalId() - 1];
-		return mi.data(role);
-	}
+    return QVariant();
 }
 
 bool BtMiniModelsModel::hasChildren(const QModelIndex &parent) const
@@ -339,23 +230,22 @@ bool BtMiniModelsModel::setData(const QModelIndex &index, const QVariant &value,
     return false;
 }
 
-void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
+void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString repository)
 {
 	Q_D(BtMiniModelsModel);
 
-    d->_models.append(QPair<QAbstractItemModel*, QString>(model, name));
+    d->_models.append(QPair<QAbstractItemModel*, QString>(model, repository));
 
-#ifdef INSTALL_MODEL
 	for(int i = 0, s = model->rowCount(); i < s; ++i)
 	{
-		// language 
+		// language
 		QModelIndex li = model->index(i, 0);
 		QString language = model->data(li).toString();
 
 		int lid = -1;
-		for(int ii = 0; ii < d->_languages.size(); ++ii)
+        for(int ii = 0; ii < d->_items.size(); ++ii)
 		{
-			if(d->_languages[ii]._language == language)
+            if(d->_items[ii]._text == language)
 			{
 				lid = ii;
 				break;
@@ -365,8 +255,10 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 		// add new language
 		if(lid == -1)
 		{
-			d->_languages.append(LanguageItem(language));
-			lid = d->_languages.size() - 1;
+            d->_items.append(Item(language));
+            lid = d->_items.size() - 1;
+
+			//qDebug() << "new lang" << d->_items.last();
 		}
 
 		// add categories
@@ -375,11 +267,10 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 			QModelIndex ci = model->index(ii, 0, li);
 			QString category = model->data(ci).toString();
 
-
 			int cid = -1;
-			for(int iii = 0; iii < d->_languages[lid]._children.size(); ++iii)
+            for(int iii = 0; iii < d->_items[lid]._children.size(); ++iii)
 			{
-				if(d->_languages[lid]._children[iii]._name == category)
+                if(d->_items[lid]._children[iii]._text == category)
 				{
 					cid = iii;
 					break;
@@ -389,23 +280,22 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString name)
 			// add new category
 			if(cid == -1)
 			{
-				d->_languages[lid]._children.append(CategoryItem(category, ci.data(Qt::DecorationRole).value<QIcon>()));
-				cid = d->_languages[lid]._children.size() - 1;
+                d->_items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
+                cid = d->_items[lid]._children.size() - 1;
 			}
 
-			d->_languages[lid]._children[cid]._children.append(ModuleItem("<font size=\"66%\"><center><b>" + name + "</b></center></font>"));
+            d->_items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + repository + "</b></center></font>"));
 
 			// add modules
 			for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
 			{
 				QModelIndex mi = model->index(iii, 0, ci);
-				d->_languages[lid]._children[cid]._children.append(ModuleItem(mi, name));
-			}
+				d->_items[lid]._children[cid]._children.append(Item(QString(), repository, mi));
+            }
 		}
-	}
+    }
 
-    qSort(d->_languages);
-#endif
+    qSort(d->_items);
 }
 
 void BtMiniModelsModel::setIndicator(QWidget *w)
