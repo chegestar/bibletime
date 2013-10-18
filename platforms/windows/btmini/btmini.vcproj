@@ -621,54 +621,6 @@
 				Name="models"
 				>
 				<File
-					RelativePath="..\..\..\src\frontend-mini\models\btminimodelsmodel.h"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Moc&apos;ing btminimodelsmodel.h..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB  &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
-							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
-							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Moc&apos;ing btminimodelsmodel.h..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQ_OS_WINCE_WM -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.12\&quot; -DBT_STATIC_TEXT -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB  &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\..\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
-							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
-							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Moc&apos;ing btminimodelsmodel.h..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.8\&quot; -DBT_MINI_WEBKIT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB  &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
-							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
-							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Moc&apos;ing btminimodelsmodel.h..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D_DEBUG -DDEBUG -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQ_OS_WINCE_WM -DBT_MINI -DLUCENE_DISABLE_MEMTRACKING -DBT_MINI_VERSION#\&quot;0.9.6\&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB  &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
-							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
-							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\..\src\frontend-mini\models\btminimodulenavigationmodel.h"
 					>
 					<FileConfiguration
@@ -711,6 +663,54 @@
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing btminimodulenavigationmodel.h..."
 							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D_DEBUG -DDEBUG -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQ_OS_WINCE_WM -DBT_MINI -DLUCENE_DISABLE_MEMTRACKING -DBT_MINI_VERSION#\&quot;0.9.6\&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB  &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\frontend-mini\models\btminimodulesmodel.h"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminimodulesmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminimodulesmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQ_OS_WINCE_WM -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.12\&quot; -DBT_STATIC_TEXT -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\..\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminimodulesmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.8\&quot; -DBT_MINI_WEBKIT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminimodulesmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D_DEBUG -DDEBUG -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQ_OS_WINCE_WM -DBT_MINI -DLUCENE_DISABLE_MEMTRACKING -DBT_MINI_VERSION#\&quot;0.9.6\&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SVG_LIB -DQT_WEBKIT_LIB &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I.\..\..\..\src\frontend-mini&quot; &quot;-I.\..\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..\..\..\src&quot; &quot;-I.\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1360,7 +1360,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Release\GeneratedFiles\moc_btminimodelsmodel.cpp"
+					RelativePath=".\Release\GeneratedFiles\moc_btminimodulenavigationmodel.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -1396,7 +1396,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Release\GeneratedFiles\moc_btminimodulenavigationmodel.cpp"
+					RelativePath=".\Release\GeneratedFiles\moc_btminimodulesmodel.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -1408,22 +1408,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2236,7 +2220,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Debug\GeneratedFiles\moc_btminimodelsmodel.cpp"
+					RelativePath=".\Debug\GeneratedFiles\moc_btminimodulenavigationmodel.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"
@@ -2272,7 +2256,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Debug\GeneratedFiles\moc_btminimodulenavigationmodel.cpp"
+					RelativePath=".\Debug\GeneratedFiles\moc_btminimodulesmodel.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"
@@ -2284,22 +2268,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -7398,11 +7366,11 @@
 				Name="models"
 				>
 				<File
-					RelativePath="..\..\..\src\frontend-mini\models\btminimodelsmodel.cpp"
+					RelativePath="..\..\..\src\frontend-mini\models\btminimodulenavigationmodel.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\frontend-mini\models\btminimodulenavigationmodel.cpp"
+					RelativePath="..\..\..\src\frontend-mini\models\btminimodulesmodel.cpp"
 					>
 				</File>
 				<File

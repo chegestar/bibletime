@@ -17,7 +17,7 @@
 #include "util/geticon.h"
 
 #include "btmini.h"
-#include "btminimodelsmodel.h"
+#include "btminimodulesmodel.h"
 
 struct Item
 {
@@ -57,11 +57,11 @@ QDebug operator<<(QDebug dbg, const Item &item)
 	return dbg.space();
 }
 
-class BtMiniModelsModelPrivate
+class BtMiniModulesModelPrivate
 {
 public:
-	BtMiniModelsModelPrivate() {;}
-	~BtMiniModelsModelPrivate() {;}
+	BtMiniModulesModelPrivate() {;}
+	~BtMiniModulesModelPrivate() {;}
 
 
 	// fff      language
@@ -91,25 +91,25 @@ public:
 };
 
 
-BtMiniModelsModel::BtMiniModelsModel(QObject *parent)
-    : QAbstractItemModel(parent), d_ptr(new BtMiniModelsModelPrivate())
+BtMiniModulesModel::BtMiniModulesModel(QObject *parent)
+    : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate())
 {
     ;
 }
 
-BtMiniModelsModel::~BtMiniModelsModel()
+BtMiniModulesModel::~BtMiniModulesModel()
 {
     ;
 }
 
-int BtMiniModelsModel::columnCount(const QModelIndex &parent) const
+int BtMiniModulesModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-int BtMiniModelsModel::rowCount(const QModelIndex &parent) const
+int BtMiniModulesModel::rowCount(const QModelIndex &parent) const
 {
-	Q_D(const BtMiniModelsModel);
+	Q_D(const BtMiniModulesModel);
 
     if(!parent.isValid())
         return d->_items.size();
@@ -126,9 +126,9 @@ int BtMiniModelsModel::rowCount(const QModelIndex &parent) const
 		return 0;
 }
 
-QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex BtMiniModulesModel::index(int row, int column, const QModelIndex &parent) const
 {
-	Q_D(const BtMiniModelsModel);
+	Q_D(const BtMiniModulesModel);
 
 	if(!parent.isValid())
 		return createIndex(row, column, d->index(row));
@@ -147,9 +147,9 @@ QModelIndex BtMiniModelsModel::index(int row, int column, const QModelIndex &par
 	return QModelIndex();
 }
 
-QModelIndex BtMiniModelsModel::parent(const QModelIndex &index) const
+QModelIndex BtMiniModulesModel::parent(const QModelIndex &index) const
 {
-	Q_D(const BtMiniModelsModel);
+	Q_D(const BtMiniModulesModel);
 
 	if(d->indexDepth(index.internalId()) == 1)
 	{
@@ -166,9 +166,9 @@ QModelIndex BtMiniModelsModel::parent(const QModelIndex &index) const
 	}
 }
 
-QVariant BtMiniModelsModel::data(const QModelIndex &index, int role) const
+QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const BtMiniModelsModel);
+    Q_D(const BtMiniModulesModel);
 
     Q_ASSERT(index.model() == this);
 
@@ -206,33 +206,33 @@ QVariant BtMiniModelsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool BtMiniModelsModel::hasChildren(const QModelIndex &parent) const
+bool BtMiniModulesModel::hasChildren(const QModelIndex &parent) const
 {
     return (rowCount(parent) > 0);
 }
 
-Qt::ItemFlags BtMiniModelsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags BtMiniModulesModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
     return Qt::ItemFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 }
 
-QVariant BtMiniModelsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant BtMiniModulesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal && section == 0)
         return "Module";
     return QVariant();
 }
 
-bool BtMiniModelsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool BtMiniModulesModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     return false;
 }
 
-void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString repository)
+void BtMiniModulesModel::addModel(QAbstractItemModel *model, QString repository)
 {
-	Q_D(BtMiniModelsModel);
+	Q_D(BtMiniModulesModel);
 
     d->_models.append(QPair<QAbstractItemModel*, QString>(model, repository));
 
@@ -298,12 +298,12 @@ void BtMiniModelsModel::addModel(QAbstractItemModel *model, QString repository)
     qSort(d->_items);
 }
 
-void BtMiniModelsModel::setIndicator(QWidget *w)
+void BtMiniModulesModel::setIndicator(QWidget *w)
 {
     d_ptr->_indicator = qobject_cast<QLabel*>(w);
 }
 
-void BtMiniModelsModel::updateIndicators(QModelIndex index)
+void BtMiniModulesModel::updateIndicators(QModelIndex index)
 {
     if(d_ptr->_indicator)
     {

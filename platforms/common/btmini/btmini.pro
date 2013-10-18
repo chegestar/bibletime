@@ -14,8 +14,8 @@ INCLUDEPATH += . \
 SOURCES += \
     ../../../src/bibletimeapp.cpp \
     ../../../src/frontend-mini/btmini.cpp \
-    ../../../src/frontend-mini/models/btminimodelsmodel.cpp \
     ../../../src/frontend-mini/models/btminimodulenavigationmodel.cpp \
+    ../../../src/frontend-mini/models/btminimodulesmodel.cpp \
     ../../../src/frontend-mini/models/btminimoduletextmodel.cpp \
     ../../../src/frontend-mini/models/btminisettingsmodel.cpp \
     ../../../src/frontend-mini/view/btminilayoutdelegate.cpp \

@@ -50,7 +50,7 @@
 
 #include "btmini.h"
 #include "models/btminimoduletextmodel.h"
-#include "models/btminimodelsmodel.h"
+#include "models/btminimodulesmodel.h"
 #include "models/btminimodulenavigationmodel.h"
 #include "models/btminisettingsmodel.h"
 #include "ui/btminimenu.h"
@@ -439,11 +439,11 @@ BtMini & BtMini::instance()
 
 QWidget *BtMini::widget(BtMiniState type)
 {
-    switch(type)
-    {
-    default:
-        Q_ASSERT(false);
-    }
+    //switch(type)
+    //{
+    //default:
+    //    Q_ASSERT(false);
+    //}
 
     return 0;
 }
@@ -968,7 +968,7 @@ void BtMini::updateRemoteSources(bool download)
 
     // Setup model
     BtMiniView *v = findView(installerWidget());
-    BtMiniModelsModel *m = new BtMiniModelsModel(v);
+    BtMiniModulesModel *m = new BtMiniModulesModel(v);
     QLabel *l = installerWidget()->findChild<QLabel*>("label");
     Q_CHECK_PTR(l);
     m->setIndicator(l);

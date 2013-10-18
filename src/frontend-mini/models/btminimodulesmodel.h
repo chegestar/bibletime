@@ -15,17 +15,17 @@
 #include <QAbstractItemModel>
 #include <QVector>
 
-class BtMiniModelsModelPrivate;
+class BtMiniModulesModelPrivate;
 
 /** 
 */
-class BtMiniModelsModel : public QAbstractItemModel
+class BtMiniModulesModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    BtMiniModelsModel(QObject *parent = 0);
-    ~BtMiniModelsModel();
+    BtMiniModulesModel(QObject *parent = 0);
+    ~BtMiniModulesModel();
     
     /** Reimplemented from QAbstractItemModel. */
     int           columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -51,8 +51,8 @@ public slots:
 protected:
 
 private:
-	Q_DECLARE_PRIVATE(BtMiniModelsModel)
-	BtMiniModelsModelPrivate * const d_ptr;
+	Q_DECLARE_PRIVATE(BtMiniModulesModel)
+	BtMiniModulesModelPrivate * const d_ptr;
 
 };
 
