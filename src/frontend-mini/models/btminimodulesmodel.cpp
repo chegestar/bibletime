@@ -13,6 +13,9 @@
 #include <QtDebug>
 
 #include "backend/bookshelfmodel/btbookshelfmodel.h"
+#include "backend/bookshelfmodel/btbookshelftreemodel.h"
+#include "backend/btinstallbackend.h"
+#include "backend/btinstallmgr.h"
 #include "backend/drivers/cswordmoduleinfo.h"
 #include "util/geticon.h"
 
@@ -57,12 +60,15 @@ QDebug operator<<(QDebug dbg, const Item &item)
 	return dbg.space();
 }
 
+
 class BtMiniModulesModelPrivate
 {
 public:
-	BtMiniModulesModelPrivate() {;}
+	BtMiniModulesModelPrivate(BtMiniModulesModel *q) : q_ptr(q)
+	{
+		_indicator = 0;
+	}
 	~BtMiniModulesModelPrivate() {;}
-
 
 	// fff      language
 	//    ff    category
@@ -85,21 +91,125 @@ public:
 			level == 2 ? ((((id & 0xff000)) - 1) >> (4*3)) : (id & 0xfff) - 1;
 	}
 
+	void refresh(bool download)
+	{
+		Q_Q(BtMiniModulesModel);
+
+		// remove all children nodes
+		qDeleteAll(q->children());
+		_models.clear();
+
+		QStringList ss(BtInstallBackend::sourceNameList(download));
+		BtInstallMgr *im = new BtInstallMgr(q);
+
+		foreach(QString s, ss)
+		{
+			sword::InstallSource is = BtInstallBackend::source(s);
+
+			if(download) im->refreshRemoteSource(&is);
+
+			CSwordBackend *be = BtInstallBackend::backend(is);
+
+			if(be->moduleList().size() == 0)
+				continue;
+
+			BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
+			g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
+
+			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g, q);
+			mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+				"<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+			mm->setSourceModel(be->model());
+
+			addModel(mm, s);
+		}
+
+		if(ss.size() > 0)
+			q->updateIndicators(QModelIndex());
+	}
+
+	void addModel(QAbstractItemModel *model, QString name)
+	{
+		_models.append(QPair<QAbstractItemModel*, QString>(model, name));
+
+		for(int i = 0, s = model->rowCount(); i < s; ++i)
+		{
+			// language
+			QModelIndex li = model->index(i, 0);
+			QString language = li.data().toString();
+
+			int lid = -1;
+			for(int ii = 0; ii < _items.size(); ++ii)
+			{
+				if(_items[ii]._text == language)
+				{
+					lid = ii;
+					break;
+				}
+			}
+
+			// add new language
+			if(lid == -1)
+			{
+				_items.append(Item(language));
+				lid = _items.size() - 1;
+			}
+
+			// add categories
+			for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
+			{
+				QModelIndex ci = model->index(ii, 0, li);
+				QString category = model->data(ci).toString();
+
+				int cid = -1;
+				for(int iii = 0; iii < _items[lid]._children.size(); ++iii)
+				{
+					if(_items[lid]._children[iii]._text == category)
+					{
+						cid = iii;
+						break;
+					}
+				}
+
+				// add new category
+				if(cid == -1)
+				{
+					_items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
+					cid = _items[lid]._children.size() - 1;
+				}
+
+				_items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + name + "</b></center></font>"));
+
+				// add modules
+				for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
+				{
+					QModelIndex mi = model->index(iii, 0, ci);
+					_items[lid]._children[cid]._children.append(Item(QString(), name, mi));
+				}
+			}
+		}
+
+		qSort(_items);
+	}
+
     QLabel                                        *_indicator;
     QVector<Item>                                  _items;
     QVector<QPair<QAbstractItemModel*, QString> >  _models;
+
+	Q_DECLARE_PUBLIC(BtMiniModulesModel);
+	BtMiniModulesModel * const                     q_ptr;
 };
 
 
 BtMiniModulesModel::BtMiniModulesModel(QObject *parent)
-    : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate())
+    : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate(this))
 {
-    ;
+	//qDebug("+++");
 }
 
 BtMiniModulesModel::~BtMiniModulesModel()
 {
-    ;
+    //qDebug("---");
 }
 
 int BtMiniModulesModel::columnCount(const QModelIndex &parent) const
@@ -230,74 +340,6 @@ bool BtMiniModulesModel::setData(const QModelIndex &index, const QVariant &value
     return false;
 }
 
-void BtMiniModulesModel::addModel(QAbstractItemModel *model, QString repository)
-{
-	Q_D(BtMiniModulesModel);
-
-    d->_models.append(QPair<QAbstractItemModel*, QString>(model, repository));
-
-	for(int i = 0, s = model->rowCount(); i < s; ++i)
-	{
-		// language
-		QModelIndex li = model->index(i, 0);
-		QString language = model->data(li).toString();
-
-		int lid = -1;
-        for(int ii = 0; ii < d->_items.size(); ++ii)
-		{
-            if(d->_items[ii]._text == language)
-			{
-				lid = ii;
-				break;
-			}
-		}
-
-		// add new language
-		if(lid == -1)
-		{
-            d->_items.append(Item(language));
-            lid = d->_items.size() - 1;
-
-			//qDebug() << "new lang" << d->_items.last();
-		}
-
-		// add categories
-		for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
-		{
-			QModelIndex ci = model->index(ii, 0, li);
-			QString category = model->data(ci).toString();
-
-			int cid = -1;
-            for(int iii = 0; iii < d->_items[lid]._children.size(); ++iii)
-			{
-                if(d->_items[lid]._children[iii]._text == category)
-				{
-					cid = iii;
-					break;
-				}
-			}
-
-			// add new category
-			if(cid == -1)
-			{
-                d->_items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
-                cid = d->_items[lid]._children.size() - 1;
-			}
-
-            d->_items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + repository + "</b></center></font>"));
-
-			// add modules
-			for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
-			{
-				QModelIndex mi = model->index(iii, 0, ci);
-				d->_items[lid]._children[cid]._children.append(Item(QString(), repository, mi));
-            }
-		}
-    }
-
-    qSort(d->_items);
-}
-
 void BtMiniModulesModel::setIndicator(QWidget *w)
 {
     d_ptr->_indicator = qobject_cast<QLabel*>(w);
@@ -312,4 +354,11 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
         else
             d_ptr->_indicator->setText(index.parent().data().toString().remove(QRegExp("<[^>]*>")));
     }
+}
+
+void BtMiniModulesModel::refresh( bool download /*= false*/ )
+{
+	Q_D(BtMiniModulesModel);
+
+	d->refresh(download);
 }

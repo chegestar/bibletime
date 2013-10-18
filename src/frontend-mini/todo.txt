@@ -13,15 +13,17 @@ kalemas@mail.ru :
         get data from sword
         install a module
         refresh remote sources
-        build search index
+        create model of available modules
+        build search index (maybe build will be resumeable, maybe index displayed verses)
 		maybe backend reloading
         ability for blocking execution (e.g. first text entry)
         make this suitable for main repo
         should know what is current view (text/install), current text, probably via signals/slots
-        i'd prefer to make it in c++ layer
     resize subview width, its primarily for tablets
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
+	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
+		there is bug with highlighting, search for strong:G25 highlights strong:G2523
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp

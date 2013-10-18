@@ -927,16 +927,8 @@ void BtMini::installerQuery(const QModelIndex &index)
 			connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 			dialog->show();
 
-            //// find most parent index corresponding to remote source
-            //QModelIndex si = index;
-            //while(si.parent().isValid())
-            //    si = si.parent();
-            //sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[si.row()]);
-
 			sword::InstallSource is = BtInstallBackend::source(index.data(BtMini::RepositoryRole).toString());
-
             int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
-
             if (status != 0)
             {
                 BtMiniMenu::execQuery(QString(tr("Module was not installed")));
@@ -971,42 +963,16 @@ void BtMini::updateRemoteSources(bool download)
     BtMiniModulesModel *m = new BtMiniModulesModel(v);
     QLabel *l = installerWidget()->findChild<QLabel*>("label");
     Q_CHECK_PTR(l);
-    m->setIndicator(l);
+    
+	m->setIndicator(l);
+	m->refresh(download);
 
     QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
     v->disconnect(SIGNAL(clicked(const QModelIndex &)));
     QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
 
-    QStringList ss(BtInstallBackend::sourceNameList(download));
-    BtInstallMgr *im = new BtInstallMgr(m);
-
-    foreach(QString s, ss)
-    {
-        sword::InstallSource is = BtInstallBackend::source(s);
-
-        if(download)
-            im->refreshRemoteSource(&is);
-
-        CSwordBackend *be = BtInstallBackend::backend(is);
-
-        if(be->moduleList().size() == 0)
-            continue;
-
-        BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
-        g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
-
-        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g, m);
-        mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-            "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
-        mm->setSourceModel(be->model());
-
-        m->addModel(mm, s);
-    }
-
+	if(v->model()) v->model()->deleteLater();
     v->setModel(m);
-
-    if(ss.size() > 0)
-        m->updateIndicators(QModelIndex());
 
 #ifndef QT_NO_CURSOR
     if(download)

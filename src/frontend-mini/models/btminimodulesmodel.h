@@ -39,10 +39,10 @@ public:
     bool          setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
     /** */
-    void          addModel(QAbstractItemModel *model, QString name);
-
-    /** */
     void          setIndicator(QWidget *w);
+
+	/** */
+	void          refresh(bool download = false);
 
 public slots:
     /** */
