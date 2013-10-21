@@ -20,52 +20,52 @@
 <context>
     <name>BtConfig</name>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="44"/>
+        <location filename="../../backend/config/btconfig.cpp" line="47"/>
         <source>Old testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="45"/>
+        <location filename="../../backend/config/btconfig.cpp" line="48"/>
         <source>Moses/Pentateuch/Torah</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="46"/>
+        <location filename="../../backend/config/btconfig.cpp" line="49"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="47"/>
+        <location filename="../../backend/config/btconfig.cpp" line="50"/>
         <source>Prophets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="48"/>
+        <location filename="../../backend/config/btconfig.cpp" line="51"/>
         <source>New testament</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="49"/>
+        <location filename="../../backend/config/btconfig.cpp" line="52"/>
         <source>Gospels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="50"/>
+        <location filename="../../backend/config/btconfig.cpp" line="53"/>
         <source>Letters/Epistles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="51"/>
+        <location filename="../../backend/config/btconfig.cpp" line="54"/>
         <source>Paul&apos;s Epistles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="84"/>
+        <location filename="../../backend/config/btconfig.cpp" line="87"/>
         <source>Error loading configuration!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/config/btconfig.cpp" line="85"/>
+        <location filename="../../backend/config/btconfig.cpp" line="88"/>
         <source>Failed to load BibleTime&apos;s configuration, because it appears that the configuration file corresponds to a newer version of BibleTime. This is likely caused by BibleTime being downgraded. Loading the new configuration file may result in &lt;b&gt;loss of data&lt;/b&gt;.&lt;br/&gt;&lt;br/&gt;Do you still want to try to load the new configuration file? Press &quot;No&quot; to quit BibleTime immediately.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -93,7 +93,7 @@
         <translation type="obsolete">Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="884"/>
+        <location filename="../btmini.cpp" line="920"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -106,32 +106,32 @@
         <translation type="obsolete">Выход</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="731"/>
+        <location filename="../btmini.cpp" line="746"/>
         <source>type and press Enter</source>
         <translation>введите и нажмите Ввод</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="783"/>
+        <location filename="../btmini.cpp" line="798"/>
         <source>No Remote Sources</source>
         <translation>Нет удаленных источников</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="883"/>
+        <location filename="../btmini.cpp" line="919"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="884"/>
+        <location filename="../btmini.cpp" line="920"/>
         <source>Install</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="890"/>
+        <location filename="../btmini.cpp" line="926"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="905"/>
+        <location filename="../btmini.cpp" line="934"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
@@ -144,17 +144,17 @@
     <name>BtMiniMenu</name>
     <message>
         <location filename="../ui/btminimenu.cpp" line="336"/>
-        <location filename="../ui/btminimenu.cpp" line="510"/>
+        <location filename="../ui/btminimenu.cpp" line="518"/>
         <source>Ok</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="469"/>
+        <location filename="../ui/btminimenu.cpp" line="477"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="514"/>
+        <location filename="../ui/btminimenu.cpp" line="522"/>
         <source>Don&apos;t show</source>
         <translation>Не показывать</translation>
     </message>
@@ -162,9 +162,8 @@
 <context>
     <name>BtMiniModelsModel</name>
     <message>
-        <location filename="../models/btminimodelsmodel.cpp" line="180"/>
         <source>Select repository:</source>
-        <translation>Выберите репозиторий:</translation>
+        <translation type="obsolete">Выберите репозиторий:</translation>
     </message>
 </context>
 <context>
@@ -183,65 +182,73 @@
 <context>
     <name>BtMiniModuleTextModel</name>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="821"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="883"/>
         <source>Add Left</source>
         <translation>Добавить Слева</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="821"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="883"/>
         <source>Add Right</source>
         <translation>Добавить Справа</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="824"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="886"/>
         <source>Clear</source>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1028"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1090"/>
         <source>No Module</source>
         <translation>Нет Модуля</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1092"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1164"/>
         <source>Search ...</source>
         <translation>Поиск ...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1098"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1170"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
         <translation>стронг:</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
         <source>Build index for module?</source>
         <translation>Создать индекс для модуля?</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1111"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1115"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1187"/>
         <source>Indexing...</source>
         <translation>Индексирование...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1172"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1248"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1175"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1251"/>
         <source>Add Parallel</source>
         <translation>Параллель</translation>
+    </message>
+</context>
+<context>
+    <name>BtMiniModulesModel</name>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="359"/>
+        <source>Select language:</source>
+        <translation>Выберите язык:</translation>
     </message>
 </context>
 <context>
@@ -302,46 +309,50 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="60"/>
         <source>Font size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Размер шрифта:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="62"/>
         <source>Font size for text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Размер текста:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="64"/>
         <source>Multi-threading:</source>
-        <translation type="unfinished"></translation>
+        <translation>Многопоточность:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="66"/>
         <source>Continuous scrolling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Авто-скроллинг:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="69"/>
         <source>Use WebKit:</source>
-        <translation type="unfinished"></translation>
+        <translation>Использовать WebKit:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="73"/>
         <source>Search type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип поиска:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="76"/>
         <source>Ui style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Стиль:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="78"/>
         <source>Handbook:</source>
-        <translation type="unfinished"></translation>
+        <translation>Руководство:</translation>
+    </message>
+    <message>
+        <source>News and Updates:</source>
+        <translation type="obsolete">Новости:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="80"/>
-        <source>News and Updates:</source>
+        <source>Changelog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -352,32 +363,32 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="84"/>
         <source>&lt;b&gt;BibleTime Mini&lt;/b&gt; - spend your time with Bible on mobile!</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;BibleTime Mini&lt;/b&gt; - время с Библией на мобильном.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="85"/>
         <source>Current version:</source>
-        <translation type="unfinished"></translation>
+        <translation>Версия:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="87"/>
         <source>Built on:</source>
-        <translation type="unfinished"></translation>
+        <translation>Собрано (дата):</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="89"/>
         <source>It is cross-platform open-source Bible study application designed for mobile devices.</source>
-        <translation type="unfinished"></translation>
+        <translation>Это свободное крос-платформенное приложение для изучения Библии созданое специально для мобильных устройств.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="91"/>
         <source>Underlying frameworks:</source>
-        <translation type="unfinished"></translation>
+        <translation>Используемые библиотеки:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="96"/>
         <source>You could post feedback, report an issue or get help throught forum:</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете оставить отзыв, сообщить о проблеме или помочь проекту через форум:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="189"/>
@@ -396,92 +407,132 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="206"/>
         <source>AND</source>
-        <translation type="unfinished"></translation>
+        <translation>Все слова</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="209"/>
         <source>OR</source>
-        <translation type="unfinished"></translation>
+        <translation>Одно из слов</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="212"/>
         <source>Full syntax</source>
-        <translation type="unfinished"></translation>
+        <translation>Поисковый синтаксис</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="250"/>
+        <source>&lt;h2&gt;&lt;center&gt;Usefull tips:&lt;/center&gt;&lt;/h2&gt;&lt;br/&gt;</source>
+        <translation>&lt;h2&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/h2&gt;&lt;br/&gt;</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="273"/>
+        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are alos another interface styles provided by your platfrom.</source>
+        <translation>&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нарвится.</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="277"/>
+        <source>Following information you could access again in &lt;b&gt;Settings&lt;/b&gt; under the &lt;b&gt;Handbook&lt;/b&gt; item.&lt;br/&gt;</source>
+        <translation>Эту информацию можно прочитать снова в &lt;b&gt;Опциях&lt;/b&gt; пункт &lt;b&gt;Руководство&lt;/b&gt;.&lt;br/&gt;</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="279"/>
+        <source>News and Updates</source>
+        <translation>Новости и Обновления</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="280"/>
+        <source>combined module manager by languages, so you could observe all available modules for particular language</source>
+        <translation>сводный установщик текстов с сортировкой по языкам</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="282"/>
+        <source>new logic for base font size selection. Tablets should looks better now.&lt;br/&gt;</source>
+        <translation>новая логика для выбора базового размера шрифта.&lt;br/&gt;</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="283"/>
+        <source>parallel Bible display, make long tap in module selection dialog and press</source>
+        <translation>параллельный просмотра Библлл, по долгому нажатию в окне выбора модуля и нажатию на</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="284"/>
+        <source>This feature is finished and may not work as expected</source>
+        <translation>Эта функция не завершена полностью и может работать не совсем как ожидается</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="286"/>
+        <source>was added support for General Books and search in non Bible modules was fixed</source>
+        <translation>добавлена поддержка для Книг и поиск в не библейских модулях исправлен</translation>
+    </message>
+    <message>
         <source>&lt;b&gt;&lt;center&gt;Usefull tips:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&lt;b&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="251"/>
         <source>Many views in BibleTime Mini recognizes &lt;b&gt;short pressing&lt;/b&gt; by finger and &lt;b&gt;long pressing&lt;/b&gt;. Try to press screen on word you interested in for a second (device should vibrate ones), information (context) view for that word should open. Same for footnotes and cross-references.&lt;br/&gt;Try to press Text view for several seconds before device vibrates twice, service menu should open. Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.</source>
-        <translation type="unfinished"></translation>
+        <translation>Разные окна в приложении распознают &lt;b&gt;короткое нажатие&lt;/b&gt; и &lt;b&gt;долгое нажатие&lt;/b&gt;. Попробуйте нажать пальцем на экране на слове которое вас интересует не более чем на секунду (устройство провибрирует один раз), откроется информационное (контекстное) окно. Нак же можно нажать на сносках и перекрестных ссылках. &lt;br/&gt;Попробуйте держать нажатие на экране Библии в течении нескольких секунд до того как устройство провибрирует дважды, откроется сервисное меню. С помощью сервисного меню можно добавлять и удалять дополнительные окна для просмотра разных мест.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="256"/>
         <source>&lt;b&gt;Context view.&lt;/b&gt; It is consist of two views: word context, and commentary context. Try to slide left/right to observe them. Default modules used for this context could be configurated in Module selection window by long pressping.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Контекстное окно.&lt;/b&gt; Оно состоит из двух частей в одном можно просматривать контекст, в другом - комментарий для стиха. Попробуйте листать в право/лево чтобы переключаться между ними. Модули, используемые для контекстного окна, можно настроить в окне выбора текущего модуля по долгому нажатию.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="259"/>
         <source>&lt;b&gt;Search.&lt;/b&gt; BibleTime Mini uses CLucene indexed search, this means that you have to wait for some time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to input box at the top your request. Try to use wildcards &quot;*&quot; (like &quot;take*&quot;), keywords (like &quot;strong:G1203&quot; or &quot;footnote:Eve&quot;), and combine several words. Note, you should have keyboard with Enter key on your keyboard to start search, or on some platforms there is way to insert Return Carriage symbol.&lt;br/&gt;Long pressing on item will bring verse to reading window.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Поиск.&lt;/b&gt; BibleTime Mini использует поиск на основе индекса, это значит что нужно подождать определенное время для генерации индекса чтобы получить мнговенный поиск по всей Библии (на устройстве с процессором 1GHz генерация индекса для модуля с номерами стронга занимает 10 минут, на устройстве с процессором 600MHz то же может занять около часа). Переключитесь на поисковое окно и введите запрос в верхней строке. Вы можете использовать знаки подстановки &quot;*&quot; (например, &quot;люб*&quot;), ключевые слова (например, &quot;стронг:G1203&quot; или &quot;footnote:Ева&quot;), совмещать слова. Замечание, поиск активируется клавишей на виртуальной клавиатуре, например, Ввод. На некоторых платформах можно вставить специальный символ Возврата Каретки.&lt;br/&gt;Долгое нажатие на стихе откроет его в Основном окне.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="266"/>
         <source>&lt;b&gt;Default Modules.&lt;/b&gt; There are several types of modules: default Bible is used to render cross-references, default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in context popup. To change default modules, when you open Module Selection popup, make long press on module you would like to make default and select corresponding action.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Модули по-умолчанию.&lt;/b&gt; Несколько типов: базовая Библия используется для обработки перекрестных ссылок, комментарий - для отображения в контекстном окне, греческий и еврейский лексиконы Стронга - для определений слов. Для того чтобы изменить модули по-умолчанию, откройте окно выбора модуля и сделав долгое нажатие выберите &quot;Сделать по-умолчанию&quot;.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="270"/>
         <source>&lt;b&gt;Parallel Bible display.&lt;/b&gt; You would open several Bible texts in one view, with respect of different verse markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like to add, then select &quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Парралельный просмотр Библии.&lt;/b&gt; Можно открыть несколько Библейских текстов в одном окне для парралельного просмотра, с учетом разных традиций разделения на стихи. В любом окне где уже открыта Библия, откройте окно выбора модуля и длелайте долгое нажатие на модуле, в сервисном меню выберите &quot;</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="272"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="279"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="284"/>
         <source>Add Parallel</source>
-        <translation type="unfinished"></translation>
+        <translation>Параллель</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="275"/>
         <source>&lt;br/&gt;This information you could access again in &lt;b&gt;Settings&lt;/b&gt; under the &lt;b&gt;Handbook&lt;/b&gt; item.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&lt;br/&gt;Эту информацию можно получить снова в &lt;b&gt;Опциях&lt;/b&gt; в пункте &lt;b&gt;Руководство&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="277"/>
         <source>&lt;body&gt;&lt;b&gt;&lt;center&gt;News and Updates:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&lt;body&gt;&lt;b&gt;&lt;center&gt;Новости и Обноления:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="278"/>
         <source>&lt;b&gt;0.9.5&lt;/b&gt; - parallel Bible display, make long tap in module selection dialog and press &quot;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&lt;b&gt;0.9.5&lt;/b&gt; - параллельный просмотр Библии, по долгому нажатию на модуле в окне выбора модуля. Нажмите &quot;</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="281"/>
         <source>&lt;b&gt;0.9.3&lt;/b&gt; - was added support for General Books and search in non Bible modules was fixed.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&lt;b&gt;0.9.3&lt;/b&gt; - добавлена поддержка для Книг и поиск для не библейских модулей исправлен.</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="298"/>
-        <location filename="../models/btminisettingsmodel.cpp" line="317"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="303"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="322"/>
         <source>Select size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите размер:</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="377"/>
         <source>Follow link?</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти?</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="377"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="372"/>
+        <location filename="../models/btminisettingsmodel.cpp" line="377"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -498,7 +549,7 @@
     <message>
         <location filename="../../frontend/cinfodisplay.cpp" line="54"/>
         <source>Select all</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../frontend/cinfodisplay.cpp" line="58"/>
@@ -585,168 +636,168 @@
 <context>
     <name>CSwordModuleInfo</name>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="808"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="809"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="811"/>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="817"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="812"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="818"/>
         <source>unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="814"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="815"/>
         <source>Markup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="820"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="821"/>
         <source>Location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="824"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="825"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="829"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="830"/>
         <source>Category</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="834"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="835"/>
         <source>LCSH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="838"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="839"/>
         <source>Writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="839"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="840"/>
         <source>yes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="839"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="840"/>
         <source>no</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="843"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="844"/>
         <source>Unlock key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="864"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="865"/>
         <source>Features</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="872"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="873"/>
         <source>Take care, this work contains cult / questionable material!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="876"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="877"/>
         <source>About</source>
         <translation type="unfinished">О Программе</translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="898"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="899"/>
         <source>Distribution license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="899"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="900"/>
         <source>Distribution source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="900"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="901"/>
         <source>Distribution notes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="901"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="902"/>
         <source>Text source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="902"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="903"/>
         <source>Copyright notes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="903"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="904"/>
         <source>Copyright holder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="904"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="905"/>
         <source>Copyright date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="905"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="906"/>
         <source>Copyright contact name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="906"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="907"/>
         <source>Copyright contact address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="907"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="908"/>
         <source>Copyright contact email</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="998"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="999"/>
         <source>Bibles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1000"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1001"/>
         <source>Commentaries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1002"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1003"/>
         <source>Books</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1004"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1005"/>
         <source>Cults/Unorthodox</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1006"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1007"/>
         <source>Maps and Images</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1008"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1009"/>
         <source>Daily Devotionals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1010"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1011"/>
         <source>Lexicons and Dictionaries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1012"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1013"/>
         <source>Glossaries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1014"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="1015"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
@@ -754,28 +805,28 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="450"/>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="460"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="461"/>
         <source>Indexing aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="451"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="452"/>
         <source>An internal error occurred while building the index: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="461"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="462"/>
         <source>An internal error occurred while building the index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="570"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="571"/>
         <source>Search aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="571"/>
+        <location filename="../../backend/drivers/cswordmoduleinfo.cpp" line="572"/>
         <source>An internal error occurred while executing your search</source>
         <translation type="unfinished"></translation>
     </message>

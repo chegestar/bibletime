@@ -270,7 +270,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
             tr("<b>Parallel Bible display.</b> You would open several Bible texts in one view, with respect of different verse "
                "markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like "
                "to add, then select \"") + tr("Add Parallel") + "\"." + "<br/><br/>" +
-            tr("<b>Dark theme.</b> You could change color sheme on dark by changing Ui Style on \"mini-night\". There are alos another "
+            tr("<b>Dark theme.</b> You could change color sheme on dark by changing Ui Style on \"mini-night\". There are also another "
                "interface styles provided by your platfrom.") + "<br/><br/>" +
             QString("</body>"));
     case tipWorksAddon:
