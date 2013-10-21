@@ -46,7 +46,12 @@ public:
 
 public slots:
     /** */
-    void          updateIndicators(QModelIndex index);
+    void          updateIndicators(QModelIndex index = QModelIndex());
+
+    /** */
+    void          backgroundDownload();
+    void          downloadComplete();
+
 
 protected:
 

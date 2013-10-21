@@ -795,7 +795,7 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             BtMiniPanel::Refresh << (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
 
-        QLabel *lb = new QLabel(tr("No Remote Sources"), w);
+        QLabel *lb = new QLabel(w);
         changeFontSize(lb, 0.9);
         lb->setAlignment(Qt::AlignCenter);
         lb->setMargin(lb->font().pixelSize() / 2);
@@ -953,31 +953,31 @@ void BtMini::installerQuery(const QModelIndex &index)
 
 void BtMini::updateRemoteSources(bool download)
 {
-#ifndef QT_NO_CURSOR
-    if(download)
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-#endif
-
-    // Setup model
     BtMiniView *v = findView(installerWidget());
-    BtMiniModulesModel *m = new BtMiniModulesModel(v);
-    QLabel *l = installerWidget()->findChild<QLabel*>("label");
-    Q_CHECK_PTR(l);
-    
-	m->setIndicator(l);
-	m->refresh(download);
+    BtMiniModulesModel *m = v->findChild<BtMiniModulesModel*>();
 
-    QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
-    v->disconnect(SIGNAL(clicked(const QModelIndex &)));
-    QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+    if(!m)
+    {
+        m = new BtMiniModulesModel(v);
 
-	if(v->model()) v->model()->deleteLater();
-    v->setModel(m);
+        QLabel *l = installerWidget()->findChild<QLabel*>("label");
+        Q_CHECK_PTR(l);
 
-#ifndef QT_NO_CURSOR
+        m->setIndicator(l);
+        m->refresh(download);
+
+        QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
+        v->disconnect(SIGNAL(clicked(const QModelIndex &)));
+        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
+
+        if(v->model()) v->model()->deleteLater();
+        v->setModel(m);
+    }
+
     if(download)
-        QApplication::restoreOverrideCursor();
-#endif
+    {
+        m->backgroundDownload();
+    }
 }
 
 /** Sword debug messages. */

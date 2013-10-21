@@ -100,7 +100,7 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
             break;
 		case Refresh:
 				bo = "Refresh";
-				bt = tr("Refresh");
+                bt = tr("Update Sources");
             break;
         default:
             Q_ASSERT(false);

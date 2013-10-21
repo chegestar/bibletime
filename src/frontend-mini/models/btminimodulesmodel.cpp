@@ -9,7 +9,10 @@
 *
 **********/
 
+#include <QApplication>
 #include <QLabel>
+#include <QTimer>
+#include <QThread>
 #include <QtDebug>
 
 #include "backend/bookshelfmodel/btbookshelfmodel.h"
@@ -61,14 +64,65 @@ QDebug operator<<(QDebug dbg, const Item &item)
 }
 
 
+QVector<QAbstractItemModel*> refreshRemoteSources(BtInstallMgr *im, bool download)
+{
+    QStringList ss(BtInstallBackend::sourceNameList(download));
+    QVector<QAbstractItemModel*> sl;
+
+    foreach(QString s, ss)
+    {
+        sword::InstallSource is = BtInstallBackend::source(s);
+
+        if(download) im->refreshRemoteSource(&is);
+
+        CSwordBackend *be = BtInstallBackend::backend(is);
+
+        if(be->moduleList().size() == 0)
+            continue;
+
+        BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
+        g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
+
+        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g);
+        mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+            "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+        mm->setSourceModel(be->model());
+        mm->setObjectName(s);
+
+        sl.append(mm);
+    }
+
+    return sl;
+}
+
+class Thread : public QThread
+{
+public:
+    Thread(QObject *parent, BtInstallMgr *im) : QThread(parent), _installManager(im) {;}
+    ~Thread() {;}
+
+    void run()
+    {
+        _data = refreshRemoteSources(_installManager, true);
+    }
+
+    QVector<QAbstractItemModel*>  _data;
+    BtInstallMgr                 *_installManager;
+};
+
+
 class BtMiniModulesModelPrivate
 {
 public:
-	BtMiniModulesModelPrivate(BtMiniModulesModel *q) : q_ptr(q)
-	{
-		_indicator = 0;
-	}
-	~BtMiniModulesModelPrivate() {;}
+    BtMiniModulesModelPrivate(BtMiniModulesModel *q)
+        : q_ptr(q)
+        , _installManager(new BtInstallMgr(q))
+        , _indicator(0)
+        , _thread(new Thread(q, _installManager))
+    {
+        QObject::connect(_thread, SIGNAL(finished ()), q, SLOT(downloadComplete()));
+    }
+    ~BtMiniModulesModelPrivate() {;}
 
 	// fff      language
 	//    ff    category
@@ -91,46 +145,72 @@ public:
 			level == 2 ? ((((id & 0xff000)) - 1) >> (4*3)) : (id & 0xfff) - 1;
 	}
 
+    void generateFavorites()
+    {
+        // add current language, Greek and Hebrew
+        Item currentItem;
+        Item englishItem;
+        Item hebrewItem;
+        Item greekItem;
+
+
+        QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
+        QString language(QObject::tr(languageEnglish.toLocal8Bit()));
+
+        bool add = false;
+
+        foreach(Item i, _items)
+        {
+            if(i._text == QObject::tr("English"))
+                englishItem = i, add = true;
+            if(i._text == language)
+                currentItem = i, add = true;
+            if(i._text == QObject::tr("Hebrew"))
+                hebrewItem = i, add = true;
+            if(i._text == QObject::tr("Greek, Ancient (to 1453)"))
+                greekItem = i, add = true;
+        }
+
+        if(add)
+            _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("All languages:") + "</b></center></font>"));
+
+        if(!greekItem._text.isEmpty())
+            _items.prepend(greekItem);
+        if(!hebrewItem._text.isEmpty())
+            _items.prepend(hebrewItem);
+        if(!currentItem._text.isEmpty())
+            _items.prepend(currentItem);
+        else if(!englishItem._text.isEmpty())
+            _items.prepend(englishItem);
+
+        if(add)
+            _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Suggestions:") + "</b></center></font>"));
+
+    }
+
 	void refresh(bool download)
 	{
 		Q_Q(BtMiniModulesModel);
 
-		// remove all children nodes
-		qDeleteAll(q->children());
-		_models.clear();
+        QVector<QAbstractItemModel*> mm(refreshRemoteSources(_installManager, false));
 
-		QStringList ss(BtInstallBackend::sourceNameList(download));
-		BtInstallMgr *im = new BtInstallMgr(q);
+        foreach(QAbstractItemModel *m, mm)
+            addModel(m);
 
-		foreach(QString s, ss)
-		{
-			sword::InstallSource is = BtInstallBackend::source(s);
-
-			if(download) im->refreshRemoteSource(&is);
-
-			CSwordBackend *be = BtInstallBackend::backend(is);
-
-			if(be->moduleList().size() == 0)
-				continue;
-
-			BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
-			g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
-
-			BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g, q);
-			mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-				"<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
-			mm->setSourceModel(be->model());
-
-			addModel(mm, s);
-		}
-
-		if(ss.size() > 0)
+        if(mm.size() > 0)
+        {
+            generateFavorites();
 			q->updateIndicators(QModelIndex());
+        }
 	}
 
-	void addModel(QAbstractItemModel *model, QString name)
+    void addModel(QAbstractItemModel *model)
 	{
-		_models.append(QPair<QAbstractItemModel*, QString>(model, name));
+        Q_Q(BtMiniModulesModel);
+
+        //model->setParent(q);
+
+        _models.append(model);
 
 		for(int i = 0, s = model->rowCount(); i < s; ++i)
 		{
@@ -151,7 +231,7 @@ public:
 			// add new language
 			if(lid == -1)
 			{
-				_items.append(Item(language));
+                _items.append(Item(language, QString(), QModelIndex(), util::getIcon("flag.svg")));
 				lid = _items.size() - 1;
 			}
 
@@ -178,13 +258,13 @@ public:
 					cid = _items[lid]._children.size() - 1;
 				}
 
-				_items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + name + "</b></center></font>"));
+                _items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + model->objectName() + "</b></center></font>"));
 
 				// add modules
 				for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
 				{
 					QModelIndex mi = model->index(iii, 0, ci);
-					_items[lid]._children[cid]._children.append(Item(QString(), name, mi));
+                    _items[lid]._children[cid]._children.append(Item(QString(), model->objectName(), mi));
 				}
 			}
 		}
@@ -194,7 +274,10 @@ public:
 
     QLabel                                        *_indicator;
     QVector<Item>                                  _items;
-    QVector<QPair<QAbstractItemModel*, QString> >  _models;
+    QVector<QAbstractItemModel*>                   _models;
+
+    BtInstallMgr                                  *_installManager;
+    Thread                                        *_thread;
 
 	Q_DECLARE_PUBLIC(BtMiniModulesModel);
 	BtMiniModulesModel * const                     q_ptr;
@@ -289,8 +372,8 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
         const Item &l = d->_items[d->indexLevel(index.internalId(), 1)];
 		if(role == Qt::DisplayRole)
             return l._text;
-		if(role == Qt::DecorationRole)
-            return util::getIcon("flag.svg");
+        if(role == Qt::DecorationRole)
+            return l._icon;
 	}
 	if(d->indexDepth(index.internalId()) == 2)
 	{
@@ -305,6 +388,10 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
         const Item &m = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)]._children[d->indexLevel(index.internalId(), 3)];
 		if(m._index.isValid())
 		{
+            // protect from module installation during remote sources update
+            if(d->_thread->isRunning() && role == BtBookshelfModel::ModulePointerRole)
+                return QVariant();
+
 			if(role == BtMini::RepositoryRole)
 				return m._repository;
 			return m._index.data(role);
@@ -347,13 +434,74 @@ void BtMiniModulesModel::setIndicator(QWidget *w)
 
 void BtMiniModulesModel::updateIndicators(QModelIndex index)
 {
+    Q_D(BtMiniModulesModel);
+
     if(d_ptr->_indicator)
     {
-        if(!index.isValid() || !index.parent().isValid())
+        if(d->_thread->isRunning())
+        {
+            static QTimer timer;
+            QString t(tr("Updating"));
+            QString tt(d_ptr->_indicator->text());
+
+            if(tt == t + "...") tt = t;
+            else if(tt == t + "..") tt = t + "...";
+            else if(tt == t + ".") tt = t + "..";
+            else tt = t + ".";
+
+            d_ptr->_indicator->setText(tt);
+
+            //QTimer::singleShot(800, this, SLOT(updateIndicators()));
+            timer.disconnect();
+            timer.setSingleShot(true);
+            timer.setInterval(800);
+            timer.start();
+            connect(&timer, SIGNAL(timeout()), this, SLOT(updateIndicators()));
+
+            return;
+        }
+
+        if(d->_models.size() == 0)
+            d_ptr->_indicator->setText(tr("Need module sources"));
+        else if(!index.isValid() || !index.parent().isValid())
             d_ptr->_indicator->setText(tr("Select language:"));
         else
             d_ptr->_indicator->setText(index.parent().data().toString().remove(QRegExp("<[^>]*>")));
     }
+}
+
+void BtMiniModulesModel::backgroundDownload()
+{
+    Q_D(BtMiniModulesModel);
+
+    if(d->_thread->isRunning())
+        return;
+
+    d->_thread->start();
+    updateIndicators(QModelIndex());
+}
+
+void BtMiniModulesModel::downloadComplete()
+{
+    Q_D(BtMiniModulesModel);
+
+    beginResetModel();
+
+    // clear old sources
+    foreach (QAbstractItemModel *m, d->_models)
+        m->deleteLater();
+    d->_models.clear();
+    d->_items.clear();
+
+    // add calculated sources
+    foreach (QAbstractItemModel *m, d->_thread->_data)
+        d->addModel(m);
+
+    d->generateFavorites();
+
+    endResetModel();
+
+    //updateIndicators(QModelIndex());
 }
 
 void BtMiniModulesModel::refresh( bool download /*= false*/ )

@@ -28,7 +28,7 @@ SOURCES += \
 HEADERS += \
     ../../../src/bibletimeapp.h \
     ../../../src/frontend-mini/btmini.h \
-    ../../../src/frontend-mini/models/btminimodelsmodel.h \
+    ../../../src/frontend-mini/models/btminimodulesmodel.h \
     ../../../src/frontend-mini/models/btminimodulenavigationmodel.h \
     ../../../src/frontend-mini/models/btminimoduletextmodel.h \
     ../../../src/frontend-mini/models/btminisettingsmodel.h \
