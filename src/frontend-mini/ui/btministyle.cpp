@@ -36,8 +36,9 @@ public:
 
         if(_night)
         {
-            _palette.setColor(QPalette::Text, QColor(255, 255, 255));
-            _palette.setColor(QPalette::Base, QColor(22, 22, 22));
+            _palette.setColor(QPalette::Text, QColor(215, 215, 215));
+            //_palette.setColor(QPalette::Base, QColor(22, 22, 22));
+            _palette.setColor(QPalette::Base, QColor(0, 0, 0));
             _palette.setColor(QPalette::Link, QColor("#62a4db"));
 
             _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
@@ -276,8 +277,8 @@ public:
             {
                 p.setColor(QPalette::Window, QColor(0, 0, 0));
                 p.setColor(QPalette::Button, QColor(0, 0, 0));
-                p.setColor(QPalette::WindowText, QColor(255, 255, 255));
-                p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
+                //p.setColor(QPalette::WindowText, QColor(255, 255, 255));
+                //p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
             }
             else
             {
