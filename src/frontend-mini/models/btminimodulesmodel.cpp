@@ -122,7 +122,10 @@ public:
     {
         QObject::connect(_thread, SIGNAL(finished ()), q, SLOT(downloadComplete()));
     }
-    ~BtMiniModulesModelPrivate() {;}
+    ~BtMiniModulesModelPrivate()
+    {
+        clear();
+    }
 
 	// fff      language
 	//    ff    category
@@ -145,7 +148,16 @@ public:
 			level == 2 ? ((((id & 0xff000)) - 1) >> (4*3)) : (id & 0xfff) - 1;
 	}
 
-    void generateFavorites()
+    void clear()
+    {
+        foreach (QAbstractItemModel *m, _models)
+            //m->deleteLater();
+            delete m;
+        _models.clear();
+        _items.clear();
+    }
+
+    void generateSuggestions()
     {
         // add current language, Greek and Hebrew
         Item currentItem;
@@ -172,20 +184,16 @@ public:
         }
 
         if(add)
-            _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("All languages:") + "</b></center></font>"));
+        {
+            _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Available languages:") + "</b></center></font>"));
 
-        if(!greekItem._text.isEmpty())
-            _items.prepend(greekItem);
-        if(!hebrewItem._text.isEmpty())
-            _items.prepend(hebrewItem);
-        if(!currentItem._text.isEmpty())
-            _items.prepend(currentItem);
-        else if(!englishItem._text.isEmpty())
-            _items.prepend(englishItem);
+            if(!greekItem._text.isEmpty()) _items.prepend(greekItem);
+            if(!hebrewItem._text.isEmpty()) _items.prepend(hebrewItem);
+            if(!currentItem._text.isEmpty()) _items.prepend(currentItem);
+            else if(!englishItem._text.isEmpty()) _items.prepend(englishItem);
 
-        if(add)
             _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Suggestions:") + "</b></center></font>"));
-
+        }
     }
 
 	void refresh(bool download)
@@ -199,7 +207,7 @@ public:
 
         if(mm.size() > 0)
         {
-            generateFavorites();
+            generateSuggestions();
 			q->updateIndicators(QModelIndex());
         }
 	}
@@ -207,8 +215,6 @@ public:
     void addModel(QAbstractItemModel *model)
 	{
         Q_Q(BtMiniModulesModel);
-
-        //model->setParent(q);
 
         _models.append(model);
 
@@ -287,12 +293,13 @@ public:
 BtMiniModulesModel::BtMiniModulesModel(QObject *parent)
     : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate(this))
 {
-	//qDebug("+++");
+	;
 }
 
 BtMiniModulesModel::~BtMiniModulesModel()
 {
-    //qDebug("---");
+	Q_D(BtMiniModulesModel);
+	delete d;
 }
 
 int BtMiniModulesModel::columnCount(const QModelIndex &parent) const
@@ -487,21 +494,15 @@ void BtMiniModulesModel::downloadComplete()
 
     beginResetModel();
 
-    // clear old sources
-    foreach (QAbstractItemModel *m, d->_models)
-        m->deleteLater();
-    d->_models.clear();
-    d->_items.clear();
+    d->clear();
 
     // add calculated sources
     foreach (QAbstractItemModel *m, d->_thread->_data)
         d->addModel(m);
 
-    d->generateFavorites();
+    d->generateSuggestions();
 
     endResetModel();
-
-    //updateIndicators(QModelIndex());
 }
 
 void BtMiniModulesModel::refresh( bool download /*= false*/ )
