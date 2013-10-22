@@ -24,6 +24,7 @@ kalemas@mail.ru :
     move CInfoDisplay text processing to Core
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
+	download locales when refresh sources
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp

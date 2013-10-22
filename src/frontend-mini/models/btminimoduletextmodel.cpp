@@ -1148,6 +1148,14 @@ void BtMiniModuleTextModel::startSearch()
 
 	sword::ListKey results;
 	sword::ListKey scope;
+    QString searchText = d->_searchText.replace(tr("strong:", "Strongs search keyword"), "strong:")
+            .replace(tr("footnote:", "Footnote search keyword"), "footnote:")
+            .replace(tr("heading:", "Heading search keyword"), "heading:")
+            .replace(tr("morph:", "Morph search keyword"), "morph:");
+
+    // test on empty keywords
+    if (searchText.replace(QRegExp("heading:|footnote:|morph:|strong:"), "").simplified().isEmpty())
+        return;
 	
 	if(CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(m))
 	{
@@ -1167,7 +1175,7 @@ void BtMiniModuleTextModel::startSearch()
 		m->module()->createSearchFramework();
 
         QPair<BtMiniMenu*, CSwordModuleInfo*> p(dialog.data(), m);
-		results = m->module()->search(d->_searchText.replace(tr("strong:", "Strongs search keyword"), "strong:").toUtf8(),
+        results = m->module()->search(searchText.toUtf8(),
             0, 0, &scope, 0, &BtMiniModuleTextModelPrivate::searchProgress, &p);
 
 		if(dialog->wasCanceled() || m->module()->terminateSearch)
@@ -1204,7 +1212,7 @@ void BtMiniModuleTextModel::startSearch()
 		{
             CSwordModuleSearch searcher;
 
-            searcher.setSearchedText(d->_searchText);
+            searcher.setSearchedText(searchText);
 			searcher.setModules(QList<const CSwordModuleInfo*>() << m);
 			searcher.setSearchScope(scope);
 
