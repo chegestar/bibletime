@@ -15,6 +15,9 @@
 #include <QThread>
 #include <QtDebug>
 
+#include <ftplibftpt.h>
+
+#include "backend/config/btconfig.h"
 #include "backend/bookshelfmodel/btbookshelfmodel.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/btinstallbackend.h"
@@ -23,6 +26,7 @@
 #include "util/geticon.h"
 
 #include "btmini.h"
+#include "ui/btminimenu.h"
 #include "btminimodulesmodel.h"
 
 struct Item
@@ -98,15 +102,37 @@ QVector<QAbstractItemModel*> refreshRemoteSources(BtInstallMgr *im, bool downloa
 class Thread : public QThread
 {
 public:
-    Thread(QObject *parent, BtInstallMgr *im) : QThread(parent), _installManager(im) {;}
+    Thread(QObject *parent, BtInstallMgr *im)
+        : QThread(parent)
+        , _installManager(im)
+        , _download(true)
+		,_locale(false)
+		,_localeComplete(false)
+		,_dataComplete(false) {;}
     ~Thread() {;}
 
     void run()
     {
-        _data = refreshRemoteSources(_installManager, true);
+        _data = refreshRemoteSources(_installManager, _download);
+		_dataComplete = true;
+
+        if(_locale)
+        {
+            QMetaObject::invokeMethod(parent(), "downloadComplete", Qt::QueuedConnection);
+
+            sword::FTPLibFTPTransport t("ftp.crosswire.org");
+            if(t.copyDirectory("ftp://ftp.crosswire.org", "/pub/sword/source/v1.7/sword-1.7.0/locales.d/"
+                , QString("%1locales.d/").arg(CSwordBackend::instance()->prefixPath).toLocal8Bit(), "") >= 0)
+				_localeComplete = true;
+			_locale = false;
+        }
     }
 
-    QVector<QAbstractItemModel*>  _data;
+    bool                          _download;
+	bool                          _locale;
+	bool                          _localeComplete;
+	QVector<QAbstractItemModel*>  _data;
+	bool                          _dataComplete;
     BtInstallMgr                 *_installManager;
 };
 
@@ -125,6 +151,7 @@ public:
     ~BtMiniModulesModelPrivate()
     {
         clear();
+        if(_thread->isRunning()) _thread->terminate();
     }
 
 	// fff      language
@@ -189,8 +216,8 @@ public:
 
             if(!greekItem._text.isEmpty()) _items.prepend(greekItem);
             if(!hebrewItem._text.isEmpty()) _items.prepend(hebrewItem);
+            if(!englishItem._text.isEmpty()) _items.prepend(englishItem);
             if(!currentItem._text.isEmpty()) _items.prepend(currentItem);
-            else if(!englishItem._text.isEmpty()) _items.prepend(englishItem);
 
             _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Suggestions:") + "</b></center></font>"));
         }
@@ -372,7 +399,7 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 
     Q_ASSERT(index.model() == this);
 
-	if(!index.isValid())
+	if(!index.isValid() || d->_items.size() == 0)
 		return QVariant();
 	if(d->indexDepth(index.internalId()) == 1)
 	{
@@ -458,7 +485,6 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
 
             d_ptr->_indicator->setText(tt);
 
-            //QTimer::singleShot(800, this, SLOT(updateIndicators()));
             timer.disconnect();
             timer.setSingleShot(true);
             timer.setInterval(800);
@@ -484,6 +510,10 @@ void BtMiniModulesModel::backgroundDownload()
     if(d->_thread->isRunning())
         return;
 
+	if(btConfig().value<QString>("mini/localesDownloadedForVersion", "") != QApplication::applicationVersion())
+		d->_thread->_locale = true;
+
+    d->_thread->_download = true;
     d->_thread->start();
     updateIndicators(QModelIndex());
 }
@@ -492,22 +522,40 @@ void BtMiniModulesModel::downloadComplete()
 {
     Q_D(BtMiniModulesModel);
 
-    beginResetModel();
+	if(d->_thread->_dataComplete)
+	{
+		d->_thread->_dataComplete = false;
 
-    d->clear();
+		beginResetModel();
 
-    // add calculated sources
-    foreach (QAbstractItemModel *m, d->_thread->_data)
-        d->addModel(m);
+		d->clear();
 
-    d->generateSuggestions();
+		// add calculated sources
+		foreach (QAbstractItemModel *m, d->_thread->_data)
+			d->addModel(m);
 
-    endResetModel();
+		d->generateSuggestions();
+
+		endResetModel();
+	}
+
+	if(d->_thread->_localeComplete)
+	{
+		d->_thread->_localeComplete = false;
+		btConfig().setValue<QString>("mini/localesDownloadedForVersion", QApplication::applicationVersion());
+	}
 }
 
 void BtMiniModulesModel::refresh( bool download /*= false*/ )
 {
 	Q_D(BtMiniModulesModel);
 
-	d->refresh(download);
+    //d->refresh(download);
+
+    if(d->_thread->isRunning())
+        return;
+
+    d->_thread->_download = false;
+    d->_thread->start();
+    updateIndicators(QModelIndex());
 }

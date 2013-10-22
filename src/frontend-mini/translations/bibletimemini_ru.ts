@@ -260,27 +260,27 @@
         <translation type="obsolete">Все языки:</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="188"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="215"/>
         <source>Available languages:</source>
         <translation>Доступные языки:</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="195"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="222"/>
         <source>Suggestions:</source>
         <translation>Предложения:</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="451"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="478"/>
         <source>Updating</source>
         <translation>Обновляю</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="472"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="498"/>
         <source>Need module sources</source>
         <translation>Нужны источники модулей</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="474"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="500"/>
         <source>Select language:</source>
         <translation>Выберите язык:</translation>
     </message>
@@ -347,7 +347,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="60"/>
         <source>Font size:</source>
-        <translation>Размер шрифта:</translation>
+        <translation>Размер интерфейса:</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="62"/>
@@ -1109,7 +1109,7 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="223"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="176"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="203"/>
         <source>English</source>
         <extracomment>Language name en</extracomment>
         <translation type="unfinished"></translation>
@@ -1206,14 +1206,14 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="260"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="182"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="209"/>
         <source>Greek, Ancient (to 1453)</source>
         <extracomment>Language name grc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="262"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="180"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="207"/>
         <source>Hebrew</source>
         <extracomment>Language name he</extracomment>
         <translation type="unfinished"></translation>

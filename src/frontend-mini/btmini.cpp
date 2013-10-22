@@ -812,26 +812,26 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 
         updateRemoteSources(false);
 
-		// scroll to proper language
-		const CLanguageMgr::Language *sl = 0;
-		QList<const CLanguageMgr::Language *> languges(CLanguageMgr::instance()->languages()->values());
-		QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
+//		// scroll to proper language
+//		const CLanguageMgr::Language *sl = 0;
+//		QList<const CLanguageMgr::Language *> languges(CLanguageMgr::instance()->languages()->values());
+//		QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
 
-		foreach(const CLanguageMgr::Language *ll, languges)
-		{
-			if(ll->englishName() == languageEnglish)
-			{
-				sl = ll;
-				break;
-			}
-		}
+//		foreach(const CLanguageMgr::Language *ll, languges)
+//		{
+//			if(ll->englishName() == languageEnglish)
+//			{
+//				sl = ll;
+//				break;
+//			}
+//		}
 
-		if(sl && sl->isValid())
-		{
-			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, sl->translatedName(), 2);
-			if(il.size() == 1)
-				v->scrollTo(il[0].child(0, 0));
-		}
+//		if(sl && sl->isValid())
+//		{
+//			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, sl->translatedName(), 2);
+//			if(il.size() == 1)
+//				v->scrollTo(il[0].child(0, 0));
+//		}
     }
 
     return w;

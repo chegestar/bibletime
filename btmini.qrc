@@ -16,7 +16,7 @@
         <file alias="calendar.svg">pics/icons/calendar.svg</file>
         <file alias="checkbox.svg">pics/icons/checkbox.svg</file>
         <file alias="commentary_add.svg">pics/icons/commentary_add.svg</file>
-        <file alias="commentary_locked.svg">pics/icons</file>
+        <file alias="commentary_locked.svg">pics/icons/commentary_locked.svg</file>
         <file alias="commentary.svg">pics/icons/commentary.svg</file>
         <file alias="configure.svg">pics/icons/configure.svg</file>
         <file alias="contents2.svg">pics/icons/contents2.svg</file>
