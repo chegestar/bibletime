@@ -243,6 +243,11 @@ QString CHTMLExportRendering::renderEntry(const KeyTreeItem& i, CSwordKey* k) {
             renderedText.append("\t\t<td class=\"")
             .append(i.settings().highlight ? "currententry" : "entry")
             .append("\" ")
+#ifdef BT_MINI
+            .append("width=\"")
+            .append(QString::number(static_cast<int>(100.0 / modules.count())))
+            .append("%\" ")
+#endif
             .append(langAttr)
             .append(" dir=\"")
             .append(isRTL ? "rtl" : "ltr")
