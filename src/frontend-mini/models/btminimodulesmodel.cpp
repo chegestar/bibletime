@@ -510,7 +510,7 @@ void BtMiniModulesModel::backgroundDownload()
     if(d->_thread->isRunning())
         return;
 
-	if(btConfig().value<QString>("mini/localesDownloadedForVersion", "") != QApplication::applicationVersion())
+    if(btConfig().value<int>("mini/localesDownloadedForVersion", 0) < SWORD_VERSION_NUM)
 		d->_thread->_locale = true;
 
     d->_thread->_download = true;
@@ -542,7 +542,7 @@ void BtMiniModulesModel::downloadComplete()
 	if(d->_thread->_localeComplete)
 	{
 		d->_thread->_localeComplete = false;
-		btConfig().setValue<QString>("mini/localesDownloadedForVersion", QApplication::applicationVersion());
+        btConfig().setValue<int>("mini/localesDownloadedForVersion", SWORD_VERSION_NUM);
 	}
 }
 
