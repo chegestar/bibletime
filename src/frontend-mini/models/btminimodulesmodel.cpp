@@ -118,12 +118,12 @@ public:
 
         if(_locale)
         {
-            QMetaObject::invokeMethod(parent(), "downloadComplete", Qt::QueuedConnection);
+//            QMetaObject::invokeMethod(parent(), "downloadComplete", Qt::QueuedConnection);
 
-            sword::FTPLibFTPTransport t("ftp.crosswire.org");
-            if(t.copyDirectory("ftp://ftp.crosswire.org", "/pub/sword/source/v1.7/sword-1.7.0/locales.d/"
-                , QString("%1locales.d/").arg(CSwordBackend::instance()->prefixPath).toLocal8Bit(), "") >= 0)
-				_localeComplete = true;
+//            sword::FTPLibFTPTransport t("ftp.crosswire.org");
+//            if(t.copyDirectory("ftp://ftp.crosswire.org", "/pub/sword/source/v1.7/sword-1.7.0/locales.d/"
+//                , QString("%1locales.d/").arg(CSwordBackend::instance()->prefixPath).toLocal8Bit(), "") >= 0)
+//				_localeComplete = true;
 			_locale = false;
         }
     }

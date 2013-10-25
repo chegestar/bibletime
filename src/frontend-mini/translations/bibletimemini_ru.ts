@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>BibleTimeApp</name>
     <message>
@@ -455,7 +455,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="212"/>
         <source>Full syntax</source>
-        <translation>Поисковый синтаксис</translation>
+        <translation type="unfinished">Синтаксис</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="250"/>
@@ -536,7 +536,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="266"/>
         <source>&lt;b&gt;Default Modules.&lt;/b&gt; There are several types of modules: default Bible is used to render cross-references, default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in context popup. To change default modules, when you open Module Selection popup, make long press on module you would like to make default and select corresponding action.</source>
-        <translation>&lt;b&gt;Модули по-умолчанию.&lt;/b&gt; Несколько типов: базовая Библия используется для обработки перекрестных ссылок, комментарий - для отображения в контекстном окне, греческий и еврейский лексиконы Стронга - для определений слов. Для того чтобы изменить модули по-умолчанию, откройте окно выбора модуля и сделав долгое нажатие выберите &quot;Сделать по-умолчанию&quot;.</translation>
+        <translation>&lt;b&gt;Модули по-умолчанию.&lt;/b&gt; Несколько типов: основная Библия используется для обработки перекрестных ссылок, комментарий - для отображения в контекстном окне, греческий и еврейский лексиконы Стронга - для определений слов. Для того чтобы изменить модули по-умолчанию, откройте окно выбора модуля и сделав долгое нажатие выберите &quot;Сделать по-умолчанию&quot;.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="270"/>
