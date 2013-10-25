@@ -252,10 +252,10 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
                "Try to press screen on word you interested in for a second (device should vibrate ones), "
                "information (context) view for that word should open. Same for footnotes and cross-references.<br/>"
                "Try to press Text view for several seconds before device vibrates twice, service menu should open. "
-               "Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.") + "<br/><br/>" +
+               "Where you will be able to add and remove additional views for parallel (currently unsynchronized) viewing.") + "<br/><br/>" +
             tr("<b>Context view.</b> It is consist of two views: word context, and commentary context. Try to slide left/right "
-               "to observe them. Default modules used for this context could be configurated in Module selection window "
-               "by long pressping.") + "<br/><br/>" +
+               "to observe them. Default modules used for this context could be configured in Module selection window "
+               "by long pressing.") + "<br/><br/>" +
             tr("<b>Search.</b> BibleTime Mini uses CLucene indexed search, this means that you have to wait for some "
                "time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, "
                "it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to "
@@ -270,8 +270,8 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
             tr("<b>Parallel Bible display.</b> You would open several Bible texts in one view, with respect of different verse "
                "markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like "
                "to add, then select \"") + tr("Add Parallel") + "\"." + "<br/><br/>" +
-            tr("<b>Dark theme.</b> You could change color sheme on dark by changing Ui Style on \"mini-night\". There are also another "
-               "interface styles provided by your platfrom.") + "<br/><br/>" +
+            tr("<b>Dark theme.</b> You could change color scheme on dark by changing Ui Style on \"mini-night\". There are also another "
+               "interface styles provided by your platform.") + "<br/><br/>" +
             QString("</body>"));
     case tipWorksAddon:
         return QString(tr("Following information you could access again in <b>Settings</b> under the <b>Handbook</b> item.<br/>"));
