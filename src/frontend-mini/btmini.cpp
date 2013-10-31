@@ -35,6 +35,12 @@
 #include <QTranslator>
 
 #include <swlog.h>
+#include <filemgr.h>
+#ifndef EXCLUDEZLIB
+extern "C" {
+#include <untgz.h>
+}
+#endif
 
 #include "backend/config/btconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
@@ -1097,8 +1103,44 @@ int main(int argc, char *argv[])
     sword::StringMgr::setSystemStringMgr(new BtStringMgr);
 
     CSwordBackend *backend = CSwordBackend::createInstance();
-    backend->booknameLanguage(btConfig().value<QString>("language", systemName));
     backend->initModules(CSwordBackend::OtherChange);
+
+    // check locales and extract from resources, we always need locales because keys stored in localized form
+    if(btConfig().value<int>("mini/swordLocalesVersion", 0) < SWORD_VERSION_NUM)
+    {
+        QDir d(backend->prefixPath);
+        d.makeAbsolute();
+        if(d.exists())
+        {
+            d.mkdir("locales.d");
+            if(d.cd("locales.d"))
+            {
+                qDebug() << "Update locales to version" << SWORD_VERSION_STR;
+
+                d.setNameFilters(QStringList() << "*.conf" << "*.tar.gz");
+                d.setFilter(QDir::Files);
+                foreach(QString f, d.entryList())
+                    d.remove(f);
+
+                if(QFile::copy(":/locales.tar.gz", d.filePath("locales.tar.gz")))
+                {
+                    sword::FileDesc *fd = sword::FileMgr::getSystemFileMgr()->open(d.filePath("locales.tar.gz").toLocal8Bit(), sword::FileMgr::RDONLY);
+                    untargz(fd->getFd(), d.absolutePath().toLocal8Bit());
+                    sword::FileMgr::getSystemFileMgr()->close(fd);
+                    QFile::remove(d.filePath("locales.tar.gz"));
+
+                    sword::LocaleMgr::getSystemLocaleMgr()->loadConfigDir(d.absolutePath().toLocal8Bit());
+
+                    btConfig().setValue<int>("mini/swordLocalesVersion", SWORD_VERSION_NUM);
+                }
+                else qDebug() << "Can't copy locales.tar.gz";
+            }
+            else qDebug() << "Can't cd to locales.d" << d;
+        }
+        else qDebug() << "Sword directory does not exists" << d;
+    }
+
+    backend->booknameLanguage(btConfig().value<QString>("language", systemName));
     backend->deleteOrphanedIndices();
 
     // Let's run...

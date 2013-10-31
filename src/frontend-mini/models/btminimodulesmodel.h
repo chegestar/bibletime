@@ -41,8 +41,6 @@ public:
     /** */
     void          setIndicator(QWidget *w);
 
-	/** */
-	void          refresh(bool download = false);
 
 public slots:
     /** */

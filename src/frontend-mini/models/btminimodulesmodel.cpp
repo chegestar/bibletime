@@ -68,37 +68,6 @@ QDebug operator<<(QDebug dbg, const Item &item)
 }
 
 
-QVector<QAbstractItemModel*> refreshRemoteSources(BtInstallMgr *im, bool download)
-{
-    QStringList ss(BtInstallBackend::sourceNameList(download));
-    QVector<QAbstractItemModel*> sl;
-
-    foreach(QString s, ss)
-    {
-        sword::InstallSource is = BtInstallBackend::source(s);
-
-        if(download) im->refreshRemoteSource(&is);
-
-        CSwordBackend *be = BtInstallBackend::backend(is);
-
-        if(be->moduleList().size() == 0)
-            continue;
-
-        BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
-        g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
-
-        BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g);
-        mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-            "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
-        mm->setSourceModel(be->model());
-        mm->setObjectName(s);
-
-        sl.append(mm);
-    }
-
-    return sl;
-}
-
 class Thread : public QThread
 {
 public:
@@ -106,33 +75,42 @@ public:
         : QThread(parent)
         , _installManager(im)
         , _download(true)
-		,_locale(false)
-		,_localeComplete(false)
-		,_dataComplete(false) {;}
+        ,_dataComplete(false) {;}
     ~Thread() {;}
 
     void run()
     {
-        _data = refreshRemoteSources(_installManager, _download);
-		_dataComplete = true;
+        QStringList ss(BtInstallBackend::sourceNameList(_download));
 
-        if(_locale)
+        foreach(QString s, ss)
         {
-//            QMetaObject::invokeMethod(parent(), "downloadComplete", Qt::QueuedConnection);
+            sword::InstallSource is = BtInstallBackend::source(s);
 
-//            sword::FTPLibFTPTransport t("ftp.crosswire.org");
-//            if(t.copyDirectory("ftp://ftp.crosswire.org", "/pub/sword/source/v1.7/sword-1.7.0/locales.d/"
-//                , QString("%1locales.d/").arg(CSwordBackend::instance()->prefixPath).toLocal8Bit(), "") >= 0)
-//				_localeComplete = true;
-			_locale = false;
+            if(_download) _installManager->refreshRemoteSource(&is);
+
+            CSwordBackend *be = BtInstallBackend::backend(is);
+
+            if(be->moduleList().size() == 0)
+                continue;
+
+            BtBookshelfTreeModel::Grouping g(BtBookshelfTreeModel::GROUP_LANGUAGE);
+            g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
+
+            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g);
+            mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
+                "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+            mm->setSourceModel(be->model());
+            mm->setObjectName(s);
+
+            _data.append(mm);
         }
+
+        _dataComplete = true;
     }
 
     bool                          _download;
-	bool                          _locale;
-	bool                          _localeComplete;
-	QVector<QAbstractItemModel*>  _data;
-	bool                          _dataComplete;
+    QVector<QAbstractItemModel*>  _data;
+    bool                          _dataComplete;
     BtInstallMgr                 *_installManager;
 };
 
@@ -178,7 +156,6 @@ public:
     void clear()
     {
         foreach (QAbstractItemModel *m, _models)
-            //m->deleteLater();
             delete m;
         _models.clear();
         _items.clear();
@@ -222,22 +199,6 @@ public:
             _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Suggestions:") + "</b></center></font>"));
         }
     }
-
-	void refresh(bool download)
-	{
-		Q_Q(BtMiniModulesModel);
-
-        QVector<QAbstractItemModel*> mm(refreshRemoteSources(_installManager, false));
-
-        foreach(QAbstractItemModel *m, mm)
-            addModel(m);
-
-        if(mm.size() > 0)
-        {
-            generateSuggestions();
-			q->updateIndicators(QModelIndex());
-        }
-	}
 
     void addModel(QAbstractItemModel *model)
 	{
@@ -320,7 +281,11 @@ public:
 BtMiniModulesModel::BtMiniModulesModel(QObject *parent)
     : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate(this))
 {
-	;
+    Q_D(BtMiniModulesModel);
+
+    d->_thread->_download = false;
+    d->_thread->start();
+    updateIndicators(QModelIndex());
 }
 
 BtMiniModulesModel::~BtMiniModulesModel()
@@ -470,11 +435,12 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
 {
     Q_D(BtMiniModulesModel);
 
-    if(d_ptr->_indicator)
+    if(d->_thread->isRunning())
     {
-        if(d->_thread->isRunning())
+        static QTimer timer;
+
+        if(d_ptr->_indicator)
         {
-            static QTimer timer;
             QString t(tr("Updating"));
             QString tt(d_ptr->_indicator->text());
 
@@ -484,16 +450,16 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
             else tt = t + ".";
 
             d_ptr->_indicator->setText(tt);
-
-            timer.disconnect();
-            timer.setSingleShot(true);
-            timer.setInterval(800);
-            timer.start();
-            connect(&timer, SIGNAL(timeout()), this, SLOT(updateIndicators()));
-
-            return;
         }
 
+        timer.disconnect();
+        timer.setSingleShot(true);
+        timer.setInterval(800);
+        timer.start();
+        connect(&timer, SIGNAL(timeout()), this, SLOT(updateIndicators()));
+    }
+    else if(d_ptr->_indicator)
+    {
         if(d->_models.size() == 0)
             d_ptr->_indicator->setText(tr("Need module sources"));
         else if(!index.isValid() || !index.parent().isValid())
@@ -510,9 +476,6 @@ void BtMiniModulesModel::backgroundDownload()
     if(d->_thread->isRunning())
         return;
 
-    if(btConfig().value<int>("mini/localesDownloadedForVersion", 0) < SWORD_VERSION_NUM)
-		d->_thread->_locale = true;
-
     d->_thread->_download = true;
     d->_thread->start();
     updateIndicators(QModelIndex());
@@ -522,40 +485,21 @@ void BtMiniModulesModel::downloadComplete()
 {
     Q_D(BtMiniModulesModel);
 
-	if(d->_thread->_dataComplete)
-	{
-		d->_thread->_dataComplete = false;
+    if(d->_thread->_dataComplete)
+    {
+        d->_thread->_dataComplete = false;
 
-		beginResetModel();
+        beginResetModel();
 
-		d->clear();
+        d->clear();
 
-		// add calculated sources
-		foreach (QAbstractItemModel *m, d->_thread->_data)
-			d->addModel(m);
+        // add calculated sources, pass ownership to Private object
+        foreach (QAbstractItemModel *m, d->_thread->_data)
+            d->addModel(m);
+        d->_thread->_data.clear();
 
-		d->generateSuggestions();
+        d->generateSuggestions();
 
-		endResetModel();
-	}
-
-	if(d->_thread->_localeComplete)
-	{
-		d->_thread->_localeComplete = false;
-        btConfig().setValue<int>("mini/localesDownloadedForVersion", SWORD_VERSION_NUM);
-	}
-}
-
-void BtMiniModulesModel::refresh( bool download /*= false*/ )
-{
-	Q_D(BtMiniModulesModel);
-
-    //d->refresh(download);
-
-    if(d->_thread->isRunning())
-        return;
-
-    d->_thread->_download = false;
-    d->_thread->start();
-    updateIndicators(QModelIndex());
+        endResetModel();
+    }
 }

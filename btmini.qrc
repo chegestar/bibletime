@@ -61,4 +61,7 @@
         <file alias="Basic.tmpl">src/display-templates/Basic-Mini.tmpl</file>
         <file alias="Blue.css">src/display-templates/Blue.css</file>
     </qresource>
+    <qresource prefix="/">
+        <file alias="locales.tar.gz">src/frontend-mini/locales.tar.gz</file>
+    </qresource>
 </RCC>
