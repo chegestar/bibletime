@@ -247,7 +247,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
 {
     switch (data) {
     case tipWorks:
-        return QString("<body>" + tr("<h2><center>Usefull tips:</center></h2><br/>") +
+        return QString("<body>" + tr("<h3><center>Usefull tips:</center></h3><br/>") +
             tr("Many views in BibleTime Mini recognizes <b>short pressing</b> by finger and <b>long pressing</b>. "
                "Try to press screen on word you interested in for a second (device should vibrate ones), "
                "information (context) view for that word should open. Same for footnotes and cross-references.<br/>"
