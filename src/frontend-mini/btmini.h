@@ -77,6 +77,8 @@ public slots:
     /** Install module. This should be moved to BtMiniLogic. */
     void installerQuery(const QModelIndex &index);
 
+    /** */
+    void applicationStateChanged();
 
     // below are old functions intended to be removed
 public:

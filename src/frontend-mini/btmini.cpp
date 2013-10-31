@@ -114,6 +114,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
         return JNI_VERSION_1_6;
     }
 
+    // This require QtActivity modifications, waiting for api from Qt
     if(!(jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V")))
         qWarning("Jni can't get method");
 
@@ -217,6 +218,11 @@ public:
 
         setWindowTitle("BibleTime Mini");
         setWindowIcon(util::getIcon(CResMgr::mainWindow::icon));
+
+#if QT_VERSION >= 0x050200
+        connect(QApplication::instance(), SIGNAL(applicationStateChanged(Qt::ApplicationState)),
+                &(BtMini::instance()), SLOT(applicationStateChanged()));
+#endif
     }
 
     ~BtMiniMainWidget()
@@ -227,6 +233,8 @@ public:
     /** Save opened session. */
     static void saveConfig()
     {
+        //qDebug("Save config.");
+
         BtMiniView *v = BtMini::findView(BtMini::worksWidget());
 
         QModelIndexList list = v->currentIndexes();
@@ -577,7 +585,7 @@ QWidget * BtMini::worksWidget(bool showTip, bool reset)
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        v->setContinuousScrolling(btConfig().value<int>("mini/miniContinuousScrolling", false));
+        v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
         v->setWebKitEnabled(true);
 
         QFont f(v->font());
@@ -744,7 +752,7 @@ QWidget * BtMini::searchWidget(bool reset)
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
+        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         // Setup controls
         QLineEdit *le = new QLineEdit(w);
@@ -796,7 +804,7 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
+        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             BtMiniPanel::Refresh << (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
@@ -817,27 +825,6 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
         w->setLayout(vl);
 
         updateRemoteSources(false);
-
-//		// scroll to proper language
-//		const CLanguageMgr::Language *sl = 0;
-//		QList<const CLanguageMgr::Language *> languges(CLanguageMgr::instance()->languages()->values());
-//		QString languageEnglish(QLocale::system().languageToString(QLocale::system().language()));
-
-//		foreach(const CLanguageMgr::Language *ll, languges)
-//		{
-//			if(ll->englishName() == languageEnglish)
-//			{
-//				sl = ll;
-//				break;
-//			}
-//		}
-
-//		if(sl && sl->isValid())
-//		{
-//			QModelIndexList il = v->model()->match(v->model()->index(0, 0), Qt::DisplayRole, sl->translatedName(), 2);
-//			if(il.size() == 1)
-//				v->scrollTo(il[0].child(0, 0));
-//		}
     }
 
     return w;
@@ -864,10 +851,7 @@ QWidget *BtMini::settingsWidget(bool reset)
 
         BtMiniView *v = new BtMiniView(w);
         //v->setTopShadow(true);
-
-        QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
-        v->setFont(f);
+        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
 
@@ -957,6 +941,14 @@ void BtMini::installerQuery(const QModelIndex &index)
     }
 }
 
+void BtMini::applicationStateChanged()
+{
+#if QT_VERSION >= 0x050200
+    if(QApplication::applicationState() == Qt::ApplicationSuspended)
+        reinterpret_cast<BtMiniMainWidget*>(mainWidget())->saveConfig();
+#endif
+}
+
 void BtMini::updateRemoteSources(bool download)
 {
     BtMiniView *v = findView(installerWidget());
@@ -968,9 +960,7 @@ void BtMini::updateRemoteSources(bool download)
 
         QLabel *l = installerWidget()->findChild<QLabel*>("label");
         Q_CHECK_PTR(l);
-
         m->setIndicator(l);
-        m->refresh(download);
 
         QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
         v->disconnect(SIGNAL(clicked(const QModelIndex &)));
@@ -981,9 +971,7 @@ void BtMini::updateRemoteSources(bool download)
     }
 
     if(download)
-    {
         m->backgroundDownload();
-    }
 }
 
 /** Sword debug messages. */
