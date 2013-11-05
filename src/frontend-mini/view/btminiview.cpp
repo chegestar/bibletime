@@ -495,10 +495,13 @@ public:
         }
 #endif
 
-        // FIX for dark theme
+        // HACK for dark theme
         QColor tc = widget->palette().color(QPalette::WindowText);
         if(tc != QColor(0, 0, 0))
             ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
+
+        // HACK resources path from url format to absolute path
+        ct.replace("<img src=\"file:///", QString("<img width=\"%1\" src=\"").arg(width()));
 
 #ifdef BT_STATIC_TEXT
         if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
@@ -2051,8 +2054,7 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 			{
 				if(model()->hasChildren(index))
 				{
-					Q_ASSERT(!d->_ld->plainMode() &&
-						"Model for plain layout must not have children");
+                    Q_ASSERT_X(!d->_ld->plainMode(), "", "Model for plain layout must not have children");
 
 					// switch to left subview with children items
 					makeSubView(d->_currentSubView + 1, index.child(0, 0));
