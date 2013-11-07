@@ -59,7 +59,7 @@ public:
         _palette.setColor(QPalette::WindowText, _palette.color(QPalette::Text));
         _palette.setColor(QPalette::ButtonText, _palette.color(QPalette::Text));
 
-        QApplication::setPalette(_palette);
+        //QApplication::setPalette(_palette);
     }
 
     ~BtMiniStyle()
@@ -219,10 +219,10 @@ public:
         return QCommonStyle::pixelMetric(metric, option, widget);
     }
 
-	QPalette standardPalette() const
-	{
+    QPalette standardPalette() const
+    {
         return _palette;
-	}
+    }
 
 
 	void polish(QWidget *widget)
@@ -236,13 +236,8 @@ public:
             _initialized = true;
         }
 
-        // FIX on Symbian palettes are not applied
-#ifdef Q_OS_SYMBIAN
-        if(!widget->parentWidget())
-            widget->setPalette(_palette);
-        else
-            widget->setPalette(widget->palette());
-#endif
+        // palettes
+        widget->setPalette(widget->parentWidget() == 0 ? _palette : widget->parentWidget()->palette());
 
         if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
         {
@@ -277,8 +272,6 @@ public:
             {
                 p.setColor(QPalette::Window, QColor(0, 0, 0));
                 p.setColor(QPalette::Button, QColor(0, 0, 0));
-                //p.setColor(QPalette::WindowText, QColor(255, 255, 255));
-                //p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
             }
             else
             {
@@ -300,6 +293,14 @@ public:
             widget->setFont(f);
         }
 #endif
+    }
+
+    void unpolish(QWidget *widget)
+    {
+        widget->setPalette(QApplication::palette());
+
+        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
+            le->setContentsMargins(QMargins());
     }
 
     int styleHint(StyleHint sh, const QStyleOption *option, const QWidget *widget,

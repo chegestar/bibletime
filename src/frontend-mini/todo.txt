@@ -1,42 +1,38 @@
 kalemas@mail.ru :
 === tasks ======================================================================
-+   multi column mode
-+   webkit render: make context work
-+   setting options for views without exiting application
-+   publish to nokia platforms
-+       support site
-+       single instance for meego
-+       check icon on meego
-+       signed symbian build with new uid
-    prototyping QML user interface
-    centralized parallel processing:
-        get data from sword
-        install a module
++	download locales when refresh sources
++		remove this functionality
++		decide how to do this, because 5 minutes for update is too long
++	android: listen applicationStateChange    prototyping QML user interface
 +       refresh remote sources
 +       create model of available modules
-        build search index (maybe build will be resumeable, maybe index displayed verses)
-		maybe backend reloading
-        ability for blocking execution (e.g. first text entry)
-        make this suitable for main repo
-        should know what is current view (text/install), current text, probably via signals/slots
     resize subview width, its primarily for tablets
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
-+	download locales when refresh sources
-+		remove this functionality
-+		decide how to do this, because 5 minutes for update is too long
-+	android: listen applicationStateChange
+    new look and feel
+    text/verses selection facility
+    clippings
+        reorganize ui
+    make module/place selection fullscreen
+
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
-    add ability to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
     download indexes feature
-    hide languages in install manager and leave: Local, English, Greek, Hebrew and Show another ### languages
++   bug: switching style in options does not switch color scheme after mini styles
 
+    centralized parallel processing:
+        get data from sword
+        install a module
+        build search index (maybe build will be resumeable, maybe index displayed verses)
+        maybe backend reloading
+        ability for blocking execution (e.g. first text entry)
+        make this suitable for main repo
+        should know what is current view (text/install), current text, probably via signals/slots
     install module logic:
         pressing on a module display dialog 'Dow You want to Install %1?'
         - any existing panel becomes a progress bar with cancel button

@@ -57,10 +57,11 @@ private:
 	class TextItem
 	{
 	public:
-		TextItem(const QString &text, QFont font)
+        TextItem(const QString &text, QFont font, QPalette palette)
 		{
             QVector<QPair<QString, Data> > stack;
             stack << QPair<QString, Data>(QString(), Data());
+            stack.first().second.color = palette.text().color();
 
 			stack.last().second.font = font;
 			_data.append(stack.last().second);
@@ -295,7 +296,7 @@ private:
 			{
 				font    = QFont();
 				font.setStyleStrategy(QFont::NoAntialias);
-                color   = QApplication::palette().color(QPalette::Text);
+                //color   = QApplication::palette().color(QPalette::Text);
 				center  = false;
 				newLine = false;
 			}
@@ -401,7 +402,7 @@ public:
 
         if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
-            _ti = new TextItem(ct, widget->font());
+            _ti = new TextItem(ct, widget->font(), widget->palette());
 			resize(size());
 			return;
 		}
