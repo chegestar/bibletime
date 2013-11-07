@@ -352,9 +352,8 @@ public:
                     switch(sc)
                     {
                     case SC_ScrollBarSlider:
+                        if(scrollbar->orientation == Qt::Vertical)
                         {
-                            Q_ASSERT(scrollbar->orientation == Qt::Vertical);
-
                             const float vh = scrollbar->rect.height();
                             const float hh = scrollbar->maximum - scrollbar->minimum;
                             

@@ -952,12 +952,11 @@ void BtMini::applicationStateChanged()
 void BtMini::updateRemoteSources(bool download)
 {
     BtMiniView *v = findView(installerWidget());
-    BtMiniModulesModel *m = v->findChild<BtMiniModulesModel*>();
+    static BtMiniModulesModel *m = new BtMiniModulesModel(mainWidget());
 
-    if(!m)
+    // attach model to current installerWidget
+    if(m != v->model())
     {
-        m = new BtMiniModulesModel(v);
-
         QLabel *l = installerWidget()->findChild<QLabel*>("label");
         Q_CHECK_PTR(l);
         m->setIndicator(l);
@@ -966,8 +965,10 @@ void BtMini::updateRemoteSources(bool download)
         v->disconnect(SIGNAL(clicked(const QModelIndex &)));
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), &BtMini::instance(), SLOT(installerQuery(const QModelIndex &)));
 
-        if(v->model()) v->model()->deleteLater();
+        if(v->model())
+            v->model()->deleteLater();
         v->setModel(m);
+        m->updateIndicators();
     }
 
     if(download)
