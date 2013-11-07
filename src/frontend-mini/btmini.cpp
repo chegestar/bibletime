@@ -809,7 +809,7 @@ QWidget * BtMini::installerWidget(bool firstTime, bool reset)
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             BtMiniPanel::Refresh << (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
 
-        QLabel *lb = new QLabel(w);
+        QLabel *lb = new QLabel(BtMiniModulesModel::tr("Updating") + "...", w);
         changeFontSize(lb, 0.9);
         lb->setAlignment(Qt::AlignCenter);
         lb->setMargin(lb->font().pixelSize() / 2);

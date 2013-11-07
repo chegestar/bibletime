@@ -1941,6 +1941,9 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    // scrollbar should be useable with fingers
+    verticalScrollBar()->setStyleSheet("min-width: " + QString::number(font().pixelSize() * 1.8) + "px");
+
     setFrameStyle(QFrame::NoFrame);
 
     d->_eventTimer = startTimer(1000/30);
@@ -2677,20 +2680,21 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 {
     Q_D(BtMiniView);
 
-	// update according vertical scrollbar
-	if(d->_vt != verticalScrollBar()->value())
-	{
-		if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
-		{
-			scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
-		}
-		else
-		{
-			scroll(0.0f, d->_vt - verticalScrollBar()->value());
-			d->_vt = verticalScrollBar()->value();
-			d->_mousePower.ry() = 0.0f;
-		}
-	}
+    // HACK update according vertical scrollbar
+    if(d->_vt != verticalScrollBar()->value())
+    {
+        if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
+        {
+            scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
+        }
+        else
+        {
+            //int f = qCeil((d->_vt - verticalScrollBar()->value()) * 1.0);
+            scroll(0.0f, d->_vt - verticalScrollBar()->value());
+            d->_vt = verticalScrollBar()->value();
+            d->_mousePower.ry() = 0.0f;
+        }
+    }
 
 
     QPainter painter(viewport());

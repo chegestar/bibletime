@@ -6,6 +6,8 @@ kalemas@mail.ru :
 +	android: listen applicationStateChange    prototyping QML user interface
 +       refresh remote sources
 +       create model of available modules
++   bug: switching style in options does not switch color scheme after mini styles
++   in non-mini styles make scrollbar wider
     resize subview width, its primarily for tablets
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
@@ -23,7 +25,7 @@ kalemas@mail.ru :
     adding functionality using default function parameters is bad practice, when you want to change them
     refresh modelsmodel instead of recreate, do it in thread
     download indexes feature
-+   bug: switching style in options does not switch color scheme after mini styles
+    add smoothness to scrollbar in btminiview
 
     centralized parallel processing:
         get data from sword
