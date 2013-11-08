@@ -127,6 +127,11 @@ DEFINES += BT_STATIC_TEXT
 SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
 }
 
+# BlackBerry10 Platform
+blackberry {
+LIBS += -lbbdevice
+}
+
 # BibleTime Core
 include(../../common/core/core.pro)
 

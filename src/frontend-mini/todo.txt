@@ -47,7 +47,7 @@ kalemas@mail.ru :
 ?   design changes
         cut-off menu overlays, open contex full-size
         sliding panels for queries
-        hide able bottom panel
+        hideable bottom panel
         top area to indicate current location
     selecting items and active item
     current subview indication

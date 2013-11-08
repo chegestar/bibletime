@@ -68,20 +68,29 @@ extern "C" {
 #include <QtQml>
 #include <QtQuick>
 #endif
+
 #if QT_VERSION >= 0x050000
 #include <QAbstractNativeEventFilter>
 #endif
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
+
 #ifdef ANDROID
 #include <android/log.h>
 #endif
+
 #ifdef Q_OS_SYMBIAN
 #include <hwrmvibra.h>
 #endif
+
 #ifdef Q_OS_IOS
 #import <AudioToolbox/AudioToolbox.h>
+#endif
+
+#ifdef Q_OS_BLACKBERRY
+#include <bb/device/VibrationController>
 #endif
 
 
@@ -185,7 +194,12 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef Q_OS_IOS
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+#endif
+
+#ifdef Q_OS_BLACKBERRY
+    static VibrationController v;
+    if(v.isSupported()) v.start(50, milliseconds);
 #endif
 }
 
