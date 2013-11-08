@@ -18,6 +18,8 @@
 #include <QPainter>
 #include <QScrollBar>
 #include <QTextDocument>
+#include <QTextDocumentFragment>
+#include <QTextFrame>
 #include <QThread>
 #include <QVariant>
 #include <QWaitCondition>
@@ -636,9 +638,32 @@ public:
 #endif
         if(_doc)
         {
+            painter->save();
             painter->translate(p);
-            _doc->drawContents(painter, clipping.translated(point.x() - p.x(), 0));
-            painter->translate(-p);
+            QAbstractTextDocumentLayout::PaintContext ctx;
+            QRect rect(clipping.translated(point.x() - p.x(), 0));
+            if (rect.isValid())
+            {
+                painter->setClipRect(rect);
+                ctx.clip = rect;
+            }
+            if(!_docCursor.isNull())
+            {
+                QAbstractTextDocumentLayout::Selection s;
+                QTextCharFormat f;
+                //f.setForeground(Qt::red);
+                f.setBackground(Qt::red);
+
+                s.cursor = _docCursor;
+                s.format = f;
+                ctx.selections.append(s);
+            }
+            _doc->documentLayout()->draw(painter, ctx);
+            painter->restore();
+
+            //painter->translate(p);
+            //_doc->drawContents(painter, clipping.translated(point.x() - p.x(), 0));
+            //painter->translate(-p);
         }
 
         if(_ti)
@@ -688,6 +713,7 @@ public:
 #endif
 
     QTextDocument   *_doc;
+    QTextCursor      _docCursor;
     TextItem        *_ti;
 
 #ifdef BT_STATIC_TEXT
@@ -1531,7 +1557,7 @@ public:
     
     /** Return displacement of borders of given subview relative to view rect.
         All margins are positive if subview is inside of view. */
-    inline QMargins subViewMargins(const int subView) const
+    QMargins subViewMargins(const int subView) const
     {
         Q_Q(const BtMiniView);
 
@@ -2073,9 +2099,7 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 					activateSubView(d->_currentSubView + 1);
 				}
 				else if(d->_interactive)
-				{
 					close();
-				}
 			}
         }
 	}
@@ -2092,6 +2116,25 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     }
 
     viewport()->update();
+
+    // TEST text selection
+    {
+        const QPoint gp(e->pos() + QPoint(d->_vx, 0));
+        const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
+        int i = d->currentSubView()->xyItem(vp);
+        if(i >= 0)
+        {
+            QTextDocument *td = d->currentSubView()->_items[i]->_doc;
+            if(td)
+            {
+                const QPoint pp(vp - d->currentSubView()->itemXy(i));
+                QTextCursor tc = td->rootFrame()->firstCursorPosition();
+                int cc = d->currentSubView()->_items[i]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
+                tc.setPosition(cc, QTextCursor::KeepAnchor);
+                d->currentSubView()->_items[i]->_docCursor = tc;
+            }
+        }
+    }
 }
 
 void BtMiniView::mouseMoveEvent(QMouseEvent *e)
