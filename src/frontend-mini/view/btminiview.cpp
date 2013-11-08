@@ -57,11 +57,11 @@ private:
 	class TextItem
 	{
 	public:
-        TextItem(const QString &text, QFont font, QPalette palette)
+        TextItem(const QString &text, QFont font, QColor baseColor)
 		{
             QVector<QPair<QString, Data> > stack;
             stack << QPair<QString, Data>(QString(), Data());
-            stack.first().second.color = palette.text().color();
+            stack.first().second.color = baseColor;
 
 			stack.last().second.font = font;
 			_data.append(stack.last().second);
@@ -69,7 +69,7 @@ private:
 			bool wordBreaks = false;
 			bool newLine = false;
 
-			// break on parts
+            // break on parts
 			for(int c = 0; c < text.size();)
 			{
 				if(text[c] == '<')
@@ -402,7 +402,7 @@ public:
 
         if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
-            _ti = new TextItem(ct, widget->font(), widget->palette());
+            _ti = new TextItem(ct, widget->font(), widget->palette().text().color());
 			resize(size());
 			return;
 		}
@@ -1562,9 +1562,17 @@ public:
 			q->verticalScrollBar()->setMaximum(qMax((qreal)0,
 				currentSubView()->contentsRect().height() - q->viewport()->height()));
 
-			q->verticalScrollBar()->setValue(qMax((qreal)q->verticalScrollBar()->minimum(),
-				qMin((qreal)q->verticalScrollBar()->maximum(), -currentSubView()->contentsRect().top())));
-		}
+            int v = qMax((qreal)q->verticalScrollBar()->minimum(),
+                         qMin((qreal)q->verticalScrollBar()->maximum(), -currentSubView()->contentsRect().top()));
+
+            if(!q->verticalScrollBar()->isSliderDown())
+                q->verticalScrollBar()->setValue(v);
+            else
+            {
+                _vt = v;
+                return; // we should not to set _vt again
+            }
+        }
 
         _vt = q->verticalScrollBar()->value();
     }
@@ -2142,11 +2150,22 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         return;
 	}
 
-	if(d->_sleep)
-		return;
+    if(d->_sleep) return;
 
+    // update scrolling to tracked value
+    if(d->_vt != verticalScrollBar()->value())
+    {
+        if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
+            scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
+        else
+        {
+            scroll(0.0f, (d->_vt - verticalScrollBar()->value()) * (SCROLL_ATTENUATION / 2));
+            viewport()->update();
+        }
+        d->_mousePower.ry() = 0.0f;
+    }
     // update kinetic scrolling
-    if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
+    else if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
     {
         if(!d->_continuousScrolling)
         {
@@ -2165,13 +2184,11 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         // if there is any connection to longPressed or shortPressed signal, vibrate
         if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
-                BtMini::vibrate(20);
+            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0) BtMini::vibrate(20);
         }
         else if(d->_mouseTapping == SHORT_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0)
-                BtMini::vibrate(20);
+            if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0) BtMini::vibrate(20);
         }
 
         d->_mouseTapping++;
@@ -2269,7 +2286,7 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
     scheduleDelayedItemsLayout();
 
 	if(index.isValid())
-		emit currentChanged(index);
+        emit currentChanged(index);
 }
 
 void BtMiniView::scrollTo(QVariant data)
@@ -2679,23 +2696,6 @@ void BtMiniView::setSelection(const QRect &rect, QItemSelectionModel::SelectionF
 void BtMiniView::paintEvent(QPaintEvent *e)
 {
     Q_D(BtMiniView);
-
-    // HACK update according vertical scrollbar
-    if(d->_vt != verticalScrollBar()->value())
-    {
-        if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
-        {
-            scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
-        }
-        else
-        {
-            //int f = qCeil((d->_vt - verticalScrollBar()->value()) * 1.0);
-            scroll(0.0f, d->_vt - verticalScrollBar()->value());
-            d->_vt = verticalScrollBar()->value();
-            d->_mousePower.ry() = 0.0f;
-        }
-    }
-
 
     QPainter painter(viewport());
 

@@ -1,5 +1,8 @@
 kalemas@mail.ru :
 === tasks ======================================================================
+%   fix webkit word context
+%   fix images
++   apply settings without restart
 +	download locales when refresh sources
 +		remove this functionality
 +		decide how to do this, because 5 minutes for update is too long
@@ -9,23 +12,26 @@ kalemas@mail.ru :
 +   bug: switching style in options does not switch color scheme after mini styles
 +   in non-mini styles make scrollbar wider
 +   refresh modelsmodel instead of recreate, do it in thread
+    text/verses selection facility
+    make module/place selection, context fullscreen
     resize subview width, its primarily for tablets
+        need to add two functions: expand window, contract window
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
     new look and feel
-    text/verses selection facility
     clippings
         reorganize ui
-    make module/place selection fullscreen
+            1. move InstallManager to Module Selection, add Clippings to bottom bar
+            2. remove bottom bar and add menu to top-right button (+ possible to add some non obvious functions here, + more space)
 
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
     adding functionality using default function parameters is bad practice, when you want to change them
     download indexes feature
-    add smoothness to scrollbar in btminiview
++   add smoothness to scrollbar in btminiview
 
     centralized parallel processing:
         get data from sword
@@ -57,11 +63,6 @@ kalemas@mail.ru :
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
     unlock locked modules
-    fix webkit word context
-    apply settings without restart
-    slider bigger in dark theme
-    fix images
-
 
     make commentary context parallel computed
         make work array and threads array static
@@ -81,8 +82,8 @@ kalemas@mail.ru :
     new style of sliding, next view doesn't slide but fade
     topbar with animated effect when go sub level
     find way to communicate with scrollbar to display current position and marks
-    ? maybe make scroll bar transparent and overlapping view
-    ? scrolling like book pages, good because user's eyes always move all around the screen
+?   maybe make scroll bar transparent and overlapping view
+?   scrolling like book pages, good because user's eyes always move all around the screen
     bookmarks would be named as Cuttings or Clippings
     notes - based on personal commentary module with av11n mapping support remark, should be created by app
 
