@@ -135,7 +135,7 @@ private:
 						// set parameters from stack to empty part
 						_data[_data.size() - 1] = stack.last().second;
 
-						if(tag == "br" || tag == "p")
+                        if(tag == "br" || tag == "p" || tag == "div")
 							newLine = true;
 					}
 					else
@@ -233,8 +233,9 @@ private:
 			for(int i = 0; i < _data.size(); ++i)
 			{
 				QFontMetrics fm(_data[i].font);
-				_data[i].size = QSize(fm.width(_data[i].text), _data[i].font.pixelSize());
-				_data[i].pos = QPoint(0, ident * 0.75);
+                int p = _data[i].font.pixelSize();
+                _data[i].size = QSize(fm.width(_data[i].text), /*_data[i].font.pixelSize() +*/ fm.lineSpacing());
+                _data[i].pos = QPoint(0, 0);
 			}
 
 			// lines and centering
@@ -267,7 +268,7 @@ private:
 				// move part to new line
 				if(nl)
 				{
-					_data[i].pos = QPoint(0, _data[i].pos.y() + h);
+                    _data[i].pos = QPoint(0, _data[i].pos.y() + h);
 					h = _data[i].size.height();
 					w = _data[i].size.width();
 				}
@@ -402,7 +403,7 @@ public:
 
         QString ct(text);
 
-        if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
+        if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "div" << "br" << "p" << "word-breaks"))
 		{
             _ti = new TextItem(ct, widget->font(), widget->palette().text().color());
 			resize(size());
@@ -431,7 +432,7 @@ public:
                 }
             }
 
-            // fix percent font-size
+            // FIX percent font-size
             for(int i = cssStart; i < cssEnd; )
             {
                     int fontSize = ct.indexOf("font-size:", i);
@@ -503,7 +504,7 @@ public:
         if(tc != QColor(0, 0, 0))
             ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
 
-        // HACK resources path from url format to absolute path
+        // HACK resources path from url format to absolute path and set width
         ct.replace("<img src=\"file:///", QString("<img width=\"%1\" src=\"").arg(width()));
 
 #ifdef BT_STATIC_TEXT
@@ -549,8 +550,8 @@ public:
 
         if(!_icon.isNull())
         {
-            w -= _scale * 1.66;
-            h = qMax(h, (int)(_scale * 1.66));
+            w -= _scale * 2.0;
+            h = qMax(h, (int)(_scale * 2.0));
         }
 
         if(_ti)
@@ -611,7 +612,7 @@ public:
 
         if(!_icon.isNull())
         {
-            QRect rect(0, 0, _scale * 1.08, _scale * 1.08);
+            QRect rect(0, 0, _scale * 1.4, _scale * 1.4);
 			rect.translate(_scale * 0.26, _scale * 0.33);
 
             if(!rect.intersected(clipping).isEmpty())
@@ -619,7 +620,7 @@ public:
                 rect.translate(point);
                 _icon.paint(painter, rect);
             }
-            p.rx() += _scale * 1.66;
+            p.rx() += _scale * 2.0;
         }
 
 #ifdef BT_MINI_WEBKIT
@@ -651,8 +652,7 @@ public:
             {
                 QAbstractTextDocumentLayout::Selection s;
                 QTextCharFormat f;
-                //f.setForeground(Qt::red);
-                f.setBackground(Qt::red);
+                f.setBackground(Qt::gray);
 
                 s.cursor = _docCursor;
                 s.format = f;
@@ -758,7 +758,14 @@ public:
                 QRect r(QPoint(), i->size());
                 r &= clipping.translated(-p);
                 if(!r.isEmpty())
-                    i->paint(painter, rect.topLeft() - clipping.topLeft() + p, r);
+                {
+                    p = rect.topLeft() - clipping.topLeft() + p;
+                    i->paint(painter, p, r);
+                    if(_selectionStart == i)
+                        painter->drawEllipse(p.x(), p.y(), 20, 20);
+                    if(_selectionEnd == i)
+                        painter->drawRect(p.x(), p.y(), 20, 20);
+                }
             }
 
             x += i->size().width();
@@ -767,10 +774,11 @@ public:
 
     void clear()
     {
-        _cachedLastItem = _cachedTopItem = _cachedBottomItem = qMakePair(0, 0);
-        _resizeCursor   = -1;
-		_rect           = QRect(_rect.left(), 0, _rect.width(), 0);
-		_viualCenter    = 0.0;
+        _cachedLastItem  = _cachedTopItem = _cachedBottomItem = qMakePair(0, 0);
+        _resizeCursor    = -1;
+        _rect            = QRect(_rect.left(), 0, _rect.width(), 0);
+        _visualCenter    = 0.0;
+        _selectionEnd    = _selectionStart = 0;
 
         foreach(BtMiniViewItem *i, _items)
             delete i;
@@ -960,6 +968,263 @@ public:
         return i == -1 ? QModelIndex() : modelIndex(_items[i]->_row);
     }
 
+    /** Text selection functions. */
+    void updateSelection(bool start, QPoint p)
+    {
+        int pi = xyItem(p);
+        if(pi < 0)
+            return;
+
+        if(QTextDocument *td = _items[pi]->_doc)
+        {
+            const QPoint pp(p - itemXy(pi));
+            int cc = _items[pi]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
+            if(cc == -1)
+                cc = td->rootFrame()->lastPosition();
+            if(!_selectionStart)
+            {
+                // select word
+                QTextCursor tc = td->rootFrame()->firstCursorPosition();
+                tc.setPosition(cc);
+                tc.setPosition(cc, QTextCursor::KeepAnchor);
+                tc.select(QTextCursor::WordUnderCursor);
+                _items[pi]->_docCursor = tc;
+                _selectionStart = _selectionEnd = _items[pi];
+            }
+            else
+            {
+                int si;
+                int ei;
+                for(int i = 0; i < _items.size(); ++i)
+                {
+                    if(_items[i] == _selectionStart)
+                        si = i;
+                    if(_items[i] == _selectionEnd)
+                        ei = i;
+                }
+
+                if(start)
+                {
+                    if(si < pi)
+                        for(int iii = si; iii < pi; ++iii)
+                        {
+                            if(!_items[iii]->_doc)
+                                continue;
+                            _items[iii]->_docCursor = QTextCursor();
+                        }
+                    if(si > pi)
+                        for(int iii = pi + 1; iii <= si; ++iii)
+                        {
+                            if(!_items[iii]->_doc)
+                                continue;
+                            if(iii == ei)
+                            {
+                                int p = _items[iii]->_docCursor.selectionEnd();
+                                _items[iii]->_docCursor.setPosition(0);
+                                _items[iii]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+                            }
+                            else
+                            {
+                                _items[iii]->_docCursor = _items[iii]->_doc->rootFrame()->firstCursorPosition();
+                                _items[iii]->_docCursor.select(QTextCursor::Document);
+                            }
+                        }
+                    if(_items[pi]->_doc)
+                    {
+                        if(_items[pi]->_docCursor.isNull())
+                        {
+                            _items[pi]->_docCursor = _items[pi]->_doc->rootFrame()->firstCursorPosition();
+                            _items[pi]->_docCursor.setPosition(cc);
+                            _items[pi]->_docCursor.select(QTextCursor::WordUnderCursor);
+                        }
+                        else
+                        {
+                            int p = _items[pi]->_docCursor.selectionEnd();
+                            _items[pi]->_docCursor.setPosition(cc);
+                            if(p < cc)
+                                _items[pi]->_docCursor.select(QTextCursor::WordUnderCursor);
+                            else
+                                _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+                        }
+
+                        _selectionStart = _items[pi];
+                    }
+                    if(ei < pi)
+                        _selectionEnd = _items[pi];
+                }
+                else
+                {
+                    if(ei > pi)
+                        for(int iii = pi + 1; iii <= ei; ++iii)
+                        {
+                            if(!_items[iii]->_doc)
+                                continue;
+                            _items[iii]->_docCursor = QTextCursor();
+                        }
+                    if(ei < pi)
+                        for(int iii = ei; iii < pi; ++iii)
+                        {
+                            if(!_items[iii]->_doc)
+                                continue;
+                            if(iii == si)
+                            {
+                                int p = _items[iii]->_docCursor.selectionStart();
+                                _items[iii]->_docCursor.setPosition(p);
+                                _items[iii]->_docCursor.setPosition(_items[iii]->_doc->rootFrame()->lastPosition(), QTextCursor::KeepAnchor);
+                            }
+                            else
+                            {
+                                _items[iii]->_docCursor = _items[iii]->_doc->rootFrame()->firstCursorPosition();
+                                _items[iii]->_docCursor.select(QTextCursor::Document);
+                            }
+                        }
+                    if(_items[pi]->_doc)
+                    {
+                        if(_items[pi]->_docCursor.isNull())
+                        {
+                            _items[pi]->_docCursor = _items[pi]->_doc->rootFrame()->firstCursorPosition();
+                            if(si < pi)
+                            {
+                                _items[pi]->_docCursor.setPosition(cc, QTextCursor::KeepAnchor);
+                            }
+                            else
+                            {
+                                _items[pi]->_docCursor.setPosition(cc);
+                                _items[pi]->_docCursor.select(QTextCursor::WordUnderCursor);
+                            }
+                        }
+                        else
+                        {
+                            int p = _items[pi]->_docCursor.selectionStart();
+                            _items[pi]->_docCursor.setPosition(cc);
+                            if(p > cc)
+                                _items[pi]->_docCursor.select(QTextCursor::WordUnderCursor);
+                            else
+                                _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+                        }
+
+                        _selectionEnd = _items[pi];
+                    }
+                    if(si > pi)
+                        _selectionStart = _items[pi];
+                }
+
+
+
+//                bool done = false;
+//                for(int ii = pi; ii >= 0; --ii)
+//                {
+//                    if(_items[ii] == _selectionEnd)
+//                    {
+//                        if(_items[ii]->_doc)
+//                        {
+//                            if(_items[ii]->_docCursor.isNull())
+//                                _items[ii]->_docCursor = _items[ii]->_doc->rootFrame()->firstCursorPosition();
+//                            _items[ii]->_docCursor.setPosition(_items[ii]->_doc->rootFrame()->lastPosition(), QTextCursor::KeepAnchor);
+//                        }
+//                        for(int iii = ii + 1; iii < pi; ++iii)
+//                        {
+//                            if(_items[iii]->_doc)
+//                            {
+//                                _items[iii]->_docCursor = _items[iii]->_doc->rootFrame()->firstCursorPosition();
+//                                _items[iii]->_docCursor.select(QTextCursor::Document);
+//                            }
+//                        }
+
+//                        if(_items[pi]->_doc)
+//                        {
+//                            if(_items[pi]->_docCursor.isNull())
+//                                _items[pi]->_docCursor = _items[pi]->_doc->rootFrame()->firstCursorPosition();
+//                            _items[pi]->_docCursor.setPosition(cc, QTextCursor::KeepAnchor);
+//                        }
+
+//                        _selectionEnd = _items[pi];
+//                        done = true;
+
+//                        break;
+//                    }
+//                    if(_items[ii] == _selectionStart)
+//                    {
+//                        if(pi == ii && cc < _items[pi]->_docCursor.selectionStart())
+//                            break;
+
+//                        _items[pi]->_docCursor.setPosition(cc, QTextCursor::KeepAnchor);
+
+//                        for(int iii = pi + 1; ; ++iii)
+//                        {
+//                            _items[iii]->_docCursor = QTextCursor();
+//                            if(_items[iii] == _selectionEnd)
+//                                break;
+//                        }
+
+//                        _selectionEnd = _items[pi];
+//                        done = true;
+
+//                        break;
+//                    }
+//                }
+//                for(int ii = pi; ii < _items.size(); ++ii)
+//                {
+//                    if(!_items[ii]->_doc)
+//                        continue;
+
+//                    if(_items[ii] == _selectionStart)
+//                    {
+//                        if(_items[ii]->_docCursor.isNull())
+//                            _items[ii]->_docCursor = _items[ii]->_doc->rootFrame()->lastCursorPosition();
+//                        int p = _items[ii]->_docCursor.selectionEnd();
+//                        _items[ii]->_docCursor.setPosition(0);
+//                        _items[ii]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+
+//                        for(int iii = ii - 1; iii > pi; ++iii)
+//                        {
+//                            if(_items[iii]->_doc)
+//                            {
+//                                _items[iii]->_docCursor = _items[iii]->_doc->rootFrame()->firstCursorPosition();
+//                                _items[iii]->_docCursor.select(QTextCursor::Document);
+//                            }
+//                        }
+
+//                        if(_items[pi]->_doc)
+//                        {
+//                            if(_items[pi]->_docCursor.isNull())
+//                                _items[pi]->_docCursor = _items[pi]->_doc->rootFrame()->lastCursorPosition();
+//                            int p = _items[pi]->_docCursor.selectionEnd();
+//                            _items[pi]->_docCursor.setPosition(cc);
+//                            _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+//                        }
+
+//                        _selectionStart = _items[pi];
+//                        done = true;
+
+//                        break;
+//                    }
+//                    if(_items[ii] == _selectionEnd)
+//                    {
+//                        if(pi == ii && cc >= _items[pi]->_docCursor.selectionStart())
+//                            break;
+
+//                        int p = _items[pi]->_docCursor.selectionEnd();
+//                        _items[pi]->_docCursor.setPosition(cc);
+//                        _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
+
+//                        for(int iii = pi - 1; ; --iii)
+//                        {
+//                            _items[iii]->_docCursor = QTextCursor();
+//                            if(_items[iii] == _selectionStart)
+//                                break;
+//                        }
+
+//                        _selectionStart = _items[pi];
+//                        done = true;
+
+//                        break;
+//                    }
+//                }
+            }
+        }
+    }
+
 public:
     /** Items. */
     QList<BtMiniViewItem*>  _items;
@@ -976,8 +1241,12 @@ public:
     QPair<int, int>         _cachedLastItem;
 	
 	/** If user just opened view or scrolled to an index, necessary to determine when resize
-		thread computed items from center or top. */
-    float                   _viualCenter;
+        thread-computed-items from center or top. */
+    float                   _visualCenter;
+
+    /** */
+    BtMiniViewItem*         _selectionStart;
+    BtMiniViewItem*         _selectionEnd;
 
 
 private:
@@ -1460,6 +1729,22 @@ public:
         int start = pos;
         int end = pos + 1;
 
+        // check if item is inside selection, do not delete such items
+        if(v->_selectionStart && v->_selectionEnd)
+        {
+            for(int i = start; i >= 1; --i)
+                if(v->_items[i] == v->_selectionEnd)
+                    break;
+                else if(v->_items[i] == v->_selectionStart)
+                    return;
+            for(int i = end; i < v->_items.size(); ++i)
+                if(v->_items[i] == v->_selectionStart)
+                    break;
+                else if(v->_items[i] == v->_selectionEnd)
+                    return;
+        }
+
+        // expand to line
         while(start >= 1 && !v->_items[start]->_newLine)
             --start;
         while(end < v->_items.size() && !v->_items[end]->_newLine)
@@ -1488,6 +1773,7 @@ public:
 				_modelWork.removeAt(ii);
 			_mutex.unlock();
 
+            // items removed only here
             delete v->_items[start];
             v->_items.erase(v->_items.begin() + start);
         }
@@ -1684,8 +1970,8 @@ public:
 					{
 						int y = v->itemXy(ii).y() + v->contentsRect().top();
 							
-						if(v->_viualCenter != 0.0)
-							distance[i] = qAbs(y + (v->_items[ii]->height() / 2) - (v->baseSize().height() * v->_viualCenter));
+                        if(v->_visualCenter != 0.0)
+                            distance[i] = qAbs(y + (v->_items[ii]->height() / 2) - (v->baseSize().height() * v->_visualCenter));
 						else if(y <= 0 && y + v->_items[ii]->height() > 0)
 							distance[i] = qAbs(y);
 						else
@@ -1802,7 +2088,7 @@ public:
 
         _subViews[v]->_items[i]->setText(text, q, _webKitEnabled);
         areaChanged(v, r.top(), r.bottom() + 1, _subViews[v]->_items[i]->height(),
-            _subViews[v]->_viualCenter);
+            _subViews[v]->_visualCenter);
     }
 
 public:
@@ -2102,6 +2388,14 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 					close();
 			}
         }
+
+
+        // TEST text selection
+        {
+            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
+            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
+            d->currentSubView()->updateSelection(false, vp);
+        }
 	}
     else
     {
@@ -2116,25 +2410,6 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     }
 
     viewport()->update();
-
-    // TEST text selection
-    {
-        const QPoint gp(e->pos() + QPoint(d->_vx, 0));
-        const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
-        int i = d->currentSubView()->xyItem(vp);
-        if(i >= 0)
-        {
-            QTextDocument *td = d->currentSubView()->_items[i]->_doc;
-            if(td)
-            {
-                const QPoint pp(vp - d->currentSubView()->itemXy(i));
-                QTextCursor tc = td->rootFrame()->firstCursorPosition();
-                int cc = d->currentSubView()->_items[i]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
-                tc.setPosition(cc, QTextCursor::KeepAnchor);
-                d->currentSubView()->_items[i]->_docCursor = tc;
-            }
-        }
-    }
 }
 
 void BtMiniView::mouseMoveEvent(QMouseEvent *e)
@@ -2151,7 +2426,7 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
         d->_mouseLeaveZone = true;
         d->_mouseTapping   = 0;
 		
-		d->currentSubView()->_viualCenter = 0.45f;
+        d->currentSubView()->_visualCenter = 0.45f;
     }
 
     // Kinetic scrolling
