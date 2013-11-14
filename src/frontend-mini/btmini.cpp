@@ -1072,7 +1072,8 @@ int main(int argc, char *argv[])
     }
 
     app.startInit();
-    if (!app.initBtConfig()) {
+    if (!app.initBtConfig())
+    {
         return EXIT_FAILURE;
     }
 
@@ -1144,7 +1145,8 @@ int main(int argc, char *argv[])
     }
 
     backend->booknameLanguage(btConfig().value<QString>("language", systemName));
-    backend->deleteOrphanedIndices();
+    if(btConfig().value<bool>("deleteOrphanedIndices", true))
+        backend->deleteOrphanedIndices();
 
     // Let's run...
 #ifdef BT_MINI_QML

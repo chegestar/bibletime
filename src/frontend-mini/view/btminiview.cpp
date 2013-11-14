@@ -403,7 +403,7 @@ public:
 
         QString ct(text);
 
-        if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "div" << "br" << "p" << "word-breaks"))
+        if(isTextAcceptable(ct, QStringList() << "b" << "center" << "font" << "br" << "p" << "word-breaks"))
 		{
             _ti = new TextItem(ct, widget->font(), widget->palette().text().color());
 			resize(size());
@@ -433,27 +433,30 @@ public:
             }
 
             // FIX percent font-size
-            for(int i = cssStart; i < cssEnd; )
+            for(int i = cssStart, fontSize = 0; i < cssEnd && fontSize != -1; fontSize = ct.indexOf("font-size:", i))
             {
-                    int fontSize = ct.indexOf("font-size:", i);
-
-                    if(fontSize == -1)
-                            break;
-
-                    for(int ii = fontSize + 10; ; ++ii)
+                for(int ii = fontSize + 10; ; ++ii)
+                {
+                    if(ct[ii] == '\n')
+                        break;
+                    else if(ct[ii] == '%')
                     {
-                            if(ct[ii] == '\n')
-                                    break;
-                            else if(ct[ii] == '%')
-                            {
-                                    int fs = fontSize + 10;
-                                    int v = ct.mid(fs, ii - fs).toInt();
-                                    ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
-                            }
+                        int fs = fontSize + 10;
+                        int v = ct.mid(fs, ii - fs).toInt();
+                        ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
                     }
-
-                    i = fontSize + 10;
+                }
+                i = fontSize + 10;
             }
+//            for(int i = cssStart, prop = 0; i < cssEnd && prop != -1; prop = ct.indexOf(":before", i))
+//            {
+//                int value = ct.indexOf("content:", prop);
+//                if(value == -1)
+//                    continue;
+//                value = ct.indexOf('"', value);
+//                QString v(ct.mid(value + 1, ct.indexOf('"', value + 1) - value - 1));
+//                i = value + 1 + v.size() + 1;
+//            }
         }
 
 #ifdef BT_MINI_WEBKIT
@@ -652,7 +655,8 @@ public:
             {
                 QAbstractTextDocumentLayout::Selection s;
                 QTextCharFormat f;
-                f.setBackground(Qt::gray);
+                //f.setBackground(Qt::gray);
+                f.setBackground(QApplication::style()->standardPalette().highlight());
 
                 s.cursor = _docCursor;
                 s.format = f;
@@ -761,10 +765,7 @@ public:
                 {
                     p = rect.topLeft() - clipping.topLeft() + p;
                     i->paint(painter, p, r);
-                    if(_selectionStart == i)
-                        painter->drawEllipse(p.x(), p.y(), 20, 20);
-                    if(_selectionEnd == i)
-                        painter->drawRect(p.x(), p.y(), 20, 20);
+
                 }
             }
 
@@ -1224,6 +1225,16 @@ public:
             }
         }
     }
+    void clearSelection()
+    {
+        for(int i = 0; i < _items.size(); ++i)
+        {
+            if(!_items[i]->_doc)
+                continue;
+            _items[i]->_docCursor = QTextCursor();
+        }
+        _selectionStart = _selectionEnd = 0;
+    }
 
 public:
     /** Items. */
@@ -1244,9 +1255,11 @@ public:
         thread-computed-items from center or top. */
     float                   _visualCenter;
 
-    /** */
+    /** Text selection data, \param *Point is screen relative coordinates that need to be updated on BtMiniView::scroll(). */
     BtMiniViewItem*         _selectionStart;
     BtMiniViewItem*         _selectionEnd;
+    QPoint                  _selectionStartPoint;
+    QPoint                  _selectionEndPoint;
 
 
 private:
@@ -1733,15 +1746,35 @@ public:
         if(v->_selectionStart && v->_selectionEnd)
         {
             for(int i = start; i >= 1; --i)
+            {
                 if(v->_items[i] == v->_selectionEnd)
                     break;
                 else if(v->_items[i] == v->_selectionStart)
-                    return;
+                {
+                    if(v->contentsRect().height() > v->contentsRect().width() * 10)
+                    {
+                        v->clearSelection();
+                        break;
+                    }
+                    else
+                        return;
+                }
+            }
             for(int i = end; i < v->_items.size(); ++i)
+            {
                 if(v->_items[i] == v->_selectionStart)
                     break;
                 else if(v->_items[i] == v->_selectionEnd)
-                    return;
+                {
+                    if(v->contentsRect().height() > v->contentsRect().width() * 10)
+                    {
+                        v->clearSelection();
+                        break;
+                    }
+                    else
+                        return;
+                }
+            }
         }
 
         // expand to line
@@ -2391,11 +2424,11 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 
 
         // TEST text selection
-        {
-            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
-            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
-            d->currentSubView()->updateSelection(false, vp);
-        }
+//        {
+//            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
+//            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
+//            d->currentSubView()->updateSelection(false, vp);
+//        }
 	}
     else
     {

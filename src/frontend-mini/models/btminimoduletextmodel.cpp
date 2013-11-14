@@ -933,14 +933,9 @@ void BtMiniModuleTextModel::openModuleSelection()
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
     m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'><word-breaks/>"
-                         // RtoL module support, need decision from Crosswire
-                         << "<br/>"
-                         //<< "<div dir=\"" << BtBookshelfModel::ModuleDescriptionRole << "\">"
-                         << BtBookshelfModel::ModuleDescriptionRole
-                         //<< "</div>"
-                         << "</font>");
+                        << BtBookshelfModel::ModuleDescriptionHtmlRole << "</font>");
 
-	// if modules more than 4, scrollbar always visible
+    // if modules more than 4, scrollbar always visible
 	if(m->modules().size() > 4)
 	{
 		BtMiniLevelOption o = view->layoutDelegate()->levelOption();

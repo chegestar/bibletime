@@ -12,7 +12,9 @@ kalemas@mail.ru :
 +   bug: switching style in options does not switch color scheme after mini styles
 +   in non-mini styles make scrollbar wider
 +   refresh modelsmodel instead of recreate, do it in thread
++   add smoothness to scrollbar in btminiview
     text/verses selection facility
+        qtextdocument is limited, we ought to wait qwebengine
     make module/place selection, context fullscreen
     resize subview width, its primarily for tablets
         need to add two functions: expand window, contract window
@@ -27,13 +29,20 @@ kalemas@mail.ru :
             2. remove bottom bar and add menu to top-right button (+ possible to add some non obvious functions here, + more space)
     switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
     in qtextdocument center headers
+        make own filters for before:/after: selectors
+            it is not simple, because we can not obtain :after insertion point and resolve correct selector
+    apply settings on button press
+    always open Settings on main page, not Handbook
+        reimplement windows switching
+    turn on/off text features (notes)
+    sliding effect for main stacked widget
+
 
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
     adding functionality using default function parameters is bad practice, when you want to change them
     download indexes feature
-+   add smoothness to scrollbar in btminiview
 
     centralized parallel processing:
         get data from sword
@@ -73,8 +82,8 @@ kalemas@mail.ru :
     memory leaking on wince, crtdebug detect leaking starting from QApplication init
     QTextDocument issues
         not load external style sheet
+            it would be possible to load with absolute path
         font enumeration in font-family dont work
-        process unhandled css construction before passing to QTextDocument
     replace unistd.h with io.h/direct.h on wince
     merge linked verses in model
     ? new menu look
