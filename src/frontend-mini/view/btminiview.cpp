@@ -432,7 +432,7 @@ public:
                 }
             }
 
-            // FIX percent font-size
+            // HACK percent font-size
             for(int i = cssStart, fontSize = 0; i < cssEnd && fontSize != -1; fontSize = ct.indexOf("font-size:", i))
             {
                 for(int ii = fontSize + 10; ; ++ii)
@@ -527,7 +527,7 @@ public:
 
         _doc->setDefaultFont(widget->font());
         _doc->setHtml(ct);
-		
+
         resize(size());
     }
 
@@ -655,7 +655,6 @@ public:
             {
                 QAbstractTextDocumentLayout::Selection s;
                 QTextCharFormat f;
-                //f.setBackground(Qt::gray);
                 f.setBackground(QApplication::style()->standardPalette().highlight());
 
                 s.cursor = _docCursor;
@@ -671,8 +670,7 @@ public:
         }
 
         if(_ti)
-            _ti->paint(painter, p, clipping.translated(point.x() - p.x(), 0).intersected(
-                           QRect(0, 0, _width, _height)));
+            _ti->paint(painter, p, clipping.translated(point.x() - p.x(), 0).intersected(QRect(0, 0, _width, _height)));
 
 #ifdef BT_STATIC_TEXT
         if(_st)
@@ -2424,11 +2422,13 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 
 
         // TEST text selection
-//        {
-//            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
-//            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
-//            d->currentSubView()->updateSelection(false, vp);
-//        }
+        {
+            //const QPoint gp(e->pos() + QPoint(d->_vx, 0));
+            //const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
+            //d->currentSubView()->updateSelection(false, vp);
+
+            //qDebug() << indexAt(e->pos()).data();
+        }
 	}
     else
     {

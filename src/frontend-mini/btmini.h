@@ -48,12 +48,15 @@ public:
     /** */
     enum BtMiniState
     {
-        Main      = 0x01,
-        Works     = 0x02,
-        Search    = 0x04,
-        Settings  = 0x08,
-        Installer = 0x10,
-        All       = 0xff
+        Main       = 1 << 1,
+        Works      = 1 << 2,
+        Search     = 1 << 3,
+        Settings   = 1 << 4,
+        Installer  = 1 << 5,
+        Context    = 1 << 6,
+        NewContext = 1 << 7,
+        Previous   = 1 << 8,
+        All        = 0xffff
     };
 
     /** Get window of specified type. */

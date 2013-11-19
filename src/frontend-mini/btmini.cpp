@@ -467,11 +467,41 @@ BtMini & BtMini::instance()
 
 QWidget *BtMini::widget(BtMiniState type)
 {
-    //switch(type)
-    //{
-    //default:
-    //    Q_ASSERT(false);
-    //}
+    static QVector<QWidget*> contextWidgets;
+
+    switch(type)
+    {
+    case Context:
+        {
+            if(contextWidgets.size() == 0)
+                return widget(NewContext);
+            return contextWidgets.last();
+        }
+    case NewContext:
+        {
+            QWidget *w = new BtMiniWidget(mainWidget());
+            BtMiniView *v = new BtMiniView(w);
+            v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
+            v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+            changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
+
+            BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+
+            QLabel *l = new QLabel("", w);
+
+            QVBoxLayout *vl = new QVBoxLayout;
+            vl->addWidget(l);
+            vl->addWidget(v);
+            vl->addWidget(p);
+            w->setLayout(vl);
+
+            contextWidgets.append(w);
+
+            return w;
+        }
+    default:
+        Q_ASSERT(false);
+    }
 
     return 0;
 }
@@ -484,6 +514,31 @@ BtMiniView *BtMini::view(BtMiniState type)
 void BtMini::reset(BtMiniState type)
 {
     ;
+}
+
+void BtMini::activate(BtMini::BtMiniState type)
+{
+    switch(type)
+    {
+    case Context:
+        {
+            setActiveWidget(widget(Context));
+        }
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+
+//    // Sync context modules to config
+//    QModelIndexList list = view->currentIndexes();
+//    QStringList modules;
+
+//    for(int i = 0; i < list.size(); ++i)
+//        modules.append(m->d_func()->_lists[i]._name);
+
+//    btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
+//    btConfig().setValue<QStringList>("mini/openInfoModules", modules);
+
 }
 
 float fontSizeFactor()
@@ -1055,14 +1110,17 @@ int main(int argc, char *argv[])
     app.installNativeEventFilter(BtMiniMainWidget::eventFilterProcessor());
 #endif
 
+    QFont nf, of;
 #ifdef BT_MINI_QML
-    {
-        QFont f(QApplication::font());
-        f.setPixelSize(fontSizeFactor());
-        QFontInfo fi(f);
-        f.setPointSizeF(fi.pointSizeF());
-        QApplication::setFont(f);
-    }
+    nf.setPixelSize(fontSizeFactor());
+    QFontInfo fi(nf);
+    nf.setPointSizeF(fi.pointSizeF());
+#else
+    nf.setStyleHint(QFont::SansSerif, (QFont::StyleStrategy)(QFont::OpenGLCompatible | QFont::PreferQuality));
+    nf.setFamily("Book Antiqua");
+    qDebug() << "Selecting fonts:" << of.defaultFamily() << of.family() << nf.family();
+    of.setFamily(of.defaultFamily());
+    QApplication::setFont(nf);
 #endif
 
     if(!util::directory::initDirectoryCache())
@@ -1076,6 +1134,9 @@ int main(int argc, char *argv[])
     {
         return EXIT_FAILURE;
     }
+
+    // restore font for interface, font for text was set above in config constructor
+    QApplication::setFont(of);
 
     app.setStyle(btConfig().value<QString>("mini/miniStyle", "mini"));
     btConfig().setValue("bibletimeVersion", app.applicationVersion());
