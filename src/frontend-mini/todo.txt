@@ -13,9 +13,35 @@ kalemas@mail.ru :
 +   in non-mini styles make scrollbar wider
 +   refresh modelsmodel instead of recreate, do it in thread
 +   add smoothness to scrollbar in btminiview
++   RtoL module description support
     text/verses selection facility
         qtextdocument is limited, we ought to wait qwebengine
     make module/place selection, context fullscreen
+        new system for interface interaction
+            * create widget instances
+            * get current widget
+            * switch active widget and do work on switching (some on activate and some on deactivate)
+            * recreate widgets and set other parameters of widgets
+            * create stack of widgets for context display
+            * flexible system
+            * make it able to display two or more widgets at same time
+            * animated transisions
+            - one file for all windows
+            - one file per window
+            - one object to manage user interface
+                no any non-ui logic
+                    move all base logic to models such as install module, refresh
+            devide user interface on several objects
+            object
+                should have behaviour
+                have widget internally
+                can return previous widget
+            many objects have same behaviour
+            still need main object to manage
+            logic should be in model
+            only interface logic should be in widgets
+            one class - one object
+    switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
     resize subview width, its primarily for tablets
         need to add two functions: expand window, contract window
     make sword text model and install model suitable for main repo
@@ -27,7 +53,6 @@ kalemas@mail.ru :
         reorganize ui
             1. move InstallManager to Module Selection, add Clippings to bottom bar
             2. remove bottom bar and add menu to top-right button (+ possible to add some non obvious functions here, + more space)
-    switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
     in qtextdocument center headers
         make own filters for before:/after: selectors
             it is not simple, because we can not obtain :after insertion point and resolve correct selector

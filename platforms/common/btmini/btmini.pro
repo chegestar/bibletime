@@ -37,6 +37,7 @@ HEADERS += \
     ../../../src/frontend-mini/ui/btminimenu.h \
     ../../../src/frontend-mini/ui/btminipanel.h \
     ../../../src/frontend-mini/ui/btministyle.cpp \
+    ../../../src/frontend-mini/ui/btminiui.h
 
 
 RESOURCES += \
