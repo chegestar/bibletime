@@ -21,6 +21,11 @@
 #include <QtDebug>
 #include <qdrawutil.h>
 
+#ifdef BTMINISTYLE_H
+#error "btministyle.h should not be included"
+#endif
+#define BTMINISTYLE_H
+
 class BtMiniStyle : public QCommonStyle
 {
     Q_OBJECT
@@ -474,11 +479,7 @@ public:
     }
 };
 
-
-// this would not be gereated on first build, temporary include this .cpp file in HEADER pro section
-#include "moc_btministyle.cpp"
-
-
+// Code below will be included in *.moc object file
 // HACK declare static plugin
 #if QT_VERSION < 0x050000
 QObject * qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)

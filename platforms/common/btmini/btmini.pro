@@ -22,7 +22,6 @@ SOURCES += \
     ../../../src/frontend-mini/view/btminiview.cpp \
     ../../../src/frontend-mini/ui/btminimenu.cpp \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
-    ../../../src/frontend-mini/ui/btministyle.cpp \
 
 
 HEADERS += \
@@ -36,8 +35,8 @@ HEADERS += \
     ../../../src/frontend-mini/view/btminilayoutdelegate.h \
     ../../../src/frontend-mini/ui/btminimenu.h \
     ../../../src/frontend-mini/ui/btminipanel.h \
-    ../../../src/frontend-mini/ui/btministyle.cpp \
-    ../../../src/frontend-mini/ui/btminiui.h
+    ../../../src/frontend-mini/ui/btministyle.h \
+    ../../../src/frontend-mini/ui/btminiui.h \
 
 
 RESOURCES += \
