@@ -14,7 +14,7 @@
 
 #include "btminimenu.h"
 #include "btminipanel.h"
-#include "btmini.h"
+#include "btminiui.h"
 
 class BtMiniPanelPrivate
 {
@@ -149,22 +149,22 @@ void BtMiniPanel::controlActivated()
     {
     case Exit:
         if(BtMiniMenu::execQuery(tr("Exit?"), QStringList() << tr("Yes") << tr("No")) == 0)
-            BtMini::mainWidget()->close();
+            BtMiniUi::instance()->mainWidget()->close();
         break;
     case Search:
-        BtMini::setActiveWidget(BtMini::searchWidget());
+        BtMiniUi::instance()->activateSearch();
         break;
     case Close:
-        BtMini::setActiveWidget(BtMini::worksWidget());
+        BtMiniUi::instance()->activateWorks();
         break;
     case Installer:
-        BtMini::setActiveWidget(BtMini::installerWidget());
+        BtMiniUi::instance()->activateInstaller();
         break;
     case Settings:
-        BtMini::setActiveWidget(BtMini::settingsWidget());
+        BtMiniUi::instance()->activateSettings();
         break;
     case Refresh:
-        BtMini::updateRemoteSources();
+        //BtMini::updateRemoteSources();
         break;
     default:
         Q_ASSERT(false);

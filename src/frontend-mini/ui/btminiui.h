@@ -14,35 +14,54 @@
 
 #include <QObject>
 
+class BtMiniView;
 class BtMiniUiPrivate;
 
-/** Class to manage all user interface elements.
- *  No basic logic should be in this object, except interface logic.
- *  All switching slots, signals, methods should go here.
- *  Models would have own logic for ui e.g. fill context popup with custom data.
- */
+/**
+* Manage all user interface elements, and responsible for:
+*   creation of all basic windows
+*   setting up basic logic for created elements
+*   provide interfaces for sofisticated interface building in logic/models objects
+*/
 class BtMiniUi : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(BtMiniUi)
 
-    BtMiniUi(QObject *parent);
+    BtMiniUi(QObject *parent = 0);
 
 public:
     ~BtMiniUi();
 
-    static BtMiniUi* instance();
+    inline static BtMiniUi* instance()
+    {
+        static BtMiniUi ui;
+        return &ui;
+    }
 
-    void openNewContext();
-    void setModelForCurrentView();
+    void show();
+
+    QWidget* mainWidget();
+    QWidget* worksWidget();
+    BtMiniView* worksView();
+    BtMiniView* searchView();
+
+    /** Mark groups of widgets to reset, this will be done when any widget activated. */
+    void resetWidgets(bool main, bool works, bool rest);
 
 public slots:
-    void switchToWorks();
-    void switchToSearch();
-    void switchToInstaller();
-    void switchToSettings();
+    /** Make window wisible to user in foreground, those function would do nothing when multiple
+     *  windows displayed. */
+    void activateWorks();
+    void activateInstaller();
+    void activateSearch();
+    void activateSettings();
 
-    void saveSession();
+    /** */
+    void applicationStateChanged();
+
+    /** */
+    void modulesReloaded();
 
 
 private:

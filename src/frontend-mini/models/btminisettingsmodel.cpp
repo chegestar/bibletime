@@ -25,6 +25,7 @@
 #include "btminisettingsmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "ui/btminimenu.h"
+#include "ui/btminiui.h"
 
 #define BT_MINI_FORUM_URL "http://sourceforge.net/p/bibletimemini/discussion"
 
@@ -306,12 +307,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
             {
                 btConfig().setValue("mini/fontScale", nv);
                 emit dataChanged(index, index);
-
-				BtMini::mainWidget(true);
-				BtMini::worksWidget(true, true);
-				BtMini::installerWidget(false, true);
-				BtMini::settingsWidget(true);
-				BtMini::searchWidget(true);
+                BtMiniUi::instance()->resetWidgets(true, true, true);
             }
         }
         break;
@@ -325,22 +321,23 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 			{
 				btConfig().setValue("mini/fontTextScale", nv);
 				emit dataChanged(index, index);
-
-				BtMini::worksWidget(true, true);
-				BtMini::installerWidget(false, true);
-				BtMini::settingsWidget(true);
-				BtMini::searchWidget(true);
+                BtMiniUi::instance()->resetWidgets(false, true, true);
 			}
 		}
         break;
 
 #ifdef BT_MINI_WEBKIT
     case BtMiniUseWebKit:
-        btConfig().setValue("mini/useWebKit", !btConfig().value<bool>("mini/useWebKit", false));
-        emit dataChanged(index, index);
+        {
+            bool b = !btConfig().value<bool>("mini/useWebKit", false);
+            btConfig().setValue("mini/useWebKit", b);
+            emit dataChanged(index, index);
 
-        BtMini::worksWidget(true, true);
-        BtMini::searchWidget(true);
+            if(BtMiniUi::instance()->worksView())
+                BtMiniUi::instance()->worksView()->setWebKitEnabled(b);
+            if(BtMiniUi::instance()->searchView())
+                BtMiniUi::instance()->searchView()->setWebKitEnabled(b);
+        }
         break;
 #endif
 
@@ -348,7 +345,8 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         {
             bool b = !btConfig().value<bool>("mini/miniContinuousScrolling", false);
             btConfig().setValue("mini/miniContinuousScrolling", b);
-            BtMini::findView(BtMini::worksWidget())->setContinuousScrolling(b);
+            if(BtMiniUi::instance()->worksView())
+                BtMiniUi::instance()->worksView()->setContinuousScrolling(b);
             emit dataChanged(index, index);
         }
         break;
@@ -365,11 +363,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
             btConfig().setValue("mini/miniStyle", s);
             emit dataChanged(index, index);
 
-            BtMini::mainWidget(false, s);
-            BtMini::worksWidget(true, true);
-            BtMini::installerWidget(false, true);
-            BtMini::settingsWidget(true);
-            BtMini::searchWidget(true);
+            BtMiniUi::instance()->resetWidgets(true, true, true);
         }
         break;
 
@@ -382,7 +376,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         btConfig().setValue("mini/threadedTextRetrieving", !btConfig().value<int>("mini/threadedTextRetrieving", true));
         emit dataChanged(index, index);
 
-        BtMini::worksWidget(true, true);
+        BtMiniUi::instance()->resetWidgets(false, true, false);
         break;
 
 #ifndef BT_NO_CLUCENE

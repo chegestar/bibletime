@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.16
+VERSION = 0.9.17
 
 CONFIG += webkit clucene svg xml mini
 
@@ -22,6 +22,7 @@ SOURCES += \
     ../../../src/frontend-mini/view/btminiview.cpp \
     ../../../src/frontend-mini/ui/btminimenu.cpp \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
+    ../../../src/frontend-mini/ui/btminiui.cpp
 
 
 HEADERS += \

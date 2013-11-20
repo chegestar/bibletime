@@ -503,3 +503,35 @@ void BtMiniModulesModel::downloadComplete()
         endResetModel();
     }
 }
+
+void BtMiniModulesModel::installerQuery(const QModelIndex &index)
+{
+    CSwordModuleInfo *m = reinterpret_cast<CSwordModuleInfo*>(
+                index.data(BtBookshelfModel::ModulePointerRole).value<void *>());
+
+    if(m)
+    {
+        // TODO detect module status: installed, obsolete, not installed
+
+        if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()),
+            QStringList() << tr("Install") << tr("Cancel")) == 0)
+        {
+            BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
+
+            QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
+            connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
+            dialog->show();
+
+            sword::InstallSource is = BtInstallBackend::source(index.data(BtMini::RepositoryRole).toString());
+            int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
+            if (status != 0)
+            {
+                dialog->hide();
+                BtMiniMenu::execQuery(QString(tr("Module was not installed")));
+                qDebug() << "Failed to install" << m->name() << status;
+            }
+            else if(!dialog->wasCanceled())
+                CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+        }
+    }
+}

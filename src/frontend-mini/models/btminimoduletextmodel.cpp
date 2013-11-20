@@ -39,6 +39,7 @@
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
 #include "ui/btminimenu.h"
+#include "ui/btminiui.h"
 
 
 QMutex BtMiniSwordMutex;
@@ -913,7 +914,7 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 
 void BtMiniModuleTextModel::openModuleSelection()
 {
-    BtMiniView *works = BtMini::findView(BtMini::worksWidget());
+    BtMiniView *works = BtMiniUi::instance()->worksView();
 	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
 	works->setSleep(true);
 
@@ -994,7 +995,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 {
 	Q_D(BtMiniModuleTextModel);
 
-    BtMiniView *works = BtMini::findView(BtMini::worksWidget());
+    BtMiniView *works = BtMiniUi::instance()->worksView();
 
     QString cm = works->currentIndex().data(BtMini::ModuleRole).toString().section(',', 0, 0);
 	QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
@@ -1137,7 +1138,7 @@ void BtMiniModuleTextModel::startSearch()
 {
 	Q_D(BtMiniModuleTextModel);
 
-	BtMiniView *works = BtMini::findView(BtMini::worksWidget());
+    BtMiniView *works = BtMiniUi::instance()->worksView();
 
     QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
     CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm.section(',', 0, 0));
@@ -1243,7 +1244,7 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     if(!m)
         return;
 
-    QModelIndex wi = BtMini::findView(BtMini::worksWidget())->currentIndex();
+    QModelIndex wi = BtMiniUi::instance()->worksView()->currentIndex();
     QString wm(wi.data(BtMini::ModuleRole).toString());
     CSwordModuleInfo *md = CSwordBackend::instance()->findModuleByName(wm.section(',', 0, 0));
 

@@ -50,6 +50,9 @@ public slots:
     void          backgroundDownload();
     void          downloadComplete();
 
+    /** */
+    void          installerQuery(const QModelIndex &index);
+
 
 protected:
 

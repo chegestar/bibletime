@@ -26,21 +26,9 @@ kalemas@mail.ru :
             * flexible system
             * make it able to display two or more widgets at same time
             * animated transisions
-            - one file for all windows
-            - one file per window
-            - one object to manage user interface
-                no any non-ui logic
-                    move all base logic to models such as install module, refresh
-            devide user interface on several objects
-            object
-                should have behaviour
-                have widget internally
-                can return previous widget
-            many objects have same behaviour
-            still need main object to manage
-            logic should be in model
-            only interface logic should be in widgets
-            one class - one object
+    restore search term
+    bug: somewhat with scrolling on tips if opened after first Bible installation
+    android: style switching does not working properly
     switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
     resize subview width, its primarily for tablets
         need to add two functions: expand window, contract window
@@ -49,6 +37,7 @@ kalemas@mail.ru :
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
     new look and feel
+        ios style, fusion-based
     clippings
         reorganize ui
             1. move InstallManager to Module Selection, add Clippings to bottom bar

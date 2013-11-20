@@ -46,67 +46,67 @@ public:
     };
 
     /** */
-    enum BtMiniState
-    {
-        Main       = 1 << 1,
-        Works      = 1 << 2,
-        Search     = 1 << 3,
-        Settings   = 1 << 4,
-        Installer  = 1 << 5,
-        Context    = 1 << 6,
-        NewContext = 1 << 7,
-        Previous   = 1 << 8,
-        All        = 0xffff
-    };
+//    enum BtMiniState
+//    {
+//        Main       = 1 << 1,
+//        Works      = 1 << 2,
+//        Search     = 1 << 3,
+//        Settings   = 1 << 4,
+//        Installer  = 1 << 5,
+//        Context    = 1 << 6,
+//        NewContext = 1 << 7,
+//        Previous   = 1 << 8,
+//        All        = 0xffff
+//    };
 
-    /** Get window of specified type. */
-    static QWidget * widget(BtMiniState type);
-    static BtMiniView * view(BtMiniState type);
+//    /** Get window of specified type. */
+//    static QWidget * widget(BtMiniState type);
+//    static BtMiniView * view(BtMiniState type);
 
-    /** Set flag to recreate widgets on demand. */
-    static void reset(BtMiniState mask);
+//    /** Set flag to recreate widgets on demand. */
+//    static void reset(BtMiniState mask);
 
-    /** Switch interface states. */
-    static void activate(BtMiniState type);
+//    /** Switch interface states. */
+//    static void activate(BtMiniState type);
 
     /** Make device vibrate. This should be reimpemented. */
     static void vibrate(int miliseconds);
 
     /** */
-    static void updateRemoteSources(bool download = true);
+//    static void updateRemoteSources(bool download = true);
 
 
 public slots:
     /** Install module. This should be moved to BtMiniLogic. */
-    void installerQuery(const QModelIndex &index);
+//    void installerQuery(const QModelIndex &index);
 
     /** */
-    void applicationStateChanged();
+//    void applicationStateChanged();
 
     // below are old functions intended to be removed
 public:
     /** Main widget. */
-    static QWidget * mainWidget(bool fontSizeChanged = false, QString newStyle = QString());
+//    static QWidget * mainWidget(bool fontSizeChanged = false, QString newStyle = QString());
     
-    /** Module text view. */
-    static QWidget * worksWidget(bool showTip = true, bool reset = false);
+//    /** Module text view. */
+//    static QWidget * worksWidget(bool showTip = true, bool reset = false);
 
-    /** */
-    static QWidget * searchWidget(bool reset = false);
+//    /** */
+//    static QWidget * searchWidget(bool reset = false);
 
-    /** Manage modules, repositories, search indecies, install manager. */
-    static QWidget * installerWidget(bool firstTime = false, bool reset = false);
+//    /** Manage modules, repositories, search indecies, install manager. */
+//    static QWidget * installerWidget(bool firstTime = false, bool reset = false);
     
-    /** */
-    static QWidget * settingsWidget(bool reset = false);
+//    /** */
+//    static QWidget * settingsWidget(bool reset = false);
     
-    /** The only way to switch interface states. Works with functions above. */
-    static void setActiveWidget(QWidget *widget);
+//    /** The only way to switch interface states. Works with functions above. */
+//    static void setActiveWidget(QWidget *widget);
     
-    /** Cast widget into type of BtMiniView or search for child of that type and
-        return. This function should throw exception if view not found, no need
-        to check pointer. */
-    static BtMiniView * findView(QWidget *widget);
+//    /** Cast widget into type of BtMiniView or search for child of that type and
+//        return. This function should throw exception if view not found, no need
+//        to check pointer. */
+//    static BtMiniView * findView(QWidget *widget);
 };
 
 #endif
