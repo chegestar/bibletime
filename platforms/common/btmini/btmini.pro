@@ -69,9 +69,6 @@ LIBS += -framework AudioToolbox
 # MeeGo platform
 unix:contains(MEEGO_EDITION,harmattan) {
 
-include(../../common/btmini/deployment.pri)
-qtcAddDeployment()
-
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
     qtc_packaging/debian_harmattan/README \
@@ -116,9 +113,6 @@ vendorinfo = \
 mini_deployment.pkg_prerules = packageheader vendorinfo
 
 DEPLOYMENT += mini_deployment
-
-include(../../common/btmini/deployment.pri)
-qtcAddDeployment()
 }
 
 
