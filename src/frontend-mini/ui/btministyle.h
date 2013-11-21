@@ -80,24 +80,25 @@ public:
         case PE_FrameMenu:
             if(const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame*>(opt))
             {
-                const int m = _menuFrameWidth;
+                const int n = QApplication::topLevelWidgets()[0]->font().pixelSize();
+                const int m = _menuFrame->width() / 3;
                 //qDrawBorderPixmap(p, frame->rect, QMargins(m, m, m, m), *_menuFrame);
                 //p->drawPixmap(0, 0, _menuFrame->width(), _menuFrame->height(), *_menuFrame);
 
                 p->setBrush(_palette.base());
                 p->setPen(Qt::NoPen);
-                p->drawRect(frame->rect.adjusted(m, m, -m, -m));
+                p->drawRect(frame->rect.adjusted(n, n, -n, -n));
 
-                p->drawPixmap(0, 0, m, m, *_menuFrame, 0, 0, m , m);
-                p->drawPixmap(m, 0, frame->rect.width() - m - m, m, *_menuFrame, m, 0, m, m);
-                p->drawPixmap(frame->rect.width() - m, 0, m, m, *_menuFrame, _menuFrame->width() - m, 0, m , m);
-                p->drawPixmap(0, m, m, frame->rect.height() - m - m, *_menuFrame, 0, m, m, m);
-                p->drawPixmap(0, frame->rect.height() - m, m, m, *_menuFrame, 0, _menuFrame->height() - m, m , m);
-                p->drawPixmap(m, frame->rect.height() - m, frame->rect.width() - m - m, m, *_menuFrame, m,
+                p->drawPixmap(0, 0, n, n, *_menuFrame, 0, 0, m , m);
+                p->drawPixmap(n, 0, frame->rect.width() - n - n, n, *_menuFrame, m, 0, m, m);
+                p->drawPixmap(frame->rect.width() - n, 0, n, n, *_menuFrame, _menuFrame->width() - m, 0, m , m);
+                p->drawPixmap(0, n, n, frame->rect.height() - n - n, *_menuFrame, 0, m, m, m);
+                p->drawPixmap(0, frame->rect.height() - n, n, n, *_menuFrame, 0, _menuFrame->height() - m, m , m);
+                p->drawPixmap(n, frame->rect.height() - n, frame->rect.width() - n - n, n, *_menuFrame, m,
                               _menuFrame->height() - m, m, m);
-                p->drawPixmap(frame->rect.width() - m, frame->rect.height() - m, m, m, *_menuFrame,
+                p->drawPixmap(frame->rect.width() - n, frame->rect.height() - n, n, n, *_menuFrame,
                               _menuFrame->width() - m, _menuFrame->height() - m, m , m);
-                p->drawPixmap(frame->rect.width() - m, m, m, frame->rect.height() - m - m, *_menuFrame,
+                p->drawPixmap(frame->rect.width() - n, n, n, frame->rect.height() - n - n, *_menuFrame,
                               _menuFrame->width() - m, m, m, m);
             }
             return;
@@ -202,7 +203,7 @@ public:
         case PM_LayoutVerticalSpacing:
             return 0;
         case PM_MenuPanelWidth:
-            return _menuFrameWidth;
+                return QApplication::topLevelWidgets()[0]->font().pixelSize();
         case PM_MaximumDragDistance:
             return -1;
         case PM_SliderThickness:
@@ -237,7 +238,6 @@ public:
         {
             _menuFrame = new QPixmap(_night ? ":/style-mini/menu-night-frame.png"
                                             : ":/style-mini/menu-frame.png");
-            _menuFrameWidth = _menuFrame->width() / 3;
             _initialized = true;
         }
 
@@ -253,8 +253,8 @@ public:
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {
             QMargins m = widget->contentsMargins();
-            widget->setContentsMargins(m.left()+_menuFrameWidth, m.top()+_menuFrameWidth,
-                m.right()+_menuFrameWidth, m.bottom()+_menuFrameWidth);
+            const int n = QApplication::topLevelWidgets()[0]->font().pixelSize();
+            widget->setContentsMargins(m.left() + n, m.top() + n, m.right() + n, m.bottom() + n);
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 
@@ -302,7 +302,7 @@ public:
 
     void unpolish(QWidget *widget)
     {
-        widget->setPalette(QApplication::palette());
+        widget->setPalette(QPalette());
 
         if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
             le->setContentsMargins(QMargins());
@@ -445,7 +445,7 @@ private:
     Q_DISABLE_COPY(BtMiniStyle)
 
     QPixmap *_menuFrame;
-    int      _menuFrameWidth;
+    //int      _menuFrameWidth;
 
     bool     _night;
 
