@@ -852,7 +852,8 @@ public:
 			for(int i = 0; i < _items.size(); ++i)
 				if(_items[i]->_newLine)
 					height += _items[i]->size().height();
-			Q_ASSERT(height == contentsRect().height());
+			if(height != contentsRect().height());
+				qDebug() << "Height does not equal to cached value" << height << contentsRect().height();
 		}
 #endif
     }

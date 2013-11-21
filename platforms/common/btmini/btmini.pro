@@ -1,7 +1,7 @@
 # Configuration
 VERSION = 0.9.17
 
-CONFIG += webkit clucene svg xml mini
+CONFIG += clucene svg xml mini
 
 
 # Base section, nothing platform specific
