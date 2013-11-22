@@ -120,6 +120,9 @@ signals:
     /** Emitted when user press item or slide view. */
     void currentChanged(const QModelIndex &index);
 
+    /** In interactive views emmited when index was selected. */
+    void selected(const QModelIndex &index);
+
 protected slots:
     /** Reimplemented from QAbstractItemView. */
 #if QT_VERSION < 0x050000

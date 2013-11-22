@@ -49,6 +49,10 @@ public:
     /** Mark groups of widgets to reset, this will be done when any widget activated. */
     void resetWidgets(bool main, bool works, bool rest);
 
+    /** */
+    QWidget* activateNewContextWidget();
+    QWidget* currentContextWidget();
+
 public slots:
     /** Make window wisible to user in foreground, those function would do nothing when multiple
      *  windows displayed. */
@@ -56,6 +60,9 @@ public slots:
     void activateInstaller();
     void activateSearch();
     void activateSettings();
+
+    /** */
+    void closeCurrentContextWidget();
 
     /** */
     void applicationStateChanged();

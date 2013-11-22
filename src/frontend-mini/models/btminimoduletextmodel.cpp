@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QPushButton>
 #include <QStringList>
 #include <QStringListModel>
 #include <QThread>
@@ -39,6 +40,7 @@
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
 #include "ui/btminimenu.h"
+#include "ui/btminipanel.h"
 #include "ui/btminiui.h"
 
 
@@ -366,7 +368,7 @@ public:
 
     /** Construct model from current user settings with given info text. Info is
         string with text and outer opening and closing tag (<tag attr="value">data</tag>). */
-    BtMiniModuleTextModel * fromContentsInfo(const QString &info, QObject *parent) const
+    BtMiniModuleTextModel * fromContentsInfo(const QString &info) const
     {
         QString mc = info.left(info.indexOf('>') - 1).mid(info.indexOf(' ') + 1
             ).replace("\" ", "||").replace("=\"", "=");
@@ -385,7 +387,7 @@ public:
             mc = "<center><small>" + info.left(info.indexOf('<', 1)).mid(
                 info.indexOf('>') + 1) + "</small></center>" + mc;
 
-        BtMiniModuleTextModel * m = new BtMiniModuleTextModel(modules, parent);
+        BtMiniModuleTextModel * m = new BtMiniModuleTextModel(modules);
 
         for(int i = 0; i < modules.size(); ++i)
         {
@@ -393,7 +395,15 @@ public:
 
             if(modules[i] == "[Contents]")
             {
-                l->setContents(mc);
+                bool onlyKey = true;
+                foreach(CInfoDisplay::InfoData d, list)
+                    if(d.first != CInfoDisplay::Key)
+                    {
+                        onlyKey = false;
+                        break;
+                    }
+                if(!onlyKey)
+                    l->setContents(mc);
             }
             if(modules[i] == "[Commentary]")
             {
@@ -830,42 +840,47 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
     if(!contents.isEmpty())
     {
-        BtMiniMenu menu;
-
-        QFont f(menu.font());
-        f.setPixelSize(f.pixelSize() * 0.65f);
-        menu.setFont(f);
-
-        BtMiniView *view = new BtMiniView(&menu);
-
-        v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        
-        BtMiniModuleTextModel *m = d->fromContentsInfo(contents, &menu);
+        BtMiniModuleTextModel *m = d->fromContentsInfo(contents);
 
         if(m)
         {
+            QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
+            BtMiniView *view = new BtMiniView(w);
+            m->setParent(v);
+
+            v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+
             connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
             connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
+            connect(view, SIGNAL(destroyed()), m, SLOT(contextAboutToClose()));
 
             view->setModel(m);
 
             QVBoxLayout *l = new QVBoxLayout;
+            BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
+            QPushButton *b = new QPushButton("Back");
+            connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+            p->layout()->addWidget(b);
+
             l->addWidget(view);
-            menu.setLayout(l);
+            l->addWidget(p);
 
-            view->scrollTo(m->index(btConfig().value<int>("mini/openInfoModule", 0), 0));
+            w->setLayout(l);
+
+            view->scrollTo(m->index(!m->d_func()->_lists[0]._contents.toString().isEmpty() ?
+                               btConfig().value<int>("mini/openInfoModule", 0) : 1, 0));
             
-            menu.exec();
+//            menu.exec();
 
-            // Sync context modules to config
-            QModelIndexList list = view->currentIndexes();
-            QStringList modules;
+//            // Sync context modules to config
+//            QModelIndexList list = view->currentIndexes();
+//            QStringList modules;
 
-            for(int i = 0; i < list.size(); ++i)
-                modules.append(m->d_func()->_lists[i]._name);
+//            for(int i = 0; i < list.size(); ++i)
+//                modules.append(m->d_func()->_lists[i]._name);
 
-            btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
-            btConfig().setValue<QStringList>("mini/openInfoModules", modules);
+//            btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
+//            btConfig().setValue<QStringList>("mini/openInfoModules", modules);
         }
     }
 }
@@ -915,21 +930,28 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 void BtMiniModuleTextModel::openModuleSelection()
 {
     BtMiniView *works = BtMiniUi::instance()->worksView();
-	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
 	works->setSleep(true);
 
-    BtMiniMenu menu;
+//    BtMiniMenu menu;
 
-    QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.68);
-    menu.setFont(f);
+//    QFont f(menu.font());
+//    f.setPixelSize(f.pixelSize() * 0.68);
+//    menu.setFont(f);
 
-    BtMiniView *view = new BtMiniView(&menu);
+    QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
+    BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
+
+    BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
+    QPushButton *b = new QPushButton("Back");
+    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    p->layout()->addWidget(b);
 
     QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(view);
-    menu.setLayout(l);
+    l->addWidget(p);
+    w->setLayout(l);
 
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
@@ -953,42 +975,13 @@ void BtMiniModuleTextModel::openModuleSelection()
 	    view->scrollTo(list[0]);
 
     connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
+    //connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    //connect(w, SIGNAL(destroyed()), m, SLOT(moduleSelectionAboutToClose()));
 
-	menu.exec();
 
-	works->setSleep(false);
-
-    if(menu.wasCanceled())
-        return;
-
-    QString nm = view->currentIndex().data(BtBookshelfModel::ModuleNameRole).toString();
-
-    if(cm == nm)
-        return;
-
-    CSwordVerseKey place(CSwordBackend::instance()->findModuleByName(cm));
-    if(cm.size() > 0)
-        place.setKey(works->currentIndex().data(BtMini::PlaceRole).toString());
-
-    // Change view current module
-    if(!works->model()->setData(works->currentIndex(), nm, BtMini::ModuleRole))
-    {
-        qDebug() << "BtMiniModuleTextModel::openModuleSelection: failed to change module";
-    }
-    else
-    {
-		CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(nm);
-        
-		// Restore module place
-		if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
-		{
-	        place.setModule(mi);
-	
-			QModelIndex index = keyIndex(works->currentLevel(), place.key());
-			if(index.isValid())
-				works->scrollTo(index);
-        }
-	}
+    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    //connect(view, SIGNAL(destroyed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(moduleSelectionAboutToClose()));
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
@@ -1002,14 +995,21 @@ void BtMiniModuleTextModel::openPlaceSelection()
 
 	works->setSleep(true);
 
-    BtMiniMenu menu;
+//    BtMiniMenu menu;
 
-    QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.85);
-    menu.setFont(f);
+//    QFont f(menu.font());
+//    f.setPixelSize(f.pixelSize() * 0.85);
+//    menu.setFont(f);
 
-    BtMiniView *view = new BtMiniView(&menu);
+
+    QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
+    BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
+
+    BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
+    QPushButton *b = new QPushButton("Back");
+    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    p->layout()->addWidget(b);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
     view->setModel(m);
@@ -1023,6 +1023,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
         view->setTopShadow(true);
 
         QLabel *c = new QLabel("", view);
+        QFont f(view->font());
         f.setPixelSize(f.pixelSize() * 0.75);
         f.setWeight(QFont::Normal);
         c->setFont(f);
@@ -1036,7 +1037,8 @@ void BtMiniModuleTextModel::openPlaceSelection()
     }
 
     l->addWidget(view);
-    menu.setLayout(l);
+    l->addWidget(p);
+    w->setLayout(l);
 
 
     // setup current place and scroll to proper place
@@ -1046,14 +1048,8 @@ void BtMiniModuleTextModel::openPlaceSelection()
 		pi = pi.parent();
 	view->scrollTo(pi);
 
-    menu.exec();
-
-    QString np = view->currentIndex().data(BtMini::PlaceRole).toString();
-
-    if(!menu.wasCanceled())
-        works->scrollTo(keyIndex(works->currentLevel(), np));
-
-	works->setSleep(false);
+    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(closeCurrentContextWidget()));
+    connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(placeSelectionAboutToClose()));
 }
 
 void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
@@ -1299,7 +1295,80 @@ void BtMiniModuleTextModel::modulesReloaded()
 	Q_D(BtMiniModuleTextModel);
 
 	for(int i = 0; i < d->_lists.size(); ++i)
-		d->_lists[i].setModule(d->_lists[i]._name);
+        d->_lists[i].setModule(d->_lists[i]._name);
+}
+
+void BtMiniModuleTextModel::contextAboutToClose()
+{
+    BtMiniView *view = reinterpret_cast<BtMiniView*>(sender());
+    Q_CHECK_PTR(view);
+    BtMiniModuleTextModel *m = reinterpret_cast<BtMiniModuleTextModel*>(view->model());
+    Q_CHECK_PTR(m);
+
+    // Sync context modules to config
+    QModelIndexList list = view->currentIndexes();
+    QStringList modules;
+
+    for(int i = 0; i < list.size(); ++i)
+        modules.append(m->d_func()->_lists[i]._name);
+
+    btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
+    btConfig().setValue<QStringList>("mini/openInfoModules", modules);
+}
+
+void BtMiniModuleTextModel::moduleSelectionAboutToClose()
+{
+    BtMiniView *works = BtMiniUi::instance()->worksView();
+    works->setSleep(false);
+
+    BtMiniView *view = reinterpret_cast<BtMiniView*>(sender());
+    Q_CHECK_PTR(view);
+
+    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+    QString nm = view->currentIndex().data(BtBookshelfModel::ModuleNameRole).toString();
+
+    if(cm == nm)
+    {
+        CSwordVerseKey place(CSwordBackend::instance()->findModuleByName(cm));
+        if(cm.size() > 0)
+            place.setKey(works->currentIndex().data(BtMini::PlaceRole).toString());
+
+        // Change view current module
+        if(!works->model()->setData(works->currentIndex(), nm, BtMini::ModuleRole))
+        {
+            qDebug() << "BtMiniModuleTextModel::openModuleSelection: failed to change module";
+        }
+        else
+        {
+            CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(nm);
+
+            // Restore module place
+            if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+            {
+                place.setModule(mi);
+
+                QModelIndex index = keyIndex(works->currentLevel(), place.key());
+                if(index.isValid())
+                    works->scrollTo(index);
+            }
+        }
+    }
+
+    BtMiniUi::instance()->closeCurrentContextWidget();
+}
+
+void BtMiniModuleTextModel::placeSelectionAboutToClose()
+{
+    BtMiniView *works = BtMiniUi::instance()->worksView();
+    works->setSleep(false);
+
+    BtMiniView *view = reinterpret_cast<BtMiniView*>(sender());
+    Q_CHECK_PTR(view);
+
+    QString np = view->currentIndex().data(BtMini::PlaceRole).toString();
+    works->scrollTo(keyIndex(works->currentLevel(), np));
+
+    BtMiniUi::instance()->closeCurrentContextWidget();
 }
 
 QModelIndexList BtMiniModuleTextModel::match(const QModelIndex &start, int role, const QVariant &value, int hits,

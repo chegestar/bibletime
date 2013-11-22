@@ -91,6 +91,11 @@ public slots:
 	/** Called after module installation. */
 	void modulesReloaded();
 
+    /** */
+    void contextAboutToClose();
+    void moduleSelectionAboutToClose();
+    void placeSelectionAboutToClose();
+
 protected:
 
 private:

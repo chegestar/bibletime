@@ -852,8 +852,8 @@ public:
 			for(int i = 0; i < _items.size(); ++i)
 				if(_items[i]->_newLine)
 					height += _items[i]->size().height();
-			if(height != contentsRect().height());
-				qDebug() << "Height does not equal to cached value" << height << contentsRect().height();
+            if(height != (int)contentsRect().height())
+                qDebug() << "Height does not equal to cached value" << height << contentsRect().height();
 		}
 #endif
     }
@@ -2417,7 +2417,10 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 					activateSubView(d->_currentSubView + 1);
 				}
 				else if(d->_interactive)
+                {
+                    emit selected(index);
 					close();
+                }
 			}
         }
 
