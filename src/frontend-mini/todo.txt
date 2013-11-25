@@ -14,18 +14,19 @@ kalemas@mail.ru :
 +   refresh modelsmodel instead of recreate, do it in thread
 +   add smoothness to scrollbar in btminiview
 +   RtoL module description support
++   menu scrollbar of different width, make depend on mainwidget font size
     text/verses selection facility
         qtextdocument is limited, we ought to wait qwebengine
-    make module/place selection, context fullscreen
-        new system for interface interaction
-            * create widget instances
-            * get current widget
-            * switch active widget and do work on switching (some on activate and some on deactivate)
-            * recreate widgets and set other parameters of widgets
-            * create stack of widgets for context display
-            * flexible system
-            * make it able to display two or more widgets at same time
-            * animated transisions
++   make module/place selection, context fullscreen
++       new system for interface interaction
++           * create widget instances
++           * get current widget
++           * switch active widget and do work on switching (some on activate and some on deactivate)
++           * recreate widgets and set other parameters of widgets
++           * create stack of widgets for context display
+-           * flexible system
+-           * make it able to display two or more widgets at same time
+-           * animated transisions
     restore search term
     bug: somewhat with scrolling on tips if opened after first Bible installation
     android: style switching does not working properly
@@ -50,7 +51,6 @@ kalemas@mail.ru :
         reimplement windows switching
     turn on/off text features (notes)
     sliding effect for main stacked widget
-    menu scrollbar of different width, make depend on mainwidget font size
 
 
 

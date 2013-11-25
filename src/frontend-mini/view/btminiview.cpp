@@ -2293,8 +2293,8 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    // scrollbar should be useable with fingers
-    verticalScrollBar()->setStyleSheet("QScrollBar::vertical { min-width: " + QString::number(font().pixelSize() * 2.0) + "px; } ");
+    // scrollbar should be usable with fingers
+    verticalScrollBar()->setStyleSheet("QScrollBar::vertical { min-width: " + QString::number(d->_sizeFactor * 2.0) + "px; } ");
 
     setFrameStyle(QFrame::NoFrame);
 

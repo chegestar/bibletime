@@ -847,9 +847,6 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             BtMiniView *view = new BtMiniView(w);
             view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
 
-            connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
-            connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
-
             QVBoxLayout *l = new QVBoxLayout;
             BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
             QPushButton *b = new QPushButton("Back");
@@ -858,12 +855,12 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             l->addWidget(p);
             w->setLayout(l);
 
-            qDebug() << "openContext" << m->d_func()->_lists[0]._contents.toString().isEmpty() << m->d_func()->_lists[0]._contents;
-
             view->setModel(m);
             view->scrollTo(m->index(!m->d_func()->_lists[0]._contents.toString().isEmpty() ?
                                btConfig().value<int>("mini/openInfoModule", 0) : 1, 0));
 
+			connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
+			connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
             connect(b, SIGNAL(pressed()), m, SLOT(closeContext()));
         }
     }
