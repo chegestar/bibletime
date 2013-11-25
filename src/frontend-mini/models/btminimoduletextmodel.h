@@ -92,9 +92,9 @@ public slots:
 	void modulesReloaded();
 
     /** */
-    void contextAboutToClose();
-    void moduleSelectionAboutToClose();
-    void placeSelectionAboutToClose();
+    void closeContext();
+    void closeModuleSelection();
+    void closePlaceSelection();
 
 protected:
 

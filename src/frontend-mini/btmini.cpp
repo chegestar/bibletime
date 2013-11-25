@@ -155,23 +155,6 @@ void BtMini::vibrate(int milliseconds)
 #endif
 }
 
-BtMini::BtMini()
-{
-    ;
-}
-
-BtMini::~BtMini()
-{
-    ;
-}
-
-BtMini & BtMini::instance()
-{
-    static BtMini bm;
-    return bm;
-}
-
-
 bool eventFilterFunction(void *message, long *result)
 {
 #ifdef Q_OS_WINCE
@@ -295,7 +278,7 @@ int main(int argc, char *argv[])
     QFontInfo fi(nf);
     nf.setPointSizeF(fi.pointSizeF());
 #else
-    nf.setStyleHint(QFont::SansSerif, (QFont::StyleStrategy)(QFont::OpenGLCompatible | QFont::PreferQuality));
+    nf.setStyleHint(QFont::Serif, (QFont::StyleStrategy)(QFont::OpenGLCompatible | QFont::PreferQuality));
     nf.setFamily("Book Antiqua");
     qDebug() << "Selecting fonts:" << of.defaultFamily() << of.family() << nf.family();
     of.setFamily(of.defaultFamily());
@@ -310,9 +293,7 @@ int main(int argc, char *argv[])
 
     app.startInit();
     if (!app.initBtConfig())
-    {
         return EXIT_FAILURE;
-    }
 
     // restore font for interface, font for text was set above in config constructor
     QApplication::setFont(of);
@@ -364,10 +345,8 @@ int main(int argc, char *argv[])
                 d.setNameFilters(QStringList() << "*.conf" << "*.tar.gz");
                 d.setFilter(QDir::Files);
                 foreach(QString f, d.entryList())
-                {
                     if(!d.remove(f))
                         qDebug() << "Failed to remove" << f;
-                }
 
                 if(QFile::copy(":/locales.tar.gz", d.filePath("locales.tar.gz")))
                 {
@@ -418,20 +397,8 @@ int main(int argc, char *argv[])
 
     view.connect(view.engine(), SIGNAL(quit()), SLOT(close()));
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-
-    //QQmlContext *ctxt = view.rootContext();
-
-    //BtMiniModuleNavigationModel mn(btConfig().getDefaultSwordModuleByType("standardBible")->name());
-    //ctxt->setContextProperty("navigationModel", &mn);
-
-
-    //BtMiniModuleTextModel tm("ESV");
-    //ctxt->setContextProperty("textModel", &tm);
-
-
     view.show();
 #else
-    //BtMini::setActiveWidget(BtMini::worksWidget());
     BtMiniUi::instance()->show();
 #endif
 

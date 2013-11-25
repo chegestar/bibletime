@@ -50,6 +50,7 @@ kalemas@mail.ru :
         reimplement windows switching
     turn on/off text features (notes)
     sliding effect for main stacked widget
+    menu scrollbar of different width, make depend on mainwidget font size
 
 
 

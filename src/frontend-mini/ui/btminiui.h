@@ -61,8 +61,8 @@ public slots:
     void activateSearch();
     void activateSettings();
 
-    /** */
-    void closeCurrentContextWidget();
+    /** Go back, return false if nothing was done. */
+    bool activatePreviousWidget();
 
     /** */
     void applicationStateChanged();

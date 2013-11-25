@@ -430,14 +430,6 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
                     d_ptr->_canceled = true; // indicate that window shuld be closed on MouseRelease
 			    return true;
             }
-
-#ifdef Q_OS_ANDROID
-            // FIX events was passed to widgets below
-            foreach(QWidget *w, findChildren<QWidget*>())
-                if(w->geometry().contains(p))
-                    return false;
-            return true;
-#endif
         }
 		break;
     case QEvent::Close:
