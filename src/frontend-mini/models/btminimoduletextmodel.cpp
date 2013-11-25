@@ -861,7 +861,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
 			connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
 			connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
-            connect(b, SIGNAL(pressed()), m, SLOT(closeContext()));
+			connect(b, SIGNAL(released()), m, SLOT(closeContext()), Qt::QueuedConnection);
         }
     }
 }
@@ -950,7 +950,7 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
-    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
@@ -1016,7 +1016,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 		pi = pi.parent();
 	view->scrollTo(pi);
 
-    connect(b, SIGNAL(pressed()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closePlaceSelection()));
 }
 
