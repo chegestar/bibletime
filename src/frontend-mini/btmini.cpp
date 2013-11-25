@@ -279,7 +279,11 @@ int main(int argc, char *argv[])
     nf.setPointSizeF(fi.pointSizeF());
 #else
     nf.setStyleHint(QFont::Serif, (QFont::StyleStrategy)(QFont::OpenGLCompatible | QFont::PreferQuality));
-    nf.setFamily("Book Antiqua");
+    //nf.setFamily("Book Antiqua");
+	QFontDatabase::addApplicationFont("://jGaramond.ttf");
+    //nf.setFamily("CMU Serif"); // good
+    //nf.setFamily("DejaVu Serif"); // normal
+    nf.setFamily("jGaramond"); // very good
     qDebug() << "Selecting fonts:" << of.defaultFamily() << of.family() << nf.family();
     of.setFamily(of.defaultFamily());
     QApplication::setFont(nf);

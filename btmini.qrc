@@ -63,5 +63,6 @@
     </qresource>
     <qresource prefix="/">
         <file alias="locales.tar.gz">src/frontend-mini/locales.tar.gz</file>
+        <file alias="jGaramond.ttf">src/frontend-mini/ui/jGaramond.ttf</file>
     </qresource>
 </RCC>
