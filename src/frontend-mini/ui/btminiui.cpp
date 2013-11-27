@@ -534,16 +534,23 @@ public:
 
         v->setModel(m);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, _settingsWidget);
+        //BtMiniPanel::Activities() << BtMiniPanel::Close,
+        BtMiniPanel *p = new BtMiniPanel(_settingsWidget);
+        QPushButton *bb = new QPushButton(BtMiniUi::tr("Back"));
+        bb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        p->addWidget(bb, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
+        QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
+        p->addWidget(lb, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
 
         QVBoxLayout *vl = new QVBoxLayout;
 
-        vl->addWidget(v);
         vl->addWidget(p);
+        vl->addWidget(v);
 
         _settingsWidget->setLayout(vl);
 
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
+        QObject::connect(bb, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
 
@@ -748,9 +755,7 @@ bool BtMiniUi::activatePreviousWidget()
     if(d->_widgetStack.size() <= 1)
         return false;
 
-	qDebug() << d->_widgetStack << d->_contextWidgets << d->_widgetStack.last();
-
-    if(d->_widgetStack.last() == BtMiniUiPrivate::Context);
+    if(d->_widgetStack.last() == BtMiniUiPrivate::Context)
         d->_contextWidgets.takeLast()->deleteLater();
 
     d->_widgetStack.removeLast();

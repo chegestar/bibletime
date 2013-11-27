@@ -103,7 +103,16 @@ public:
             }
             return;
         case PE_PanelButtonCommand:
+            if(opt->state & QStyle::State_Sunken)
+            {
+                p->setPen(Qt::NoPen);
+                p->setBrush(_palette.highlight());
+                p->drawRect(opt->rect);
+            }
+            return;
+        case PE_FrameFocusRect:
         case PE_PanelMenu:
+        case PE_Frame:
             return;
         case PE_CustomBase + 1:
             {
@@ -141,7 +150,6 @@ public:
                 return;
             }
         case CE_PushButtonBevel:
-            break;
         case CE_PushButton:
             break;
         default:
@@ -201,7 +209,13 @@ public:
         case PM_LayoutBottomMargin:
         case PM_LayoutHorizontalSpacing:
         case PM_LayoutVerticalSpacing:
+        case PM_ButtonShiftHorizontal:
+        case PM_ButtonShiftVertical:
             return 0;
+        case PM_DefaultFrameWidth:
+            return 0;
+        //case PM_ButtonMargin:
+        //    return 50;
         case PM_MenuPanelWidth:
                 return QApplication::topLevelWidgets()[0]->font().pixelSize();
         case PM_MaximumDragDistance:
@@ -313,6 +327,8 @@ public:
     {
         switch(sh)
         {
+        //case SH_ScrollBar_Transient:
+        //    return true;
         case SH_ScrollBar_LeftClickAbsolutePosition:
             return true;
         }
@@ -339,6 +355,9 @@ public:
         case SE_ProgressBarContents:
         case SE_ProgressBarGroove:
         case SE_ProgressBarLabel:
+            return option->rect;
+        case SE_ShapedFrameContents:
+        case SE_FrameLayoutItem:
             return option->rect;
         }
 
@@ -409,7 +428,7 @@ public:
         case CT_PushButton:
             {
                 QSize s = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
-                return QSize(s.width(), s.height() * 1.4);
+                return QSize(s.width() * 2, s.height() * 2);
             }
         }
         return QCommonStyle::sizeFromContents(ct, opt, csz, widget);

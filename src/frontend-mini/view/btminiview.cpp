@@ -49,7 +49,7 @@
 #define SCROLL_BACK_ATTENUATION  13.285713041 // qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t;
 
 /**
-	Basic item to hold data and render text for view.
+    Basic item to hold data and render text for view.
 	There is no ploymorphysm, because for one object we may change
 	implementation after object was created, so we use pointers to implementations.
 */
@@ -2296,7 +2296,7 @@ BtMiniView::BtMiniView(QWidget *parent) : QAbstractItemView(parent), d_ptr(new B
     // scrollbar should be usable with fingers
     verticalScrollBar()->setStyleSheet("QScrollBar::vertical { min-width: " + QString::number(d->_sizeFactor * 2.4) + "px; } ");
 
-    setFrameStyle(QFrame::NoFrame);
+    //setFrameStyle(QFrame::NoFrame);
 
     d->_eventTimer = startTimer(1000/30);
 

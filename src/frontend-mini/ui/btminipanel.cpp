@@ -11,6 +11,7 @@
 
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QStyle>
 
 #include "btminimenu.h"
 #include "btminipanel.h"
@@ -21,7 +22,7 @@ class BtMiniPanelPrivate
 public:
     BtMiniPanelPrivate()
     {
-        ;
+        _anchorBased = false;
     }
 
     /** */
@@ -46,9 +47,13 @@ public:
         return BtMiniPanel::None;
     }
 
-private:
+
+public:
     QVector<BtMiniPanel::Activity>  _activities;
     QVector<QWidget*>               _widgets;
+    bool                            _anchorBased;
+    QVector<Qt::AnchorPoint>        _anchorPoints;
+
 
 };
 
@@ -119,6 +124,15 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
     setLayout(l);
 }
 
+BtMiniPanel::BtMiniPanel(QWidget *parent)
+    : d_ptr(new BtMiniPanelPrivate), QWidget(parent)
+{
+    Q_D(BtMiniPanel);
+
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    d->_anchorBased = true;
+}
+
 BtMiniPanel::~BtMiniPanel()
 {
     Q_D(BtMiniPanel);
@@ -126,19 +140,67 @@ BtMiniPanel::~BtMiniPanel()
     delete d;
 }
 
+void BtMiniPanel::addWidget(QWidget *widget, Qt::AnchorPoint point)
+{
+    Q_D(BtMiniPanel);
+
+    Q_ASSERT(d->_anchorBased);
+
+    widget->setParent(this);
+    d->_widgets.append(widget);
+    d->_anchorPoints.append(point);
+}
+
 QSize BtMiniPanel::sizeHint() const
 {
-    return QWidget::sizeHint().boundedTo(parentWidget()->size());
+    Q_D(const BtMiniPanel);
+
+    //if(d->_anchorBased)
+        return QSize(parentWidget()->size().width(), parentWidget()->font().pixelSize() * 2.2);
+    //else
+    //    return QWidget::sizeHint().boundedTo(parentWidget()->size());
 }
 
 QSize BtMiniPanel::minimumSizeHint() const
 {
-    return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
+    Q_D(const BtMiniPanel);
+
+    //if(d->_anchorBased)
+        return QSize(parentWidget()->size().width(), parentWidget()->font().pixelSize() * 2.2);
+    //else
+    //    return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
 }
 
 void BtMiniPanel::paintEvent(QPaintEvent *event)
 {
     ;
+}
+
+void BtMiniPanel::resizeEvent(QResizeEvent *e)
+{
+    Q_D(BtMiniPanel);
+
+    if(d->_anchorBased)
+    {
+        for(int i = 0; i < d->_widgets.size(); ++i)
+        {
+            QRect r(QPoint(), d->_widgets[i]->sizeHint());
+
+            if(d->_anchorPoints[i] & Qt::AnchorRight)
+                r.moveLeft(e->size().width() - r.width());
+            if(d->_anchorPoints[i] & Qt::AnchorHorizontalCenter)
+                r.moveLeft((e->size().width() - r.width()) / 2);
+            if(d->_anchorPoints[i] & Qt::AnchorBottom)
+                r.moveTop(e->size().height() - r.width());
+            if(d->_anchorPoints[i] & Qt::AnchorVerticalCenter)
+                r.moveTop((e->size().height() - r.height()) / 2);
+
+            if(d->_widgets[i]->sizePolicy().expandingDirections() & Qt::Vertical)
+                r.setTop(0), r.setBottom(height() - 1);
+
+            d->_widgets[i]->setGeometry(r);
+        }
+    }
 }
 
 void BtMiniPanel::controlActivated()

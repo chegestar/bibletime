@@ -245,7 +245,7 @@ void BtMiniMessageHandler(QtMsgType type, const QMessageLogContext &context, con
 #endif
     QTextStream (&f) << s;
 
-#ifdef ANDROID
+#ifdef Q_OS_ANDROID
     const int a[] = {ANDROID_LOG_DEBUG, ANDROID_LOG_WARN, ANDROID_LOG_ERROR, ANDROID_LOG_FATAL};
     __android_log_print(a[qMin((const int)type, 3)], "BtMini", s.toLocal8Bit());
 #elif defined Q_OS_WIN && !(defined Q_OS_WINCE)

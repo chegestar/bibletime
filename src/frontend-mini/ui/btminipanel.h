@@ -35,7 +35,12 @@ public:
     typedef QVector<Activity> Activities;
 
     BtMiniPanel(Activities activities, QWidget *parent=0);
+    BtMiniPanel(QWidget *parent=0);
     ~BtMiniPanel();
+
+    /** Setup panel in layout style. */
+    void addWidget(QWidget *widget, Qt::AnchorPoint anchor);
+    inline void addWidget(QWidget *widget, int anchor) { addWidget(widget, (Qt::AnchorPoint)anchor); }
 
 protected slots:
     /** Handle interaction with activities's controls. */
@@ -44,8 +49,8 @@ protected slots:
 protected:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
-
     void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *e);
 
 private:
     Q_DECLARE_PRIVATE(BtMiniPanel)

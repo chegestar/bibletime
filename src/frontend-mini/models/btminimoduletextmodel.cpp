@@ -610,19 +610,12 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
                         // parallel display
                         if(l->_name.contains(','))
-                        {
                             foreach(QString s, l->_name.split(',').mid(1))
-                            {
-                                CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(s);
-                                if(m)
-                                    modules << m;
-                            }
-                        }
-
+                                if(CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(s)) modules << m;
 
                         if(!d->_isSearch && v == 1)
-                            r += "<center><b><font size='+1'>" + key.book() + " " +
-                                    QString::number(key.getChapter()) + "</font></b></center>";
+                            r += "<center><b><font size='+2' face=\"" + btConfig().getDefaultFont().family() + "\">"
+                                    + key.book() + " " + QString::number(key.getChapter()) + "</font></b></center>";
 
                         if(v != 0)
                             r += Rendering::CEntryDisplay().text(modules, key.key(), l->_displayOptions, l->_filterOptions);
@@ -911,20 +904,27 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 void BtMiniModuleTextModel::openModuleSelection()
 {
     BtMiniView *works = BtMiniUi::instance()->worksView();
-    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
     works->setSleep(true);
+    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
 
     QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
     BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
+    view->setTopShadow(true);
 
-    BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
-    QPushButton *b = new QPushButton("Back");
-    p->layout()->addWidget(b);
+    BtMiniPanel *p = new BtMiniPanel;
+    QPushButton *b = new QPushButton(tr("Back"));
+    b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    QPushButton *ib = new QPushButton(tr("Install"));
+    ib->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    QLabel *lb = new QLabel("Select Text:");
+    p->addWidget(b, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
+    p->addWidget(lb, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
+    p->addWidget(ib, Qt::AnchorRight | Qt::AnchorVerticalCenter);
 
     QVBoxLayout *l = new QVBoxLayout;
-    l->addWidget(view);
     l->addWidget(p);
+    l->addWidget(view);
     w->setLayout(l);
 
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
@@ -951,6 +951,8 @@ void BtMiniModuleTextModel::openModuleSelection()
     connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
     connect(b, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(ib, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(ib, SIGNAL(released()), BtMiniUi::instance(), SLOT(activateInstaller()));
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
@@ -958,26 +960,19 @@ void BtMiniModuleTextModel::openPlaceSelection()
 	Q_D(BtMiniModuleTextModel);
 
     BtMiniView *works = BtMiniUi::instance()->worksView();
+    works->setSleep(true);
 
     QString cm = works->currentIndex().data(BtMini::ModuleRole).toString().section(',', 0, 0);
-	QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
-
-	works->setSleep(true);
-
-//    BtMiniMenu menu;
-
-//    QFont f(menu.font());
-//    f.setPixelSize(f.pixelSize() * 0.85);
-//    menu.setFont(f);
-
+    QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
 
     QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
     BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
 
-    BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
+    BtMiniPanel *p = new BtMiniPanel();
     QPushButton *b = new QPushButton("Back");
-    p->layout()->addWidget(b);
+    b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    p->addWidget(b, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
     view->setModel(m);
@@ -1001,11 +996,11 @@ void BtMiniModuleTextModel::openPlaceSelection()
         m->setIndicator(c);
         QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
 
-        l->addWidget(c, Qt::AlignCenter);
+        p->addWidget(c, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
     }
 
-    l->addWidget(view);
     l->addWidget(p);
+    l->addWidget(view);
     w->setLayout(l);
 
 
