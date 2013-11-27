@@ -155,20 +155,17 @@ QSize BtMiniPanel::sizeHint() const
 {
     Q_D(const BtMiniPanel);
 
-    //if(d->_anchorBased)
-        return QSize(parentWidget()->size().width(), parentWidget()->font().pixelSize() * 2.2);
-    //else
-    //    return QWidget::sizeHint().boundedTo(parentWidget()->size());
+    return minimumSizeHint();
+    //return QWidget::sizeHint().boundedTo(parentWidget()->size());
 }
 
 QSize BtMiniPanel::minimumSizeHint() const
 {
     Q_D(const BtMiniPanel);
 
-    //if(d->_anchorBased)
-        return QSize(parentWidget()->size().width(), parentWidget()->font().pixelSize() * 2.2);
-    //else
-    //    return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
+    // -100 required for android, where main window was enlarged each time panel was opened
+    return QSize(parentWidget()->size().width() - 100, parentWidget()->font().pixelSize() * 2.2);
+    //return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
 }
 
 void BtMiniPanel::paintEvent(QPaintEvent *event)
@@ -188,11 +185,14 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
 
             if(d->_anchorPoints[i] & Qt::AnchorRight)
                 r.moveLeft(e->size().width() - r.width());
-            if(d->_anchorPoints[i] & Qt::AnchorHorizontalCenter)
+            else if(d->_anchorPoints[i] & Qt::AnchorHorizontalCenter
+                    || !(d->_anchorPoints[i] & Qt::AnchorLeft))
                 r.moveLeft((e->size().width() - r.width()) / 2);
+
             if(d->_anchorPoints[i] & Qt::AnchorBottom)
                 r.moveTop(e->size().height() - r.width());
-            if(d->_anchorPoints[i] & Qt::AnchorVerticalCenter)
+            else if(d->_anchorPoints[i] & Qt::AnchorVerticalCenter
+                    || !(d->_anchorPoints[i] & Qt::AnchorTop))
                 r.moveTop((e->size().height() - r.height()) / 2);
 
             if(d->_widgets[i]->sizePolicy().expandingDirections() & Qt::Vertical)

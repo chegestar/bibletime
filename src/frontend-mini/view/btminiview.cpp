@@ -508,7 +508,11 @@ public:
             ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
 
         // HACK resources path from url format to absolute path and set width
-        ct.replace("<img src=\"file:///", QString("<img width=\"%1\" src=\"").arg(width()));
+        ct.replace("<img src=\"file://"
+#ifndef Q_OS_LINUX
+                   "/"
+#endif
+                   , QString("<img width=\"%1\" src=\"").arg(width()));
 
 #ifdef BT_STATIC_TEXT
         if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
