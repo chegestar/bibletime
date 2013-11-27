@@ -443,20 +443,28 @@ public:
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
         changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
-        // Setup controls
         QLineEdit *le = new QLineEdit(_searchWidget);
         le->setAlignment(Qt::AlignCenter);
         le->setPlaceholderText(BtMiniUi::tr("type and press Enter"));
-        changeFontSize(le, 1.2);
+        changeFontSize(le, 0.95);
+        le->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, _searchWidget);
+        QPushButton *pb = new QPushButton(QObject::tr("Back"));
+        pb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+        QPushButton *eb = new QPushButton(QObject::tr("Go"));
+        eb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+
+        BtMiniPanel *p = new BtMiniPanel;
+        p->addWidget(pb, Qt::AlignLeft);
+        p->addWidget(le, Qt::AlignCenter);
+        p->addWidget(eb, Qt::AlignRight);
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
 
-        vl->addWidget(le);
-        vl->addWidget(v);
+        //vl->addWidget(le);
         vl->addWidget(p);
+        vl->addWidget(v);
 
         _searchWidget->setLayout(vl);
 
@@ -467,9 +475,11 @@ public:
 
         QObject::connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
         QObject::connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
+        QObject::connect(eb, SIGNAL(clicked()), m, SLOT(startSearch()));
         QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), _worksWidget->findChild<BtMiniView*>(), SLOT(scrollTo(const QModelIndex &)));
-        QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), p->findChild<QPushButton*>("Close"), SIGNAL(clicked()));
+        //QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), p->findChild<QPushButton*>("Close"), SIGNAL(clicked()));
+        QObject::connect(pb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
     void createInstallerWidget()
@@ -484,21 +494,26 @@ public:
         v->setTopShadow(true);
         changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
-            BtMiniPanel::Refresh << (_worksWidget ? BtMiniPanel::Close : BtMiniPanel::Exit), _installerWidget);
-
+        //BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
+        //    BtMiniPanel::Refresh << (_worksWidget ? BtMiniPanel::Close : BtMiniPanel::Exit), _installerWidget);
+        BtMiniPanel *p = new BtMiniPanel;
+        QPushButton *bb = new QPushButton(_worksWidget ? BtMiniUi::tr("Back") : BtMiniUi::tr("Exit"));
+        QPushButton *rb = new QPushButton(BtMiniUi::tr("Refresh"));
         QLabel *lb = new QLabel(BtMiniModulesModel::tr("Updating") + "...", _installerWidget);
-        changeFontSize(lb, 0.9);
         lb->setAlignment(Qt::AlignCenter);
-        lb->setMargin(lb->font().pixelSize() / 2);
         lb->setObjectName("label");
+        bb->setObjectName("back");
+        rb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        bb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-        // Put into layout
+
+        p->addWidget(lb, Qt::AlignCenter);
+        p->addWidget(bb, Qt::AlignLeft);
+        p->addWidget(rb, Qt::AlignRight);
+
         QVBoxLayout *vl = new QVBoxLayout;
-
-        vl->addWidget(lb, Qt::AlignCenter);
-        vl->addWidget(v);
         vl->addWidget(p);
+        vl->addWidget(v);
 
         _installerWidget->setLayout(vl);
 
@@ -515,7 +530,11 @@ public:
         v->setModel(_installModel);
         _installModel->updateIndicators();
 
-        QObject::connect(p->findChild<QPushButton*>("Refresh"), SIGNAL(clicked()), _installModel, SLOT(backgroundDownload()));
+        if(_worksWidget)
+            QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        else
+            QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance()->mainWidget(), SLOT(close()));
+        QObject::connect(rb, SIGNAL(clicked()), _installModel, SLOT(backgroundDownload()));
     }
 
     void createSettingsWidget()
@@ -527,20 +546,19 @@ public:
         _mainWidget->addWidget(_settingsWidget);
 
         BtMiniView *v = new BtMiniView(_settingsWidget);
-        //v->setTopShadow(true);
+        v->setTopShadow(true);
         changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
-
         v->setModel(m);
 
-        //BtMiniPanel::Activities() << BtMiniPanel::Close,
         BtMiniPanel *p = new BtMiniPanel(_settingsWidget);
         QPushButton *bb = new QPushButton(BtMiniUi::tr("Back"));
         bb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        p->addWidget(bb, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
         QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
-        p->addWidget(lb, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
+        lb->setAlignment(Qt::AlignCenter);
+        p->addWidget(lb, Qt::AlignCenter);
+        p->addWidget(bb, Qt::AlignLeft);
 
         QVBoxLayout *vl = new QVBoxLayout;
 
@@ -550,7 +568,7 @@ public:
         _settingsWidget->setLayout(vl);
 
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
-        QObject::connect(bb, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
 
@@ -884,9 +902,18 @@ void BtMiniUi::modulesReloaded()
             d->_haveBible = true;
 
             // refresh panel
-            delete d->_installerWidget->findChild<BtMiniPanel*>();
-            d->_installerWidget->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
-                BtMiniPanel::Refresh << BtMiniPanel::Close, d->_installerWidget));
+            //delete d->_installerWidget->findChild<BtMiniPanel*>();
+            //d->_installerWidget->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
+            //    BtMiniPanel::Refresh << BtMiniPanel::Close, d->_installerWidget));
+
+            qDebug("modulesReloaded & QPushButton");
+
+            QPushButton *b = d->_installerWidget->findChild<BtMiniPanel*>()->findChild<QPushButton*>("back");
+            if(b)
+            {
+                connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()), Qt::UniqueConnection);
+                b->setText(tr("Back"));
+            }
 
             activateWorks();
         }

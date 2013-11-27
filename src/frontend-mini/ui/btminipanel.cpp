@@ -52,7 +52,7 @@ public:
     QVector<BtMiniPanel::Activity>  _activities;
     QVector<QWidget*>               _widgets;
     bool                            _anchorBased;
-    QVector<Qt::AnchorPoint>        _anchorPoints;
+    QVector<Qt::Alignment>          _anchorPoints;
 
 
 };
@@ -140,7 +140,7 @@ BtMiniPanel::~BtMiniPanel()
     delete d;
 }
 
-void BtMiniPanel::addWidget(QWidget *widget, Qt::AnchorPoint point)
+void BtMiniPanel::addWidget(QWidget *widget, Qt::Alignment point)
 {
     Q_D(BtMiniPanel);
 
@@ -149,12 +149,11 @@ void BtMiniPanel::addWidget(QWidget *widget, Qt::AnchorPoint point)
     widget->setParent(this);
     d->_widgets.append(widget);
     d->_anchorPoints.append(point);
+    //connect(widget, SIGNAL(resized()))
 }
 
 QSize BtMiniPanel::sizeHint() const
 {
-    Q_D(const BtMiniPanel);
-
     return minimumSizeHint();
     //return QWidget::sizeHint().boundedTo(parentWidget()->size());
 }
@@ -179,26 +178,65 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
 
     if(d->_anchorBased)
     {
+        int ls = 0, rs = 0, cs = 0, cw = 0;
+        //int spacing = 20; //style()->QStyle::combinedLayoutSpacing(QSizePolicy::DefaultType,
+                          //                           QSizePolicy::DefaultType, Qt::Horizontal);
+        int spacing = style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing);
+
         for(int i = 0; i < d->_widgets.size(); ++i)
         {
             QRect r(QPoint(), d->_widgets[i]->sizeHint());
 
-            if(d->_anchorPoints[i] & Qt::AnchorRight)
-                r.moveLeft(e->size().width() - r.width());
-            else if(d->_anchorPoints[i] & Qt::AnchorHorizontalCenter
-                    || !(d->_anchorPoints[i] & Qt::AnchorLeft))
-                r.moveLeft((e->size().width() - r.width()) / 2);
+            if(d->_anchorPoints[i] & Qt::AlignRight)
+                r.moveLeft(e->size().width() - r.width()), rs += r.width() + spacing;
+            else if(d->_anchorPoints[i] & Qt::AlignHCenter
+                    || !(d->_anchorPoints[i] & Qt::AlignLeft))
+                r.moveLeft((e->size().width() - r.width()) / 2), cs += r.width(), ++cw;
+            else
+                ls += r.width() + spacing;
 
-            if(d->_anchorPoints[i] & Qt::AnchorBottom)
+            if(d->_anchorPoints[i] & Qt::AlignBottom)
                 r.moveTop(e->size().height() - r.width());
-            else if(d->_anchorPoints[i] & Qt::AnchorVerticalCenter
-                    || !(d->_anchorPoints[i] & Qt::AnchorTop))
+            else if(d->_anchorPoints[i] & Qt::AlignVCenter
+                    || !(d->_anchorPoints[i] & Qt::AlignTop))
                 r.moveTop((e->size().height() - r.height()) / 2);
 
             if(d->_widgets[i]->sizePolicy().expandingDirections() & Qt::Vertical)
                 r.setTop(0), r.setBottom(height() - 1);
 
             d->_widgets[i]->setGeometry(r);
+        }
+
+        // again, set central widgets
+        for(int i = 0; i < d->_widgets.size(); ++i)
+        {
+            if(d->_anchorPoints[i] & Qt::AlignHCenter)
+            {
+                QRect r(d->_widgets[i]->geometry());
+
+                if(cw == 1)
+                {
+                    if(d->_widgets[i]->sizePolicy().expandingDirections() & Qt::Horizontal)
+                    {
+                        r.setLeft(ls);
+                        r.setRight(e->size().width() - rs - 1);
+                    }
+                    else
+                    {
+                        r.setLeft(qMax(ls , rs));
+                        r.setRight(e->size().width() - qMax(ls , rs));
+                    }
+                }
+                else
+                {
+                    int nw = (e->size().width() - ls - rs) / (qreal)cs * r.width();
+                    r.setLeft(ls);
+                    r.setWidth(nw);
+                    ls += nw, cs -= nw;
+                }
+
+                d->_widgets[i]->setGeometry(r);
+            }
         }
     }
 }

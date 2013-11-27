@@ -841,11 +841,12 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
 
             QVBoxLayout *l = new QVBoxLayout;
-            BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities());
+            BtMiniPanel *p = new BtMiniPanel;
             QPushButton *b = new QPushButton("Back");
-            p->layout()->addWidget(b);
-            l->addWidget(view);
+            p->addWidget(b, Qt::AlignLeft);
+            b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
             l->addWidget(p);
+            l->addWidget(view);
             w->setLayout(l);
 
             view->setModel(m);
@@ -918,9 +919,10 @@ void BtMiniModuleTextModel::openModuleSelection()
     QPushButton *ib = new QPushButton(tr("Install"));
     ib->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     QLabel *lb = new QLabel("Select Text:");
-    p->addWidget(b, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
-    p->addWidget(lb, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
-    p->addWidget(ib, Qt::AnchorRight | Qt::AnchorVerticalCenter);
+    lb->setAlignment(Qt::AlignCenter);
+    p->addWidget(b, Qt::AlignLeft);
+    p->addWidget(lb, Qt::AlignCenter);
+    p->addWidget(ib, Qt::AlignRight);
 
     QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(p);
@@ -972,7 +974,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
     BtMiniPanel *p = new BtMiniPanel();
     QPushButton *b = new QPushButton("Back");
     b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    p->addWidget(b, Qt::AnchorLeft | Qt::AnchorVerticalCenter);
+    p->addWidget(b, Qt::AlignLeft);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
     view->setModel(m);
@@ -996,7 +998,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
         m->setIndicator(c);
         QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
 
-        p->addWidget(c, Qt::AnchorHorizontalCenter | Qt::AnchorVerticalCenter);
+        p->addWidget(c, Qt::AlignCenter);
     }
 
     l->addWidget(p);

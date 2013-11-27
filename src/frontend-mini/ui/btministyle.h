@@ -113,7 +113,9 @@ public:
         case PE_FrameFocusRect:
         case PE_PanelMenu:
         case PE_Frame:
-            return;
+            if(!qobject_cast<const QLineEdit*>(widget))
+                return;
+            break;
         case PE_CustomBase + 1:
             {
                 const int h = opt->fontMetrics.height();
@@ -213,7 +215,9 @@ public:
         case PM_ButtonShiftVertical:
             return 0;
         case PM_DefaultFrameWidth:
-            return 0;
+            if(!qobject_cast<const QLineEdit*>(widget))
+                return 0;
+            break;
         //case PM_ButtonMargin:
         //    return 50;
         case PM_MenuPanelWidth:
@@ -284,24 +288,34 @@ public:
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
 		{
-			widget->setAutoFillBackground(true);
-
-            QPalette p = widget->palette();
-            if(_night)
+            if(widget->parentWidget()->layout()->indexOf(widget) > 0)
             {
-                p.setColor(QPalette::Window, QColor(0, 0, 0));
-                p.setColor(QPalette::Button, QColor(0, 0, 0));
-            }
-            else
-            {
-                p.setColor(QPalette::Window, QColor(102, 102, 102));
-                p.setColor(QPalette::Button, QColor(102, 102, 102));
-                p.setColor(QPalette::WindowText, QColor(255, 255, 255));
-                p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
+                widget->setAutoFillBackground(true);
+
+                QPalette p = widget->palette();
+                if(_night)
+                {
+                    p.setColor(QPalette::Window, QColor(0, 0, 0));
+                    p.setColor(QPalette::Button, QColor(0, 0, 0));
+                }
+                else
+                {
+                    p.setColor(QPalette::Window, QColor(102, 102, 102));
+                    p.setColor(QPalette::Button, QColor(102, 102, 102));
+                    p.setColor(QPalette::WindowText, QColor(255, 255, 255));
+                    p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
+                }
+
+                foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
+                    w->setPalette(p);
             }
 
-			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
-				w->setPalette(p);
+            foreach(QAbstractButton *w, widget->findChildren<QAbstractButton*>())
+            {
+                QFont f(w->font());
+                f.setBold(true);
+                w->setFont(f);
+            }
         }
 
 #ifdef Q_WS_WINCE
@@ -358,7 +372,9 @@ public:
             return option->rect;
         case SE_ShapedFrameContents:
         case SE_FrameLayoutItem:
-            return option->rect;
+            if(!qobject_cast<const QLineEdit*>(widget))
+                return option->rect;
+            break;
         }
 
         return QCommonStyle::subElementRect(element, option, widget);
@@ -428,7 +444,7 @@ public:
         case CT_PushButton:
             {
                 QSize s = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
-                return QSize(s.width() * 2, s.height() * 2);
+                return QSize(s.width() * 1.5, s.height() * 2);
             }
         }
         return QCommonStyle::sizeFromContents(ct, opt, csz, widget);

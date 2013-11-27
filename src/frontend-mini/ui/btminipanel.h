@@ -39,8 +39,7 @@ public:
     ~BtMiniPanel();
 
     /** Setup panel in layout style. */
-    void addWidget(QWidget *widget, Qt::AnchorPoint anchor);
-    inline void addWidget(QWidget *widget, int anchor) { addWidget(widget, (Qt::AnchorPoint)anchor); }
+    void addWidget(QWidget *widget, Qt::Alignment anchor);
 
 protected slots:
     /** Handle interaction with activities's controls. */
