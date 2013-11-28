@@ -52,6 +52,8 @@
         <file alias="swordconfig.svg">pics/icons/swordconfig.svg</file>
         <file alias="sync.svg">pics/icons/sync.svg</file>
         <file alias="unlock.svg">pics/icons/unlock.svg</file>
+        <file alias="mini-back.svg">src/frontend-mini/ui/resources/back.svg</file>
+        <file alias="mini-back-night.svg">src/frontend-mini/ui/resources/back-night.svg</file>
     </qresource>
     <qresource prefix="/share/bibletime/locale">
         <file alias="bibletime_ui_ru.qm">i18n/messages/bibletime_ui_ru.qm</file>

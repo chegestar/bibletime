@@ -429,6 +429,8 @@ bool BtMiniModulesModel::setData(const QModelIndex &index, const QVariant &value
 void BtMiniModulesModel::setIndicator(QWidget *w)
 {
     d_ptr->_indicator = qobject_cast<QLabel*>(w);
+    Q_CHECK_PTR(d_ptr->_indicator);
+    connect(w, SIGNAL(destroyed()), this, SLOT(indicatorDestroyed()));
 }
 
 void BtMiniModulesModel::updateIndicators(QModelIndex index)
@@ -467,6 +469,12 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
         else
             d_ptr->_indicator->setText(index.parent().data().toString().remove(QRegExp("<[^>]*>")));
     }
+}
+
+void BtMiniModulesModel::indicatorDestroyed()
+{
+    Q_D(BtMiniModulesModel);
+    d_ptr->_indicator = 0;
 }
 
 void BtMiniModulesModel::backgroundDownload()

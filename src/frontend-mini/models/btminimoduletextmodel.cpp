@@ -838,13 +838,20 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
         {
             QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
             BtMiniView *view = new BtMiniView(w);
-            view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+            //view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+            view->setTopShadow(true);
+
+            QFont f(view->font());
+            f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
+            f.setWeight(QFont::Normal);
+            view->setFont(f);
+
+            QPushButton *b = BtMiniUi::instance()->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+
+            BtMiniPanel *p = new BtMiniPanel;
+            p->addWidget(b, Qt::AlignLeft);
 
             QVBoxLayout *l = new QVBoxLayout;
-            BtMiniPanel *p = new BtMiniPanel;
-            QPushButton *b = new QPushButton("Back");
-            p->addWidget(b, Qt::AlignLeft);
-            b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
             l->addWidget(p);
             l->addWidget(view);
             w->setLayout(l);
@@ -855,7 +862,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
 			connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
 			connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
-			connect(b, SIGNAL(released()), m, SLOT(closeContext()), Qt::QueuedConnection);
+            connect(b, SIGNAL(clicked()), m, SLOT(closeContext()), Qt::QueuedConnection);
         }
     }
 }
@@ -913,16 +920,15 @@ void BtMiniModuleTextModel::openModuleSelection()
     view->setInteractive(true);
     view->setTopShadow(true);
 
-    BtMiniPanel *p = new BtMiniPanel;
-    QPushButton *b = new QPushButton(tr("Back"));
-    b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    QPushButton *ib = new QPushButton(tr("Install"));
-    ib->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *i = BtMiniUi::instance()->makeButton(tr("Install"));
     QLabel *lb = new QLabel("Select Text:");
     lb->setAlignment(Qt::AlignCenter);
+
+    BtMiniPanel *p = new BtMiniPanel;
     p->addWidget(b, Qt::AlignLeft);
     p->addWidget(lb, Qt::AlignCenter);
-    p->addWidget(ib, Qt::AlignRight);
+    p->addWidget(i, Qt::AlignRight);
 
     QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(p);
@@ -952,9 +958,9 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
-    connect(b, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
-    connect(ib, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
-    connect(ib, SIGNAL(released()), BtMiniUi::instance(), SLOT(activateInstaller()));
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activateInstaller()));
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
@@ -971,9 +977,13 @@ void BtMiniModuleTextModel::openPlaceSelection()
     BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
 
+    QFont f(view->font());
+    f.setPixelSize(f.pixelSize() * 1.3);
+    view->setFont(f);
+
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+
     BtMiniPanel *p = new BtMiniPanel();
-    QPushButton *b = new QPushButton("Back");
-    b->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     p->addWidget(b, Qt::AlignLeft);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
@@ -1013,7 +1023,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 		pi = pi.parent();
 	view->scrollTo(pi);
 
-    connect(b, SIGNAL(released()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closePlaceSelection()));
 }
 

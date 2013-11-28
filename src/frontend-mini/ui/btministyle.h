@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QtDebug>
+#include <QtMath>
 #include <qdrawutil.h>
 
 #ifdef BTMINISTYLE_H
@@ -42,11 +43,8 @@ public:
         if(_night)
         {
             _palette.setColor(QPalette::Text, QColor(215, 215, 215));
-            //_palette.setColor(QPalette::Base, QColor(22, 22, 22));
             _palette.setColor(QPalette::Base, QColor(0, 0, 0));
             _palette.setColor(QPalette::Link, QColor("#62a4db"));
-
-            _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
             _palette.setColor(QPalette::HighlightedText, QColor(255, 255, 255));
         }
         else
@@ -54,8 +52,6 @@ public:
             _palette.setColor(QPalette::Text, QColor(0, 0, 0));
             _palette.setColor(QPalette::Base, QColor(255, 255, 255));
             _palette.setColor(QPalette::Link, QColor(127, 196, 255));
-
-            _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
             _palette.setColor(QPalette::HighlightedText, QColor("#000000"));
         }
 
@@ -63,14 +59,18 @@ public:
         _palette.setColor(QPalette::Button, _palette.color(QPalette::Base));
         _palette.setColor(QPalette::WindowText, _palette.color(QPalette::Text));
         _palette.setColor(QPalette::ButtonText, _palette.color(QPalette::Text));
-
-        //QApplication::setPalette(_palette);
+        _palette.setColor(QPalette::Highlight, _palette.color(QPalette::Link));
     }
 
     ~BtMiniStyle()
     {
         if(_menuFrame)
             delete _menuFrame;
+    }
+
+    int baseSize()
+    {
+        return QApplication::topLevelWidgets().at(0)->font().pixelSize();
     }
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *p, const QWidget *widget = 0) const
@@ -113,9 +113,17 @@ public:
         case PE_FrameFocusRect:
         case PE_PanelMenu:
         case PE_Frame:
-            if(!qobject_cast<const QLineEdit*>(widget))
-                return;
-            break;
+            if(qobject_cast<const QLineEdit*>(widget))
+            {
+                QPen n(_palette.highlight().color(), qCeil(widget->font().pixelSize() / 9.0));
+                n.setJoinStyle(Qt::MiterJoin);
+                p->setPen(n);
+                p->drawPolyline(QVector<QPoint>() << QPoint(opt->rect.x(), opt->rect.y() + (opt->rect.height() * 0.73))
+                                << opt->rect.bottomLeft() - QPoint(0, (opt->rect.height() * 0.1))
+                                << opt->rect.bottomRight() - QPoint(0, (opt->rect.height() * 0.1))
+                                << QPoint(opt->rect.right(), opt->rect.y() + (opt->rect.height() * 0.73)));
+            }
+            return;
         case PE_CustomBase + 1:
             {
                 const int h = opt->fontMetrics.height();
@@ -170,7 +178,8 @@ public:
                 if(const QStyleOptionSlider *scrollbar = qstyleoption_cast<const QStyleOptionSlider *>(option))
                 {
                     p->setPen(Qt::NoPen);
-                    p->setBrush(_palette.color(QPalette::Link)); // "#2c6799"
+                    //p->setBrush(_palette.color(QPalette::Link)); // "#2c6799"
+                    p->setBrush(_palette.highlight().color()); // "#2c6799"
                     p->drawRect(scrollbar->rect);
 
                     if(scrollbar->subControls & SC_ScrollBarSlider)
@@ -209,10 +218,13 @@ public:
         case PM_LayoutTopMargin:
         case PM_LayoutRightMargin:
         case PM_LayoutBottomMargin:
-        case PM_LayoutHorizontalSpacing:
         case PM_LayoutVerticalSpacing:
         case PM_ButtonShiftHorizontal:
         case PM_ButtonShiftVertical:
+            return 0;
+        case PM_LayoutHorizontalSpacing:
+            if(widget && !qstrcmp(widget->metaObject()->className(), "BtMiniPanel"))
+                return widget->font().pixelSize() / 3;
             return 0;
         case PM_DefaultFrameWidth:
             if(!qobject_cast<const QLineEdit*>(widget))
@@ -310,12 +322,7 @@ public:
                     w->setPalette(p);
             }
 
-            foreach(QAbstractButton *w, widget->findChildren<QAbstractButton*>())
-            {
-                QFont f(w->font());
-                f.setBold(true);
-                w->setFont(f);
-            }
+            widget->setMinimumHeight(baseSize() * 2.6);
         }
 
 #ifdef Q_WS_WINCE

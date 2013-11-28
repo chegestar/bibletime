@@ -16,6 +16,11 @@
 
 class BtMiniView;
 class BtMiniUiPrivate;
+class QPushButton;
+
+#if !(defined Q_OS_ANDROID || defined Q_OS_IOS || defined Q_OS_LINUX || defined Q_OS_WIN32 || defined Q_OS_BLACKBERRY)
+#define BT_MINI_EXIT_BUTTON
+#endif
 
 /**
 * Manage all user interface elements, and responsible for:
@@ -52,6 +57,13 @@ public:
     /** */
     QWidget* activateNewContextWidget();
     QWidget* currentContextWidget();
+
+    /** Routines.
+     *  Make button suitable fot Mini interface. if invertedIcon is supplied detection of
+     *  current color scheme is performed.
+    */
+    QPushButton* makeButton(QString text, QString icon = QString(), QString invertedIcon = QString());
+    QPushButton* makeButton(QString text, QIcon icon);
 
 public slots:
     /** Make window wisible to user in foreground, those function would do nothing when multiple

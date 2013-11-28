@@ -12,6 +12,8 @@
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QStyle>
+#include <QStyleOption>
+#include <QtDebug>
 
 #include "btminimenu.h"
 #include "btminipanel.h"
@@ -181,7 +183,9 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
         int ls = 0, rs = 0, cs = 0, cw = 0;
         //int spacing = 20; //style()->QStyle::combinedLayoutSpacing(QSizePolicy::DefaultType,
                           //                           QSizePolicy::DefaultType, Qt::Horizontal);
-        int spacing = style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing);
+        QStyleOption so;
+        so.initFrom(this);
+        int spacing = style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing, &so, this);
 
         for(int i = 0; i < d->_widgets.size(); ++i)
         {
@@ -208,7 +212,7 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
         }
 
         // again, set central widgets
-        for(int i = 0; i < d->_widgets.size(); ++i)
+        for(int i = 0, pos = ls; i < d->_widgets.size(); ++i)
         {
             if(d->_anchorPoints[i] & Qt::AlignHCenter)
             {
@@ -225,14 +229,20 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
                     {
                         r.setLeft(qMax(ls , rs));
                         r.setRight(e->size().width() - qMax(ls , rs));
+
+                        int mw = d->_widgets[i]->sizeHint().width();
+                        if(r.width() < mw)
+                        {
+                            // TODO expand widget if its cut but there is space
+                        }
                     }
                 }
                 else
                 {
                     int nw = (e->size().width() - ls - rs) / (qreal)cs * r.width();
-                    r.setLeft(ls);
+                    r.setLeft(pos);
                     r.setWidth(nw);
-                    ls += nw, cs -= nw;
+                    pos += nw;
                 }
 
                 d->_widgets[i]->setGeometry(r);

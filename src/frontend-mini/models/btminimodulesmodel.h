@@ -45,6 +45,7 @@ public:
 public slots:
     /** */
     void          updateIndicators(QModelIndex index = QModelIndex());
+    void          indicatorDestroyed();
 
     /** */
     void          backgroundDownload();
