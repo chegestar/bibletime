@@ -2543,11 +2543,19 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         // if there is any connection to longPressed or shortPressed signal, vibrate
         if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0) BtMini::vibrate(20);
+            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
+            {
+                if(indexAt(d->_mouseLast).isValid())
+                    BtMini::vibrate(20);
+            }
         }
         else if(d->_mouseTapping == SHORT_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0) BtMini::vibrate(20);
+            if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0)
+            {
+                if(indexAt(d->_mouseLast).isValid())
+                    BtMini::vibrate(20);
+            }
         }
 
         d->_mouseTapping++;
