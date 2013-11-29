@@ -233,8 +233,7 @@ private:
 			for(int i = 0; i < _data.size(); ++i)
 			{
 				QFontMetrics fm(_data[i].font);
-                int p = _data[i].font.pixelSize();
-                _data[i].size = QSize(fm.width(_data[i].text), /*_data[i].font.pixelSize() +*/ fm.lineSpacing());
+                _data[i].size = QSize(fm.width(_data[i].text), fm.lineSpacing());
                 _data[i].pos = QPoint(0, 0);
 			}
 
@@ -500,6 +499,8 @@ public:
 
             return;
         }
+#else
+        Q_UNUSED(useWebKit);
 #endif
 
         // HACK for dark theme
@@ -1316,8 +1317,6 @@ public:
 
     ~BtMiniViewPrivate()
     {
-		Q_Q(BtMiniView);
-
         clear();
 
 		if(_cachedSurface)
@@ -1665,7 +1664,7 @@ public:
 			item->setIcon(icon);
 
 		// text
-        item->setText(o.preText + index.data(o.useThread ? BtMini::PreviewRole :
+        item->setText(o.preText + index.data(o.useThread ? (Qt::ItemDataRole)BtMini::PreviewRole :
             Qt::DisplayRole).toString() + o.postText, q, _webKitEnabled);
 
 		// threaded processing
@@ -1716,7 +1715,8 @@ public:
 
                 if(v->contentsRect().width() > (width + item->contentsSize().width()) && i < o.perLine)
                 {
-                    newLine = v->_items[0]->_newLine = false;
+                    newLine = false;
+                    v->_items[0]->_newLine = false;
                     item->resize(item->width(), v->_items[0]->height());
                 }
             }
@@ -1842,38 +1842,37 @@ public:
 
         for(int l = 0; l < amount; ++l)
         {
-            bool t = -v->contentsRect().top() - _limitHeightTop < 
+            bool atTop = -v->contentsRect().top() - _limitHeightTop <
                 v->contentsRect().bottom() - v->baseSize().height() - _limitHeightBottom;
-            bool ct = v->_items.size() == 0 || v->_items[0]->_row > 0;
-            bool cb = v->_items.size() == 0 || v->_items[v->_items.size() - 1]->_row < v->rowCount() - 1;
+            bool canAtTop = v->_items.size() == 0 || v->_items[0]->_row > 0;
+            bool canAtBottom = v->_items.size() == 0 || v->_items[v->_items.size() - 1]->_row < v->rowCount() - 1;
 
             if(v->_items.size() < o.perLine && o.perLine > 1)
-                t = false;
+                atTop = false;
 
             if(o.limitItems)
             {
                 if(-v->contentsRect().top() - _limitHeightTop > 0)
-                    ct = false;
+                    canAtTop = false;
                 if(v->contentsRect().bottom() - v->baseSize().height() - _limitHeightBottom > 0)
-                    cb = false;
+                    canAtBottom = false;
             }
 
-            if(t && !ct)
-                t = false;
-            if(!t && !cb)
-                t = true;
-
-            if(t && !ct || !t && !cb)
+            if(atTop && !canAtTop)
+                atTop = false;
+            if(!atTop && !canAtBottom)
+                atTop = true;
+            if((atTop && !canAtTop) || (!atTop && !canAtBottom))
                 return;
 
             int r = v->modelIndex().row();
 
             if(v->_items.size() > 0)
-                r = t ? v->_items[0]->_row - 1 : v->_items[v->_items.size() - 1]->_row + 1;
+                r = atTop ? v->_items[0]->_row - 1 : v->_items[v->_items.size() - 1]->_row + 1;
             else if(o.perLine > 1)
                 r = r - (r % o.perLine);
 
-            addItem(subView, v->modelIndex(r), t ? 0 : v->_items.size(), v->baseSize().width());
+            addItem(subView, v->modelIndex(r), atTop ? 0 : v->_items.size(), v->baseSize().width());
         }
     }
     
@@ -1928,8 +1927,6 @@ public:
     /** Cyclic procedure. */
     void updateSubView(int subView)
 	{
-		Q_Q(BtMiniView);
-
         BtMiniSubView *v = _subViews[subView];
 
 		// resize items
@@ -2729,6 +2726,9 @@ QModelIndex BtMiniView::indexAt(const QPoint &point) const
 
 QModelIndex BtMiniView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
 {
+    Q_UNUSED(cursorAction);
+    Q_UNUSED(modifiers);
+
     return QModelIndex();
 }
 
@@ -2744,16 +2744,21 @@ int BtMiniView::verticalOffset() const
 
 bool BtMiniView::isIndexHidden(const QModelIndex &index) const
 {
+    Q_UNUSED(index);
+
     return false;
 }
 
 #if QT_VERSION < 0x050000
 void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
 #else
 void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                              const QVector<int> &roles)
-#endif
 {
+    Q_UNUSED(roles);
+#endif
+
     Q_D(BtMiniView);
 
     Q_ASSERT(topLeft == bottomRight);
@@ -3084,7 +3089,8 @@ void BtMiniView::setSearchRole(int searchRole, int level)
 
 void BtMiniView::showEvent(QShowEvent *e)
 {
-    Q_D(BtMiniView);
+    Q_UNUSED(e);
+    //Q_D(BtMiniView);
     //qDebug() << "BtMiniView::showEvent" << rect();
     //d->updateViews();
 }
@@ -3105,6 +3111,7 @@ void BtMiniView::setSelection(const QRect &rect, QItemSelectionModel::SelectionF
 
 void BtMiniView::paintEvent(QPaintEvent *e)
 {
+    Q_UNUSED(e);
     Q_D(BtMiniView);
 
     QPainter painter(viewport());
@@ -3310,7 +3317,8 @@ bool BtMiniView::viewportEvent(QEvent *e)
 
 QRect BtMiniView::visualRect(const QModelIndex &index) const
 {
-    Q_D(const BtMiniView);
+    Q_UNUSED(index);
+    //Q_D(const BtMiniView);
 
     //qDebug() << "BtMiniView::visualRect" << index;
 
