@@ -838,7 +838,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
         {
             QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
             BtMiniView *view = new BtMiniView(w);
-            //view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+            view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
             view->setTopShadow(true);
 
             QFont f(view->font());
@@ -1035,7 +1035,14 @@ void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
                 place = QString::fromLocal8Bit(key.getShortText());
             }
             else if(d->indexList(index)->_module->type() == CSwordModuleInfo::GenericBook)
-                place = place.replace("/", " "). replace("Book ", "").replace("Section ", "");
+            {
+                //place = place.replace("/", " ").replace("Book ", "").replace("Section ", "");
+                QStringList sl(place.split("/"));
+                if(sl.size() > 1 && sl[sl.size() - 1].size() + sl[sl.size() - 2].size() < 20)
+                    place = sl[sl.size() - 2] + ", " + sl.last();
+                else
+                    place = sl.last();
+            }
         }
 
         d->_placeIndicator->setEnabled(!place.isEmpty());

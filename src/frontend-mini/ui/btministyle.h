@@ -159,13 +159,44 @@ public:
                 p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - (opt->rect.width() - s * 2), -s, 0));
                 return;
             }
-        case CE_PushButtonBevel:
-        case CE_PushButton:
-            break;
-        default:
             ;
         }
         QCommonStyle::drawControl(element, opt, p, widget);
+    }
+
+    void drawItemText(QPainter *painter, const QRect &rectangle, int alignment, const QPalette &palette, bool enabled, const QString &text, QPalette::ColorRole textRole) const
+    {
+        if(text.isEmpty())
+            return;
+        QPen savedPen;
+        if(textRole != QPalette::NoRole)
+        {
+            savedPen = painter->pen();
+            painter->setPen(QPen(palette.brush(textRole), savedPen.widthF()));
+        }
+//        if(!enabled)
+//        {
+//            if(proxy()->styleHint(SH_DitherDisabledText))
+//            {
+//                QRect br;
+//                painter->drawText(rect, alignment, text, &br);
+//                painter->fillRect(br, QBrush(painter->background().color(), Qt::Dense5Pattern));
+//                return;
+//            } else if (proxy()->styleHint(SH_EtchDisabledText))
+//            {
+//                QPen pen = painter->pen();
+//                painter->setPen(pal.light().color());
+//                painter->drawText(rect.adjusted(1, 1, 1, 1), alignment, text);
+//                painter->setPen(pen);
+//            }
+//        }
+        QFontMetrics fm(painter->font());
+        int tw = fm.width(text);
+        if(tw > rectangle.width())
+            alignment = (alignment | Qt::AlignHorizontal_Mask) ^ (Qt::AlignHorizontal_Mask ^ Qt::AlignRight);
+        painter->drawText(rectangle, alignment, text);
+        if (textRole != QPalette::NoRole)
+            painter->setPen(savedPen);
     }
 
     void drawComplexControl(ComplexControl cc, const QStyleOptionComplex *option,

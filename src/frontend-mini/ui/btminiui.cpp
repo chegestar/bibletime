@@ -299,9 +299,8 @@ public:
         BtMiniView *v = new BtMiniView(_worksWidget);
         v->setTopShadow(true);
         v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
-        v->setWebKitEnabled(true);
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
+        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         // Setup controls
         QPushButton *b1 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowLeft));
