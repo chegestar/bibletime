@@ -1310,16 +1310,20 @@ void BtMiniModuleTextModel::closeModuleSelection()
             qDebug() << "BtMiniModuleTextModel::openModuleSelection: failed to change module";
         else
         {
+            QModelIndex index(createIndex(0, 0, (void*)&d_func()->_lists[works->currentLevel()]));
             CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(nm);
+            CSwordModuleInfo *ci = CSwordBackend::instance()->findModuleByName(cm);
 
             // Restore module place
-            if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+            if((mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+                && (ci->type() == CSwordModuleInfo::Bible || ci->type() == CSwordModuleInfo::Commentary))
             {
                 place.setModule(mi);
-                QModelIndex index = keyIndex(works->currentLevel(), place.key());
-                if(index.isValid())
-                    works->scrollTo(index);
+                index = keyIndex(works->currentLevel(), place.key());
             }
+
+            if(index.isValid())
+                works->scrollTo(index);
         }
     }
 
