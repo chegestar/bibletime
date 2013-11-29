@@ -2379,8 +2379,17 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     QPointF speed(QPointF(d->_mouseScrolling[1].first - d->_mouseScrolling[0].first) /
         qMax((d->_mouseScrolling[1].second - d->_mouseScrolling[0].second), (qint64)120));
 
+    // deccelerate
     d->_mousePower.rx() *= qMin(qAbs(speed.x()) * 200.0f / d->_sizeFactor, (qreal)1.0);
     d->_mousePower.ry() *= qMin(qAbs(speed.y()) * 200.0f / d->_sizeFactor, (qreal)1.0);
+
+    // stop if different directions
+    if((speed.ry() > 0 && d->_mousePower.ry() < 0) || (speed.ry() < 0 && d->_mousePower.ry() > 0))
+        d->_mousePower.ry() = 0.0;
+    if((speed.rx() > 0 && d->_mousePower.rx() < 0) || (speed.rx() < 0 && d->_mousePower.rx() > 0))
+        d->_mousePower.rx() = 0.0;
+
+    // accelerate
     d->_mousePower += speed * 50.0f;
 
 	int tapping = d->_mouseTapping;
