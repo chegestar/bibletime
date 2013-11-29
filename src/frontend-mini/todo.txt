@@ -27,20 +27,19 @@ kalemas@mail.ru :
 -           * flexible system
 -           * make it able to display two or more widgets at same time
 -           * animated transisions
-                delay for nex release because may affect perfomance
+                delay for next release because may affect perfomance
 ?   restore search term
 +   bug: somewhat with scrolling on tips if opened after first Bible installation
 +   android: style switching does not working properly
-!   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
-        current item sould be changed right after current item was left the screen
++   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
++       current item sould be changed right after current item was left the screen
     resize subview width, its primarily for tablets
         need to add two functions: expand window, contract window
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
-    new look and feel
-        ios style, fusion-based
+    new look and feel, ios style, fusion-based
     clippings
         reorganize ui
             1. move InstallManager to Module Selection, add Clippings to bottom bar

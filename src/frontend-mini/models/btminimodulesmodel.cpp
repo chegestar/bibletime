@@ -370,7 +370,7 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 	{
         const Item &l = d->_items[d->indexLevel(index.internalId(), 1)];
 		if(role == Qt::DisplayRole)
-            return l._text;
+            return "<word-breaks/>" + l._text;
         if(role == Qt::DecorationRole)
             return l._icon;
 	}
@@ -378,7 +378,7 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 	{
         const Item &c = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)];
 		if(role == Qt::DisplayRole)
-            return c._text;
+            return "<word-breaks/>" + c._text;
 		if(role == Qt::DecorationRole)
             return c._icon;
 	}
