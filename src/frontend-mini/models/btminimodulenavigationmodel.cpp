@@ -400,7 +400,10 @@ QVariant BtMiniModuleNavigationModel::data(const QModelIndex &index, int role) c
         if(role == BtMini::PlaceRole)
             return key.key();
         if(role == Qt::DisplayRole)
-            return key.key().split("/").last();
+        {
+            QString s(key.key().split("/").last());
+            return s.isRightToLeft() ? "<div dir=\"rtl\">" + s + "</div>" : s;
+        }
     }
 
     return QVariant();
@@ -497,16 +500,13 @@ void BtMiniModuleNavigationModel::updateIndicator(QModelIndex index)
                 d->_indicator->setText(index.parent().parent().data().toString() + " " +
                                        index.parent().data().toString());
         }
-        else if(d->_gm)
+        if(d->_gm)
         {
             if(!index.isValid() || !index.parent().isValid())
                 d->_indicator->setText(tr("Select Section:"));
             else if(index.parent().isValid())
-                d->_indicator->setText(index.parent().data().toString().split('/').last());
+                d->_indicator->setText(index.parent().data().toString().remove(
+                                           QRegExp("<[^>]*>")).split('/').last());
         }
-        else
-            return;
-
-
     }
 }

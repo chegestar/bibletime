@@ -300,20 +300,10 @@ public:
         v->setTopShadow(true);
         v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
         v->setWebKitEnabled(true);
-
-        QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
-        f.setWeight(QFont::Normal);
-        v->setFont(f);
-
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
+        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
 
         // Setup controls
-        //QPushButton *b1 = new QPushButton(v->style()->standardIcon(QStyle::SP_ArrowLeft), QString(), _worksWidget);
-        //QPushButton *b2 = new QPushButton(v->style()->standardIcon(QStyle::SP_ArrowRight), QString(), _worksWidget);
-        //QPushButton *b3 = new QPushButton(QString("Work"), _worksWidget);
-        //QPushButton *b4 = new QPushButton(QString("Place"), _worksWidget);
-
         QPushButton *b1 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowLeft));
         QPushButton *b2 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowRight));
         QPushButton *b3 = q->makeButton(BtMiniUi::tr("Work"));
@@ -321,22 +311,6 @@ public:
 
         QObject::connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
         QObject::connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
-
-//        const int maxSize = _worksWidget->font().pixelSize()*2.0;
-//        //const QSize iconSize(_worksWidget->font().pixelSize()*1.3, _worksWidget->font().pixelSize()*1.3);
-//        b1->setMaximumSize(maxSize, maxSize);
-//        b1->setIconSize(getIconSize(b1->icon()));
-//        b2->setMaximumSize(maxSize, maxSize);
-//        b2->setIconSize(getIconSize(b2->icon()));
-
-//        f = _worksWidget->font();
-//        f.setPixelSize(f.pixelSize() * 0.75);
-//        f.setWeight(QFont::DemiBold);
-//        b3->setFont(f);
-//        b4->setFont(f);
-
-//        b3->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-//        b4->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
             BtMiniPanel::Installer << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
@@ -346,10 +320,6 @@ public:
         //QHBoxLayout *hl = new QHBoxLayout;
         QVBoxLayout *vl = new QVBoxLayout;
 
-//        hl->addWidget(b1, Qt::AlignLeft);
-//        hl->addWidget(b3, Qt::AlignCenter);
-//        hl->addWidget(b4, Qt::AlignCenter);
-//        hl->addWidget(b2, Qt::AlignRight);
         BtMiniPanel *pn = new BtMiniPanel;
         pn->addWidget(b1, Qt::AlignLeft);
         pn->addWidget(b3, Qt::AlignCenter);
@@ -455,12 +425,12 @@ public:
         BtMiniView *v = new BtMiniView(_searchWidget);
         v->setTopShadow(true);
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
+        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
 
         QLineEdit *le = new QLineEdit(_searchWidget);
         le->setAlignment(Qt::AlignCenter);
         le->setPlaceholderText(BtMiniUi::tr("search string"));
-        changeFontSize(le, 0.95);
+        BtMiniUi::changeFontSize(le, 0.95);
         le->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
         QPushButton *pb = q->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
@@ -586,14 +556,6 @@ public:
 
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
         QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
-    }
-
-
-    void changeFontSize(QWidget *w, double factor)
-    {
-        QFont f(w->font());
-        f.setPixelSize(f.pixelSize() * factor);
-        w->setFont(f);
     }
 
     void updateMainWidget()
@@ -803,14 +765,12 @@ QPushButton* BtMiniUi::makeButton(QString text, QString icon, QString invertedIc
     b->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
     if(!icon.isEmpty())
     {
-        Q_D(BtMiniUi);
-
-        if(!invertedIcon.isEmpty() && d->_mainWidget->style()->standardPalette().background().color().lightnessF() < 0.2)
+        if(!invertedIcon.isEmpty() && BtMiniUi::instance()->d_func()->_mainWidget->style()->standardPalette().background().color().lightnessF() < 0.2)
             b->setIcon(util::getIcon(invertedIcon));
         else
             b->setIcon(util::getIcon(icon));
 
-        b->setIconSize(d->getIconSize(b->icon()));
+        b->setIconSize(BtMiniUi::instance()->d_func()->getIconSize(b->icon()));
     }
     return b;
 }
@@ -821,12 +781,17 @@ QPushButton *BtMiniUi::makeButton(QString text, QIcon icon)
     b->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
     if(!icon.isNull())
     {
-        Q_D(BtMiniUi);
-
         b->setIcon(icon);
-        b->setIconSize(d->getIconSize(b->icon()));
+        b->setIconSize(BtMiniUi::instance()->d_func()->getIconSize(b->icon()));
     }
     return b;
+}
+
+void BtMiniUi::changeFontSize(QWidget *w, qreal factor)
+{
+    QFont f(w->font());
+    f.setPixelSize(f.pixelSize() * factor);
+    w->setFont(f);
 }
 
 bool BtMiniUi::activatePreviousWidget()

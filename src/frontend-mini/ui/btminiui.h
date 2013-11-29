@@ -62,8 +62,10 @@ public:
      *  Make button suitable fot Mini interface. if invertedIcon is supplied detection of
      *  current color scheme is performed.
     */
-    QPushButton* makeButton(QString text, QString icon = QString(), QString invertedIcon = QString());
-    QPushButton* makeButton(QString text, QIcon icon);
+    static QPushButton* makeButton(QString text, QString icon = QString(), QString invertedIcon = QString());
+    static QPushButton* makeButton(QString text, QIcon icon);
+
+    static void changeFontSize(QWidget *w, qreal factor);
 
 public slots:
     /** Make window wisible to user in foreground, those function would do nothing when multiple

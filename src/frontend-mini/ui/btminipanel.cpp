@@ -189,6 +189,10 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
         {
             QRect r(QPoint(), d->_widgets[i]->sizeHint());
 
+            // limit button width
+            if(r.width() > e->size().width() * 0.66)
+                r.setWidth(e->size().width() * 0.66);
+
             if(d->_anchorPoints[i] & Qt::AlignRight)
                 r.moveLeft(e->size().width() - r.width()), rs += r.width() + spacing;
             else if(d->_anchorPoints[i] & Qt::AlignHCenter
@@ -234,11 +238,9 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
                             int al = r.left() - ls + spacing;
                             int ar = e->size().width() - rs - r.right() + spacing;
                             qreal a = al == 0 ? (ar == 0 ? 0.5 : 0.0) : (ar == 0 ? 1.0 : al / (qreal)ar);
-                            //qDebug() << al << ar << a;
                             r.setLeft(r.left() - (qMin(aw, al + ar) * a));
                             r.setRight(r.right() + (qMin(aw, al + ar) * (1 - a)));
                         }
-                        qDebug() << r;
                     }
                 }
                 else

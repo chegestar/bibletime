@@ -976,41 +976,29 @@ void BtMiniModuleTextModel::openPlaceSelection()
     QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
     BtMiniView *view = new BtMiniView(w);
     view->setInteractive(true);
-
-    QFont f(view->font());
-    f.setPixelSize(f.pixelSize() * 1.3);
-    view->setFont(f);
+    view->setTopShadow(true);
+    BtMiniUi::changeFontSize(view, 1.2);
 
     QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
 
-    BtMiniPanel *p = new BtMiniPanel();
+    BtMiniPanel *p = new BtMiniPanel;
     p->addWidget(b, Qt::AlignLeft);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
     view->setModel(m);
 
-    QVBoxLayout *l = new QVBoxLayout;
-
     CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(cm);
 
     if(mi && mi->type() != CSwordModuleInfo::Lexicon)
     {
-        view->setTopShadow(true);
-
         QLabel *c = new QLabel("", view);
-        QFont f(view->font());
-        f.setPixelSize(f.pixelSize() * 0.75);
-        f.setWeight(QFont::Normal);
-        c->setFont(f);
-        c->setMargin(f.pixelSize() / 2);
         c->setAlignment(Qt::AlignCenter);
-
         m->setIndicator(c);
-        QObject::connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
-
+        connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
         p->addWidget(c, Qt::AlignCenter);
     }
 
+    QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(p);
     l->addWidget(view);
     w->setLayout(l);

@@ -3257,10 +3257,6 @@ void BtMiniView::paintEvent(QPaintEvent *e)
             painter.drawEllipse(r);
         }
     }
-
-//    painter.setPen(Qt::black);
-//    painter.drawText(viewport()->rect(), QString("Hi � џСЂ� ё� І� µС‚"));
-//    painter.drawText(viewport()->rect(), tr("Hello World!"));
 }
 
 void BtMiniView::resizeEvent(QResizeEvent *e)
