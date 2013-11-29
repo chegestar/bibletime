@@ -38,9 +38,9 @@ public:
 
     enum StandardData
     {
-        tipWorks = 0,
+        TipWorks = 0,
         tipWorksAddon,
-        news
+        News
     };
 
     static QVariant standardData(StandardData data);

@@ -538,7 +538,7 @@ public:
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
         v->setModel(m);
 
-        QPushButton *bb = q->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+        QPushButton *bb = q->makeButton(QObject::tr("Apply"), "mini-back.svg", "mini-back-night.svg");
 
         QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
         lb->setAlignment(Qt::AlignCenter);
@@ -563,11 +563,16 @@ public:
 
         QFont f = _mainWidget->font();
         f.setPixelSize(_sizeFactor * btConfig().value<int>("mini/fontScale", 100) / 100.0);
+        f.setFamily(btConfig().value<QString>("mini/fontFamily", QApplication::font().family()));
         _mainWidget->setFont(f);
 
         QString s = btConfig().value<QString>("mini/miniStyle", "mini");
         if(s != _mainWidget->style()->objectName())
             QApplication::setStyle(s);
+
+        QFont cf(f);
+        cf.setFamily(btConfig().value<QString>("mini/fontTextFamily", "jGaramond"));
+        btConfig().setDefaultFont(cf);
     }
 
     /** Return basic icon size for BtMini interface. */
@@ -853,7 +858,7 @@ void BtMiniUi::activateWorks()
     if(!shown && btConfig().value<bool>("mini/showTipAtStartup", true))
     {
         if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString() +
-                            BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString()) == 1)
+                            BtMiniSettingsModel::standardData(BtMiniSettingsModel::TipWorks).toString()) == 1)
             btConfig().setValue<bool>("mini/showTipAtStartup", false);
         shown = true;
     }

@@ -64,10 +64,10 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 {
     Q_D(BtMiniPanel);
 
-//	QFont f(font());
+    //QFont f(font());
 //	f.setPixelSize(f.pixelSize() * 0.9);
 //	f.setWeight(QFont::Bold);
-//	setFont(f);
+    //setFont(f);
 
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 

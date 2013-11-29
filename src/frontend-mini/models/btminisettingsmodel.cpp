@@ -9,6 +9,7 @@
 *
 **********/
 
+#include <QFontDatabase>
 #include <QDesktopServices>
 #include <QStyleFactory>
 #include <QUrl>
@@ -29,22 +30,35 @@
 
 #define BT_MINI_FORUM_URL "http://sourceforge.net/p/bibletimemini/discussion"
 
-enum BtMiniSettingsIds
+struct Item
 {
-    BtMiniFontSize = 1,
-    BtMiniFontTextSize,
-    BtMiniThreads,
-    BtMiniContinuousScrolling,
-#ifdef BT_MINI_WEBKIT
-    BtMiniUseWebKit,
-#endif
-#ifndef BT_NO_CLUCENE
-    BtMiniSearchType,
-#endif
-    BtMiniStyle,
-    BtMiniTips = BtMiniStyle + 1,
-    BtMiniNews,
-    BtMiniForum = BtMiniNews + 3
+    enum Type
+    {
+        None,
+        FontSize,
+        FontFamily,
+        FontFamilies,
+        FontTextSize,
+        FontTextFamily,
+        FontTextFamilies,
+        Threads,
+        ContinuousScrolling,
+        UseWebKit,
+        SearchType,
+        Style,
+        Forum
+    };
+
+    Item(Type type, QString text) : _type(type), _text(text) {;}
+    ~Item()
+    {
+        foreach(Item *i, _children)
+            delete i;
+    }
+
+    int            _type;
+    QString        _text;
+    QVector<Item*> _children;
 };
 
 
@@ -55,57 +69,71 @@ public:
     BtMiniSettingsModelPrivate()
     {
         QString tbs = "<table width=\"100%\" cellpadding=\"5\"><tr><td>";
+        QFontDatabase fd;
 
-        _strings << "<body><font size=\"50%\"><center>" + BtMiniSettingsModel::tr("Settings") +
-                    "</center></font></body>";
-        _strings << tbs + BtMiniSettingsModel::tr("Font size:") +
-                    "</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
-        _strings << tbs + BtMiniSettingsModel::tr("Font size for text:") +
-                    "</td> <td align=\"right\"><b>%1%</b></td></tr></table>";
-        _strings << tbs + BtMiniSettingsModel::tr("Multi-threading:") +
-                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << tbs + BtMiniSettingsModel::tr("Continuous scrolling:") +
-                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _items.append(new Item(Item::None, "<body><font size=\"50%\"><center>"
+            + BtMiniSettingsModel::tr("Settings") + "</center></font></body>"));
+        _items.append(new Item(Item::FontSize, tbs + BtMiniSettingsModel::tr("Font size:") +
+            "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
+        _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Other Font settings:") +
+            "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        _items.last()->_children.append(new Item(Item::FontTextSize, tbs + BtMiniSettingsModel::tr("Font size for text:") +
+            "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
+        _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Interface font") +
+            "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        foreach(QString f, fd.families())
+            _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies,
+                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>"));
+        _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Text font") +
+            "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        foreach(QString f, fd.families())
+            _items.last()->_children.last()->_children.append(new Item(Item::FontTextFamilies,
+                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>"));
+        _items.append(new Item(Item::Threads, tbs + BtMiniSettingsModel::tr("Multi-threading:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
+        _items.append(new Item(Item::ContinuousScrolling, tbs + BtMiniSettingsModel::tr("Continuous scrolling:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #ifdef BT_MINI_WEBKIT
-        _strings << tbs + BtMiniSettingsModel::tr("Use WebKit:") +
-                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _items.append(new Item(Item::UseWebKit, tbs + BtMiniSettingsModel::tr("Use WebKit:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #endif
 #ifndef BT_NO_CLUCENE
-        _strings << tbs + BtMiniSettingsModel::tr("Search type:") +
-                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
+        _items.append(new Item(Item::SearchType, tbs + BtMiniSettingsModel::tr("Search type:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #endif
-        _strings << tbs + BtMiniSettingsModel::tr("Ui style:") +
-                    "</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
-                    "</td> <td align=\"right\"> > </td></tr></table></b>";
-        _strings << "<b>" + tbs + BtMiniSettingsModel::tr("Changelog") + ":" +
-                    "</td> <td align=\"right\"> > </td></tr></table></b>";
-        _strings << "<body><font size=\"50%\"><center>" +
-                    BtMiniSettingsModel::tr("About") + "</center></font></body>";
-        _strings << "<body>" + BtMiniSettingsModel::tr("<b>BibleTime Mini</b> - spend your time with Bible on mobile!") +
-                    "<br/><table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Current version:") +
-                    "</td><td align=\"right\"><b>" BT_MINI_VERSION "</b></td></tr></table>"
-                    "<table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Built on:") + "</td><td align=\"right\">"
-                    __DATE__ "</td></tr></table><br/><br/>" +
-                    BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +
-                    "<br/><br/>" +
-                    BtMiniSettingsModel::tr("Underlying frameworks:") +
-                    "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.10.dev</td></tr></table>"
-                    "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" SWORD_VERSION_STR "</td></tr></table>"
-                    "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
-                    "</body>";
-        _strings << BtMiniSettingsModel::tr("You could post feedback, report an issue or get help throught forum:") +
-                    "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>";
-
-        Q_ASSERT(BtMiniForum == _strings.size() - 1);
+        _items.append(new Item(Item::Style, tbs + BtMiniSettingsModel::tr("Ui style:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
+        _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
+            "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        _items.last()->_children.append(new Item(Item::None, BtMiniSettingsModel::standardData(BtMiniSettingsModel::TipWorks).toString()));
+        _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Changelog") + ":" +
+            "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        _items.last()->_children.append(new Item(Item::None, BtMiniSettingsModel::standardData(BtMiniSettingsModel::News).toString()));
+        _items.append(new Item(Item::None, "<body><font size=\"50%\"><center>" +
+            BtMiniSettingsModel::tr("About") + "</center></font><br/>"
+            + BtMiniSettingsModel::tr("<b>BibleTime Mini</b> - spend your time with Bible on mobile!") +
+            "<br/><table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Current version:") +
+            "</td><td align=\"right\"><b>" BT_MINI_VERSION "</b></td></tr></table>"
+            "<table width=\"100%\"><tr><td>" + BtMiniSettingsModel::tr("Built on:") + "</td><td align=\"right\">"
+            __DATE__ "</td></tr></table><br/><br/>" +
+            BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +
+            "<br/><br/>" +
+            BtMiniSettingsModel::tr("Underlying frameworks:") +
+            "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.10.dev</td></tr></table>"
+            "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" SWORD_VERSION_STR "</td></tr></table>"
+            "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
+            "</body>"));
+        _items.append(new Item(Item::Forum, BtMiniSettingsModel::tr("You could post feedback, report an issue or get help throught forum:") +
+            "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>"));
     }
 
     ~BtMiniSettingsModelPrivate()
     {
-        ;
+        foreach(Item *i, _items)
+            delete i;
     }
 
-    QVector<QString>      _strings;
+    QList<Item*>          _items;
     BtMiniLayoutDelegate *_ld;
 };
 
@@ -132,37 +160,77 @@ int BtMiniSettingsModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const BtMiniSettingsModel);
 
-    if(parent.internalId() == 0)
-    {
-        if(parent.row() == BtMiniTips ||
-           parent.row() == BtMiniNews)
-            return 1;
-    }
-
-    if(parent.isValid())
-        return 0;
-
-    return d->_strings.size();
+    if(!parent.isValid())
+        return d->_items.size();
+    else
+        return reinterpret_cast<Item*>(parent.internalPointer())->_children.size();
 }
 
 QModelIndex BtMiniSettingsModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_D(const BtMiniSettingsModel);
 
-    if(parent.isValid())
-        return createIndex(row, 0, parent.row());
-
-    return createIndex(row, 0);
+    if(!parent.isValid())
+        return createIndex(row, 0, d->_items.at(row));
+    else
+        return createIndex(row, 0, reinterpret_cast<Item*>(parent.internalPointer())->_children[row]);
 }
 
 QModelIndex BtMiniSettingsModel::parent(const QModelIndex &index) const
 {
     Q_D(const BtMiniSettingsModel);
 
-    if(index.internalId() != 0)
-        return createIndex(index.internalId(), 0);
+    Item *p = reinterpret_cast<Item*>(index.internalPointer());
+    if(!p)
+        return QModelIndex();
 
+    QVector<QPair<Item*, int> > stack;
+    stack.append(QPair<Item*, int>(0, 0));
+    while(stack.size() > 0)
+    {
+        Item *childItem;
+
+        if(stack.last().first == 0)
+        {
+            if(stack.last().second >= d->_items.size())
+            {
+                stack.removeLast();
+                continue;
+            }
+            childItem = d->_items[stack.last().second];
+        }
+        else
+        {
+            if(stack.last().second >= stack.last().first->_children.size())
+            {
+                stack.removeLast();
+                continue;
+            }
+            childItem = stack.last().first->_children[stack.last().second];
+        }
+
+        // check
+        if(p == childItem)
+        {
+            if(stack.last().first == 0)
+                return QModelIndex();
+            else
+                return createIndex(stack[stack.size() - 2].second, 0, stack.last().first);
+        }
+
+        stack.last().second++;
+
+        if(childItem->_children.size() > 0)
+        {
+            stack.append(QPair<Item*, int>(childItem, 0));
+            continue;
+        }
+
+    }
+
+    qDebug() << "Settings model can't find parent for item" << index;
     return QModelIndex();
+
 }
 
 QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
@@ -171,57 +239,40 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        if(index.internalId() == BtMiniTips)
-            return standardData(tipWorks);
-        if(index.internalId() == BtMiniNews)
-            return standardData(news);
-
-        QString s(d->_strings[index.row()]);
-        switch(index.row())
+        Item *i = reinterpret_cast<Item*>(index.internalPointer());
+        switch(i->_type)
         {
-        case BtMiniFontSize:
-            s = s.arg(btConfig().value<int>("mini/fontScale", 100));
-            break;
-        case BtMiniFontTextSize:
-            s = s.arg(btConfig().value<int>("mini/fontTextScale", 100));
-            break;
+        case Item::FontSize:
+            return i->_text.arg(btConfig().value<int>("mini/fontScale", 100));
+        case Item::FontTextSize:
+            return i->_text.arg(btConfig().value<int>("mini/fontTextScale", 100));
 #ifdef BT_MINI_WEBKIT
-        case BtMiniUseWebKit:
-            s = s.arg(btConfig().value<bool>("mini/useWebKit", false) ? tr("on") : tr("off"));
-            break;
+        case Item::UseWebKit:
+            return i->_text.arg(btConfig().value<bool>("mini/useWebKit", false) ? tr("on") : tr("off"));
 #endif
-        case BtMiniContinuousScrolling:
-            s = s.arg(btConfig().value<bool>("mini/miniContinuousScrolling", false) ? tr("on") : tr("off"));
-            break;
-        case BtMiniStyle:
-            s = s.arg(btConfig().value<QString>("mini/miniStyle", "mini"));
-            break;
-        case BtMiniThreads:
-            s = s.arg(btConfig().value<bool>("mini/threadedTextRetrieving", true) ? tr("on") : tr("off"));
-            break;
+        case Item::ContinuousScrolling:
+            return i->_text.arg(btConfig().value<bool>("mini/miniContinuousScrolling", false) ? tr("on") : tr("off"));
+        case Item::Style:
+            return i->_text.arg(btConfig().value<QString>("mini/miniStyle", "mini"));
+        case Item::Threads:
+            return i->_text.arg(btConfig().value<bool>("mini/threadedTextRetrieving", true) ? tr("on") : tr("off"));
 #ifndef BT_NO_CLUCENE
-        case BtMiniSearchType:
+        case Item::SearchType:
             switch(btConfig().value<int>("GUI/SearchDialog/searchType", CSwordModuleSearch::AndType))
             {
                 case CSwordModuleSearch::AndType:
-                    s = s.arg(tr("AND"));
-                break;
+                    return i->_text.arg(tr("AND"));
                 case CSwordModuleSearch::OrType:
-                    s = s.arg(tr("OR"));
-                break;
+                    return i->_text.arg(tr("OR"));
                 case CSwordModuleSearch::FullType:
-                    s = s.arg(tr("Full syntax"));
-                break;
+                    return i->_text.arg(tr("Full syntax"));
                 default:
-                    s = s.arg("Unknown");
+                    return i->_text.arg("Unknown");
             }
-            break;
 #endif
         default:
-            ;
+            return i->_text;
         }
-
-        return s;
     }
 
     return QVariant();
@@ -247,7 +298,7 @@ QVariant BtMiniSettingsModel::headerData(int section, Qt::Orientation orientatio
 QVariant BtMiniSettingsModel::standardData(StandardData data)
 {
     switch (data) {
-    case tipWorks:
+    case TipWorks:
         return QString("<body>" + tr("<h3><center>Usefull tips:</center></h3><br/>") +
             tr("Many views in BibleTime Mini recognizes <b>short pressing</b> by finger and <b>long pressing</b>. "
                "Try to press screen on word you interested in for a second (device should vibrate ones), "
@@ -276,7 +327,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
             QString("</body>"));
     case tipWorksAddon:
         return QString(tr("Following information you could access again in <b>Settings</b> under the <b>Handbook</b> item.<br/>"));
-    case news:
+    case News:
         return QString("<body><b><center>" + tr("News and Updates") + ":</center></b><br/>" +
 					   "<b>0.9.11</b> - " + tr("combined module manager by languages, so you could observe all available modules for "
 						  "particular language") + ".<br/>" +
@@ -296,9 +347,24 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 {
     Q_D(const BtMiniSettingsModel);
 
-    switch(index.row())
+    if(!index.isValid())
+        return;
+
+    Item *i = reinterpret_cast<Item*>(index.internalPointer());
+    switch(i->_type)
     {
-    case BtMiniFontSize:
+    case Item::FontTextFamilies:
+    case Item::FontFamilies:
+        {
+            QString f(i->_text.remove(QRegExp("<[^>]*>")));
+            if(i->_type == Item::FontFamilies)
+                btConfig().setValue("mini/fontFamily", f);
+            else
+                btConfig().setValue("mini/fontTextFamily", f);
+            BtMiniUi::instance()->resetWidgets(true, true, true);
+        }
+        break;
+    case Item::FontSize:
         {
             int ov = btConfig().value<int>("mini/fontScale", 100);
             int nv = BtMiniMenu::execInput(tr("Select size:"), "<b>%1%</b>", ov, 1, 1000);
@@ -312,7 +378,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         }
         break;
 
-    case BtMiniFontTextSize:
+    case Item::FontTextSize:
 		{
 			int ov = btConfig().value<int>("mini/fontTextScale", 100);
 			int nv = BtMiniMenu::execInput(tr("Select size:"), "<b>%1%</b>", ov, 1, 1000);
@@ -327,7 +393,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         break;
 
 #ifdef BT_MINI_WEBKIT
-    case BtMiniUseWebKit:
+    case Item::UseWebKit:
         {
             bool b = !btConfig().value<bool>("mini/useWebKit", false);
             btConfig().setValue("mini/useWebKit", b);
@@ -341,7 +407,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         break;
 #endif
 
-    case BtMiniContinuousScrolling:
+    case Item::ContinuousScrolling:
         {
             bool b = !btConfig().value<bool>("mini/miniContinuousScrolling", false);
             btConfig().setValue("mini/miniContinuousScrolling", b);
@@ -351,7 +417,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         }
         break;
 
-    case BtMiniStyle:
+    case Item::Style:
         {
             QStringList ss(QStyleFactory::keys());
             int i = ss.indexOf(btConfig().value<QString>("mini/miniStyle", "mini"));
@@ -367,12 +433,12 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         }
         break;
 
-    case BtMiniForum:
+    case Item::Forum:
         if(BtMiniMenu::execQuery(tr("Follow link?"), QStringList() << tr("Yes") << tr("No")) == 0)
             QDesktopServices::openUrl(QUrl(BT_MINI_FORUM_URL));
         break;
 
-    case BtMiniThreads:
+    case Item::Threads:
         btConfig().setValue("mini/threadedTextRetrieving", !btConfig().value<int>("mini/threadedTextRetrieving", true));
         emit dataChanged(index, index);
 
@@ -380,7 +446,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         break;
 
 #ifndef BT_NO_CLUCENE
-    case BtMiniSearchType:
+    case Item::SearchType:
         btConfig().setValue("GUI/SearchDialog/searchType", (btConfig().value<int>("GUI/SearchDialog/searchType",
                             CSwordModuleSearch::AndType) + 1) % (CSwordModuleSearch::FullType + 1));
         emit dataChanged(index, index);
