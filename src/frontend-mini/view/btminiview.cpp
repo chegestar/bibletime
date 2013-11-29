@@ -2632,6 +2632,40 @@ void BtMiniView::scroll(float horizontal, float vertical)
     
     if(oy != (int)d->currentSubView()->contentsRect().top() || ox != (int)d->_vx)
     {
+        // need to change current index?
+        if(receivers(SIGNAL(currentChanged(const QModelIndex &))) > 0)
+        {
+            int i = d->currentSubView()->indexItem(d->currentSubView()->modelIndex());
+            if(i != -1)
+            {
+                int oi = i;
+                QRect r(d->currentSubView()->itemXy(i), d->currentSubView()->_items[i]->size());
+                while(r.bottom() < -d->currentSubView()->contentsRect().top())
+                {
+                    if(i == d->currentSubView()->_items.size() - 1)
+                        break;
+                    ++i;
+                    r = QRect(d->currentSubView()->itemXy(i), d->currentSubView()->_items[i]->size());
+                }
+                while(r.top() > -d->currentSubView()->contentsRect().top() + viewport()->height())
+                {
+                    if(i == 0)
+                        break;
+                    --i;
+                    r = QRect(d->currentSubView()->itemXy(i), d->currentSubView()->_items[i]->size());
+                }
+                if(oi != i)
+                {
+                    QModelIndex mi(d->currentSubView()->modelIndex(d->currentSubView()->_items[i]->_row));
+                    if(mi.isValid())
+                    {
+                        d->currentSubView()->updateModelIndex(mi);
+                        emit currentChanged(mi);
+                    }
+                }
+            }
+        }
+
         d->updateScrollBars();
         viewport()->update();
     }
