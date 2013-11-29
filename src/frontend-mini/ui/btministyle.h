@@ -118,10 +118,10 @@ public:
                 QPen n(_palette.highlight().color(), qCeil(widget->font().pixelSize() / 9.0));
                 n.setJoinStyle(Qt::MiterJoin);
                 p->setPen(n);
-                p->drawPolyline(QVector<QPoint>() << QPoint(opt->rect.x(), opt->rect.y() + (opt->rect.height() * 0.73))
-                                << opt->rect.bottomLeft() - QPoint(0, (opt->rect.height() * 0.1))
-                                << opt->rect.bottomRight() - QPoint(0, (opt->rect.height() * 0.1))
-                                << QPoint(opt->rect.right(), opt->rect.y() + (opt->rect.height() * 0.73)));
+                p->drawPolyline(QVector<QPoint>() << QPoint(opt->rect.x(), opt->rect.y() + (opt->rect.height() * 0.75))
+                                << opt->rect.bottomLeft() - QPoint(0, (opt->rect.height() * 0.15))
+                                << opt->rect.bottomRight() - QPoint(0, (opt->rect.height() * 0.15))
+                                << QPoint(opt->rect.right(), opt->rect.y() + (opt->rect.height() * 0.75)));
             }
             return;
         case PE_CustomBase + 1:

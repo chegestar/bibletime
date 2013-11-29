@@ -64,10 +64,10 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 {
     Q_D(BtMiniPanel);
 
-	QFont f(font());
-	f.setPixelSize(f.pixelSize() * 0.9);
-	f.setWeight(QFont::Bold);
-	setFont(f);
+//	QFont f(font());
+//	f.setPixelSize(f.pixelSize() * 0.9);
+//	f.setWeight(QFont::Bold);
+//	setFont(f);
 
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
@@ -156,7 +156,8 @@ void BtMiniPanel::addWidget(QWidget *widget, Qt::Alignment point)
 
 QSize BtMiniPanel::sizeHint() const
 {
-    return minimumSizeHint();
+    // -100 required for android, where main window was enlarged each time panel was opened
+    return QSize(100, parentWidget()->font().pixelSize() * 2.2);
     //return QWidget::sizeHint().boundedTo(parentWidget()->size());
 }
 
@@ -164,8 +165,7 @@ QSize BtMiniPanel::minimumSizeHint() const
 {
     Q_D(const BtMiniPanel);
 
-    // -100 required for android, where main window was enlarged each time panel was opened
-    return QSize(parentWidget()->size().width() - 100, parentWidget()->font().pixelSize() * 2.2);
+    return sizeHint();
     //return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
 }
 
@@ -181,8 +181,6 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
     if(d->_anchorBased)
     {
         int ls = 0, rs = 0, cs = 0, cw = 0;
-        //int spacing = 20; //style()->QStyle::combinedLayoutSpacing(QSizePolicy::DefaultType,
-                          //                           QSizePolicy::DefaultType, Qt::Horizontal);
         QStyleOption so;
         so.initFrom(this);
         int spacing = style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing, &so, this);
@@ -230,11 +228,17 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
                         r.setLeft(qMax(ls , rs));
                         r.setRight(e->size().width() - qMax(ls , rs));
 
-                        int mw = d->_widgets[i]->sizeHint().width();
-                        if(r.width() < mw)
+                        int aw = d->_widgets[i]->sizeHint().width() - r.width();
+                        if(aw > 0)
                         {
-                            // TODO expand widget if its cut but there is space
+                            int al = r.left() - ls + spacing;
+                            int ar = e->size().width() - rs - r.right() + spacing;
+                            qreal a = al == 0 ? (ar == 0 ? 0.5 : 0.0) : (ar == 0 ? 1.0 : al / (qreal)ar);
+                            //qDebug() << al << ar << a;
+                            r.setLeft(r.left() - (qMin(aw, al + ar) * a));
+                            r.setRight(r.right() + (qMin(aw, al + ar) * (1 - a)));
                         }
+                        qDebug() << r;
                     }
                 }
                 else
@@ -249,6 +253,16 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
             }
         }
     }
+}
+
+bool BtMiniPanel::event(QEvent *e)
+{
+    if(e->type() == QEvent::LayoutRequest || e->type() == QEvent::Show)
+    {
+        QResizeEvent e(size(), size());
+        resizeEvent(&e);
+    }
+    return QWidget::event(e);
 }
 
 void BtMiniPanel::controlActivated()

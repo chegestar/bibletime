@@ -340,6 +340,7 @@ public:
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
             BtMiniPanel::Installer << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
+        p->layout()->setContentsMargins(0, 0, 0, 0);
 
         // Put into layout
         //QHBoxLayout *hl = new QHBoxLayout;
@@ -521,7 +522,6 @@ public:
 
         QLabel *lb = new QLabel(BtMiniModulesModel::tr("Updating") + "...", _installerWidget);
         lb->setAlignment(Qt::AlignCenter);
-        lb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
         lb->setObjectName("label");
 
         p->addWidget(lb, Qt::AlignCenter);

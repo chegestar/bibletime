@@ -50,6 +50,7 @@ protected:
     QSize minimumSizeHint() const;
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *e);
+    bool event(QEvent * e);
 
 private:
     Q_DECLARE_PRIVATE(BtMiniPanel)
