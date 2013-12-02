@@ -197,11 +197,17 @@ public:
                 QStackedWidget::timerEvent(e);
         }
 
-        void resizeEvent(QResizeEvent *e)
-        {
-            //qDebug() << "Resize main widget" << e->oldSize() << "to" << e->size() << "desktop" << QApplication::desktop()->screenGeometry();
-            QStackedWidget::resizeEvent(e);
-        }
+//        void resizeEvent(QResizeEvent *e)
+//        {
+//            qDebug() << "Resize main widget" << e->oldSize() << "to" << e->size() << "desktop" << QApplication::desktop()->screenGeometry();
+//            QStackedWidget::resizeEvent(e);
+//        }
+
+//        void keyReleaseEvent(QKeyEvent *e)
+//        {
+//            qDebug() << this << e << e->key();
+//            QStackedWidget::keyReleaseEvent(e);
+//        }
 
     private:
         int _saveTimer;
@@ -211,16 +217,8 @@ public:
     class BtMiniWidget : public QWidget
     {
     public:
-        BtMiniWidget(QWidget *parent=0) : QWidget(parent)
-        {
-            //Q_CHECK_PTR(BtMiniUi::instance()->d_func()->_mainWidget);
-            //qobject_cast<QStackedWidget*>(BtMiniUi::instance()->d_func()->_mainWidget)->addWidget(this);
-        }
-
-        ~BtMiniWidget()
-        {
-            ;
-        }
+        BtMiniWidget(QWidget *parent=0) : QWidget(parent) {;}
+        ~BtMiniWidget() {;}
 
     protected:
         QSize sizeHint() const
@@ -233,11 +231,11 @@ public:
             return QWidget::minimumSizeHint().boundedTo(parentWidget()->size());
         }
 
-        void resizeEvent(QResizeEvent *e)
-        {
-            //qDebug() << "Resize widget" << e->oldSize() << "to" << e->size() << "desktop";
-            QWidget::resizeEvent(e);
-        }
+//        void resizeEvent(QResizeEvent *e)
+//        {
+//            //qDebug() << "Resize widget" << e->oldSize() << "to" << e->size() << "desktop";
+//            QWidget::resizeEvent(e);
+//        }
     };
 
 

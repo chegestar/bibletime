@@ -39,6 +39,7 @@ public:
         _night = night;
         _menuFrame = 0;
         _initialized = false;
+        _elideEnabled = false;
 
         if(_night)
         {
@@ -159,7 +160,11 @@ public:
                 p->drawEllipse(opt->rect.adjusted(s, opt->rect.height() - (opt->rect.width() - s * 2), -s, 0));
                 return;
             }
-            ;
+        case CE_PushButton:
+            _elideEnabled = true;
+            QCommonStyle::drawControl(element, opt, p, widget);
+            _elideEnabled = false;
+            return;
         }
         QCommonStyle::drawControl(element, opt, p, widget);
     }
@@ -209,7 +214,39 @@ public:
 ////            alignment = (alignment | Qt::AlignHorizontal_Mask) ^ (Qt::AlignHorizontal_Mask ^ Qt::AlignRight);
 //        }
 //        else
-        painter->drawText(rectangle, alignment, QFontMetrics(painter->font()).elidedText(text, Qt::ElideRight, rectangle.width()));
+
+//        QTextLayout textLayout(text);
+//        textLayout.setFont(painter->font());
+//        int widthUsed = 0;
+//        int height = 0;
+//        int lineCount = 0;
+//        textLayout.beginLayout();
+
+//        while (++lineCount < 10) {
+//            QTextLine line = textLayout.createLine();
+//            if (!line.isValid())
+//                break;
+//            line.setLineWidth(rectangle.width());
+//            line.setPosition(QPointF(0, height));
+//            height += line.height();
+//            if(height > rectangle.height())
+//                break;
+//            widthUsed += line.naturalTextWidth();
+//            qDebug() << widthUsed << line.position();
+//        }
+//        textLayout.endLayout();
+
+//        //widthUsed += rectangle.width();
+//        qDebug() << text << rectangle << widthUsed;
+
+//        painter->drawText(rectangle, alignment, painter->fontMetrics().elidedText(text, Qt::ElideRight, widthUsed));
+
+
+        // do not work with multiline text
+        if(_elideEnabled && !text.contains('\n'))
+            painter->drawText(rectangle, alignment, QFontMetrics(painter->font()).elidedText(text, Qt::ElideRight, rectangle.width()));
+        else
+            painter->drawText(rectangle, alignment, text);
         if (textRole != QPalette::NoRole)
             painter->setPen(savedPen);
     }
@@ -532,13 +569,13 @@ public slots:
 private:
     Q_DISABLE_COPY(BtMiniStyle)
 
-    QPixmap *_menuFrame;
-    //int      _menuFrameWidth;
+    QPixmap      *_menuFrame;
 
-    bool     _night;
+    bool          _night;
 
-    QPalette _palette;
-    bool     _initialized;
+    QPalette      _palette;
+    bool          _initialized;
+    mutable bool  _elideEnabled;
 };
 
 class BtMiniStylePlugin : public QStylePlugin

@@ -965,8 +965,6 @@ void BtMiniModuleTextModel::openModuleSelection()
 
 void BtMiniModuleTextModel::openPlaceSelection()
 {
-	Q_D(BtMiniModuleTextModel);
-
     BtMiniView *works = BtMiniUi::instance()->worksView();
     works->setSleep(true);
 
@@ -1191,7 +1189,7 @@ void BtMiniModuleTextModel::startSearch()
 
 	Q_ASSERT(d->_lists.size() == 1 && d->_lists[0]._name == "[Search]");
 
-    if(results.Count() > 0)
+    if(results.getCount() > 0)
         d->_lists[0]._module = m;
     else
         d->_lists[0]._module = 0;
@@ -1217,12 +1215,10 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     QStringList actions;
     
     QString category(m->categoryName(m->category()));
-    if(category.size() > 11)
-        category = category.left(10) + "...";
     
     actions << tr("Set default ") + "\n" + category;
 
-    if(md && md->category() == m->category() == CSwordModuleInfo::Bibles)
+    if(md && (md->category() == m->category() == CSwordModuleInfo::Bibles))
         actions << tr("Add Parallel");
     
     const int r = BtMiniMenu::execMenu(actions);
