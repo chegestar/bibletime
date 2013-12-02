@@ -922,7 +922,7 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
     QPushButton *i = BtMiniUi::instance()->makeButton(tr("Install"));
-    QLabel *lb = new QLabel("Select Text:");
+	QLabel *lb = new QLabel(tr("Select Text:"));
     lb->setAlignment(Qt::AlignCenter);
 
     BtMiniPanel *p = new BtMiniPanel;

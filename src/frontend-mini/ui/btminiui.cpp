@@ -432,7 +432,7 @@ public:
         BtMiniUi::changeFontSize(le, 0.95);
         le->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
-        QPushButton *pb = q->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+        QPushButton *pb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
         QPushButton *eb = q->makeButton("", "find.svg");
 
         BtMiniPanel *p = new BtMiniPanel;
@@ -476,10 +476,10 @@ public:
 
         QPushButton *bb = 0;
         if(_worksWidget)
-            bb = q->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+            bb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
 #if BT_MINI_EXIT_BUTTON
         else
-            bb = q->makeButton(QObject::tr("Exit"));
+            bb = q->makeButton(BtMiniUi::tr("Exit"));
 #endif
         if(bb) bb->setObjectName("back");
 
@@ -535,7 +535,7 @@ public:
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
         v->setModel(m);
 
-        QPushButton *bb = q->makeButton(QObject::tr("Apply"), "mini-back.svg", "mini-back-night.svg");
+        QPushButton *bb = q->makeButton(BtMiniUi::tr("Apply"), "mini-back.svg", "mini-back-night.svg");
 
         QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
         lb->setAlignment(Qt::AlignCenter);
@@ -839,9 +839,7 @@ void BtMiniUi::activateWorks()
 
     d->switchFrom();
 
-    for(int i = d->_widgetStack.size() - 1; i >= 0; --i)
-        if(d->_widgetStack[i] == BtMiniUiPrivate::Works)
-        d->_widgetStack.removeAt(i);
+    d->_widgetStack.removeAll(BtMiniUiPrivate::Works);
     d->_widgetStack.append(BtMiniUiPrivate::Works);
 
     if(!d->_worksWidget)
@@ -867,9 +865,7 @@ void BtMiniUi::activateInstaller()
 
     d->switchFrom();
 
-    for(int i = d->_widgetStack.size() - 1; i >= 0; --i)
-        if(d->_widgetStack[i] == BtMiniUiPrivate::Installer)
-        d->_widgetStack.removeAt(i);
+    d->_widgetStack.removeAll(BtMiniUiPrivate::Installer);
     d->_widgetStack.append(BtMiniUiPrivate::Installer);
 
     if(!d->_installerWidget)
@@ -884,9 +880,7 @@ void BtMiniUi::activateSearch()
 
     d->switchFrom();
 
-    for(int i = d->_widgetStack.size() - 1; i >= 0; --i)
-        if(d->_widgetStack[i] == BtMiniUiPrivate::Search)
-        d->_widgetStack.removeAt(i);
+    d->_widgetStack.removeAll(BtMiniUiPrivate::Search);
     d->_widgetStack.append(BtMiniUiPrivate::Search);
 
     if(!d->_searchWidget)
@@ -901,9 +895,7 @@ void BtMiniUi::activateSettings()
 
     d->switchFrom();
 
-    for(int i = d->_widgetStack.size() - 1; i >= 0; --i)
-        if(d->_widgetStack[i] == BtMiniUiPrivate::Settings)
-        d->_widgetStack.removeAt(i);
+    d->_widgetStack.removeAll(BtMiniUiPrivate::Settings);
     d->_widgetStack.append(BtMiniUiPrivate::Settings);
 
     if(!d->_settingsWidget)
@@ -929,21 +921,6 @@ void BtMiniUi::modulesReloaded()
         if(haveBible)
         {
             d->_haveBible = true;
-
-            // refresh panel
-            //delete d->_installerWidget->findChild<BtMiniPanel*>();
-            //d->_installerWidget->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
-            //    BtMiniPanel::Refresh << BtMiniPanel::Close, d->_installerWidget));
-
-//            qDebug("modulesReloaded & QPushButton");
-
-//            QPushButton *b = d->_installerWidget->findChild<BtMiniPanel*>()->findChild<QPushButton*>("back");
-//            if(b)
-//            {
-//                connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()), Qt::UniqueConnection);
-//                b->setText(tr("Back"));
-//            }
-
             resetWidgets(false, false, true);
             activateWorks();
         }

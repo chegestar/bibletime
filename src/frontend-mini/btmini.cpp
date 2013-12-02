@@ -183,6 +183,9 @@ bool eventFilterFunction(void *message, long *result)
     case WM_CLOSE: qDebug("Close"); break;
     case WM_HIBERNATE: qDebug("Low memory");break;
     }
+#else
+    Q_UNUSED(message);
+    Q_UNUSED(result);
 #endif
     return false;
 }
@@ -201,6 +204,7 @@ public:
 
     bool nativeEventFilter(const QByteArray & eventType, void * message, long * result)
     {
+        Q_UNUSED(eventType);
         return eventFilterFunction(message, result);
     }
 };

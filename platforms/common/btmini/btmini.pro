@@ -56,6 +56,11 @@ OTHER_FILES += \
 TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
 
 
+# Android platform
+android {
+QT += androidextras
+}
+
 # Windows platform
 windows {
 }

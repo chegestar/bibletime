@@ -19,7 +19,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QtDebug>
-#include <QtMath>
+#include <QtCore/qmath.h>
 #include <qdrawutil.h>
 
 #ifdef BTMINISTYLE_H
@@ -382,7 +382,7 @@ public:
 
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
-		{
+        {
             if(widget->parentWidget()->layout()->indexOf(widget) > 0)
             {
                 widget->setAutoFillBackground(true);

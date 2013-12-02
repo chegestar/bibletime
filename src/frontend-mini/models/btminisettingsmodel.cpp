@@ -75,7 +75,7 @@ public:
             + BtMiniSettingsModel::tr("Settings") + "</center></font></body>"));
         _items.append(new Item(Item::FontSize, tbs + BtMiniSettingsModel::tr("Font size:") +
             "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
-        _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Other Font settings:") +
+        _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Font settings:") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
         _items.last()->_children.append(new Item(Item::FontTextSize, tbs + BtMiniSettingsModel::tr("Font size for text:") +
             "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
