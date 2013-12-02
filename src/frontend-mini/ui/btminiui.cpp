@@ -117,8 +117,8 @@ public:
         };
         void setOrientation(ScreenOrientation orientation)
         {
-    #if QT_VERSION < 0x050000
-            #if defined(Q_OS_SYMBIAN)
+#if QT_VERSION < 0x050000
+#if defined(Q_OS_SYMBIAN)
                 // If the version of Qt on the device is < 4.7.2, that attribute won't work
                 if (orientation != ScreenOrientationAuto) {
                     const QStringList v = QString::fromAscii(qVersion()).split(QLatin1Char('.'));
@@ -127,11 +127,11 @@ public:
                         return;
                     }
                 }
-            #endif // Q_OS_SYMBIAN
+#endif // Q_OS_SYMBIAN
 
             Qt::WidgetAttribute attribute;
             switch (orientation) {
-        #if QT_VERSION < 0x040702
+#if QT_VERSION < 0x040702
             // Qt < 4.7.2 does not yet have the Qt::WA_*Orientation attributes
             case ScreenOrientationLockPortrait:
                 attribute = static_cast<Qt::WidgetAttribute>(128);
@@ -143,7 +143,7 @@ public:
             case ScreenOrientationAuto:
                 attribute = static_cast<Qt::WidgetAttribute>(130);
                 break;
-        #else
+#else
             case ScreenOrientationLockPortrait:
                 attribute = Qt::WA_LockPortraitOrientation;
                 break;
@@ -154,9 +154,11 @@ public:
             case ScreenOrientationAuto:
                 attribute = Qt::WA_AutoOrientation;
                 break;
-        #endif
+#endif
             };
             setAttribute(attribute, true);
+#else
+            Q_UNUSED(orientation);
     #endif
         }
 
@@ -442,8 +444,6 @@ public:
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
-
-        //vl->addWidget(le);
         vl->addWidget(p);
         vl->addWidget(v);
 
@@ -451,7 +451,6 @@ public:
 
         // Setup model
         BtMiniModuleTextModel *m = new BtMiniModuleTextModel(QStringList() << "[Search]", v);
-
         v->setModel(m);
 
         QObject::connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
@@ -459,7 +458,7 @@ public:
         QObject::connect(eb, SIGNAL(clicked()), m, SLOT(startSearch()));
         QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), _worksWidget->findChild<BtMiniView*>(), SLOT(scrollTo(const QModelIndex &)));
-        //QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), p->findChild<QPushButton*>("Close"), SIGNAL(clicked()));
+        QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
         QObject::connect(pb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
