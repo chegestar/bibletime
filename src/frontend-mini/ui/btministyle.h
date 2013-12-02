@@ -166,6 +166,8 @@ public:
 
     void drawItemText(QPainter *painter, const QRect &rectangle, int alignment, const QPalette &palette, bool enabled, const QString &text, QPalette::ColorRole textRole) const
     {
+        Q_UNUSED(enabled);
+
         if(text.isEmpty())
             return;
         QPen savedPen;
@@ -190,11 +192,24 @@ public:
 //                painter->setPen(pen);
 //            }
 //        }
-        QFontMetrics fm(painter->font());
-        int tw = fm.width(text);
-        if(tw > rectangle.width())
-            alignment = (alignment | Qt::AlignHorizontal_Mask) ^ (Qt::AlignHorizontal_Mask ^ Qt::AlignRight);
-        painter->drawText(rectangle, alignment, text);
+//        if(fm.width(text) > rectangle.width())
+//        {
+//            QChar e(2026);
+//            int ew = fm.width(e);
+//            for(int c = 0;; ++c)
+//            {
+//                int w = fm.width(text.left(c));
+//                if(w <= rectangle.width() && w + ew >= rectangle.width())
+//                {
+//                    painter->drawText(rectangle, alignment, text.left(c) + e);
+//                    return;
+//                }
+//            }
+////            painter->drawText(rectangle, alignment, text.left(c) + e);
+////            alignment = (alignment | Qt::AlignHorizontal_Mask) ^ (Qt::AlignHorizontal_Mask ^ Qt::AlignRight);
+//        }
+//        else
+        painter->drawText(rectangle, alignment, QFontMetrics(painter->font()).elidedText(text, Qt::ElideRight, rectangle.width()));
         if (textRole != QPalette::NoRole)
             painter->setPen(savedPen);
     }
