@@ -981,7 +981,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 
     QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
 
-    BtMiniPanel *p = new BtMiniPanel;
+    BtMiniPanel *p = new BtMiniPanel(w);
     p->addWidget(b, Qt::AlignLeft);
 
     BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
@@ -991,7 +991,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 
     if(mi && mi->type() != CSwordModuleInfo::Lexicon)
     {
-        QLabel *c = new QLabel("", view);
+        QLabel *c = new QLabel;
         c->setAlignment(Qt::AlignCenter);
         m->setIndicator(c);
         connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
@@ -1315,7 +1315,7 @@ void BtMiniModuleTextModel::closeModuleSelection()
             CSwordModuleInfo *ci = CSwordBackend::instance()->findModuleByName(cm);
 
             // Restore module place
-            if((mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
+            if(ci && mi && (mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
                 && (ci->type() == CSwordModuleInfo::Bible || ci->type() == CSwordModuleInfo::Commentary))
             {
                 place.setModule(mi);
