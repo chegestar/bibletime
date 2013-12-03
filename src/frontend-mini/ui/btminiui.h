@@ -13,6 +13,7 @@
 #define BTMINIUI_H
 
 #include <QObject>
+#include <QIcon>
 
 class BtMiniView;
 class BtMiniUiPrivate;

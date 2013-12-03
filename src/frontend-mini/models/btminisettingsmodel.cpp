@@ -184,7 +184,7 @@ QModelIndex BtMiniSettingsModel::parent(const QModelIndex &index) const
     if(!p)
         return QModelIndex();
 
-    QVector<QPair<Item*, int> > stack;
+    QList<QPair<Item*, int> > stack;
     stack.append(QPair<Item*, int>(0, 0));
     while(stack.size() > 0)
     {

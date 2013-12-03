@@ -81,6 +81,9 @@ public:
         case PE_FrameMenu:
             if(const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame*>(opt))
             {
+                if(!_menuFrame)
+                    break;
+
                 const int n = QApplication::topLevelWidgets()[0]->font().pixelSize();
                 const int m = _menuFrame->width() / 3;
                 //qDrawBorderPixmap(p, frame->rect, QMargins(m, m, m, m), *_menuFrame);

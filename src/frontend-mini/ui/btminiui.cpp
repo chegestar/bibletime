@@ -477,7 +477,7 @@ public:
         QPushButton *bb = 0;
         if(_worksWidget)
             bb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
-#if BT_MINI_EXIT_BUTTON
+#ifdef BT_MINI_EXIT_BUTTON
         else
             bb = q->makeButton(BtMiniUi::tr("Exit"));
 #endif
