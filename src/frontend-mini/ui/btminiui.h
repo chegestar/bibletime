@@ -39,7 +39,7 @@ class BtMiniUi : public QObject
 public:
     ~BtMiniUi();
 
-    static BtMiniUi* instance()
+    static BtMiniUi* instance();
 
     void show();
 

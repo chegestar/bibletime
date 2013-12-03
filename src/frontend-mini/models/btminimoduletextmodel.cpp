@@ -366,70 +366,6 @@ public:
 		}
 	}
 
-    /** Construct model from current user settings with given info text. Info is
-        string with text and outer opening and closing tag (<tag attr="value">data</tag>). */
-    BtMiniModuleTextModel * fromContentsInfo(const QString &info) const
-    {
-        QString mc = info.left(info.indexOf('>') - 1).mid(info.indexOf(' ') + 1
-            ).replace("\" ", "||").replace("=\"", "=");
-
-        using namespace InfoDisplay;
-
-        CInfoDisplay::ListInfoData list = CInfoDisplay::detectInfo(mc);
-        mc = InfoDisplay::CInfoDisplay::formatInfo(list);
-
-        if(mc.isEmpty())
-            return 0;
-
-		QStringList modules = btConfig().value<QStringList>("mini/openInfoModules", QStringList() << "[Contents]" << "[Commentary]");
-
-        if(!(list.size() == 1 && list[0].first == CInfoDisplay::Footnote))
-            mc = "<center><small>" + info.left(info.indexOf('<', 1)).mid(
-                info.indexOf('>') + 1) + "</small></center>" + mc;
-
-        BtMiniModuleTextModel * m = new BtMiniModuleTextModel(modules);
-
-        for(int i = 0; i < modules.size(); ++i)
-        {
-			List *l = &m->d_func()->_lists[i];
-
-            if(modules[i] == "[Contents]")
-            {
-                bool onlyKey = true;
-                foreach(CInfoDisplay::InfoData d, list)
-                    if(d.first != CInfoDisplay::Key)
-                    {
-                        onlyKey = false;
-                        break;
-                    }
-                if(!onlyKey)
-                    l->setContents(mc);
-            }
-            if(modules[i] == "[Commentary]")
-            {
-                QString place;
-
-                foreach(CInfoDisplay::InfoData d, list)
-                    if(d.first == CInfoDisplay::Key)
-                        place = d.second;
-
-                if(!place.isEmpty())
-                {
-                    CSwordVerseKey key(l->_module);
-                    l->setScope(key.parseVerseList((const char*)place.toUtf8()));
-                }
-
-				if(l->_scopeMap.size() == 0)
-				{
-					l->_hasScope = false;
-					l->setContents(QString());
-				}
-            }
-        }
-
-        return m;
-    }
-
     QList<List>                 _lists;
 
     BtMiniLayoutDelegate       *_ld;
@@ -832,7 +768,63 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
     if(!contents.isEmpty())
     {
-        BtMiniModuleTextModel *m = d->fromContentsInfo(contents);
+        // Construct model from current user settings with given info text
+        // Info is string with text and outer opening and closing tag (<tag attr="value">data</tag>)
+        QString mc = contents.left(contents.indexOf('>') - 1).mid(contents.indexOf(' ') + 1
+            ).replace("\" ", "||").replace("=\"", "=");
+
+        using namespace InfoDisplay;
+
+        CInfoDisplay::ListInfoData list = CInfoDisplay::detectInfo(mc);
+        mc = InfoDisplay::CInfoDisplay::formatInfo(list);
+
+        if(mc.isEmpty())
+            return;
+
+        if(!(list.size() == 1 && list[0].first == CInfoDisplay::Footnote))
+            mc = "<center><small>" + contents.left(contents.indexOf('<', 1)).mid(
+                contents.indexOf('>') + 1) + "</small></center>" + mc;
+
+        QStringList modules;
+        foreach(CInfoDisplay::InfoData d, list)
+        {
+            if(d.first == CInfoDisplay::Key)
+                modules.append("[Commentary]");
+            else if(!modules.contains("[Contents]"))
+                modules.prepend("[Contents]");
+        }
+
+        BtMiniModuleTextModel *m = new BtMiniModuleTextModel(modules);
+
+        for(int i = 0; i < modules.size(); ++i)
+        {
+            BtMiniModuleTextModelPrivate::List *l = &m->d_func()->_lists[i];
+
+            if(modules[i] == "[Contents]")
+            {
+                l->setContents(mc);
+            }
+            if(modules[i] == "[Commentary]")
+            {
+                QString place;
+
+                foreach(CInfoDisplay::InfoData d, list)
+                    if(d.first == CInfoDisplay::Key)
+                        place = d.second;
+
+                if(!place.isEmpty())
+                {
+                    CSwordVerseKey key(l->_module);
+                    l->setScope(key.parseVerseList((const char*)place.toUtf8()));
+                }
+
+                if(l->_scopeMap.size() == 0)
+                {
+                    l->_hasScope = false;
+                    l->setContents(QString());
+                }
+            }
+        }
 
         if(m)
         {
@@ -857,8 +849,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             w->setLayout(l);
 
             view->setModel(m);
-            view->scrollTo(m->index(!m->d_func()->_lists[0]._contents.toString().isEmpty() ?
-                               btConfig().value<int>("mini/openInfoModule", 0) : 1, 0));
+            view->scrollTo(m->index(0, 0));
 
 			connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
 			connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
