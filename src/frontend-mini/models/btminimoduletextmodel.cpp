@@ -96,7 +96,7 @@ public:
 		void setModule(QString module)
 		{
 			if(module == "[Commentary]")
-				setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
+                setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
             else if(module.contains(','))
                 setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
 			else
@@ -788,7 +788,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
         QStringList modules;
         foreach(CInfoDisplay::InfoData d, list)
         {
-            if(d.first == CInfoDisplay::Key)
+            if(d.first == CInfoDisplay::Key && btConfig().getDefaultSwordModuleByType("standardCommentary") != 0)
                 modules.append("[Commentary]");
             else if(!modules.contains("[Contents]"))
                 modules.prepend("[Contents]");
