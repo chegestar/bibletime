@@ -3522,8 +3522,8 @@ QString BtMiniView::currentContents() const
                         dt.mid(dt.indexOf("</head>", Qt::CaseInsensitive) + 7);
 
 					// remove highlighting
-					for(int hsp; (hsp = dt.indexOf("<span style=\"background-color:#FFFF66;\">")) >= 0; )
-						dt = dt.remove(dt.indexOf("</span>", hsp), 7).remove(hsp, 40);
+                    for(int hsp; (hsp = dt.indexOf("<span style=\"background-color:#FFFF66; color:#000000;\">")) >= 0; )
+                        dt = dt.remove(dt.indexOf("</span>", hsp), 7).remove(hsp, 55);
 
 					// remove new lines
 					for(int nlp; (nlp = dt.indexOf("&nbsp;")) >= 0; )
