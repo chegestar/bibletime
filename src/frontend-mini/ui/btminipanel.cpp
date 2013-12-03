@@ -75,7 +75,7 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 
     foreach(Activity a, activities)
     {
-#if defined Q_OS_ANDROID || defined Q_OS_IOS || defined Q_OS_LINUX || defined Q_OS_WIN32
+#ifndef 
         if(a == Exit)
             continue;
 #endif

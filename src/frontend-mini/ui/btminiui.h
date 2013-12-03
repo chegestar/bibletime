@@ -19,7 +19,7 @@ class BtMiniView;
 class BtMiniUiPrivate;
 class QPushButton;
 
-#if !(defined Q_OS_ANDROID || defined Q_OS_IOS || defined Q_OS_LINUX || defined Q_OS_WIN32 || defined Q_OS_BLACKBERRY)
+#if !(defined Q_OS_ANDROID || defined Q_OS_MAC || defined Q_OS_LINUX || defined Q_OS_WIN32 || defined Q_OS_BLACKBERRY)
 #define BT_MINI_EXIT_BUTTON
 #endif
 
@@ -39,11 +39,7 @@ class BtMiniUi : public QObject
 public:
     ~BtMiniUi();
 
-    inline static BtMiniUi* instance()
-    {
-        static BtMiniUi ui;
-        return &ui;
-    }
+    static BtMiniUi* instance()
 
     void show();
 
@@ -67,6 +63,9 @@ public:
     static QPushButton* makeButton(QString text, QIcon icon);
 
     static void changeFontSize(QWidget *w, qreal factor);
+
+    /** Return basic icon size for BtMini interface. */
+    static QSize getIconSize(QIcon icon);
 
 public slots:
     /** Make window wisible to user in foreground, those function would do nothing when multiple

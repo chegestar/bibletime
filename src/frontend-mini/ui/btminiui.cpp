@@ -247,7 +247,7 @@ public:
 
         _mainWidget = new BtMiniMainWidget;
 
-#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
+#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID) || defined Q_OS_OSX
         _mainWidget->resize(QSize(480, 640));
         _mainWidget->show();
         _mainWidget->raise();
@@ -671,6 +671,13 @@ BtMiniUi::~BtMiniUi()
     delete d_ptr;
 }
 
+BtMiniUi* BtMiniUi::instance()
+{
+    // for iOS this required to be in object file
+    static BtMiniUi ui;
+    return &ui;
+}
+
 void BtMiniUi::show()
 {
     Q_D(BtMiniUi);
@@ -766,12 +773,12 @@ QPushButton* BtMiniUi::makeButton(QString text, QString icon, QString invertedIc
     b->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
     if(!icon.isEmpty())
     {
-        if(!invertedIcon.isEmpty() && BtMiniUi::instance()->d_func()->_mainWidget->style()->standardPalette().background().color().lightnessF() < 0.2)
+        if(!invertedIcon.isEmpty() && BtMiniUi::instance()->mainWidget()->style()->standardPalette().background().color().lightnessF() < 0.2)
             b->setIcon(util::getIcon(invertedIcon));
         else
             b->setIcon(util::getIcon(icon));
 
-        b->setIconSize(BtMiniUi::instance()->d_func()->getIconSize(b->icon()));
+        b->setIconSize(BtMiniUi::getIconSize(b->icon()));
     }
     return b;
 }
@@ -783,9 +790,24 @@ QPushButton *BtMiniUi::makeButton(QString text, QIcon icon)
     if(!icon.isNull())
     {
         b->setIcon(icon);
-        b->setIconSize(BtMiniUi::instance()->d_func()->getIconSize(b->icon()));
+        b->setIconSize(BtMiniUi::getIconSize(b->icon()));
     }
     return b;
+}
+
+QSize BtMiniUi::getIconSize(QIcon icon)
+{
+    QWidget *m = BtMiniUi::instance()->mainWidget();
+    Q_CHECK_PTR(m);
+    int h = m->font().pixelSize();
+    if(h < 0)
+    {
+        QFontInfo i(m->font());
+        h = i.pixelSize();
+    }
+    h *= 1.6;
+    QSize s(icon.actualSize(QSize(h, h)));
+    return QSize(h / s.height() * s.width(), h);
 }
 
 void BtMiniUi::changeFontSize(QWidget *w, qreal factor)

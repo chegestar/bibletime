@@ -271,7 +271,7 @@
     <message>
         <location filename="../models/btminimodulesmodel.cpp" line="525"/>
         <source>Install</source>
-        <translation>Установить</translation>
+        <translation>Да</translation>
     </message>
     <message>
         <location filename="../models/btminimodulesmodel.cpp" line="525"/>

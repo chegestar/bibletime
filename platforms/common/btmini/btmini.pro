@@ -67,10 +67,10 @@ windows {
 
 # iOS Platform
 mac {
-#DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
-#DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
+DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 
-#LIBS += -framework AudioToolbox
+LIBS += -framework AudioToolbox
 }
 
 # MeeGo platform

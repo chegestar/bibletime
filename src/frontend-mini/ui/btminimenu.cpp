@@ -51,14 +51,16 @@ public:
 	void updateGeometry(QWidget *menu)
 	{
 		menu->adjustSize();
-		const QSize s = (menu->parentWidget()->geometry().size() - menu->frameSize())/2;
+        const QSize s = (BtMiniMenuPrivate::parentWidget()->geometry().size() - menu->frameSize())/2;
 		menu->move(QPoint(s.width(), s.height()));
 	}
 
     static QWidget * parentWidget()
     {
+        QWidget *w = BtMiniUi::instance()->mainWidget();
+        Q_CHECK_PTR(w);
         //return QApplication::topLevelWidgets()[0];
-        return BtMiniUi::instance()->mainWidget();
+        return w;
     }
     
     QList<QWidget*>  _buttons;
@@ -161,7 +163,7 @@ void BtMiniMenu::mouseReleaseEvent(QMouseEvent *e)
 
 QSize BtMiniMenu::sizeHint() const
 {
-	QSize s(parentWidget()->size());
+    QSize s(BtMiniMenuPrivate::parentWidget()->size());
 
 	// take some place
 	if(s.width() * 0.8 > s.height())

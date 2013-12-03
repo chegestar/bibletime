@@ -87,7 +87,7 @@ extern "C" {
 #endif
 
 #ifdef Q_OS_IOS
-#import <AudioToolbox/AudioToolbox.h>
+//#include <AudioToolbox/AudioToolbox.h>
 #endif
 
 #ifdef Q_OS_BLACKBERRY
