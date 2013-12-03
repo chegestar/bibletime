@@ -8,7 +8,7 @@ CONFIG += clucene svg xml mini
 DEFINES += BT_MINI
 DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 
-QMAKE_CXXFLAGS_DEBUG += -Wno-switch # useless warning
+QMAKE_CXXFLAGS_DEBUG += -Wno-switch -Wno-unused-parameter # useless warning
 
 INCLUDEPATH += . \
     ../../../src/frontend-mini \
@@ -67,10 +67,10 @@ windows {
 
 # iOS Platform
 mac {
-DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
-DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
+#DEFINES -= BT_MINI_VERSION=\\\"$${VERSION}\\\"
+#DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 
-LIBS += -framework AudioToolbox
+#LIBS += -framework AudioToolbox
 }
 
 # MeeGo platform
