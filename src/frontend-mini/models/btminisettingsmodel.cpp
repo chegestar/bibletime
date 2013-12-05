@@ -362,6 +362,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
             else
                 btConfig().setValue("mini/fontTextFamily", f);
             BtMiniUi::instance()->resetWidgets(true, true, true);
+            BtMiniUi::instance()->activateWorks();
         }
         break;
     case Item::FontSize:

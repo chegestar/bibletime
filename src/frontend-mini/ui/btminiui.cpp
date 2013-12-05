@@ -84,8 +84,6 @@ public:
         /** Save opened session. */
         static void saveConfig()
         {
-            qDebug("Save config.");
-
             if(BtMiniUi::instance()->d_func()->_worksWidget)
             {
                 QModelIndexList list = BtMiniUi::instance()->worksView()->currentIndexes();
@@ -106,7 +104,6 @@ public:
 
                 btConfig().sync();
             }
-            qDebug("Save config: ok.");
         }
 
         /** */
@@ -207,9 +204,7 @@ public:
         {
             if(e->key() == Qt::Key_Back)
             {
-                if(BtMiniUi::instance()->d_func()->_widgetStack.size() > 1)
-                    BtMiniUi::instance()->activatePreviousWidget();
-                else
+                if(!BtMiniUi::instance()->activatePreviousWidget())
                     close();
                 e->accept();
             }
@@ -931,6 +926,14 @@ void BtMiniUi::activateSettings()
         d->createSettingsWidget();
 
     d->_mainWidget->setCurrentWidget(d->_settingsWidget);
+
+    // always open on first page
+    for(QModelIndex i = d->_settingsWidget->findChild<BtMiniView*>()->currentIndex(); ; i = i.parent())
+        if(!i.parent().isValid())
+        {
+            d->_settingsWidget->findChild<BtMiniView*>()->scrollTo(i);
+            break;
+        }
 }
 
 void BtMiniUi::modulesReloaded()

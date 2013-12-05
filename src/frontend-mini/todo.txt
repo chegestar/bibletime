@@ -48,16 +48,14 @@ kalemas@mail.ru :
         make own filters for before:/after: selectors
             it is not simple, because we can not obtain :after insertion point and resolve correct selector
     apply settings on button press
-    always open Settings on main page, not Handbook
++   always open Settings on main page, not Handbook
 +       reimplement windows switching
     turn on/off text features (notes)
     sliding effect for main stacked widget
 
-
-
 ?   replace panel with android
-?   move all logic from models to btminilogic.cpp
-    adding functionality using default function parameters is bad practice, when you want to change them
+-   move all logic from models to btminilogic.cpp
++   adding functionality using default function parameters is bad practice, when you want to change them
     download indexes feature
 
     centralized parallel processing:
