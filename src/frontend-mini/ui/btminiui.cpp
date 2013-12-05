@@ -203,11 +203,18 @@ public:
 //            QStackedWidget::resizeEvent(e);
 //        }
 
-//        void keyReleaseEvent(QKeyEvent *e)
-//        {
-//            qDebug() << this << e << e->key();
-//            QStackedWidget::keyReleaseEvent(e);
-//        }
+        void keyReleaseEvent(QKeyEvent *e)
+        {
+            if(e->key() == Qt::Key_Back)
+            {
+                if(BtMiniUi::instance()->d_func()->_widgetStack.size() > 1)
+                    BtMiniUi::instance()->activatePreviousWidget();
+                else
+                    close();
+                e->accept();
+            }
+            QStackedWidget::keyReleaseEvent(e);
+        }
 
     private:
         int _saveTimer;
