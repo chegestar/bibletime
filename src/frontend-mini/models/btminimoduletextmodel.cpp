@@ -666,6 +666,9 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString keyName) const
 
 	const BtMiniModuleTextModelPrivate::List *l = &d->_lists[i];
 
+    if(!l->_module)
+        return QModelIndex();
+
 	if(l->_module->type() == CSwordModuleInfo::Lexicon)
 	{
 		CSwordLexiconModuleInfo *li = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
