@@ -1212,7 +1212,8 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     
     actions << tr("Set default ") + "\n" + category;
 
-    if(md && (md->category() == m->category() == CSwordModuleInfo::Bibles))
+    if(md && ((md->category() == CSwordModuleInfo::Bibles || md->category() == CSwordModuleInfo::Commentaries)
+              && (m->category() == CSwordModuleInfo::Bibles || m->category() == CSwordModuleInfo::Commentaries)))
         actions << tr("Add Parallel");
     
     const int r = BtMiniMenu::execMenu(actions);
@@ -1247,6 +1248,7 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     {
         setData(wi, wm + ',' + m->name(), BtMini::ModuleRole);
         BtMiniMenu::closeMenus();
+        BtMiniUi::instance()->activatePreviousWidget();
     }
 }
 
