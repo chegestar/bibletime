@@ -2518,7 +2518,7 @@ void BtMiniView::timerEvent(QTimerEvent *e)
     if(d->_sleep) return;
 
     // update scrolling to tracked value
-    if(d->_vt != verticalScrollBar()->value())
+    if(d->_vt != verticalScrollBar()->value() && verticalScrollBar()->isVisible())
     {
         if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
             scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
