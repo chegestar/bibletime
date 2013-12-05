@@ -928,12 +928,12 @@ void BtMiniUi::activateSettings()
     d->_mainWidget->setCurrentWidget(d->_settingsWidget);
 
     // always open on first page
-    for(QModelIndex i = d->_settingsWidget->findChild<BtMiniView*>()->currentIndex(); ; i = i.parent())
-        if(!i.parent().isValid())
-        {
-            d->_settingsWidget->findChild<BtMiniView*>()->scrollTo(i);
-            break;
-        }
+    QModelIndex i = d->_settingsWidget->findChild<BtMiniView*>()->currentIndex();
+    if(i.parent().isValid())
+    {
+        while(i.parent().isValid()) i = i.parent();
+        d->_settingsWidget->findChild<BtMiniView*>()->scrollTo(i);
+    }
 }
 
 void BtMiniUi::modulesReloaded()
