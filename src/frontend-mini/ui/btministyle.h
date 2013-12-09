@@ -38,7 +38,6 @@ public:
 
         _night = night;
         _menuFrame = 0;
-        _initialized = false;
         _elideEnabled = false;
 
         if(_night)
@@ -81,6 +80,10 @@ public:
         case PE_FrameMenu:
             if(const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame*>(opt))
             {
+                if(!_menuFrame)
+                    _menuFrame = new QPixmap(_night ? ":/style-mini/menu-night-frame.png"
+                                                    : ":/style-mini/menu-frame.png");
+
                 if(!_menuFrame)
                     break;
 
@@ -349,14 +352,6 @@ public:
 
 	void polish(QWidget *widget)
     {
-        // FIX initialization in constructor cause crash
-        if(!_initialized)
-        {
-            _menuFrame = new QPixmap(_night ? ":/style-mini/menu-night-frame.png"
-                                            : ":/style-mini/menu-frame.png");
-            _initialized = true;
-        }
-
         // palettes
         widget->setPalette(widget->parentWidget() == 0 ? _palette : widget->parentWidget()->palette());
 
@@ -572,13 +567,10 @@ public slots:
 private:
     Q_DISABLE_COPY(BtMiniStyle)
 
-    QPixmap      *_menuFrame;
-
-    bool          _night;
-
-    QPalette      _palette;
-    bool          _initialized;
-    mutable bool  _elideEnabled;
+    mutable bool     _elideEnabled;
+    mutable QPixmap *_menuFrame;
+    bool             _night;
+    QPalette         _palette;
 };
 
 class BtMiniStylePlugin : public QStylePlugin
