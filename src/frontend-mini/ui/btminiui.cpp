@@ -202,10 +202,14 @@ public:
 
         void keyReleaseEvent(QKeyEvent *e)
         {
-            if(e->key() == Qt::Key_Back)
+            if(e->key() == Qt::Key_Back || (e->modifiers() & Qt::AltModifier
+                && (e->key() == Qt::Key_Backspace || e->key() == Qt::Key_Left)))
             {
                 if(!BtMiniUi::instance()->activatePreviousWidget())
+                {
+                    qDebug() << "close main widget:" << BtMiniUi::instance()->d_func()->_widgetStack;
                     close();
+                }
                 e->accept();
             }
             QStackedWidget::keyReleaseEvent(e);
@@ -458,7 +462,7 @@ public:
         QObject::connect(eb, SIGNAL(clicked()), m, SLOT(startSearch()));
         QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), _worksWidget->findChild<BtMiniView*>(), SLOT(scrollTo(const QModelIndex &)));
-        QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), BtMiniUi::instance(), SLOT(activateWorks()));
         QObject::connect(pb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
