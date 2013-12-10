@@ -1315,7 +1315,11 @@ void BtMiniModuleTextModel::closeModuleSelection()
             }
 
             if(index.isValid())
+            {
+                for(int i = 0; i < 5 && index.data(BtMini::PlaceRole).toString().size() == 0; ++i)
+                    index = index.model()->index(index.row() + 1, 0, index.parent());
                 works->scrollTo(index);
+            }
         }
     }
 
