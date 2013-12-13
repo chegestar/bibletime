@@ -276,51 +276,28 @@ int main(int argc, char *argv[])
     app.installNativeEventFilter(EventFilterProcessor::instance());
 #endif
 
-//    QFont nf, of;
-//#ifdef BT_MINI_QML
-//    nf.setPixelSize(fontSizeFactor());
-//    QFontInfo fi(nf);
-//    nf.setPointSizeF(fi.pointSizeF());
-//#else
-//    nf.setStyleHint(QFont::Serif, (QFont::StyleStrategy)(QFont::OpenGLCompatible | QFont::PreferQuality));
-//    //nf.setFamily("Book Antiqua");
-//	QFontDatabase::addApplicationFont("://jGaramond.ttf");
-//    //nf.setFamily("CMU Serif"); // good
-//    //nf.setFamily("DejaVu Serif"); // normal
-//    //nf.setFamily("jGaramond"); // very good
-//    nf.setFamily(btConfig().value<QString>("mini/fontTextFamily", QApplication::font().family()));
-//    qDebug() << "Selecting fonts:" << of.defaultFamily() << of.family() << nf.family();
-//    of.setFamily(of.defaultFamily());
-//    QApplication::setFont(nf);
-//#endif
-
     if(!util::directory::initDirectoryCache())
     {
         qFatal("Init Application: Error initializing directory cache!");
         return EXIT_FAILURE;
     }
 
+    QFontDatabase::addApplicationFont("://jGaramond.ttf");
+
     app.startInit();
     if (!app.initBtConfig())
         return EXIT_FAILURE;
-
-    // restore font for interface, font for text was set above in config constructor
-    //QApplication::setFont(of);
-    QFontDatabase::addApplicationFont("://jGaramond.ttf");
-    //btConfig().setDefaultFont()
 
     app.setStyle(btConfig().value<QString>("mini/miniStyle", "mini"));
     btConfig().setValue("bibletimeVersion", app.applicationVersion());
 
     // install translators
-    QString systemName(QLocale::system().name());
-
-    qDebug() << "Select interface locale:" << systemName;
-
+    QString locale(btConfig().value<QString>("mini/locale", QLocale::system().name()));
+    qDebug() << "Select interface locale:" << locale;
     foreach(QString s, QStringList() << "bibletime_ui_" << "bibletimemini_")
     {
         QTranslator *t = new QTranslator(&app);
-        t->load(s + systemName, util::directory::getLocaleDir().canonicalPath());
+        t->load(s + locale, util::directory::getLocaleDir().canonicalPath());
         app.installTranslator(t);
     }
 
@@ -380,7 +357,7 @@ int main(int argc, char *argv[])
         else qDebug() << "Sword directory does not exists" << d;
     }
 
-    backend->booknameLanguage(btConfig().value<QString>("language", systemName));
+    backend->booknameLanguage(btConfig().value<QString>("language", locale));
     if(btConfig().value<bool>("deleteOrphanedIndices", true))
         backend->deleteOrphanedIndices();
 

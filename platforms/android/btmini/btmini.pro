@@ -6,3 +6,4 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 OTHER_FILES += \
     android/AndroidManifest.xml \
     android/src/org/qtproject/bibletimemini/MiniActivity.java
+    android/src/org/qtproject/qt5/android/bindings/QtActivity.java

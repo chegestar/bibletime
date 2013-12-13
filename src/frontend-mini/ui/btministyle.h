@@ -133,7 +133,7 @@ public:
             return;
         case PE_CustomBase + 1:
             {
-                const int h = opt->fontMetrics.height();
+                const int h = _night ? opt->fontMetrics.height() : opt->fontMetrics.height() * 0.66 ;
                 const int m = _night ? 200 : 100;
 
                 QRect r(opt->rect.adjusted(0, 0, 0, h - opt->rect.height()));
@@ -393,10 +393,8 @@ public:
                 }
                 else
                 {
-                    p.setColor(QPalette::Window, QColor(102, 102, 102));
-                    p.setColor(QPalette::Button, QColor(102, 102, 102));
-                    p.setColor(QPalette::WindowText, QColor(255, 255, 255));
-                    p.setColor(QPalette::ButtonText, QColor(255, 255, 255));
+                    p.setColor(QPalette::Window, QColor::fromHsl(0, 0, 128));
+                    p.setColor(QPalette::ButtonText, QColor::fromHsl(0, 0, 255));
                 }
 
                 foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)

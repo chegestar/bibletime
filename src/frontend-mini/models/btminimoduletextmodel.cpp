@@ -837,7 +837,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             view->setTopShadow(true);
 
             QFont f(view->font());
-            f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
+            f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 140) / 100);
             f.setWeight(QFont::Normal);
             view->setFont(f);
 

@@ -306,7 +306,7 @@ public:
         v->setTopShadow(true);
         v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
+        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 140) / 100.0);
 
         // Setup controls
         QPushButton *b1 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowLeft));
@@ -320,6 +320,9 @@ public:
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
             BtMiniPanel::Installer << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
         p->layout()->setContentsMargins(0, 0, 0, 0);
+        QFont f (p->font());
+        f.setBold(true);
+        p->setFont(f);
 
         // Put into layout
         //QHBoxLayout *hl = new QHBoxLayout;
@@ -430,7 +433,7 @@ public:
         BtMiniView *v = new BtMiniView(_searchWidget);
         v->setTopShadow(true);
         v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100.0);
+        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 140) / 100.0);
 
         QLineEdit *le = new QLineEdit(_searchWidget);
         le->setAlignment(Qt::AlignCenter);

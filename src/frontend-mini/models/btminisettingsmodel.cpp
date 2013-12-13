@@ -9,6 +9,7 @@
 *
 **********/
 
+#include <QApplication>
 #include <QFontDatabase>
 #include <QDesktopServices>
 #include <QStyleFactory>
@@ -49,7 +50,8 @@ struct Item
         Forum
     };
 
-    Item(Type type, QString text) : _type(type), _text(text) {;}
+    Item(Type type, QString text, QVariant data = QVariant())
+        : _type(type), _text(text), _data(data) {;}
     ~Item()
     {
         foreach(Item *i, _children)
@@ -58,6 +60,7 @@ struct Item
 
     int            _type;
     QString        _text;
+    QVariant       _data;
     QVector<Item*> _children;
 };
 
@@ -81,14 +84,18 @@ public:
             "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
         _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Interface font") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies,
+            "<body><font size=\"+1\" face=\"" + QApplication::font().family() + "\">Default</font></body>", QApplication::font().family()));
         foreach(QString f, fd.families())
             _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies,
-                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>"));
+                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>", f));
         _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Text font") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
+        _items.last()->_children.last()->_children.append(new Item(Item::FontTextFamilies,
+            "<body><font size=\"+1\" face=\"jGaramond\">Default</font></body>", "jGaramond"));
         foreach(QString f, fd.families())
             _items.last()->_children.last()->_children.append(new Item(Item::FontTextFamilies,
-                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>"));
+                "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>", f));
         _items.append(new Item(Item::Threads, tbs + BtMiniSettingsModel::tr("Multi-threading:") +
             "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
         _items.append(new Item(Item::ContinuousScrolling, tbs + BtMiniSettingsModel::tr("Continuous scrolling:") +
@@ -245,7 +252,7 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
         case Item::FontSize:
             return i->_text.arg(btConfig().value<int>("mini/fontScale", 100));
         case Item::FontTextSize:
-            return i->_text.arg(btConfig().value<int>("mini/fontTextScale", 100));
+            return i->_text.arg(btConfig().value<int>("mini/fontTextScale", 140));
 #ifdef BT_MINI_WEBKIT
         case Item::UseWebKit:
             return i->_text.arg(btConfig().value<bool>("mini/useWebKit", false) ? tr("on") : tr("off"));
@@ -356,7 +363,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     case Item::FontTextFamilies:
     case Item::FontFamilies:
         {
-            QString f(i->_text.remove(QRegExp("<[^>]*>")));
+            QString f(i->_data.toString());
             if(i->_type == Item::FontFamilies)
                 btConfig().setValue("mini/fontFamily", f);
             else
@@ -381,7 +388,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
 
     case Item::FontTextSize:
 		{
-			int ov = btConfig().value<int>("mini/fontTextScale", 100);
+            int ov = btConfig().value<int>("mini/fontTextScale", 140);
 			int nv = BtMiniMenu::execInput(tr("Select size:"), "<b>%1%</b>", ov, 1, 1000);
 
 			if(ov != nv)
