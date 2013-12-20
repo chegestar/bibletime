@@ -1,7 +1,7 @@
 # Configuration
 VERSION = 1.0.1
 
-CONFIG += clucene svg xml mini curl
+CONFIG += clucene svg xml mini
 
 
 # Base section, nothing platform specific
