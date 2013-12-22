@@ -943,7 +943,7 @@
             "SourcePath" = "8:.\\Release\\Windows Mobile 5.0 Pocket PC SDK (ARMV4I)\\BibleTime-Mini.exe"
             "TargetName" = "8:BibleTime Mini.exe"
             "Tag" = "8:"
-            "Folder" = "8:_5562B91B95134418AE579E2B9B01D9ED"
+            "Folder" = "8:_C6158D27E4324D9E8EE487DF5A2347B9"
             "Condition" = "8:"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1357,7 +1357,7 @@
             "SourcePath" = "8:.\\abbr.conf"
             "TargetName" = "8:abbr.conf"
             "Tag" = "8:"
-            "Folder" = "8:_21E2AFC42942425BB6FB6C6F2E6C3DC0"
+            "Folder" = "8:_A465B0EAEE7E48729822FF963BA74D0C"
             "Condition" = "8:"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -2236,54 +2236,72 @@
             "Property" = "8:%InstallDir%"
                 "Folders"
                 {
-                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_21E2AFC42942425BB6FB6C6F2E6C3DC0"
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_A46E85FABEE94A64A2DB0811814C38BA"
                     {
-                    "Name" = "8:locales.d"
+                    "Name" = "8:share"
                     "Condition" = "8:"
-                    "Property" = "8:_DF5E949E55304322BBF33E4DBECB20F3"
+                    "Property" = "8:_1554B08FCD2E4D90AAFBFC1EEC6715E6"
                         "Folders"
                         {
+                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_FE4AAC2C7C4444529B10D4BFE976397E"
+                            {
+                            "Name" = "8:bibletime"
+                            "Condition" = "8:"
+                            "Property" = "8:_9FD651D42C3D46F68DF26F949B953A60"
+                                "Folders"
+                                {
+                                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_04BB32E91DB04F618C13B21509A020DD"
+                                    {
+                                    "Name" = "8:display-templates"
+                                    "Condition" = "8:"
+                                    "Property" = "8:_C670F110CD3C460C89D2AF555934BC04"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_D34908A3574D41088D91D902578B3BF2"
+                                    {
+                                    "Name" = "8:pics"
+                                    "Condition" = "8:"
+                                    "Property" = "8:_45B34295AE86486D8C9A5BB29454F8BC"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_DFC5A54352754D2F8EE79490FDD12B8D"
+                                    {
+                                    "Name" = "8:locale"
+                                    "Condition" = "8:"
+                                    "Property" = "8:_4940FBEFFA384B2F9DA0C1FB3CE1FECC"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_F024EE3136384EA481035428E266CFA5"
+                                    {
+                                    "Name" = "8:icons"
+                                    "Condition" = "8:"
+                                    "Property" = "8:_6718AF1281854CF3AEC0ABEF7294CD65"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_EB5F90C3404E490B85A9A55EB35385A4"
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_C6158D27E4324D9E8EE487DF5A2347B9"
                     {
-                    "Name" = "8:bibletime"
+                    "Name" = "8:bin"
                     "Condition" = "8:"
-                    "Property" = "8:_9FD651D42C3D46F68DF26F949B953A60"
+                    "Property" = "8:_20C44D7138294C26BD68D2ED55629705"
                         "Folders"
                         {
-                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_04BB32E91DB04F618C13B21509A020DD"
+                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_A465B0EAEE7E48729822FF963BA74D0C"
                             {
-                            "Name" = "8:display-templates"
+                            "Name" = "8:locales.d"
                             "Condition" = "8:"
-                            "Property" = "8:_C670F110CD3C460C89D2AF555934BC04"
-                                "Folders"
-                                {
-                                }
-                            }
-                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_D34908A3574D41088D91D902578B3BF2"
-                            {
-                            "Name" = "8:pics"
-                            "Condition" = "8:"
-                            "Property" = "8:_45B34295AE86486D8C9A5BB29454F8BC"
-                                "Folders"
-                                {
-                                }
-                            }
-                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_DFC5A54352754D2F8EE79490FDD12B8D"
-                            {
-                            "Name" = "8:locale"
-                            "Condition" = "8:"
-                            "Property" = "8:_4940FBEFFA384B2F9DA0C1FB3CE1FECC"
-                                "Folders"
-                                {
-                                }
-                            }
-                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_F024EE3136384EA481035428E266CFA5"
-                            {
-                            "Name" = "8:icons"
-                            "Condition" = "8:"
-                            "Property" = "8:_6718AF1281854CF3AEC0ABEF7294CD65"
+                            "Property" = "8:_DF5E949E55304322BBF33E4DBECB20F3"
                                 "Folders"
                                 {
                                 }

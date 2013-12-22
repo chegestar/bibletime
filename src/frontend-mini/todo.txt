@@ -33,6 +33,7 @@ kalemas@mail.ru :
 +   android: style switching does not working properly
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
 +       current item sould be changed right after current item was left the screen
+	setup default modules occurs even on install sources reload
     context for pictures
     context for reeferences of type "look <this module ref>"
     sometimes list get displaced vertically (RSP Rom 9-15)
