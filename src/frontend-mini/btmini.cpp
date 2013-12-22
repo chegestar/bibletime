@@ -282,7 +282,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    QFontDatabase::addApplicationFont("://jGaramond.ttf");
+	QFontDatabase::addApplicationFont("://jGaramond.ttf");
+	QFontDatabase::addApplicationFont("jGaramond.ttf");
 
     app.startInit();
     if (!app.initBtConfig())
