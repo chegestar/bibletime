@@ -84,15 +84,15 @@ public:
             "</td> <td align=\"right\"><b>%1%</b></td></tr></table>"));
         _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Interface font") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
-        _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies,
-            "<body><font size=\"+1\" face=\"" + QApplication::font().family() + "\">Default</font></body>", QApplication::font().family()));
+        _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies, "<body><font size=\"+1\" face=\"" +
+			QApplication::font().family() + "\">" + QObject::tr("Default") + "</font></body>", QApplication::font().family()));
         foreach(QString f, fd.families())
             _items.last()->_children.last()->_children.append(new Item(Item::FontFamilies,
                 "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>", f));
         _items.last()->_children.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Text font") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
         _items.last()->_children.last()->_children.append(new Item(Item::FontTextFamilies,
-            "<body><font size=\"+1\" face=\"jGaramond\">Default</font></body>", "jGaramond"));
+            "<body><font size=\"+1\" face=\"jGaramond\">" + QObject::tr("Default") + "</font></body>", "jGaramond"));
         foreach(QString f, fd.families())
             _items.last()->_children.last()->_children.append(new Item(Item::FontTextFamilies,
                 "<body><font size=\"+1\" face=\"" + f + "\">" + f + "</font></body>", f));
