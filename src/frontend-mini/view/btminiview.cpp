@@ -639,7 +639,7 @@ public:
             _wp->mainFrame()->render(painter, QWebFrame::ContentsLayer, clipping);
 
 			//painter->setBrush(Qt::NoBrush);
-			//painter->setPen(QPen(Qt::black, 1));
+			//painter->setPen(QPen(QColor(0, 0, 0), 1));
 			//painter->drawRect(_wp->mainFrame()->geometry());
 
             painter->restore();

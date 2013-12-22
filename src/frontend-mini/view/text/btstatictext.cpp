@@ -536,7 +536,7 @@ namespace {
     public:
         DrawTextItemRecorder(bool untransformedCoordinates, bool useBackendOptimizations)
                 : m_dirtyPen(false), m_useBackendOptimizations(useBackendOptimizations),
-                  m_untransformedCoordinates(untransformedCoordinates), m_currentColor(Qt::black)
+                  m_untransformedCoordinates(untransformedCoordinates), m_currentColor(QColor(0, 0, 0))
         {
         }
 
