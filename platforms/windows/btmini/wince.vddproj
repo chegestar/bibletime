@@ -32,6 +32,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_046F0C2C0D83434185DCE584D41AB6CF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0536C6EA6EF143E28286F60DE945F4C5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -200,6 +206,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4E6D353F458249388F6C522DF1A6C227"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4F3D8A876CD24D489A48DA8D0FC08A82"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -285,6 +297,12 @@
         "Entry"
         {
         "MsmKey" = "8:_6B79684D392B4EE58727CC81213903B6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6C7EC182DB904335AB0EF66C442D91DB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -620,6 +638,24 @@
             "TargetName" = "8:bibletime_ui_ru.qm"
             "Tag" = "8:"
             "Folder" = "8:_DFC5A54352754D2F8EE79490FDD12B8D"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_046F0C2C0D83434185DCE584D41AB6CF"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\frontend-mini\\ui\\jGaramond.ttf"
+            "TargetName" = "8:jGaramond.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_C6158D27E4324D9E8EE487DF5A2347B9"
             "Condition" = "8:"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
@@ -1136,6 +1172,24 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_4E6D353F458249388F6C522DF1A6C227"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\frontend-mini\\ui\\resources\\back-night.svg"
+            "TargetName" = "8:mini-back-night.svg"
+            "Tag" = "8:"
+            "Folder" = "8:_F024EE3136384EA481035428E266CFA5"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{BA458234-9B71-4F46-8107-E91156377184}:_4F3D8A876CD24D489A48DA8D0FC08A82"
             {
             "SourcePath" = "8:..\\..\\..\\pics\\icons\\text_center.svg"
@@ -1392,6 +1446,24 @@
             {
             "SourcePath" = "8:..\\..\\..\\pics\\icons\\tile.svg"
             "TargetName" = "8:tile.svg"
+            "Tag" = "8:"
+            "Folder" = "8:_F024EE3136384EA481035428E266CFA5"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_6C7EC182DB904335AB0EF66C442D91DB"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\frontend-mini\\ui\\resources\\back.svg"
+            "TargetName" = "8:mini-back.svg"
             "Tag" = "8:"
             "Folder" = "8:_F024EE3136384EA481035428E266CFA5"
             "Condition" = "8:"
