@@ -511,7 +511,7 @@ public:
 
         // setup model
         if(!_installModel)
-            _installModel = new BtMiniModulesModel(_mainWidget);
+            _installModel = new BtMiniModulesModel(true, _mainWidget);
 
         _installModel->setIndicator(lb);
 

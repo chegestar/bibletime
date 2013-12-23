@@ -56,7 +56,7 @@ struct Item
     QModelIndex    _index;
     QString        _repository;
     QIcon          _icon;
-    QVector<Item>  _children;
+    QList<Item>    _children;
 };
 
 QDebug operator<<(QDebug dbg, const Item &item)
@@ -125,14 +125,14 @@ public:
         : q_ptr(q)
         , _installManager(new BtInstallMgr(q))
         , _indicator(0)
-        , _thread(new Thread(q, _installManager))
+        , _refreshThread(new Thread(q, _installManager))
     {
-        QObject::connect(_thread, SIGNAL(finished ()), q, SLOT(downloadComplete()));
+        QObject::connect(_refreshThread, SIGNAL(finished ()), q, SLOT(downloadComplete()));
     }
     ~BtMiniModulesModelPrivate()
     {
         clear();
-        if(_thread->isRunning()) _thread->terminate();
+        if(_refreshThread->isRunning()) _refreshThread->terminate();
     }
 
 	// fff      language
@@ -209,91 +209,112 @@ public:
 
         _models.append(model);
 
-		for(int i = 0, s = model->rowCount(); i < s; ++i)
-		{
-			// language
-			QModelIndex li = model->index(i, 0);
-			QString language = li.data().toString();
+        if(qobject_cast<BtBookshelfTreeModel*>(model))
+        {
+            for(int i = 0, s = model->rowCount(); i < s; ++i)
+            {
+                // language
+                QModelIndex li = model->index(i, 0);
+                QString language = li.data().toString();
 
-			int lid = -1;
-			for(int ii = 0; ii < _items.size(); ++ii)
-			{
-				if(_items[ii]._text == language)
-				{
-					lid = ii;
-					break;
-				}
-			}
+                int lid = -1;
+                for(int ii = 0; ii < _items.size(); ++ii)
+                {
+                    if(_items[ii]._text == language)
+                    {
+                        lid = ii;
+                        break;
+                    }
+                }
 
-			// add new language
-			if(lid == -1)
-			{
-                _items.append(Item(language, QString(), QModelIndex(), util::getIcon("flag.svg")));
-				lid = _items.size() - 1;
-			}
+                // add new language
+                if(lid == -1)
+                {
+                    _items.append(Item(language, QString(), QModelIndex(), util::getIcon("flag.svg")));
+                    lid = _items.size() - 1;
+                }
 
-			// add categories
-			for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
-			{
-				QModelIndex ci = model->index(ii, 0, li);
-				QString category = model->data(ci).toString();
+                // add categories
+                for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
+                {
+                    QModelIndex ci = model->index(ii, 0, li);
+                    QString category = model->data(ci).toString();
 
-				int cid = -1;
-				for(int iii = 0; iii < _items[lid]._children.size(); ++iii)
-				{
-					if(_items[lid]._children[iii]._text == category)
-					{
-						cid = iii;
-						break;
-					}
-				}
+                    int cid = -1;
+                    for(int iii = 0; iii < _items[lid]._children.size(); ++iii)
+                    {
+                        if(_items[lid]._children[iii]._text == category)
+                        {
+                            cid = iii;
+                            break;
+                        }
+                    }
 
-				// add new category
-				if(cid == -1)
-				{
-					_items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
-					cid = _items[lid]._children.size() - 1;
-				}
+                    // add new category
+                    if(cid == -1)
+                    {
+                        _items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
+                        cid = _items[lid]._children.size() - 1;
+                    }
 
-                _items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + model->objectName() + "</b></center></font>"));
+                    _items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + model->objectName() + "</b></center></font>"));
 
-				// add modules
-				for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
-				{
-					QModelIndex mi = model->index(iii, 0, ci);
-                    _items[lid]._children[cid]._children.append(Item(QString(), model->objectName(), mi));
-				}
-			}
-		}
+                    // add modules
+                    for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
+                    {
+                        QModelIndex mi = model->index(iii, 0, ci);
+                        _items[lid]._children[cid]._children.append(Item(QString(), model->objectName(), mi));
+                    }
+                }
+            }
 
-		qSort(_items);
+            qSort(_items);
+        }
+        else
+        {
+            Q_ASSERT(true);
+        }
 	}
 
     QLabel                                        *_indicator;
     QVector<Item>                                  _items;
     QVector<QAbstractItemModel*>                   _models;
 
+    static BtMiniModulesModel                     *_installModel;
     BtInstallMgr                                  *_installManager;
-    Thread                                        *_thread;
+    Thread                                        *_refreshThread;
 
 	Q_DECLARE_PUBLIC(BtMiniModulesModel);
 	BtMiniModulesModel * const                     q_ptr;
 };
 
+BtMiniModulesModel* BtMiniModulesModelPrivate::_installModel = 0;
 
-BtMiniModulesModel::BtMiniModulesModel(QObject *parent)
+
+BtMiniModulesModel::BtMiniModulesModel(bool install, QObject *parent)
     : QAbstractItemModel(parent), d_ptr(new BtMiniModulesModelPrivate(this))
 {
     Q_D(BtMiniModulesModel);
 
-    d->_thread->_download = false;
-    d->_thread->start();
+    d->_refreshThread->_download = false;
+    d->_refreshThread->start();
+    if(install)
+    {
+        Q_ASSERT(d->_installModel == 0);
+        d->_installModel = this;
+    }
+    else
+    {
+        d->addModel(CSwordBackend::instance()->model());
+    }
     updateIndicators(QModelIndex());
 }
 
 BtMiniModulesModel::~BtMiniModulesModel()
 {
 	Q_D(BtMiniModulesModel);
+    if(d->_installModel == this)
+        d->_installModel = 0;
 	delete d;
 }
 
@@ -391,7 +412,7 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 		if(m._index.isValid())
 		{
             // protect from module installation during remote sources update
-            if(d->_thread->isRunning() && role == BtBookshelfModel::ModulePointerRole)
+            if(d->_refreshThread->isRunning() && role == BtBookshelfModel::ModulePointerRole)
                 return QVariant();
 
 			if(role == BtMini::RepositoryRole)
@@ -440,7 +461,7 @@ void BtMiniModulesModel::updateIndicators(QModelIndex index)
 {
     Q_D(BtMiniModulesModel);
 
-    if(d->_thread->isRunning())
+    if(d->_refreshThread->isRunning())
     {
         static QTimer timer;
 
@@ -484,11 +505,11 @@ void BtMiniModulesModel::backgroundDownload()
 {
     Q_D(BtMiniModulesModel);
 
-    if(d->_thread->isRunning())
+    if(d->_refreshThread->isRunning())
         return;
 
-    d->_thread->_download = true;
-    d->_thread->start();
+    d->_refreshThread->_download = true;
+    d->_refreshThread->start();
     updateIndicators(QModelIndex());
 }
 
@@ -496,18 +517,18 @@ void BtMiniModulesModel::downloadComplete()
 {
     Q_D(BtMiniModulesModel);
 
-    if(d->_thread->_dataComplete)
+    if(d->_refreshThread->_dataComplete)
     {
-        d->_thread->_dataComplete = false;
+        d->_refreshThread->_dataComplete = false;
 
         beginResetModel();
 
         d->clear();
 
         // add calculated sources, pass ownership to Private object
-        foreach (QAbstractItemModel *m, d->_thread->_data)
+        foreach (QAbstractItemModel *m, d->_refreshThread->_data)
             d->addModel(m);
-        d->_thread->_data.clear();
+        d->_refreshThread->_data.clear();
 
         d->generateSuggestions();
 

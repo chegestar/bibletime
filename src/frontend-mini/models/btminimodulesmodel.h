@@ -13,7 +13,6 @@
 #define BTMINIMODELSMODEL_H
 
 #include <QAbstractItemModel>
-#include <QVector>
 
 class BtMiniModulesModelPrivate;
 
@@ -24,7 +23,7 @@ class BtMiniModulesModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    BtMiniModulesModel(QObject *parent = 0);
+    BtMiniModulesModel(bool install, QObject *parent = 0);
     ~BtMiniModulesModel();
     
     /** Reimplemented from QAbstractItemModel. */
