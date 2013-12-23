@@ -80,7 +80,10 @@ public:
 
     void run()
     {
-        QStringList ss(BtInstallBackend::sourceNameList(_download));
+        if(_download)
+            _installManager->refreshRemoteSourceConfiguration();
+
+        QStringList ss(BtInstallBackend::sourceNameList());
 
         foreach(QString s, ss)
         {
