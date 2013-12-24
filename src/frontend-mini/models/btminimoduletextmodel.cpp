@@ -950,7 +950,7 @@ void BtMiniModuleTextModel::openModuleSelection()
 	if(list.size() > 0 && list[0].isValid())
 	    view->scrollTo(list[0]);
 
-    connect(view, SIGNAL(longPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
+    connect(view, SIGNAL(shortPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
     connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
@@ -1199,26 +1199,46 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     CSwordModuleInfo *m = static_cast<CSwordModuleInfo*>(
         index.data(BtBookshelfModel::ModulePointerRole).value<void*>());
 
-    if(!m)
-        return;
+    if(!m) return;
 
     QModelIndex wi = BtMiniUi::instance()->worksView()->currentIndex();
     QString wm(wi.data(BtMini::ModuleRole).toString());
     CSwordModuleInfo *md = CSwordBackend::instance()->findModuleByName(wm.section(',', 0, 0));
 
-    QStringList actions;
-    
-    QString category(m->categoryName(m->category()));
-    
-    actions << tr("Set default ") + "\n" + category;
+    QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
+    BtMiniView *view = new BtMiniView(w);
+    view->setTopShadow(true);
 
-    if(md && ((md->category() == CSwordModuleInfo::Bibles || md->category() == CSwordModuleInfo::Commentaries)
-              && (m->category() == CSwordModuleInfo::Bibles || m->category() == CSwordModuleInfo::Commentaries)))
-        actions << tr("Add Parallel");
-    
-    const int r = BtMiniMenu::execMenu(actions);
+    BtMiniPanel *p = new BtMiniPanel(w);
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QLabel *c = new QLabel(m->name());
+    c->setAlignment(Qt::AlignCenter);
+    p->addWidget(b, Qt::AlignLeft);
+    p->addWidget(c, Qt::AlignCenter);
 
-    if(r == 0)
+    QStringListModel* model = new QStringListModel(QStringList()
+        << "<h2><center>" + tr("Set default ") + "<br/>" + m->categoryName(m->category()) + "</center></h2>"
+        /// \todo add / remove from context
+        << "<h2><center>" + tr("Add Parallel") + "</center></h2>"
+        /// \todo remove module
+        << "<hr>" + m->aboutText(), view);
+    model->setObjectName(m->name());
+    view->setModel(model);
+
+    QVBoxLayout *l = new QVBoxLayout;
+    l->addWidget(p);
+    l->addWidget(view);
+    w->setLayout(l);
+
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(moduleContextClicked(const QModelIndex &)));
+}
+
+void BtMiniModuleTextModel::moduleContextClicked(const QModelIndex &index)
+{
+    CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(index.model()->objectName());
+
+    if(index.row() == 0)
     {
         switch(m->category())
         {
@@ -1243,12 +1263,14 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
             btConfig().setDefaultSwordModuleByType("standardDailyDevotional", m);
             break;
         }
+        BtMiniUi::instance()->activateWorks();
     }
-    else if(r == 1)
+    else if(index.row() == 1)
     {
+        QModelIndex wi = BtMiniUi::instance()->worksView()->currentIndex();
+        QString wm(wi.data(BtMini::ModuleRole).toString());
         setData(wi, wm + ',' + m->name(), BtMini::ModuleRole);
-        BtMiniMenu::closeMenus();
-        BtMiniUi::instance()->activatePreviousWidget();
+        BtMiniUi::instance()->activateWorks();
     }
 }
 

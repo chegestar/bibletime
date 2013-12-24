@@ -77,6 +77,9 @@ public slots:
     /**  This function works with worksView only. */
     void openPlaceSelection();
 
+    /** Handle items for module context */
+    void moduleContextClicked(const QModelIndex &index);
+
     /** */
     void updateIndicators(const QModelIndex &index);
 
