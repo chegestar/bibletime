@@ -2406,7 +2406,10 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 
         if(tapping >= LONG_PRESS_DELAY)
         {
-            emit longPressed(index);
+            if(receivers(SIGNAL(longPressed(const QModelIndex &))) == 0)
+                emit shortPressed(index);
+            else
+                emit longPressed(index);
         }
         else if(tapping >= SHORT_PRESS_DELAY)
         {
