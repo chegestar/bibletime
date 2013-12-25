@@ -43,15 +43,14 @@ class BtMiniUiPrivate
 {
 public:
     BtMiniUiPrivate(BtMiniUi *parent) : q_ptr(parent)
-    {
-        _mainWidget = 0;
-        _worksWidget = 0;
-        _searchWidget = 0;
-        _installerWidget = 0;
-        _settingsWidget = 0;
-        _installModel = 0;
-        _haveBible = false;
-    }
+        , _mainWidget(0)
+        , _worksWidget(0)
+        , _searchWidget(0)
+        , _installerWidget(0)
+        , _settingsWidget(0)
+        , _clippingsWidget(0)
+        , _installModel(0)
+        , _haveBible(false) {;}
     ~BtMiniUiPrivate()
     {
         ;
@@ -318,14 +317,13 @@ public:
         QObject::connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
-            BtMiniPanel::Installer << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
+            BtMiniPanel::Options << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
         p->layout()->setContentsMargins(0, 0, 0, 0);
         QFont f (p->font());
         f.setBold(true);
         p->setFont(f);
 
         // Put into layout
-        //QHBoxLayout *hl = new QHBoxLayout;
         QVBoxLayout *vl = new QVBoxLayout;
 
         BtMiniPanel *pn = new BtMiniPanel;
@@ -563,6 +561,40 @@ public:
         QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
     }
 
+    void createClippingsWidget()
+    {
+        Q_Q(BtMiniUi);
+        Q_ASSERT(_clippingsWidget == 0);
+        Q_CHECK_PTR(_mainWidget);
+
+        _clippingsWidget = new BtMiniWidget(_mainWidget);
+        _mainWidget->addWidget(_clippingsWidget);
+
+        BtMiniView *v = new BtMiniView(_clippingsWidget);
+        v->setTopShadow(true);
+
+        BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
+        v->setModel(m);
+
+        QPushButton *bb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+
+        QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
+        lb->setAlignment(Qt::AlignCenter);
+
+        BtMiniPanel *p = new BtMiniPanel;
+        p->addWidget(lb, Qt::AlignCenter);
+        p->addWidget(bb, Qt::AlignLeft);
+
+        QVBoxLayout *vl = new QVBoxLayout;
+        vl->addWidget(p);
+        vl->addWidget(v);
+
+        _clippingsWidget->setLayout(vl);
+
+        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
+        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    }
+
     void updateMainWidget()
     {
         Q_CHECK_PTR(_mainWidget);
@@ -641,6 +673,7 @@ public:
     QWidget                     *_searchWidget;
     QWidget                     *_installerWidget;
     QWidget                     *_settingsWidget;
+    QWidget                     *_clippingsWidget;
     QList<QWidget*>              _contextWidgets;
 
     BtMiniModulesModel          *_installModel;
@@ -658,7 +691,8 @@ public:
         Search = 1 << 3,
         Installer = 1 << 4,
         Settings = 1 << 5,
-        Context = 1 << 6
+        Context = 1 << 6,
+        Clippings = 1 << 7
     };
     QFlags<WidgetFlag>           _resetFlag;
     QList<WidgetFlag>            _widgetStack;
@@ -682,7 +716,7 @@ BtMiniUi::~BtMiniUi()
 
 BtMiniUi* BtMiniUi::instance()
 {
-    // for iOS this required to be in object file
+    // for iOS this required to be in implementation
     static BtMiniUi ui;
     return &ui;
 }
@@ -943,6 +977,21 @@ void BtMiniUi::activateSettings()
     }
 }
 
+void BtMiniUi::activateClippings()
+{
+    Q_D(BtMiniUi);
+
+    d->switchFrom();
+
+    d->_widgetStack.removeAll(BtMiniUiPrivate::Clippings);
+    d->_widgetStack.append(BtMiniUiPrivate::Clippings);
+
+    if(!d->_clippingsWidget)
+        d->createClippingsWidget();
+
+    d->_mainWidget->setCurrentWidget(d->_clippingsWidget);
+}
+
 void BtMiniUi::modulesReloaded()
 {
     Q_D(BtMiniUi);
@@ -984,5 +1033,18 @@ void BtMiniUi::modulesReloaded()
     SETUP_STANDARD_MODULE("standardHebrewMorphLexicon", "StrongsHebrew", tr("StrongsHebrew", "default Hebrew strongs lexicon"), \
         m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::HebrewParse));
     SETUP_STANDARD_MODULE("standardGreekMorphLexicon", "StrongsGreek", tr("StrongsGreek", "default Greek morph lexicon"), \
-        m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekParse));
+                          m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekParse));
+}
+
+void BtMiniUi::openWorksMenu()
+{
+    switch(BtMiniMenu::execMenu(QStringList() << "Install" << "Clippings"))
+    {
+    case 0:
+        activateInstaller();
+        break;
+    case 1:
+        activateClippings();
+        break;
+    }
 }

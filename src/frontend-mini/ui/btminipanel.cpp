@@ -85,9 +85,13 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 
         switch(a)
         {
-		case Close:
+        case Close:
                 bo = "Close";
-				bt = tr("Close");
+                bt = tr("Close");
+            break;
+        case Options:
+                bo = "Options";
+                bt = tr("Options");
             break;
         case Exit:
                 bo = "Exit";
@@ -104,10 +108,6 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
         case Settings:
                 bo = "Settings";
 				bt = tr("Settings");
-            break;
-		case Refresh:
-				bo = "Refresh";
-                bt = tr("Update Sources");
             break;
         default:
             Q_ASSERT(false);
@@ -289,8 +289,8 @@ void BtMiniPanel::controlActivated()
     case Settings:
         BtMiniUi::instance()->activateSettings();
         break;
-    case Refresh:
-        //BtMini::updateRemoteSources();
+    case Options:
+        BtMiniUi::instance()->openWorksMenu();
         break;
     default:
         Q_ASSERT(false);

@@ -63,6 +63,7 @@ public:
     static QPushButton* makeButton(QString text, QIcon icon);
 
     static void changeFontSize(QWidget *w, qreal factor);
+    //static void changeFontWeight(QWidget *w, qint weight);
 
     /** Return basic icon size for BtMini interface. */
     static QSize getIconSize(QIcon icon);
@@ -74,6 +75,7 @@ public slots:
     void activateInstaller();
     void activateSearch();
     void activateSettings();
+    void activateClippings();
 
     /** Go back, return false if nothing was done. */
     bool activatePreviousWidget();
@@ -83,6 +85,9 @@ public slots:
 
     /** */
     void modulesReloaded();
+
+    /** */
+    void openWorksMenu();
 
 
 private:
