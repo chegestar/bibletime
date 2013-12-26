@@ -36,9 +36,21 @@ kalemas@mail.ru :
 +       setup default modules occurs even on install sources reload
     clippings model
         based on text model
-        make List polymorph class
-        allow addition of verses, store current item in model
+            make List polymorph class
+            allow addition of verses, store current item in model
         read/write data to local storage
+        types of List
+            from Sword Module
+            search model
+                with highlighting
+                with scope
+            from Context
+                current context made from string
+                multiple commentary modules
+                multiple Dictionaty/Lexicon modules
+            clippings model
+                multipe entries of any module scoped to any range
+    allow notes
     context for pictures
     context for reeferences of type "look <this module ref>"
     sometimes list get displaced vertically (RSP Rom 9-15)
