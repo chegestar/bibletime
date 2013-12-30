@@ -114,7 +114,7 @@ public:
         void setOrientation(ScreenOrientation orientation)
         {
 #if QT_VERSION < 0x050000
-#if defined(Q_OS_SYMBIAN)
+#ifdef Q_OS_SYMBIAN
                 // If the version of Qt on the device is < 4.7.2, that attribute won't work
                 if (orientation != ScreenOrientationAuto) {
                     const QStringList v = QString::fromAscii(qVersion()).split(QLatin1Char('.'));
@@ -146,8 +146,8 @@ public:
             case ScreenOrientationLockLandscape:
                 attribute = Qt::WA_LockLandscapeOrientation;
                 break;
-            default:
             case ScreenOrientationAuto:
+            default:
                 attribute = Qt::WA_AutoOrientation;
                 break;
 #endif
@@ -165,7 +165,6 @@ public:
             show();
             showFullScreen();
         #elif defined (Q_OS_ANDROID)
-            //resize(QApplication::desktop()->screenGeometry().size());
             showMaximized();
         #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
             showFullScreen();
