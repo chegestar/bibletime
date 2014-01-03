@@ -315,8 +315,10 @@ public:
         QObject::connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
         QObject::connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search <<
-            BtMiniPanel::Options << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search
+            //<< BtMiniPanel::Options
+            << BtMiniPanel::Installer
+            << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
         p->layout()->setContentsMargins(0, 0, 0, 0);
         QFont f (p->font());
         f.setBold(true);
