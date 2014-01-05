@@ -2,7 +2,7 @@
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
     <id>com.qtproject.btmini</id>
     <name>BibleTime Mini</name>
-    <versionNumber>0.9.13</versionNumber>
+    <versionNumber>1.0.3</versionNumber>
     <description>Simple and convenient app for daily Bible reading</description>
     <initialWindow>
         <autoOrients>true</autoOrients>

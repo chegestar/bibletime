@@ -149,7 +149,7 @@ void BtMini::vibrate(int milliseconds)
 #endif
 
 #ifdef Q_OS_BLACKBERRY
-    static VibrationController v;
+    static bb::device::VibrationController v;
     if(v.isSupported())
         v.start(50, milliseconds);
 #endif
