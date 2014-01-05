@@ -1216,12 +1216,13 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     p->addWidget(b, Qt::AlignLeft);
     p->addWidget(c, Qt::AlignCenter);
 
-    QStringListModel* model = new QStringListModel(QStringList()
-        << "<h2><center>" + tr("Set default ") + "<br/>" + m->categoryName(m->category()) + "</center></h2>"
-        /// \todo add / remove from context
-        << "<h2><center>" + tr("Add Parallel") + "</center></h2>"
-        /// \todo remove module
-        << "<hr>" + m->aboutText(), view);
+    /// \todo add / remove from context
+    /// \todo remove module
+    QStringList items;
+    items << "<h2><center>" + tr("Set default ") + "<br/>" + m->categoryName(m->category()) + "</center></h2>";
+    if(!wm.isEmpty()) items << "<h2><center>" + tr("Add Parallel") + "</center></h2>";
+    items << "<hr>" + m->aboutText();
+    QStringListModel* model = new QStringListModel(items, view);
     model->setObjectName(m->name());
     view->setModel(model);
 
@@ -1265,6 +1266,8 @@ void BtMiniModuleTextModel::moduleContextClicked(const QModelIndex &index)
         }
         BtMiniUi::instance()->activateWorks();
     }
+    else if(index.model()->rowCount() < 3)
+        ;
     else if(index.row() == 1)
     {
         QModelIndex wi = BtMiniUi::instance()->worksView()->currentIndex();
