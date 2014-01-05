@@ -46,408 +46,13 @@
 
 QMutex BtMiniSwordMutex;
 
-class List
-{
-public:
-    List()
-    {
-        init();
-    }
-
-    List(QString &name)
-    {
-        init();
-
-        _name = name;
-
-        /// \todo view now not supports row without items at all
-        _maxEntries = 1;
-
-        _displayOptions = btConfig().getDisplayOptions();
-        _filterOptions = btConfig().getFilterOptions();
-
-        setModule(_name);
-    }
-
-    virtual ~List() {;}
-
-    void init()
-    {
-        _name = "";
-        _module = 0;
-        _maxEntries = 0;
-        _firstEntry = 0;
-        _hasScope = false;
-        _hasContents = false;
-    }
-
-    /** */
-    virtual int itemsCount()
-    {
-        return 0;
-    }
-
-    /** */
-    virtual QVariant data(int index, int role)
-    {
-        return QVariant();
-    }
-
-    /** */
-    void setModule(QString module)
-    {
-        if(module == "[Commentary]")
-            setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
-        else if(module.contains(','))
-            setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
-        else
-            setModule(CSwordBackend::instance()->findModuleByName(module));
-    }
-
-    void setModule(CSwordModuleInfo *module)
-    {
-        _module = module;
-
-        if(!_module)
-            return;
-
-        if(_module->type() == CSwordModuleInfo::Bible ||
-            _module->type() == CSwordModuleInfo::Commentary)
-        {
-            CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(_module);
-
-            _firstEntry = bm->lowerBound().getIndex();
-            _maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
-
-            _displayOptions.verseNumbers = true;
-            _displayOptions.simpleVerseNumber = true;
-        }
-
-        if(_module->type() == CSwordModuleInfo::Lexicon)
-        {
-            CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(_module);
-            _maxEntries = lm->entries().size();
-        }
-
-        if(_module->type() == CSwordModuleInfo::GenericBook)
-        {
-            CSwordBookModuleInfo *bm = qobject_cast<CSwordBookModuleInfo*>(_module);
-
-            sword::TreeKeyIdx tk(*bm->tree());
-            tk.root();
-            tk.firstChild();
-
-            Q_ASSERT(tk.getOffset() == 4);
-
-            tk.setPosition(sword::BOTTOM);
-
-            _maxEntries = tk.getOffset() / 4;
-        }
-    }
-
-    /** Set list contents to specified text. */
-    void setContents(QString contents)
-    {
-        _hasContents = true;
-        _contents = contents;
-
-        _maxEntries = 1;
-        _firstEntry = 0;
-    }
-
-    /** For sword module lists set scope of verses. Scope will not be set if \list is empty. */
-    virtual void setScope(sword::ListKey list)
-    {
-        _hasScope = list.Count() > 0;
-        _scopeMap.clear();
-
-        if(!_module)
-            return;
-
-        if(_module->type() == CSwordModuleInfo::Lexicon)
-        {
-            CSwordLexiconModuleInfo *mi = qobject_cast<CSwordLexiconModuleInfo*>(_module);
-
-            for(int i = 0; i < list.Count(); ++i)
-            {
-                CSwordLDKey k(list.GetElement(i), mi);
-                _scopeMap.append(mi->entries().indexOf(k.key()));
-            }
-        }
-        else
-        {
-            for(int i = 0; i < list.Count(); ++i)
-                _scopeMap.append(list.GetElement(i)->getIndex());
-        }
-
-        Q_ASSERT(!_scopeMap.contains(-1));
-    }
-
-    /** Factory */
-    static List* fromModuleName(QString module)
-    {
-        CSwordModuleInfo *mi;
-        if(module == "[Commentary]")
-            mi = btConfig().getDefaultSwordModuleByType("standardCommentary");
-        else if(module.contains(','))
-            mi = CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0));
-        else
-            mi = CSwordBackend::instance()->findModuleByName(module);
-
-        if(!mi) return 0;
-
-        if(mi->type() == CSwordModuleInfo::Bible || mi->type() == CSwordModuleInfo::Commentary)
-            return BibleList(mi);
-        if(mi->type() == CSwordModuleInfo::Lexicon)
-            return DictList(mi);
-        if(mi->type() == CSwordModuleInfo::GenericBook)
-            return BookList(mi);
-
-        return 0;
-    }
-
-    QString             _name;
-
-    CSwordModuleInfo   *_module;
-
-    long                _maxEntries;
-    long                _firstEntry;
-
-    DisplayOptions      _displayOptions;
-    FilterOptions       _filterOptions;
-
-    bool                _hasScope;
-    QVector<int>        _scopeMap;
-
-    bool                _hasContents;
-    QVariant            _contents;
-};
-
-class TextList : public List
-{
-public:
-    TextList(QStringList textItems)
-        : _textItems(textItems) {;}
-
-    int itemsCount() { return _textItems.size(); }
-
-    QVariant data(int index, int role)
-    {
-        if(role == Qt::DisplayRole)
-            return _textItems[index];
-        return List::data(index, role);
-    }
-
-private:
-    QStringList _textItems;
-
-};
-
-class ModuleList : public List
-{
-protected:
-    ModuleList(CSwordModuleInfo *module)
-        : _module(module)
-        , _moduleName(module->name())
-        , _maxEntries(0), _firstEntry(0)
-        , _displayOptions(btConfig().getDisplayOptions())
-        , _filterOptions(btConfig().getFilterOptions()) {;}
-
-
-public:
-    int itemsCount() { return _scopeMap.size() > 0 ? _scopeMap.size() : _maxEntries - _firstEntry; }
-
-    virtual QVariant data(int index, int role)
-    {
-        switch(role)
-        {
-        case BtMini::PreviewRole:
-        {
-            // there was issue with VerseKey::freshtext at simoultaneous call
-            static CSwordVerseKey vk(_module);
-            vk.setModule(list->_module);
-            vk.setIndex(index.row() + _firstEntry);
-            int v = vk.getVerse();
-
-            if(v == 0)
-                return QString();
-
-            QString r("<font color='#aaaaaa'>");
-
-            if(v == 1)
-                r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
-                "<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
-
-            if(v > 0)
-                r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
-
-            return r + "</font>";
-        }
-        case BtBookshelfModel::ModuleNameRole:
-            return _moduleName;
-        }
-        return List::data(index, role);
-    }
-
-    virtual void setScope(sword::ListKey list)
-    {
-        _hasScope = list.Count() > 0;
-        _scopeMap.clear();
-
-        for(int i = 0; i < list.Count(); ++i)
-            _scopeMap.append(list.GetElement(i)->getIndex());
-    }
-
-    inline int actualIndex(int index) const
-    {
-        return _hasScope ? _scopeMap[index] : index + _firstEntry;
-    }
-
-protected:
-    CSwordModuleInfo   *_module;
-    QString             _moduleName;
-
-    long                _maxEntries;
-    long                _firstEntry;
-
-    DisplayOptions      _displayOptions;
-    FilterOptions       _filterOptions;
-
-    QVector<int>        _scopeMap;
-
-};
-
-class BibleList : public ModuleList
-{
-public:
-    BibleList(CSwordModuleInfo *module)
-        : ModuleList(module)
-    {
-        CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(_module);
-
-        _firstEntry = bm->lowerBound().getIndex();
-        _maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
-
-        _displayOptions.verseNumbers = true;
-        _displayOptions.simpleVerseNumber = true;
-    }
-
-    QVariant data(int index, int role)
-    {
-        if(role == Qt::DisplayRole)
-        {
-            ;
-        }
-        return ModuleList::data(index, role);
-    }
-
-    CSwordVerseKey getKey(int index) const
-    {
-        QMutexLocker locker(&BtMiniSwordMutex);
-
-        CSwordVerseKey key(_module);
-
-        key.setIntros(true);
-        key.setIndex(actualIndex(index));
-
-        return key;
-    }
-
-private:
-
-};
-
-class DictList : public ModuleList
-{
-public:
-    DictList(CSwordModuleInfo *module)
-        : ModuleList(module)
-    {
-        CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(_module);
-        _maxEntries = lm->entries().size();
-    }
-
-    QVariant data(int index, int role)
-    {
-        if(role == Qt::DisplayRole)
-        {
-            ;
-        }
-        return ModuleList::data(index, role);
-    }
-
-
-    virtual void setScope(sword::ListKey list)
-    {
-        _hasScope = list.Count() > 0;
-        _scopeMap.clear();
-
-        CSwordLexiconModuleInfo *mi = qobject_cast<CSwordLexiconModuleInfo*>(_module);
-
-        for(int i = 0; i < list.Count(); ++i)
-        {
-            CSwordLDKey k(list.GetElement(i), mi);
-            _scopeMap.append(mi->entries().indexOf(k.key()));
-        }
-    }
-
-
-private:
-
-};
-
-class BookList : public ModuleList
-{
-public:
-    BookList(CSwordModuleInfo *module)
-        : ModuleList(module)
-    {
-        CSwordBookModuleInfo *bm = qobject_cast<CSwordBookModuleInfo*>(_module);
-
-        sword::TreeKeyIdx tk(*bm->tree());
-        tk.root();
-        tk.firstChild();
-
-        Q_ASSERT(tk.getOffset() == 4);
-        tk.setPosition(sword::BOTTOM);
-
-        _maxEntries = tk.getOffset() / 4;
-    }
-
-    QVariant data(int index, int role)
-    {
-        if(role == Qt::DisplayRole)
-        {
-            ;
-        }
-        else if(role == BtMini::PreviewRole)
-        {
-            CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(_module);
-            CSwordTreeKey k(b->tree(), b);
-
-            k.setIndex(index * 4);
-
-            return QString("<word-breaks/><font color='#aaaaaa'><center>%1</center></font><font size='1'><br>"
-                           "&nbsp;</br></font>").arg(k.key().replace('/', ' '));
-        }
-        return ModuleList::data(index, role);
-    }
-
-private:
-
-};
-
-
-
 class BtMiniModuleTextModelPrivate
 {
 public:
     BtMiniModuleTextModelPrivate()
     {
-        _isSearch = false;
+		_isSearch = false;
         _singleModule = false;
-
-        //_lists << TextList(QStringList() << "1" << "2");
     }
     
     ~BtMiniModuleTextModelPrivate()
@@ -455,23 +60,160 @@ public:
         ;
     }
 
+	struct List
+	{
+		List()
+		{
+			init();
+		}
+
+		List(QString &name)
+		{
+			init();
+
+			_name = name;
+
+			// TODO view now not supports row without items at all
+			_maxEntries = 1;
+
+            _displayOptions = btConfig().getDisplayOptions();
+            _filterOptions = btConfig().getFilterOptions();
+
+			setModule(_name);
+		}
+
+		void init()
+		{
+			_name = "";
+			_module = 0;
+			_maxEntries = 0;
+			_firstEntry = 0;
+			_hasScope = false;
+			_hasContents = false;
+		}
+
+		/** */
+		void setModule(QString module)
+		{
+			if(module == "[Commentary]")
+                setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
+            else if(module.contains(','))
+                setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
+			else
+				setModule(CSwordBackend::instance()->findModuleByName(module));
+		}
+
+		void setModule(CSwordModuleInfo *module)
+		{
+			_module = module;
+
+			if(!_module)
+				return;
+
+			if(_module->type() == CSwordModuleInfo::Bible ||
+				_module->type() == CSwordModuleInfo::Commentary)
+			{
+				CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(_module);
+
+				_firstEntry = bm->lowerBound().getIndex();
+				_maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
+
+                _displayOptions.verseNumbers = true;
+                _displayOptions.simpleVerseNumber = true;
+			}
+
+            if(_module->type() == CSwordModuleInfo::Lexicon)
+			{
+				CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(_module);
+				_maxEntries = lm->entries().size();
+			}
+
+            if(_module->type() == CSwordModuleInfo::GenericBook)
+            {
+                CSwordBookModuleInfo *bm = qobject_cast<CSwordBookModuleInfo*>(_module);
+
+                sword::TreeKeyIdx tk(*bm->tree());
+                tk.root();
+                tk.firstChild();
+
+                Q_ASSERT(tk.getOffset() == 4);
+
+                tk.setPosition(sword::BOTTOM);
+
+                _maxEntries = tk.getOffset() / 4;
+            }
+		}
+
+		/** Set list contents to specified text. */
+        void setContents(QString contents)
+		{
+			_hasContents = true;
+			_contents = contents;
+
+			_maxEntries = 1;
+			_firstEntry = 0;
+		}
+
+		/** For sword module lists set scope of verses. Scope will not be set if \list is empty. */
+        void setScope(sword::ListKey list)
+		{
+			_hasScope = list.Count() > 0;
+			_scopeMap.clear();
+
+            if(!_module)
+                return;
+
+            if(_module->type() == CSwordModuleInfo::Lexicon)
+            {
+                CSwordLexiconModuleInfo *mi = qobject_cast<CSwordLexiconModuleInfo*>(_module);
+
+                for(int i = 0; i < list.Count(); ++i)
+                {
+                    CSwordLDKey k(list.GetElement(i), mi);
+                    _scopeMap.append(mi->entries().indexOf(k.key()));
+                }
+            }
+            else
+            {
+                for(int i = 0; i < list.Count(); ++i)
+                    _scopeMap.append(list.GetElement(i)->getIndex());
+            }
+
+            Q_ASSERT(!_scopeMap.contains(-1));
+        }
+
+		QString             _name;
+
+		CSwordModuleInfo   *_module;
+
+		long                _maxEntries;
+		long                _firstEntry;
+
+		DisplayOptions      _displayOptions;
+		FilterOptions       _filterOptions;
+
+		bool                _hasScope;
+		QVector<int>        _scopeMap;
+
+		bool                _hasContents;
+		QVariant            _contents;
+	};
+
     CSwordVerseKey indexToVerseKey(const QModelIndex &index) const
     {
+
         Q_ASSERT(indexDepth(index) == 2);
 
-        const BibleList *l = dynamic_cast<const BibleList *>(indexList(index));
-        if(l)
-            return l->getKey(index.row());
-        return CSwordVerseKey(0);
+		const List *l = indexList(index);
 
-//        QMutexLocker locker(&BtMiniSwordMutex);
+        QMutexLocker locker(&BtMiniSwordMutex);
         
-//		CSwordVerseKey key(l->_module);
+		CSwordVerseKey key(l->_module);
 
-//		key.setIntros(true);
-//		key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() + l->_firstEntry);
+		key.setIntros(true);
+		key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() + l->_firstEntry);
 		
-//        return key;
+        return key;
     }
 
     /** Parents count. */
@@ -521,7 +263,7 @@ public:
     /** */
     void insertModule(int i, QString module)
     {
-        _lists.insert(i, List::fromModuleName(module));
+		_lists.insert(i, List());
 
 		// insert new option
 		if(_lists.size() > _ld->levelOptionsCount())
@@ -536,7 +278,7 @@ public:
 				_ld->setLevelOption(ii, os[ii]);
 		}
 
-        setupModule(i, module);
+		setupModule(i, module);
     }
 
     /** */
@@ -549,9 +291,8 @@ public:
 	/** */
 	void setupModule(int i, QString module)
 	{
-        _lists[i] = List::fromModuleName(module);
+		_lists[i] = List(module);
 
-        /// \todo move to logic
 		BtMiniLevelOption o;
 
 		_isSearch = false;
@@ -685,16 +426,15 @@ int BtMiniModuleTextModel::rowCount(const QModelIndex &parent) const
     case 0:
         return d->_lists.size();
     case 1:
-        return d->indexList(parent)->itemsCount();
-//		{
-//            const List *l = d->indexList(parent);
+		{
+            const BtMiniModuleTextModelPrivate::List *l = d->indexList(parent);
 
-//			if(l->_hasScope)
-//				return l->_scopeMap.size();
-//            if(l->_hasContents)
-//                return 1;
-//			return l->_maxEntries;
-//		}
+			if(l->_hasScope)
+				return l->_scopeMap.size();
+            if(l->_hasContents)
+                return 1;
+			return l->_maxEntries;
+		}
     }
 
     return 0;
@@ -740,49 +480,48 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
     case BtMini::PreviewUpdateRole:
 	case BtMini::PreviewRole:
 		{
-            const List *list = d->indexList(index);
-            list->data(index.row(), role);
+            const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
 
             // put to thread processing
-//            if(role == BtMini::PreviewUpdateRole)
-//            {
-//                ;
-//            }
+            if(role == BtMini::PreviewUpdateRole)
+            {
+                ;
+            }
 
 
-//            if(list->_module->type() == CSwordModuleInfo::GenericBook)
-//            {
-//                CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(list->_module);
-//                CSwordTreeKey k(b->tree(), b);
+            if(list->_module->type() == CSwordModuleInfo::GenericBook)
+            {
+                CSwordBookModuleInfo *b = qobject_cast<CSwordBookModuleInfo*>(list->_module);
+                CSwordTreeKey k(b->tree(), b);
 
-//                k.setIndex(index.row() * 4);
+                k.setIndex(index.row() * 4);
 
-//                return QString("<word-breaks/><font color='#aaaaaa'><center>%1</center></font><font size='1'><br>"
-//                               "&nbsp;</br></font>").arg(k.key().replace('/', ' '));
-//            }
-//            else
-//            {
+                return QString("<word-breaks/><font color='#aaaaaa'><center>%1</center></font><font size='1'><br>"
+                               "&nbsp;</br></font>").arg(k.key().replace('/', ' '));
+            }
+            else
+            {
 
-//                // there was issue with VerseKey::freshtext at simoultaneous call
-//                static CSwordVerseKey vk(list->_module);
-//                vk.setModule(list->_module);
-//                vk.setIndex(index.row() + list->_firstEntry);
-//                int v = vk.getVerse();
+                // there was issue with VerseKey::freshtext at simoultaneous call
+                static CSwordVerseKey vk(list->_module);
+                vk.setModule(list->_module);
+                vk.setIndex(index.row() + list->_firstEntry);
+                int v = vk.getVerse();
 
-//                if(v == 0)
-//                    return QString();
+                if(v == 0)
+                    return QString();
 
-//                QString r("<font color='#aaaaaa'>");
+                QString r("<font color='#aaaaaa'>");
 
-//                if(v == 1)
-//                    r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
-//                    "<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
+                if(v == 1)
+                    r += QString("<center><b><font size='+1'>%1 %2</font></b></center>"
+                    "<font size='1'><br>&nbsp;</br></font>").arg(vk.book()).arg(vk.getChapter());
 
-//                if(v > 0)
-//                    r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
+                if(v > 0)
+                    r += QString("<center>%1</center></font><font size='1'><br>&nbsp;</br>").arg(v);
 
-//                return r + "</font>";
-//            }
+                return r + "</font>";
+            }
 		}
 
 	case Qt::DisplayRole:
@@ -794,7 +533,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 			case 2:
 				{
 					QString r;
-                    const List *l = d->indexList(index);
+					const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
 
 					if(l->_module && (l->_module->type() == CSwordModuleInfo::Bible ||
 						l->_module->type() == CSwordModuleInfo::Commentary))
@@ -852,7 +591,7 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
     case BtMini::PlaceShortRole:
     case BtMini::PlaceRole:
 		{
-            const List *l = d->indexList(index);
+			const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
 
 			if(l->_module)
 			{
@@ -925,7 +664,7 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString keyName) const
 
 	Q_ASSERT(!d->_lists[i]._hasScope);
 
-    const List *l = &d->_lists[i];
+	const BtMiniModuleTextModelPrivate::List *l = &d->_lists[i];
 
     if(!l->_module)
         return QModelIndex();
@@ -1062,7 +801,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
         for(int i = 0; i < modules.size(); ++i)
         {
-            List *l = &m->d_func()->_lists[i];
+            BtMiniModuleTextModelPrivate::List *l = &m->d_func()->_lists[i];
 
             if(modules[i] == "[Contents]")
             {
