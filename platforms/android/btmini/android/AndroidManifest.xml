@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest package="org.qtproject.bibletimemini" android:installLocation="auto" android:versionName="1.0.0" android:versionCode="11" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="12" package="org.qtproject.bibletimemini" android:installLocation="auto" android:versionName="1.0.3">
     <application android:name="org.qtproject.qt5.android.bindings.QtApplication" android:icon="@drawable/icon" android:label="BibleTime Mini">
-        <activity android:screenOrientation="unspecified" android:name="org.qtproject.bibletimemini.MiniActivity" android:label="BibleTime Mini" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation">
+        <activity android:name="org.qtproject.bibletimemini.MiniActivity" android:label="BibleTime Mini" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -31,8 +31,8 @@
             <!-- Splash screen -->
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="14"/>
-    <supports-screens android:normalScreens="true" android:anyDensity="true" android:smallScreens="true" android:xlargeScreens="true" android:largeScreens="true"/>
+    <uses-sdk android:targetSdkVersion="14" android:minSdkVersion="9"/>
+    <supports-screens android:largeScreens="true" android:normalScreens="true" android:xlargeScreens="true" android:smallScreens="true" android:anyDensity="true"/>
     <!-- %%INSERT_PERMISSIONS -->
     <!-- %%INSERT_FEATURES -->
     <uses-permission android:name="android.permission.INTERNET"/>
