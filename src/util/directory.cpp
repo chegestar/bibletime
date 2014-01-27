@@ -212,7 +212,7 @@ bool initDirectoryCache() {
     cachedUserHomeDir.reset(new QDir(QCoreApplication::applicationDirPath()));
 #elif defined(ANDROID)
     cachedUserHomeDir.reset(new QDir(qgetenv("EXTERNAL_STORAGE")));
-    if(!cachedUserHomeDir->exists() || !cachedUserHomeDir->isReadable())
+    if(!cachedUserHomeDir->exists() || !QFileInfo(cachedUserHomeDir->absolutePath()).isWritable())
     {
         qWarning() << "No external storage found, use application home.";
         cachedUserHomeDir->setPath(QDir::homePath());
