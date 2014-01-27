@@ -34,6 +34,7 @@ kalemas@mail.ru :
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
 +       current item sould be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
+    Open module selection dialog on new list opened
     clippings model
         based on text model
             make List polymorph class
@@ -193,4 +194,3 @@ Sword
 BibleTime
     set BT_MINI where needed
     static QDir initialization in directory.cpp causes exception on wince
-
