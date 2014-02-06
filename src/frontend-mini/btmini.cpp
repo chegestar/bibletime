@@ -84,6 +84,16 @@ extern "C" {
 
 #ifdef Q_OS_SYMBIAN
 #include <hwrmvibra.h>
+
+// required for new (std::nothrow) [] in cswordmoduleinfo.cpp
+namespace std
+{
+const nothrow_t& GetNoThrowObj()
+{
+    static nothrow_t nt;
+    return nt;
+}
+}
 #endif
 
 #ifdef Q_OS_IOS
