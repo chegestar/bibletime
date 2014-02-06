@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.0.4
+VERSION = 1.0.5
 
 CONFIG += clucene svg xml mini
 
@@ -22,7 +22,7 @@ SOURCES += \
     ../../../src/frontend-mini/view/btminiview.cpp \
     ../../../src/frontend-mini/ui/btminimenu.cpp \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
-    ../../../src/frontend-mini/ui/btminiui.cpp
+    ../../../src/frontend-mini/ui/btminiui.cpp \
 
 
 HEADERS += \
@@ -51,7 +51,8 @@ OTHER_FILES += \
 
 
 # BtMini translations
-TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
+TRANSLATIONS += \
+	../../../src/frontend-mini/translations/bibletimemini_ru.ts \
 
 
 # Android platform
@@ -81,7 +82,7 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/copyright \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
-    qtc_packaging/debian_harmattan/changelog
+    qtc_packaging/debian_harmattan/changelog \
 }
 
 # Symbian platform
