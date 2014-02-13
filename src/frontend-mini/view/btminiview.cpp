@@ -783,6 +783,7 @@ public:
         _rect            = QRect(_rect.left(), 0, _rect.width(), 0);
         _visualCenter    = 0.0;
         _selectionEnd    = _selectionStart = 0;
+        _selectionMode   = false;
 
         foreach(BtMiniViewItem *i, _items)
             delete i;
@@ -950,7 +951,7 @@ public:
         return index.row() - _items[0]->_row;
     }
 
-    /** Return rect for given model index. */
+    /** Return rect for given model index. Subview coordinates. */
     QRect indexRect(const QModelIndex &index) const
     {
         Q_ASSERT(index.parent() == _parentIndex);
@@ -973,7 +974,7 @@ public:
         return i == -1 ? QModelIndex() : modelIndex(_items[i]->_row);
     }
 
-    /** Text selection functions. */
+    /** Edit text selection, adjust start and end of selection. */
     void updateSelection(bool start, QPoint p)
     {
         int pi = xyItem(p);
@@ -1229,6 +1230,7 @@ public:
             }
         }
     }
+
     void clearSelection()
     {
         for(int i = 0; i < _items.size(); ++i)
@@ -1239,6 +1241,23 @@ public:
         }
         _selectionStart = _selectionEnd = 0;
     }
+
+//    /** Return point in subview's coordinate system that is visual start or end of text selection. */
+//    QPoint getSelectionPoint(bool start)
+//    {
+//        int i = 0;
+//        for(; ; ++i)
+//        {
+//            if(_items[i] == _selectionStart && start)
+//                break;
+//            if(_items[i] == _selectionEnd && !start)
+//                break;
+//            if(i == _items.size() - 1)
+//                return QPoint();
+//        }
+
+//        int c = start ? _items[i]->_docCursor.selectionStart() : _items[i]->_docCursor.selectionEnd();
+//    }
 
 public:
     /** Items. */
@@ -1259,9 +1278,11 @@ public:
         thread-computed-items from center or top. */
     float                   _visualCenter;
 
-    /** Text selection data, \param *Point is screen relative coordinates that need to be updated on BtMiniView::scroll(). */
+    /** Text selection data. When selection mode is active, changes to list should be dropped. */
     BtMiniViewItem*         _selectionStart;
     BtMiniViewItem*         _selectionEnd;
+    bool                    _selectionMode;
+    /** Those points are in space of subviews, most left subview is 0 x. */
     QPoint                  _selectionStartPoint;
     QPoint                  _selectionEndPoint;
 
@@ -2360,6 +2381,15 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 {
     Q_D(BtMiniView);
 
+    /// \test
+    if(e->button() == Qt::RightButton)
+    {
+        if(d->currentSubView()->_selectionMode)
+            selectionEnd();
+        else
+            selectionStart();
+    }
+
     if(e->button() != Qt::LeftButton || !d->_mouseDown)
         return;
 
@@ -2439,13 +2469,13 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 
 
         // TEST text selection
-        {
-            //const QPoint gp(e->pos() + QPoint(d->_vx, 0));
-            //const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
-            //d->currentSubView()->updateSelection(false, vp);
+//        {
+//            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
+//            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
+//            d->currentSubView()->updateSelection(false, vp);
 
-            //qDebug() << indexAt(e->pos()).data();
-        }
+//            qDebug() << indexAt(e->pos()).data();
+//        }
 	}
     else
     {
@@ -2697,6 +2727,45 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 
 	if(index.isValid())
         emit currentChanged(index);
+}
+
+void BtMiniView::selectionStart()
+{
+    Q_D(BtMiniView);
+    d->currentSubView()->_selectionMode = true;
+
+    // place selection markers to the currentIndex
+    QRect r(d->currentSubView()->indexRect(d->currentSubView()->modelIndex()));
+    QPoint vp(QPoint(d->_vx, 0) - d->currentSubView()->contentsRect().topLeft().toPoint());
+    r.moveTopLeft(vp);
+
+    d->currentSubView()->_selectionStartPoint = r.topLeft();
+    d->currentSubView()->_selectionEndPoint = r.bottomRight();
+
+    // update to selection
+    d->currentSubView()->updateSelection(true, d->currentSubView()->_selectionStartPoint);
+    d->currentSubView()->updateSelection(false, d->currentSubView()->_selectionEndPoint);
+
+    qDebug() << d->currentSubView()->_selectionStartPoint << d->currentSubView()->_selectionEndPoint
+             << vp << d->currentSubView()->_selectionMode;
+
+//    for(int i = 0; i < d->currentSubView()->_items.size(); ++i)
+//    {
+//        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionStart)
+//            d->currentSubView()->_selectionStartPoint = d->currentSubView()->itemXy(i);
+//        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionEnd)
+//        {
+//            d->currentSubView()->_selectionEndPoint = d->currentSubView()->itemXy(i);
+//            d->currentSubView()->_selectionEndPoint.rx() += d->currentSubView()->_items[i]->width();
+//            d->currentSubView()->_selectionEndPoint.ry() += d->currentSubView()->_items[i]->height();
+//        }
+//    }
+}
+
+void BtMiniView::selectionEnd()
+{
+    Q_D(BtMiniView);
+    d->currentSubView()->_selectionMode = false;
 }
 
 void BtMiniView::scrollTo(QVariant data)

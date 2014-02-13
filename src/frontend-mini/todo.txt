@@ -34,7 +34,14 @@ kalemas@mail.ru :
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
 +       current item sould be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
+1   selection behaivior
+        draw selection markers
+        move selection markers
+2   bookmarks model
+3   addition menus
     Open module selection dialog on new list opened
+        side slide module selection list would be good, then slide on top and module list is shown
+    plus icon instead of inactive arrow in top panel
     clippings model
         based on text model
             make List polymorph class

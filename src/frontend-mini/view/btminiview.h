@@ -110,6 +110,12 @@ public slots:
         also current. */
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 
+    /** Selecting text or items, by default contents of currectIndex are selected. As long
+        as selection mode is active two selection markers for start and end of selection
+        are displayed. */
+    void selectionStart();
+    void selectionEnd();
+
 signals:
     /** Emitted when user have long pressed item.*/
     void shortPressed(const QModelIndex &index);
