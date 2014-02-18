@@ -22,6 +22,7 @@ SOURCES += \
     ../../../src/frontend-mini/view/btminiview.cpp \
     ../../../src/frontend-mini/ui/btminimenu.cpp \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
+    ../../../src/frontend-mini/ui/btministyle.cpp \
     ../../../src/frontend-mini/ui/btminiui.cpp \
 
 
