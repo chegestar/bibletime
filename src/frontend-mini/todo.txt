@@ -1,47 +1,35 @@
 kalemas@mail.ru :
 === tasks ======================================================================
-%   fix webkit word context
-%   fix images
-+   apply settings without restart
-+	download locales when refresh sources
-+		remove this functionality
-+		decide how to do this, because 5 minutes for update is too long
-+	android: listen applicationStateChange    prototyping QML user interface
-+       refresh remote sources
-+       create model of available modules
-+   bug: switching style in options does not switch color scheme after mini styles
-+   in non-mini styles make scrollbar wider
-+   refresh modelsmodel instead of recreate, do it in thread
-+   add smoothness to scrollbar in btminiview
-+   RtoL module description support
-+   menu scrollbar of different width, make depend on mainwidget font size
-    text/verses selection facility
-        qtextdocument is limited, we ought to wait qwebengine
-+   make module/place selection, context fullscreen
-+       new system for interface interaction
-+           * create widget instances
-+           * get current widget
-+           * switch active widget and do work on switching (some on activate and some on deactivate)
-+           * recreate widgets and set other parameters of widgets
-+           * create stack of widgets for context display
--           * flexible system
--           * make it able to display two or more widgets at same time
--           * animated transisions
-                delay for next release because may affect perfomance
-?   restore search term during one session
 +   bug: somewhat with scrolling on tips if opened after first Bible installation
 +   android: style switching does not working properly
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
 +       current item sould be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
-1   selection behaivior
+    text/verses selection facility
+1       selection behaivior
         draw selection markers
         move selection markers
-2   bookmarks model
-3   addition menus
+2       bookmarks model
+3       addition menus
+    android: scrolling does not stops if app was put into bg
+    symbian: text input in search view does not activate sip
+    symbian: S60 style draw white text on lime green after restart
+    restore search term during one session
+    find correct facility to retrieve icons
+        i need some additional icons, its best for if they would be provided by style
+            add new view at left/right
+        whole set should be provided for night mode
+            nightmode by style is preffered in Qt, just like Symbian styles
+            but other impletation for nightmode would be, for example by application palette
+    android: sometimes failed to start after app was put into bg
+    with mini style
+
+    make it able to display two or more widgets at same time
     Open module selection dialog on new list opened
         side slide module selection list would be good, then slide on top and module list is shown
     plus icon instead of inactive arrow in top panel
+    better way to deploy sword locales
+    save search string durring session(after ui recreate)
     clippings model
         based on text model
             make List polymorph class
@@ -60,18 +48,17 @@ kalemas@mail.ru :
                 multipe entries of any module scoped to any range
     allow notes
     context for pictures
-    context for reeferences of type "look <this module ref>"
-    sometimes list get displaced vertically (RSP Rom 9-15)
-    save search string durring session(after ui recreate)
+    context for references of type "look at <this module ref>"
+?   sometimes list get displaced vertically (RSP Rom 9-15)
     improve search query with * in AND mode
-    when decode context info KJV is used and cause displacement
+    when decode context info KJV is used and cause incorrect content
 ?   auto-scrolling for search and context views
     resize subview width, its primarily for tablets
         need to add two functions: expand window, contract window
     make sword text model and install model suitable for main repo
     move CInfoDisplay text processing to Core
-	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
-		there is bug with highlighting, search for strong:G25 highlights strong:G2523
+    search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
+        there is bug with highlighting, search for strong:G25 highlights strong:G2523
     new look and feel, ios style, fusion-based
     clippings
         reorganize ui
@@ -80,6 +67,7 @@ kalemas@mail.ru :
     in qtextdocument center headers
         make own filters for before:/after: selectors
             it is not simple, because we can not obtain :after insertion point and resolve correct selector
+		qtextdocument is limited, we ought to wait qwebengine
     apply settings on button press
 +   always open Settings on main page, not Handbook
 +       reimplement windows switching

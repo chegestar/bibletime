@@ -399,6 +399,7 @@ public:
         QObject::connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
         QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
+        QObject::connect(v, SIGNAL(selected(const QModelIndex &)), m, SLOT(selectedIndexes(const QModelIndex &)));
 
         m->setIndicators(b1, b3, b4, b2);
 

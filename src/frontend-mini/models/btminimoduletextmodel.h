@@ -68,6 +68,9 @@ public slots:
     /** */
     void openMenu(const QModelIndex &index);
 
+    /** */
+    void selectedIndexes(const QModelIndex &index);
+
     /** For pressed module in BtBookshelfModel. */
     void openModuleMenu(const QModelIndex &index);
 

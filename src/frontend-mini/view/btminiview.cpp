@@ -743,7 +743,7 @@ public:
 
     /** Render subview to screen or cache.
         \param rect is screen area, that needs to be painted.
-        \param clipping is in local subview coordinates. */
+        \param clipping is in local subview coordinates (x: 0 == this subview 0). */
     void paint(QPainter *painter, const QRect &rect, const QRect &clipping)
     {
         QPair<int, int> _cachedTopItem;
@@ -774,6 +774,14 @@ public:
 
             x += i->size().width();
         }
+
+        // selection
+        if(_selectionMode)
+        {
+            static QImage handle(":/handle.svg");
+            painter->drawImage(_selectionStartArea, handle);
+            painter->drawImage(_selectionEndArea, handle.mirrored(true, false));
+        }
     }
 
     void clear()
@@ -782,8 +790,8 @@ public:
         _resizeCursor    = -1;
         _rect            = QRect(_rect.left(), 0, _rect.width(), 0);
         _visualCenter    = 0.0;
-        _selectionEnd    = _selectionStart = 0;
-        _selectionMode   = false;
+        _selectionEndItem = _selectionStartItem = 0;
+        _selectionMode = _selectionMoveStartMarker = _selectionMoveEndMarker = false;
 
         foreach(BtMiniViewItem *i, _items)
             delete i;
@@ -846,8 +854,9 @@ public:
 
         _rect.moveTop(vertical);
 
-        if(ot == (int)_rect.top())
-            return;
+        int d = ot - (int)_rect.top();
+
+        if(d == 0) return;
 
         //qDebug() << "setContentsTop" << vertical;
 
@@ -862,6 +871,10 @@ public:
                 qDebug() << "Height does not equal to cached value" << height << contentsRect().height();
 		}
 #endif
+
+        if(_selectionMode)
+            _selectionStartArea.moveBottom(_selectionStartArea.bottom() - d),
+            _selectionEndArea.moveBottom(_selectionEndArea.bottom() - d);
     }
     void setContentsLeft(int horizontal)
     {
@@ -869,6 +882,13 @@ public:
     }
     void setContentsSize(int w, int h)
     {
+        if(_selectionMode)
+        {
+            qreal d = w / _rect.width();
+            _selectionStartArea.moveLeft(_selectionStartArea.left() * d);
+            _selectionEndArea.moveLeft(_selectionEndArea.left() * d);
+        }
+
         _rect.setWidth(w);
         _rect.setHeight(h);
     }
@@ -974,9 +994,11 @@ public:
         return i == -1 ? QModelIndex() : modelIndex(_items[i]->_row);
     }
 
-    /** Edit text selection, adjust start and end of selection. */
+    /** Edit text selection, adjust start and end of selection. Point is in subview local space. */
     void updateSelection(bool start, QPoint p)
     {
+        p.ry() -= contentsRect().top();
+
         int pi = xyItem(p);
         if(pi < 0)
             return;
@@ -987,7 +1009,7 @@ public:
             int cc = _items[pi]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
             if(cc == -1)
                 cc = td->rootFrame()->lastPosition();
-            if(!_selectionStart)
+            if(!_selectionStartItem)
             {
                 // select word
                 QTextCursor tc = td->rootFrame()->firstCursorPosition();
@@ -995,7 +1017,7 @@ public:
                 tc.setPosition(cc, QTextCursor::KeepAnchor);
                 tc.select(QTextCursor::WordUnderCursor);
                 _items[pi]->_docCursor = tc;
-                _selectionStart = _selectionEnd = _items[pi];
+                _selectionStartItem = _selectionEndItem = _items[pi];
             }
             else
             {
@@ -1003,9 +1025,9 @@ public:
                 int ei;
                 for(int i = 0; i < _items.size(); ++i)
                 {
-                    if(_items[i] == _selectionStart)
+                    if(_items[i] == _selectionStartItem)
                         si = i;
-                    if(_items[i] == _selectionEnd)
+                    if(_items[i] == _selectionEndItem)
                         ei = i;
                 }
 
@@ -1053,10 +1075,10 @@ public:
                                 _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
                         }
 
-                        _selectionStart = _items[pi];
+                        _selectionStartItem = _items[pi];
                     }
                     if(ei < pi)
-                        _selectionEnd = _items[pi];
+                        _selectionEndItem = _items[pi];
                 }
                 else
                 {
@@ -1109,10 +1131,10 @@ public:
                                 _items[pi]->_docCursor.setPosition(p, QTextCursor::KeepAnchor);
                         }
 
-                        _selectionEnd = _items[pi];
+                        _selectionEndItem = _items[pi];
                     }
                     if(si > pi)
-                        _selectionStart = _items[pi];
+                        _selectionStartItem = _items[pi];
                 }
 
 
@@ -1239,24 +1261,16 @@ public:
                 continue;
             _items[i]->_docCursor = QTextCursor();
         }
-        _selectionStart = _selectionEnd = 0;
+        _selectionStartItem = _selectionEndItem = 0;
     }
 
-//    /** Return point in subview's coordinate system that is visual start or end of text selection. */
-//    QPoint getSelectionPoint(bool start)
+    /** Mapp point from view coordinates to sub view local coordinates. */
+//    QPoint fromView(QPoint p)
 //    {
-//        int i = 0;
-//        for(; ; ++i)
-//        {
-//            if(_items[i] == _selectionStart && start)
-//                break;
-//            if(_items[i] == _selectionEnd && !start)
-//                break;
-//            if(i == _items.size() - 1)
-//                return QPoint();
-//        }
-
-//        int c = start ? _items[i]->_docCursor.selectionStart() : _items[i]->_docCursor.selectionEnd();
+//        QRect r(d->currentSubView()->indexRect(d->currentSubView()->modelIndex()));
+//        //QPoint vp(QPoint(d->_vx, 0) - d->currentSubView()->contentsRect().topLeft().toPoint());
+//        //r.moveTopLeft(vp);
+//        r.moveTop(d->currentSubView()->contentsRect().top() + r.top());
 //    }
 
 public:
@@ -1279,12 +1293,14 @@ public:
     float                   _visualCenter;
 
     /** Text selection data. When selection mode is active, changes to list should be dropped. */
-    BtMiniViewItem*         _selectionStart;
-    BtMiniViewItem*         _selectionEnd;
+    BtMiniViewItem*         _selectionStartItem;
+    BtMiniViewItem*         _selectionEndItem;
     bool                    _selectionMode;
-    /** Those points are in space of subviews, most left subview is 0 x. */
-    QPoint                  _selectionStartPoint;
-    QPoint                  _selectionEndPoint;
+    /** Those points are in space of view. */
+    QRect                   _selectionStartArea;
+    QRect                   _selectionEndArea;
+    bool                    _selectionMoveStartMarker;
+    bool                    _selectionMoveEndMarker;
 
 
 private:
@@ -1544,16 +1560,28 @@ public:
 		if(to - from == d)
 			return;
 
+        // scroll markers
+        if(v->_selectionMode)
+        {
+            int sp = v->_selectionStartArea.center().y() - v->contentsRect().top();
+            int ep = v->_selectionEndArea.center().y() - v->contentsRect().top();
+            if(sp > to)
+                v->_selectionStartArea.moveTop(v->_selectionStartArea.top() + d);
+            if(ep > to)
+                v->_selectionEndArea.moveTop(v->_selectionEndArea.top() + d);
+        }
+
+        // resize height
 		const int oldHeight = v->contentsRect().height();
 
 		v->setContentsSize(v->contentsRect().width(), oldHeight + d);
 
 		if(from == to)       // add
 		{
-			if(oldHeight == 0)
-				v->setContentsTop(0);
-			else if(from == 0)
-				v->setContentsTop(v->contentsRect().top() - d);
+            if(oldHeight == 0)
+                v->setContentsTop(0);
+            else if(from == 0)
+                v->setContentsTop(v->contentsRect().top() - d);
 		}
 		else if(height == 0) // remove
 		{
@@ -1565,6 +1593,7 @@ public:
 			if(v->contentsRect().top() + to <= v->baseSize().height() * resizeFactor)
 				v->setContentsTop(v->contentsRect().top() - d);
 		}
+
 
 		updateScrollBars();
     }
@@ -1761,43 +1790,36 @@ public:
         scrolling. If multiline mode enabled, whole line will be deleted. */
     void removeItem(const int subView, const int pos)
     {
+        Q_Q(BtMiniView);
+
         BtMiniSubView  *v  = _subViews[subView];
 
         int start = pos;
         int end = pos + 1;
 
+        //qDebug() << "remove item pos:" << pos << v->_items.size() << start << end;
+
         // check if item is inside selection, do not delete such items
-        if(v->_selectionStart && v->_selectionEnd)
+        if(v->_selectionMode)
         {
-            for(int i = start; i >= 1; --i)
+            int si = -1;
+            int ei = -1;
+            for(int i = 0; i < v->_items.size(); ++i)
             {
-                if(v->_items[i] == v->_selectionEnd)
-                    break;
-                else if(v->_items[i] == v->_selectionStart)
-                {
-                    if(v->contentsRect().height() > v->contentsRect().width() * 10)
-                    {
-                        v->clearSelection();
-                        break;
-                    }
-                    else
-                        return;
-                }
+                if(v->_items[i] == v->_selectionStartItem)
+                    si = i;
+                if(v->_items[i] == v->_selectionEndItem)
+                    ei = i;
             }
-            for(int i = end; i < v->_items.size(); ++i)
+
+            Q_ASSERT(si >= 0 && ei >= 0);
+
+            if(start >= si && start <= ei)
             {
-                if(v->_items[i] == v->_selectionStart)
-                    break;
-                else if(v->_items[i] == v->_selectionEnd)
-                {
-                    if(v->contentsRect().height() > v->contentsRect().width() * 10)
-                    {
-                        v->clearSelection();
-                        break;
-                    }
-                    else
-                        return;
-                }
+//                if(v->contentsRect().height() > v->contentsRect().width() * 10)
+//                    q->selectionEnd();
+//                else
+                    return;
             }
         }
 
@@ -1806,8 +1828,6 @@ public:
             --start;
         while(end < v->_items.size() && !v->_items[end]->_newLine)
             ++end;
-    
-        //qDebug() << "removeItem" << pos << start << end;
 
         const int y = v->itemXy(start).y();
         const int h = v->_items[start]->size().height();
@@ -2347,6 +2367,24 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
     d->_mouseScrolling[0].first  = e->pos();
     d->_mouseScrolling[0].second = d->_timer.elapsed();
 
+    // update current index to one under pressed point
+    QPersistentModelIndex index = indexAt(e->pos());
+    if(index.isValid())
+    {
+        d->currentSubView()->updateModelIndex(index);
+        emit currentChanged(index);
+    }
+
+    // selection
+    if(d->currentSubView()->_selectionMode)
+    {
+        if(d->currentSubView()->_selectionStartArea.contains(e->pos()))
+            d->currentSubView()->_selectionMoveStartMarker = true;
+        if(d->currentSubView()->_selectionEndArea.contains(e->pos()))
+            d->currentSubView()->_selectionMoveEndMarker = true;
+        return;
+    }
+
     // calculate snapping
     QMargins m(d->subViewMargins(d->_currentSubView));
     d->_snappingLeft  = qMin(0, m.left());
@@ -2367,32 +2405,97 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
 				Q_ASSERT(false);
         }
     }
-
-    QPersistentModelIndex index = indexAt(e->pos());
-
-    if(index.isValid())
-    {
-        d->currentSubView()->updateModelIndex(index);
-        emit currentChanged(index);
-    }
 }
 
 void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
 {
     Q_D(BtMiniView);
 
-    /// \test
-    if(e->button() == Qt::RightButton)
-    {
-        if(d->currentSubView()->_selectionMode)
-            selectionEnd();
-        else
-            selectionStart();
-    }
-
     if(e->button() != Qt::LeftButton || !d->_mouseDown)
         return;
 
+    // clicking
+    int tapping = d->_mouseTapping;
+    d->_mouseTapping = 0;
+    d->_mouseDown = false;
+
+    if(!d->_mouseLeaveZone)
+    {
+        QPersistentModelIndex index = indexAt(e->pos());
+
+        if(selectionModel())
+            selectionModel()->select(index, selectionCommand(index, e));
+
+
+        if(d->currentSubView()->_selectionMode)
+        {
+            if(tapping >= SHORT_PRESS_DELAY)
+            {
+                if(selectionModel())
+                {
+                    selectionModel()->clear();
+                    bool b = false;
+                    for(int i = 0; i < d->currentSubView()->_items.size(); ++i)
+                    {
+                        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionStartItem)
+                            b = true;
+                        if(b)
+                        {
+                            QModelIndex ix(model()->index(d->currentSubView()->_items[i]->_row, 0, d->currentSubView()->modelParentIndex()));
+                            selectionModel()->select(ix, QItemSelectionModel::Select);
+                        }
+                        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionEndItem)
+                            break;
+                    }
+                }
+
+                emit selected(index);
+                // signals should end selection
+            }
+        }
+        else if(tapping >= LONG_PRESS_DELAY)
+        {
+            if(receivers(SIGNAL(longPressed(const QModelIndex &))) == 0)
+                emit shortPressed(index);
+            else
+                emit longPressed(index);
+        }
+        else if(tapping >= SHORT_PRESS_DELAY)
+        {
+            emit shortPressed(index);
+        }
+        else
+        {
+            emit clicked(index);
+
+            if(index.isValid())
+            {
+                if(model()->hasChildren(index))
+                {
+                    Q_ASSERT_X(!d->_ld->plainMode(), "", "Model for plain layout must not have children");
+
+                    // switch to left subview with children items
+                    makeSubView(d->_currentSubView + 1, index.child(0, 0));
+                    activateSubView(d->_currentSubView + 1);
+                }
+                else if(d->_interactive)
+                {
+                    emit selected(index);
+                    close();
+                }
+            }
+        }
+    }
+
+    // selection
+    if(d->currentSubView()->_selectionMode)
+    {
+        d->currentSubView()->_selectionMoveEndMarker = false;
+        d->currentSubView()->_selectionMoveStartMarker = false;
+        return;
+    }
+
+    // kinetic scrolling
     d->_mouseScrolling[1].second = d->_timer.elapsed();
     d->_mouseScrolling[1].first  = e->pos();
 
@@ -2419,75 +2522,17 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     // accelerate
     d->_mousePower += speed * 50.0f;
 
-	int tapping = d->_mouseTapping;
-
 	// cut down horizontal kinetic power, for a while
 	d->_mousePower.rx() = 0.0;
 
-	d->_mouseTapping = 0;
-	d->_mouseDown = false;
+    // switch subview if passed horizontal snapping
+    const int xr = d->_mouseStart.x() - e->pos().x() + d->_snappingRight;
+    const int xl = e->pos().x() - d->_mouseStart.x() + d->_snappingLeft;
 
-    if(!d->_mouseLeaveZone)
-    {
-        QPersistentModelIndex index = indexAt(e->pos());
-
-        if(selectionModel())
-            selectionModel()->select(index, selectionCommand(index, e));
-
-        if(tapping >= LONG_PRESS_DELAY)
-        {
-            if(receivers(SIGNAL(longPressed(const QModelIndex &))) == 0)
-                emit shortPressed(index);
-            else
-                emit longPressed(index);
-        }
-        else if(tapping >= SHORT_PRESS_DELAY)
-        {
-            emit shortPressed(index);
-        }
-        else
-        {
-            emit clicked(index);
-
-			if(index.isValid())
-			{
-				if(model()->hasChildren(index))
-				{
-                    Q_ASSERT_X(!d->_ld->plainMode(), "", "Model for plain layout must not have children");
-
-					// switch to left subview with children items
-					makeSubView(d->_currentSubView + 1, index.child(0, 0));
-					activateSubView(d->_currentSubView + 1);
-				}
-				else if(d->_interactive)
-                {
-                    emit selected(index);
-					close();
-                }
-			}
-        }
-
-
-        // TEST text selection
-//        {
-//            const QPoint gp(e->pos() + QPoint(d->_vx, 0));
-//            const QPoint vp(gp - d->currentSubView()->contentsRect().topLeft().toPoint());
-//            d->currentSubView()->updateSelection(false, vp);
-
-//            qDebug() << indexAt(e->pos()).data();
-//        }
-	}
-    else
-    {
-        // switch subview if passed horizontal snapping
-        const int xr = d->_mouseStart.x() - e->pos().x() + d->_snappingRight;
-        const int xl = e->pos().x() - d->_mouseStart.x() + d->_snappingLeft;
-
-        if(xr > d->_snappingValue)
-            slideRight();
-        if(xl > d->_snappingValue)
-            slideLeft();
-    }
+    if(xr > d->_snappingValue)
+        slideRight();
+    if(xl > d->_snappingValue)
+        slideLeft();
 
     viewport()->update();
 }
@@ -2499,28 +2544,42 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
     if(!d->_mouseDown)
         return;
 
-    // Tapping / clicking
+    // tapping / clicking
     if(qAbs(d->_mouseStart.x() - e->x()) > d->_sizeFactor ||
-		qAbs(d->_mouseStart.y() - e->y()) > d->_sizeFactor)
+        qAbs(d->_mouseStart.y() - e->y()) > d->_sizeFactor)
     {
         d->_mouseLeaveZone = true;
         d->_mouseTapping   = 0;
-		
+
         d->currentSubView()->_visualCenter = 0.45f;
     }
 
-    // Kinetic scrolling
-    d->_mouseScrolling[1].second = d->_timer.elapsed();
-    d->_mouseScrolling[1].first  = e->pos();
-
-    if(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second > 200)
+    // selection
+    if(d->currentSubView()->_selectionMode)
     {
-        d->_mouseScrolling[0].first  = d->_mouseScrolling[1].first + ((d->_mouseScrolling[0].first -
-            d->_mouseScrolling[1].first) * (200.0f / (d->_mouseScrolling[1].second - d->_mouseScrolling[0].second)));
-        d->_mouseScrolling[0].second = d->_mouseScrolling[1].second - 200;
+        QPoint delta = e->pos() - d->_mouseLast;
+        d->_mouseLast = e->pos();
+
+        if(d->currentSubView()->_selectionMoveStartMarker)
+        {
+            d->currentSubView()->_selectionStartArea.moveTopLeft(
+                        d->currentSubView()->_selectionStartArea.topLeft() + delta);
+            d->currentSubView()->updateSelection(true, d->currentSubView()->_selectionStartArea.topLeft());
+        }
+        else if(d->currentSubView()->_selectionMoveEndMarker)
+        {
+            d->currentSubView()->_selectionEndArea.moveTopLeft(
+                        d->currentSubView()->_selectionEndArea.topLeft() + delta);
+            d->currentSubView()->updateSelection(false, d->currentSubView()->_selectionEndArea.topRight());
+        }
+        else
+            scroll(0, static_cast<float>(delta.y()));
+
+        viewport()->update();
+        return;
     }
 
-    // Make snapping feeling
+    // make snapping feeling
     QPoint p = e->pos();
     const int xr = d->_mouseStart.x() - p.x() + d->_snappingRight;
     const int xl = p.x() - d->_mouseStart.x() + d->_snappingLeft;
@@ -2531,10 +2590,21 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
         p.rx() -= xl;
 
     QPoint delta = p - d->_mouseLast;
-
-    scroll(static_cast<float>(delta.x()), static_cast<float>(delta.y()));
-
     d->_mouseLast = p;
+
+    // kinetic scrolling
+    d->_mouseScrolling[1].second = d->_timer.elapsed();
+    d->_mouseScrolling[1].first  = e->pos();
+
+    if(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second > 200)
+    {
+        d->_mouseScrolling[0].first  = d->_mouseScrolling[1].first + ((d->_mouseScrolling[0].first -
+            d->_mouseScrolling[1].first) * (200.0f / (d->_mouseScrolling[1].second - d->_mouseScrolling[0].second)));
+        d->_mouseScrolling[0].second = d->_mouseScrolling[1].second - 200;
+    }
+
+    // scroll
+    scroll(static_cast<float>(delta.x()), static_cast<float>(delta.y()));
 }
 
 
@@ -2562,25 +2632,18 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         }
         d->_mousePower.ry() = 0.0f;
     }
-    // update kinetic scrolling
-    else if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
-    {
-        if(!d->_continuousScrolling)
-        {
-            d->_mousePower *= SCROLL_ATTENUATION;
-            scroll(d->_mousePower.x(), d->_mousePower.y());
-        }
-        else
-        {
-            scroll(d->_mousePower.x() * 0.02, d->_mousePower.y() * 0.02);
-        }
-    }
 
     // update long press
     if(d->_mouseDown && !d->_mouseLeaveZone)
     {
         // if there is any connection to longPressed or shortPressed signal, vibrate
-        if(d->_mouseTapping == LONG_PRESS_DELAY)
+
+        if(d->currentSubView()->_selectionMode)
+        {
+            if(d->_mouseTapping == SHORT_PRESS_DELAY && receivers(SIGNAL(selected(const QModelIndex &))) > 0)
+                BtMini::vibrate(20);
+        }
+        else if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
             if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
             {
@@ -2600,6 +2663,52 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         d->_mouseTapping++;
         viewport()->update();
     }
+
+    // disble some function and logic for if selction is active
+    if(d->currentSubView()->_selectionMode)
+    {
+        int l = font().pixelSize() * 0.2 + 1;
+
+        // scroll view if selection handle is too close to boundary
+        if(d->currentSubView()->_selectionMoveStartMarker &&
+           (d->currentSubView()->_selectionStartArea.top() < d->currentSubView()->_selectionStartArea.width() ||
+            d->currentSubView()->_selectionStartArea.bottom() > viewport()->height() - d->currentSubView()->_selectionStartArea.width()))
+        {
+            if(d->currentSubView()->_selectionStartArea.center().y() > viewport()->height() / 2) l = -l;
+            d->currentSubView()->_selectionStartArea.moveTop(d->currentSubView()->_selectionStartArea.top() - l);
+            d->currentSubView()->updateSelection(true, d->currentSubView()->_selectionStartArea.topLeft());
+            scroll(0.0, l);
+        }
+
+        if(d->currentSubView()->_selectionMoveEndMarker &&
+           (d->currentSubView()->_selectionEndArea.bottom() > viewport()->height() - d->currentSubView()->_selectionEndArea.width() ||
+            d->currentSubView()->_selectionEndArea.top() < d->currentSubView()->_selectionEndArea.width()))
+        {
+            if(d->currentSubView()->_selectionEndArea.center().y() > viewport()->height() / 2) l = -l;
+            d->currentSubView()->_selectionEndArea.moveTop(d->currentSubView()->_selectionEndArea.top() - l);
+            d->currentSubView()->updateSelection(false, d->currentSubView()->_selectionEndArea.topRight());
+            scroll(0.0, l);
+        }
+
+        // still update subviews
+        d->updateSubView(d->_currentSubView);
+        return;
+    }
+
+    // update kinetic scrolling
+    else if(!d->_mouseDown && (qAbs(d->_mousePower.x()) > 0.1f || qAbs(d->_mousePower.y()) > 0.1f))
+    {
+        if(!d->_continuousScrolling)
+        {
+            d->_mousePower *= SCROLL_ATTENUATION;
+            scroll(d->_mousePower.x(), d->_mousePower.y());
+        }
+        else
+        {
+            scroll(d->_mousePower.x() * 0.02, d->_mousePower.y() * 0.02);
+        }
+    }
+
 
     bool calmly = false;
         
@@ -2736,36 +2845,45 @@ void BtMiniView::selectionStart()
 
     // place selection markers to the currentIndex
     QRect r(d->currentSubView()->indexRect(d->currentSubView()->modelIndex()));
-    QPoint vp(QPoint(d->_vx, 0) - d->currentSubView()->contentsRect().topLeft().toPoint());
-    r.moveTopLeft(vp);
+    r.moveTop(d->currentSubView()->contentsRect().top() + r.top());
+    r.adjust(font().pixelSize() * 0.3, font().pixelSize() * 0.3, -font().pixelSize() * 0.3, -font().pixelSize() * 0.3);
 
-    d->currentSubView()->_selectionStartPoint = r.topLeft();
-    d->currentSubView()->_selectionEndPoint = r.bottomRight();
+    int sf = font().pixelSize() * 2.2;
+    d->currentSubView()->_selectionStartArea = QRect(0, 0, sf, sf * 1.6);
+    d->currentSubView()->_selectionEndArea = QRect(0, 0, sf, sf * 1.6);
+    d->currentSubView()->_selectionStartArea.moveTopLeft(r.topLeft());
+    d->currentSubView()->_selectionEndArea.moveTopRight(r.bottomRight());
 
     // update to selection
-    d->currentSubView()->updateSelection(true, d->currentSubView()->_selectionStartPoint);
-    d->currentSubView()->updateSelection(false, d->currentSubView()->_selectionEndPoint);
+    d->currentSubView()->updateSelection(true, r.topLeft());
+    d->currentSubView()->updateSelection(false, r.bottomRight());
 
-    qDebug() << d->currentSubView()->_selectionStartPoint << d->currentSubView()->_selectionEndPoint
-             << vp << d->currentSubView()->_selectionMode;
-
-//    for(int i = 0; i < d->currentSubView()->_items.size(); ++i)
-//    {
-//        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionStart)
-//            d->currentSubView()->_selectionStartPoint = d->currentSubView()->itemXy(i);
-//        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionEnd)
-//        {
-//            d->currentSubView()->_selectionEndPoint = d->currentSubView()->itemXy(i);
-//            d->currentSubView()->_selectionEndPoint.rx() += d->currentSubView()->_items[i]->width();
-//            d->currentSubView()->_selectionEndPoint.ry() += d->currentSubView()->_items[i]->height();
-//        }
-//    }
+    viewport()->update();
 }
 
 void BtMiniView::selectionEnd()
 {
     Q_D(BtMiniView);
     d->currentSubView()->_selectionMode = false;
+    d->currentSubView()->clearSelection();
+    viewport()->update();
+}
+
+QString BtMiniView::selectedText()
+{
+    Q_D(BtMiniView);
+    bool b = false;
+    QString r;
+    for(int i = 0; i < d->currentSubView()->_items.size(); ++i)
+    {
+        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionStartItem)
+            b = true;
+        if(b)
+            r += d->currentSubView()->_items[i]->_docCursor.selectedText();
+        if(d->currentSubView()->_items[i] == d->currentSubView()->_selectionEndItem)
+            break;
+    }
+    return r;
 }
 
 void BtMiniView::scrollTo(QVariant data)
@@ -3188,7 +3306,7 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 
     QPainter painter(viewport());
 
-	const bool debugClipping = false;
+    const bool debugClipping = false;
 	const bool debugCache = false;
     
 	if(debugClipping || debugCache)
@@ -3200,18 +3318,16 @@ void BtMiniView::paintEvent(QPaintEvent *e)
     // draw subviews
     foreach(BtMiniSubView *v, d->_subViews)
     {
+        // visible area
         const QRect area(viewport()->rect() &
             QRect(v->contentsRect().toRect()).translated(-d->_vx, 0));
 
-        if(area.isNull())
-            continue;
-
-		// subview-related clipping
+        // subview-related clipping
         const QRect clip(QRect(QPoint(), v->contentsRect().size().toSize()) &
             viewport()->rect().translated(QPoint(d->_vx, 0) -
             v->contentsRect().topLeft().toPoint()));
 
-        if(!clip.isNull())
+        if(!area.isNull() && !clip.isNull())
 		{
 			if(d->_useRenderCaching && d->_subViews[d->_currentSubView] == v && 
 				v->contentsRect().width() == d->_cachedSurface->width())
@@ -3399,7 +3515,7 @@ QRect BtMiniView::visualRect(const QModelIndex &index) const
 
 QRegion BtMiniView::visualRegionForSelection(const QItemSelection &selection) const
 {
-    qDebug() << "BtMiniView::visualRegionForSelection" << selection;
+    //qDebug() << "BtMiniView::visualRegionForSelection" << selection;
     return QRegion();
 }
 
@@ -3697,7 +3813,12 @@ void BtMiniView::setSleep(bool sleep)
 
         // clear unnecessary items
         if(d->_currentSubView < d->_subViews.size())
+        {
+            // we have to turn off selection when fall asleep, to allow deletion of unnecessary items
+            selectionEnd();
+
             d->clearSubView(d->_currentSubView, false, true);
+        }
     }
 }
 

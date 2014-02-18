@@ -9,8 +9,10 @@
 *
 **********/
 
+#include <QApplication>
 #include <QAbstractButton>
 #include <QBoxLayout>
+#include <QClipboard>
 #include <QLabel>
 #include <QMutex>
 #include <QMutexLocker>
@@ -877,27 +879,62 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 	if(d->_lists.size() > 1)
 		actions << tr("Clear");
 
+    actions << tr("Select");
+
+    int r = BtMiniMenu::execMenu(actions);
+
+    if(actions[r] == tr("Add Left"))
+    {
+        beginInsertRows(QModelIndex(), level, level);
+        d->insertModule(level, "");
+        endInsertRows();
+    }
+    if(actions[r] == tr("Add Right"))
+    {
+        beginInsertRows(QModelIndex(), level + 1, level + 1);
+        d->insertModule(level + 1, "");
+        endInsertRows();
+    }
+    if(actions[r] == tr("Clear"))
+    {
+        beginRemoveRows(QModelIndex(), level, level);
+        d->eraseModule(level);
+        endRemoveRows();
+    }
+    if(actions[r] == tr("Select"))
+    {
+        v->selectionStart();
+    }
+}
+
+void BtMiniModuleTextModel::selectedIndexes(const QModelIndex &index)
+{
+    BtMiniView *v = qobject_cast<BtMiniView *>(sender());
+    Q_CHECK_PTR(v);
+
+    QStringList actions;
+    actions << tr("Copy") << tr("Copy text") /*<< tr("Bookmark")*/;
+
     switch(BtMiniMenu::execMenu(actions))
     {
     case 0:
         {
-            beginInsertRows(QModelIndex(), level, level);
-            d->insertModule(level, "");
-            endInsertRows();
+            QString r;
+            foreach(QModelIndex i, v->selectionModel()->selection().indexes())
+                r += i.data().toString();
+            QApplication::clipboard()->setText(r);
+            v->selectionEnd();
         }
         break;
     case 1:
         {
-            beginInsertRows(QModelIndex(), level + 1, level + 1);
-            d->insertModule(level + 1, "");
-            endInsertRows();
+            QApplication::clipboard()->setText(v->selectedText());
+            v->selectionEnd();
         }
         break;
     case 2:
         {
-            beginRemoveRows(QModelIndex(), level, level);
-            d->eraseModule(level);
-            endRemoveRows();
+            ;
         }
         break;
     }
@@ -1373,3 +1410,4 @@ QModelIndexList BtMiniModuleTextModel::match(const QModelIndex &start, int role,
 
     return QAbstractItemModel::match(start, role, value, hits, flags);
 }
+
