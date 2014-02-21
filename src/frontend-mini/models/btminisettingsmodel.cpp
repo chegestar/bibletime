@@ -335,15 +335,15 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
     case tipWorksAddon:
         return QString(tr("Following information you could access again in <b>Settings</b> under the <b>Handbook</b> item.<br/>"));
     case News:
-        return QString("<body><b><center>" + tr("News and Updates") + ":</center></b><br/>" +
-					   "<b>0.9.11</b> - " + tr("combined module manager by languages, so you could observe all available modules for "
-						  "particular language") + ".<br/>" +
-					   "<b>0.9.8</b> - " + tr("new logic for base font size selection. Tablets should looks better now.<br/>") +
-					   "<b>0.9.5</b> - " + tr("parallel Bible display, make long tap in module selection dialog "
-						  "and press") + " \"" + tr("Add Parallel") + "\". " + tr("This feature is finished and may not work "
-					      "as expected") + ".<br/>" +
-                       "<b>0.9.3</b> - " + tr("was added support for General Books and search in non Bible "
-                          "modules was fixed") + "." +
+        return QString("<body><b><center>" + tr("News and Updates") + ":</center></b><br/>"
+                       "<b>1.1.0</b> - Copy text to clipboard.<br/>"
+                       "<b>1.0.4</b> - New menu for module with About information.<br/>"
+                       "<b>1.0.0</b> - Remake interface, context windows in fullscreen, font selection, some RtoL languages support.<br/>"
+                       "<b>0.9.11</b> - Combined module manager by languages, so you could observe all available modules for particular language.<br/>"
+                       "<b>0.9.8</b> - New logic for base font size selection. Tablets should looks better now.<br/>"
+                       "<b>0.9.5</b> - Parallel Bible display, make long tap in module selection dialog and press \"Add Parallel\". "
+                           "This feature is not finished and may not work as expected.<br/>"
+                       "<b>0.9.3</b> - was added support for General Books and search in non Bible modules was fixed."
                        "</body>");
     default:
         return QVariant();

@@ -1,25 +1,25 @@
 kalemas@mail.ru :
-=== tasks ======================================================================
+=== tasks ===
 +   bug: somewhat with scrolling on tips if opened after first Bible installation
 +   android: style switching does not working properly
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
 +       current item should be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
+=== 1.0.4 ===
     text/verses selection facility
-        redraw handle
-1       selection behavior
-        draw selection markers
-        move selection markers
-2       bookmarks model
-3       addition menus
-        select 1 more character for end of selction
-        scroll area for handles, top - thiner, relative to view height
-        only Copy function atm
++       redraw handle
++       select 1 more character for end of selction
++       scroll area for handles, top - thiner, relative to view height
++       only Copy function atm
     Back button logic
     android: scrolling does not stops if app was put into bg
-    
     symbian: text input in search view does not activate sip
     symbian: S60 style draw white text on lime green after restart
+    android: sometimes failed to start after app was put into bg
+
+
+=== 1.1.0 ===
+    bookmarks
     restore search term during one session
     find correct facility to retrieve icons
         i need some additional icons, its best for if they would be provided by style
@@ -27,10 +27,12 @@ kalemas@mail.ru :
         whole set should be provided for night mode
             night mode by style is preferred in Qt, just like Symbian styles
             but other implementation for night mode would be, for example by application palette
-    android: sometimes failed to start after app was put into bg
-    with mini style
+    with mini style standard context menu is solid rectangle, make handler for custom context menus in style
+    encrypted modules
 
 
+=== some future version ===
+    right click - service menu, middle click - context menu
     make it able to display two or more widgets at same time
         We have to know minimum widget width, and if we could place two widgets at same time do so.
                open search  module and place selection at left, open settings  and context at right

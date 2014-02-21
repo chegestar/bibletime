@@ -874,6 +874,14 @@ bool BtMiniUi::activatePreviousWidget()
 
     d->_widgetStack.removeLast();
 
+    // remove all context windows if we switch from context
+    if(d->_widgetStack.last() != BtMiniUiPrivate::Context && d->_contextWidgets.size() > 0)
+    {
+        d->_widgetStack.removeAll(BtMiniUiPrivate::Context);
+        for(int i = 0; i < d->_contextWidgets.size(); ++i)
+            d->_contextWidgets.takeLast()->deleteLater();
+    }
+
     switch(d->_widgetStack.last())
     {
         case BtMiniUiPrivate::Works: activateWorks(); break;
@@ -906,8 +914,8 @@ void BtMiniUi::activateWorks()
 
     d->switchFrom();
 
-    d->_widgetStack.removeAll(BtMiniUiPrivate::Works);
-    d->_widgetStack.append(BtMiniUiPrivate::Works);
+    if(!d->_widgetStack.contains(BtMiniUiPrivate::Works))
+        d->_widgetStack.append(BtMiniUiPrivate::Works);
 
     if(!d->_worksWidget)
         d->createWorksWidget();
@@ -932,8 +940,8 @@ void BtMiniUi::activateInstaller()
 
     d->switchFrom();
 
-    d->_widgetStack.removeAll(BtMiniUiPrivate::Installer);
-    d->_widgetStack.append(BtMiniUiPrivate::Installer);
+    if(!d->_widgetStack.contains(BtMiniUiPrivate::Installer))
+        d->_widgetStack.append(BtMiniUiPrivate::Installer);
 
     if(!d->_installerWidget)
         d->createInstallerWidget();
@@ -947,8 +955,8 @@ void BtMiniUi::activateSearch()
 
     d->switchFrom();
 
-    d->_widgetStack.removeAll(BtMiniUiPrivate::Search);
-    d->_widgetStack.append(BtMiniUiPrivate::Search);
+    if(!d->_widgetStack.contains(BtMiniUiPrivate::Search))
+        d->_widgetStack.append(BtMiniUiPrivate::Search);
 
     if(!d->_searchWidget)
         d->createSearchWidget();
@@ -962,8 +970,8 @@ void BtMiniUi::activateSettings()
 
     d->switchFrom();
 
-    d->_widgetStack.removeAll(BtMiniUiPrivate::Settings);
-    d->_widgetStack.append(BtMiniUiPrivate::Settings);
+    if(!d->_widgetStack.contains(BtMiniUiPrivate::Settings))
+        d->_widgetStack.append(BtMiniUiPrivate::Settings);
 
     if(!d->_settingsWidget)
         d->createSettingsWidget();
@@ -985,8 +993,8 @@ void BtMiniUi::activateClippings()
 
     d->switchFrom();
 
-    d->_widgetStack.removeAll(BtMiniUiPrivate::Clippings);
-    d->_widgetStack.append(BtMiniUiPrivate::Clippings);
+    if(!d->_widgetStack.contains(BtMiniUiPrivate::Clippings))
+        d->_widgetStack.append(BtMiniUiPrivate::Clippings);
 
     if(!d->_clippingsWidget)
         d->createClippingsWidget();

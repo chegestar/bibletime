@@ -913,22 +913,22 @@ void BtMiniModuleTextModel::selectedIndexes(const QModelIndex &index)
     Q_CHECK_PTR(v);
 
     QStringList actions;
-    actions << tr("Copy") << tr("Copy text") /*<< tr("Bookmark")*/;
+    actions << tr("Copy") /*<< tr("Copy text") << tr("Bookmark")*/;
 
     switch(BtMiniMenu::execMenu(actions))
     {
     case 0:
         {
-            QString r;
-            foreach(QModelIndex i, v->selectionModel()->selection().indexes())
-                r += i.data().toString();
-            QApplication::clipboard()->setText(r);
+            QApplication::clipboard()->setText(v->selectedText());
             v->selectionEnd();
         }
         break;
     case 1:
         {
-            QApplication::clipboard()->setText(v->selectedText());
+            QString r;
+            foreach(QModelIndex i, v->selectionModel()->selection().indexes())
+                r += i.data().toString();
+            QApplication::clipboard()->setText(r);
             v->selectionEnd();
         }
         break;

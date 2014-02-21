@@ -17,6 +17,7 @@
 #include <QMutexLocker>
 #include <QPainter>
 #include <QScrollBar>
+#include <QSvgRenderer>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <QTextFrame>
@@ -778,9 +779,16 @@ public:
         // selection
         if(_selectionMode)
         {
-            static QImage handle(":/handle.svg");
-            painter->drawImage(_selectionStartArea, handle);
-            painter->drawImage(_selectionEndArea, handle.mirrored(true, false));
+            static QSvgRenderer handle(QString(":/handle.svg"));
+
+            QImage i(_selectionStartArea.size(), QImage::Format_ARGB32);
+            i.fill(0x00000000);
+            QPainter p(&i);
+            handle.render(&p);
+            p.end();
+
+            painter->drawImage(_selectionStartArea, i);
+            painter->drawImage(_selectionEndArea, i.mirrored(true, false));
         }
     }
 
@@ -1007,8 +1015,12 @@ public:
         {
             const QPoint pp(p - itemXy(pi));
             int cc = _items[pi]->_doc->documentLayout()->hitTest(pp, Qt::ExactHit);
+
             if(cc == -1)
                 cc = td->rootFrame()->lastPosition();
+            else if(!start)
+                cc = qMin(cc + 1, td->rootFrame()->lastPosition());
+
             if(!_selectionStartItem)
             {
                 // select word
@@ -2667,12 +2679,13 @@ void BtMiniView::timerEvent(QTimerEvent *e)
     // disble some function and logic for if selction is active
     if(d->currentSubView()->_selectionMode)
     {
-        int l = font().pixelSize() * 0.2 + 1;
-
         // scroll view if selection handle is too close to boundary
+        int l = font().pixelSize() * 0.2 + 1;
+        const int ta = viewport()->height() * 0.05;
+        const int ba = viewport()->height() * 0.9;
+
         if(d->currentSubView()->_selectionMoveStartMarker &&
-           (d->currentSubView()->_selectionStartArea.top() < d->currentSubView()->_selectionStartArea.width() ||
-            d->currentSubView()->_selectionStartArea.bottom() > viewport()->height() - d->currentSubView()->_selectionStartArea.width()))
+            (d->currentSubView()->_selectionStartArea.top() < ta || d->currentSubView()->_selectionStartArea.bottom() > ba))
         {
             if(d->currentSubView()->_selectionStartArea.center().y() > viewport()->height() / 2) l = -l;
             d->currentSubView()->_selectionStartArea.moveTop(d->currentSubView()->_selectionStartArea.top() - l);
@@ -2681,8 +2694,7 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         }
 
         if(d->currentSubView()->_selectionMoveEndMarker &&
-           (d->currentSubView()->_selectionEndArea.bottom() > viewport()->height() - d->currentSubView()->_selectionEndArea.width() ||
-            d->currentSubView()->_selectionEndArea.top() < d->currentSubView()->_selectionEndArea.width()))
+            (d->currentSubView()->_selectionEndArea.top() < ta || d->currentSubView()->_selectionEndArea.bottom() > ba))
         {
             if(d->currentSubView()->_selectionEndArea.center().y() > viewport()->height() / 2) l = -l;
             d->currentSubView()->_selectionEndArea.moveTop(d->currentSubView()->_selectionEndArea.top() - l);

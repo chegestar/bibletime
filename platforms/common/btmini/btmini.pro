@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.0.5
+VERSION = 1.1.0
 
 CONFIG += clucene svg xml mini
 
