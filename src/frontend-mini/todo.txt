@@ -3,15 +3,21 @@ kalemas@mail.ru :
 +   bug: somewhat with scrolling on tips if opened after first Bible installation
 +   android: style switching does not working properly
 +   switch currentIndex in view from time to time on on its deletion (avoid bad behavior with auto-scrolling)
-+       current item sould be changed right after current item was left the screen
++       current item should be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
     text/verses selection facility
-1       selection behaivior
+        redraw handle
+1       selection behavior
         draw selection markers
         move selection markers
 2       bookmarks model
 3       addition menus
+        select 1 more character for end of selction
+        scroll area for handles, top - thiner, relative to view height
+        only Copy function atm
+    Back button logic
     android: scrolling does not stops if app was put into bg
+    
     symbian: text input in search view does not activate sip
     symbian: S60 style draw white text on lime green after restart
     restore search term during one session
@@ -19,17 +25,20 @@ kalemas@mail.ru :
         i need some additional icons, its best for if they would be provided by style
             add new view at left/right
         whole set should be provided for night mode
-            nightmode by style is preffered in Qt, just like Symbian styles
-            but other impletation for nightmode would be, for example by application palette
+            night mode by style is preferred in Qt, just like Symbian styles
+            but other implementation for night mode would be, for example by application palette
     android: sometimes failed to start after app was put into bg
     with mini style
 
+
     make it able to display two or more widgets at same time
+        We have to know minimum widget width, and if we could place two widgets at same time do so.
+               open search  module and place selection at left, open settings  and context at right
     Open module selection dialog on new list opened
         side slide module selection list would be good, then slide on top and module list is shown
     plus icon instead of inactive arrow in top panel
     better way to deploy sword locales
-    save search string durring session(after ui recreate)
+    save search string during session(after ui recreate)
     clippings model
         based on text model
             make List polymorph class
@@ -47,7 +56,7 @@ kalemas@mail.ru :
             clippings model
                 multipe entries of any module scoped to any range
     allow notes
-    context for pictures
+    context for pictures with zoom/pan support
     context for references of type "look at <this module ref>"
 ?   sometimes list get displaced vertically (RSP Rom 9-15)
     improve search query with * in AND mode
