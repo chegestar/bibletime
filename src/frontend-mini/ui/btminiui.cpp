@@ -903,8 +903,25 @@ void BtMiniUi::applicationStateChanged()
     Q_D(BtMiniUi);
 
 #if QT_VERSION >= 0x050200
+    // on android we get this function called simultaneously
+    static QMutex m;
+    QMutexLocker ml(&m);
+
     if(QApplication::applicationState() == Qt::ApplicationSuspended)
+    {
         d->_mainWidget->saveConfig();
+    }
+    if(QApplication::applicationState() == Qt::ApplicationHidden ||
+       QApplication::applicationState() == Qt::ApplicationInactive)
+    {
+        if(d->_widgetStack.last() == BtMiniUiPrivate::Works)
+            worksView()->setSleep(true, 1.0);
+    }
+    if(QApplication::applicationState() == Qt::ApplicationActive)
+    {
+        if(d->_widgetStack.last() == BtMiniUiPrivate::Works)
+            worksView()->setSleep(false);
+    }
 #endif
 }
 

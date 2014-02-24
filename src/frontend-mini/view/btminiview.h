@@ -72,8 +72,9 @@ public:
     /** Set default role for searching indexes. This function change level options. */
     void setSearchRole(int searchRole = Qt::EditRole, int level = -1);
 
-	/** View does not update subviews during sleeping. */
-	void setSleep(bool sleep);
+    /** View does not update subviews during sleeping. Scrolling would be also adjusted by
+        setting \param[in] scrolling factor. */
+    void setSleep(bool sleep, qreal scrolling = 0.0);
 
     /** */
     void setWebKitEnabled(bool enable);

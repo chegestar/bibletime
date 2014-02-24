@@ -2628,7 +2628,7 @@ void BtMiniView::timerEvent(QTimerEvent *e)
 	{
 		QAbstractItemView::timerEvent(e);
         return;
-	}
+    }
 
     if(d->_sleep) return;
 
@@ -3808,7 +3808,7 @@ void BtMiniView::keyPressEvent( QKeyEvent *e )
 #endif
 }
 
-void BtMiniView::setSleep(bool sleep)
+void BtMiniView::setSleep(bool sleep, qreal scrolling)
 {
 	Q_D(BtMiniView);
 
@@ -3817,7 +3817,7 @@ void BtMiniView::setSleep(bool sleep)
 	if(sleep)
 	{
         // stop cinetic scrolling
-		d->_mousePower = QPointF();
+        d->_mousePower *= scrolling;
 
         // stop streads
 		foreach(BtMiniViewPrivate::BtMiniViewThread *t, d->_threads)
