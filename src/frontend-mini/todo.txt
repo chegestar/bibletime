@@ -29,6 +29,8 @@ kalemas@mail.ru :
             but other implementation for night mode would be, for example by application palette
     with mini style standard context menu is solid rectangle, make handler for custom context menus in style
     encrypted modules
+    in handbook make it clean for understanding module/text/work  definition
+    android: keep device on
 
 
 === some future version ===
@@ -36,6 +38,7 @@ kalemas@mail.ru :
     make it able to display two or more widgets at same time
         We have to know minimum widget width, and if we could place two widgets at same time do so.
                open search  module and place selection at left, open settings  and context at right
+            if context widget is opened we are able to update it as user press anywhere in main reading widget
     Open module selection dialog on new list opened
         side slide module selection list would be good, then slide on top and module list is shown
     plus icon instead of inactive arrow in top panel
