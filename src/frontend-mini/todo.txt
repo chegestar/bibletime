@@ -30,7 +30,9 @@ kalemas@mail.ru :
     with mini style standard context menu is solid rectangle, make handler for custom context menus in style
     encrypted modules
     in handbook make it clean for understanding module/text/work  definition
+    "Context view explanation is still too short for me"
     android: keep device on
+    per module font family
 
 
 === some future version ===
