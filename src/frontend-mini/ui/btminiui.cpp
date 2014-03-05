@@ -42,6 +42,20 @@
 class BtMiniUiPrivate
 {
 public:
+    enum WidgetFlag
+    {
+        Main = 1 << 0,
+        Works = 1 << 1,
+        Rest = 1 << 2,
+
+        Search = 1 << 3,
+        Installer = 1 << 4,
+        Settings = 1 << 5,
+        Context = 1 << 6,
+        Clippings = 1 << 7
+    };
+
+public:
     BtMiniUiPrivate(BtMiniUi *parent) : q_ptr(parent)
         , _mainWidget(0)
         , _worksWidget(0)
@@ -209,6 +223,7 @@ public:
                     close();
                 }
                 e->accept();
+                return;
             }
             QStackedWidget::keyReleaseEvent(e);
         }
@@ -270,6 +285,8 @@ public:
                 factor 72 is ok
             nexus 7         800                 133                 214
                 factor 45 is ok
+            wexler 10is     1368x720            72                  120
+                factor 31 is big
         */
 
 #if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID)
@@ -630,7 +647,7 @@ public:
     }
 
     /** Do work to switch from current widget type. */
-    void switchFrom()
+    void switchTo(BtMiniUiPrivate::WidgetFlag widget)
     {
         // sleep works
         if(_worksWidget && _mainWidget->currentWidget() == _worksWidget)
@@ -643,30 +660,42 @@ public:
         {
             _mainWidget->saveConfig();
 
-            //delete _worksWidget;
             _worksWidget->deleteLater();
             _worksWidget = 0;
         }
         if(_resetFlag & Rest && _installerWidget)
         {
-            //delete _installerWidget;
             _installerWidget->deleteLater();
             _installerWidget = 0;
         }
         if(_resetFlag & Rest && _settingsWidget)
         {
-            //delete _settingsWidget;
             _settingsWidget->deleteLater();
             _settingsWidget = 0;
         }
         if(_resetFlag & Rest && _searchWidget)
         {
-            //delete _searchWidget;
             _searchWidget->deleteLater();
             _searchWidget = 0;
         }
 
         _resetFlag = 0;
+
+        // remove all context windows
+        if(widget != BtMiniUiPrivate::Context)
+        {
+            _widgetStack.removeAll(BtMiniUiPrivate::Context);
+            for(int i = 0; i < _contextWidgets.size(); ++i)
+                _contextWidgets.takeLast()->deleteLater();
+        }
+
+        if(widget == BtMiniUiPrivate::Works || widget == BtMiniUiPrivate::Installer ||
+           widget == BtMiniUiPrivate::Search  || widget == BtMiniUiPrivate::Settings ||
+           widget == BtMiniUiPrivate::Clippings)
+        {
+            if(!_widgetStack.contains(widget))
+                _widgetStack.append(widget);
+        }
     }
 
 
@@ -684,18 +713,6 @@ public:
 
     qreal                        _sizeFactor;
 
-    enum WidgetFlag
-    {
-        Main = 1 << 0,
-        Works = 1 << 1,
-        Rest = 1 << 2,
-
-        Search = 1 << 3,
-        Installer = 1 << 4,
-        Settings = 1 << 5,
-        Context = 1 << 6,
-        Clippings = 1 << 7
-    };
     QFlags<WidgetFlag>           _resetFlag;
     QList<WidgetFlag>            _widgetStack;
 
@@ -794,7 +811,7 @@ QWidget* BtMiniUi::activateNewContextWidget()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
+    d->switchTo(BtMiniUiPrivate::Context);
 
     d->_widgetStack.append(BtMiniUiPrivate::Context);
     d->_contextWidgets.append(new QWidget(d->_mainWidget));
@@ -874,14 +891,6 @@ bool BtMiniUi::activatePreviousWidget()
 
     d->_widgetStack.removeLast();
 
-    // remove all context windows if we switch from context
-    if(d->_widgetStack.last() != BtMiniUiPrivate::Context && d->_contextWidgets.size() > 0)
-    {
-        d->_widgetStack.removeAll(BtMiniUiPrivate::Context);
-        for(int i = 0; i < d->_contextWidgets.size(); ++i)
-            d->_contextWidgets.takeLast()->deleteLater();
-    }
-
     switch(d->_widgetStack.last())
     {
         case BtMiniUiPrivate::Works: activateWorks(); break;
@@ -889,7 +898,7 @@ bool BtMiniUi::activatePreviousWidget()
         case BtMiniUiPrivate::Settings: activateSettings(); break;
         case BtMiniUiPrivate::Search: activateSearch(); break;
         case BtMiniUiPrivate::Context:
-            d->switchFrom();
+            d->switchTo(BtMiniUiPrivate::Context);
             d->_mainWidget->setCurrentWidget(d->_contextWidgets.last());
             break;
         default:
@@ -929,10 +938,7 @@ void BtMiniUi::activateWorks()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
-
-    if(!d->_widgetStack.contains(BtMiniUiPrivate::Works))
-        d->_widgetStack.append(BtMiniUiPrivate::Works);
+    d->switchTo(BtMiniUiPrivate::Works);
 
     if(!d->_worksWidget)
         d->createWorksWidget();
@@ -955,10 +961,7 @@ void BtMiniUi::activateInstaller()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
-
-    if(!d->_widgetStack.contains(BtMiniUiPrivate::Installer))
-        d->_widgetStack.append(BtMiniUiPrivate::Installer);
+    d->switchTo(BtMiniUiPrivate::Installer);
 
     if(!d->_installerWidget)
         d->createInstallerWidget();
@@ -970,10 +973,7 @@ void BtMiniUi::activateSearch()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
-
-    if(!d->_widgetStack.contains(BtMiniUiPrivate::Search))
-        d->_widgetStack.append(BtMiniUiPrivate::Search);
+    d->switchTo(BtMiniUiPrivate::Search);
 
     if(!d->_searchWidget)
         d->createSearchWidget();
@@ -985,10 +985,7 @@ void BtMiniUi::activateSettings()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
-
-    if(!d->_widgetStack.contains(BtMiniUiPrivate::Settings))
-        d->_widgetStack.append(BtMiniUiPrivate::Settings);
+    d->switchTo(BtMiniUiPrivate::Settings);
 
     if(!d->_settingsWidget)
         d->createSettingsWidget();
@@ -1008,10 +1005,7 @@ void BtMiniUi::activateClippings()
 {
     Q_D(BtMiniUi);
 
-    d->switchFrom();
-
-    if(!d->_widgetStack.contains(BtMiniUiPrivate::Clippings))
-        d->_widgetStack.append(BtMiniUiPrivate::Clippings);
+    d->switchTo(BtMiniUiPrivate::Clippings);
 
     if(!d->_clippingsWidget)
         d->createClippingsWidget();

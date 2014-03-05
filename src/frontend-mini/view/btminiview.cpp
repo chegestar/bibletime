@@ -2860,11 +2860,21 @@ void BtMiniView::selectionStart()
     r.moveTop(d->currentSubView()->contentsRect().top() + r.top());
     r.adjust(font().pixelSize() * 0.3, font().pixelSize() * 0.3, -font().pixelSize() * 0.3, -font().pixelSize() * 0.3);
 
-    int sf = font().pixelSize() * 2.2;
+    int sf = (parentWidget() != 0 ? parentWidget() : this)->font().pixelSize() * 3.0;
+
     d->currentSubView()->_selectionStartArea = QRect(0, 0, sf, sf * 1.6);
     d->currentSubView()->_selectionEndArea = QRect(0, 0, sf, sf * 1.6);
+
+    // limit selected area for tall items
+    if(r.height() > viewport()->height())
+    {
+        r.setTop(qMax(r.top(), 0));
+        r.setHeight(viewport()->height() - d->currentSubView()->_selectionEndArea.height());
+    }
+
     d->currentSubView()->_selectionStartArea.moveTopLeft(r.topLeft());
     d->currentSubView()->_selectionEndArea.moveTopRight(r.bottomRight());
+
 
     // update to selection
     d->currentSubView()->updateSelection(true, r.topLeft());

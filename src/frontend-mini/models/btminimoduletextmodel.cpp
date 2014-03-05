@@ -883,6 +883,8 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 
     int r = BtMiniMenu::execMenu(actions);
 
+    if(r < 0) return;
+
     if(actions[r] == tr("Add Left"))
     {
         beginInsertRows(QModelIndex(), level, level);
@@ -912,30 +914,14 @@ void BtMiniModuleTextModel::selectedIndexes(const QModelIndex &index)
     BtMiniView *v = qobject_cast<BtMiniView *>(sender());
     Q_CHECK_PTR(v);
 
-    QStringList actions;
-    actions << tr("Copy") /*<< tr("Copy text") << tr("Bookmark")*/;
-
-    switch(BtMiniMenu::execMenu(actions))
+    switch(BtMiniMenu::execMenu(QStringList() << tr("Copy") << tr("Cancel")))
     {
     case 0:
-        {
-            QApplication::clipboard()->setText(v->selectedText());
-            v->selectionEnd();
-        }
+        QApplication::clipboard()->setText(v->selectedText());
+        v->selectionEnd();
         break;
     case 1:
-        {
-            QString r;
-            foreach(QModelIndex i, v->selectionModel()->selection().indexes())
-                r += i.data().toString();
-            QApplication::clipboard()->setText(r);
-            v->selectionEnd();
-        }
-        break;
-    case 2:
-        {
-            ;
-        }
+        v->selectionEnd();
         break;
     }
 }

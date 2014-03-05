@@ -6,28 +6,32 @@ kalemas@mail.ru :
 +       current item should be changed right after current item was left the screen
 +       setup default modules occurs even on install sources reload
 === 1.0.4 ===
-    text/verses selection facility
++   text/verses selection facility
 +       redraw handle
 +       select 1 more character for end of selction
 +       scroll area for handles, top - thiner, relative to view height
 +       only Copy function atm
-    Back button logic
-    android: scrolling does not stops if app was put into bg
++       cancel selection
++       size of selection handle relative to ui size, not text
++   android: scrolling does not stops if app was put into bg
++   back button close on context widgets
++   click on non menu area when service menu for works widget active cause crash
+    limit selection to screen height, for too long entries
+=== 1.1.0 ===
     symbian: text input in search view does not activate sip
     symbian: S60 style draw white text on lime green after restart
+        setup emulator
     android: sometimes failed to start after app was put into bg
-    back button close on context widgets
-    click on non menu area when service menu for works widget active cause crash
-    size of selection handle relative to ui size, not text
-        adjust base size selection: tablets got too large text
     end selection when call clear for unused items instead of when set sleep
     add parallel works for incompatible module types
     do not start tapping when handle was pressed
-    android: are there fallback fonts, try to fix unrecognized characters
-    limit selection to screen height, for too long entries
-
-
-=== 1.1.0 ===
+    android: are there fallback fonts, try to fix unrecognized characters?
+    adjust base size selection: tablets got too large text
+        base size is height of basic font for interface
+        on small screen it should be fixed in physical units for example 7mm
+        on tablet it should be fixed in physical units lets take 7mm
+    < back button return to previous level in install manager and settings
+=== 1.2.0 ===
     bookmarks
     restore search term during one session
     find correct facility to retrieve icons
@@ -41,9 +45,9 @@ kalemas@mail.ru :
     in handbook make it clean for understanding module/text/work  definition
     "Context view explanation is still too short for me"
     android: keep device on
+    per module font family
     in context display messages if default modules absent
-
-
+    fix text selection for paralleled display
 === some future version ===
     right click - service menu, middle click - context menu
     make it able to display two or more widgets at same time
