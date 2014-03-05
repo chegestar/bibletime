@@ -16,6 +16,15 @@ kalemas@mail.ru :
     symbian: text input in search view does not activate sip
     symbian: S60 style draw white text on lime green after restart
     android: sometimes failed to start after app was put into bg
+    back button close on context widgets
+    click on non menu area when service menu for works widget active cause crash
+    size of selection handle relative to ui size, not text
+        adjust base size selection: tablets got too large text
+    end selection when call clear for unused items instead of when set sleep
+    add parallel works for incompatible module types
+    do not start tapping when handle was pressed
+    android: are there fallback fonts, try to fix unrecognized characters
+    limit selection to screen height, for too long entries
 
 
 === 1.1.0 ===
@@ -32,7 +41,7 @@ kalemas@mail.ru :
     in handbook make it clean for understanding module/text/work  definition
     "Context view explanation is still too short for me"
     android: keep device on
-    per module font family
+    in context display messages if default modules absent
 
 
 === some future version ===
