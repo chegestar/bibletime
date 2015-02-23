@@ -23,26 +23,26 @@ import java.util.TimerTask;
 public class MiniActivity extends org.qtproject.qt5.android.bindings.QtActivity
 {
     private static MiniActivity _instance;
-    private static Timer _keepTimer;
-    private static View.OnTouchListener _keepListener;
+//    private static Timer _keepTimer;
+//    private static View.OnTouchListener _keepListener;
 
     public MiniActivity()
     {
         _instance = this;
-        _keepListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                _keepTimer = new Timer();
-                _keepTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF 2");
-                        //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    }
-                }, seconds * 10);
-            }
-        }
+//        _keepListener = new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event)
+//            {
+//                _keepTimer = new Timer();
+//                _keepTimer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF 2");
+//                        //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//                    }
+//                }, seconds * 10);
+//            }
+//        }
     }
 
     public static void vibrate(long miliseconds)
@@ -52,38 +52,38 @@ public class MiniActivity extends org.qtproject.qt5.android.bindings.QtActivity
     }
 
     // Control keep screen on timeout.
-    public static void keepScreenAwake(long seconds)
-    {
-        if (seconds == 0)
-        {
-            _keepTimer = null;
-            Log.v("BtMini", "FLAG_KEEP_SCREEN_ON");
-            //_instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
-        else if (seconds < 0)
-        {
-            _keepTimer = null;
-            Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF");
-            //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
-        else
-        {
-            // attach touch listener on first call
-            // start timer or call listener routine
-            // set flag on
+//    public static void keepScreenAwake(long seconds)
+//    {
+//        if (seconds == 0)
+//        {
+//            _keepTimer = null;
+//            Log.v("BtMini", "FLAG_KEEP_SCREEN_ON");
+//            //_instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        }
+//        else if (seconds < 0)
+//        {
+//            _keepTimer = null;
+//            Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF");
+//            //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        }
+//        else
+//        {
+//            // attach touch listener on first call
+//            // start timer or call listener routine
+//            // set flag on
 
-            _keepTimer = new Timer();
-            _keepTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF 2");
-                    //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                }
-            }, seconds * 10);
+//            _keepTimer = new Timer();
+//            _keepTimer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    Log.v("BtMini", "FLAG_KEEP_SCREEN_OFF 2");
+//                    //_instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//                }
+//            }, seconds * 10);
 
-            Log.v("BtMini", "FLAG_KEEP_SCREEN_ON 2");
-            //_instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            _instance.getWindow().setOnClickListener(_keepListener);
-        }
-    }
+//            Log.v("BtMini", "FLAG_KEEP_SCREEN_ON 2");
+//            //_instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//            _instance.getWindow().setOnClickListener(_keepListener);
+//        }
+//    }
 }

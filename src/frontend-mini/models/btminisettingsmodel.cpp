@@ -112,8 +112,8 @@ public:
         _items.append(new Item(Item::Style, tbs + BtMiniSettingsModel::tr("Ui style:") +
             "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #ifdef Q_OS_ANDROID
-        _items.append(new Item(Item::KeepAwake, tbs + BtMiniSettingsModel::tr("Keep screen awake:") +
-            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
+//        _items.append(new Item(Item::KeepAwake, tbs + BtMiniSettingsModel::tr("Keep screen awake:") +
+//            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #endif
         _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
