@@ -58,12 +58,7 @@ TRANSLATIONS += \
 
 # Android platform
 android {
-QT += androidextras
-
-#CONFIG += exceptions
-#QMAKE_CXXFLAGS_EXCEPTIONS_ON += -fexceptions
-#LIBS += -l$$ANDROID_SOURCES_CXX_STL_LIBDIR/libgnustl_static.a
-#LIBS -= -lgnustl_shared
+!lessThan(QT_MAJOR_VERSION, 5):!lessThan(QT_MINOR_VERSION, 2):QT += androidextras
 }
 
 
