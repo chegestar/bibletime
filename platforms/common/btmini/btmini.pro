@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.1.2
+VERSION = 1.1.3
 
 CONFIG += clucene svg xml mini
 
@@ -59,7 +59,13 @@ TRANSLATIONS += \
 # Android platform
 android {
 QT += androidextras
+
+#CONFIG += exceptions
+#QMAKE_CXXFLAGS_EXCEPTIONS_ON += -fexceptions
+#LIBS += -l$$ANDROID_SOURCES_CXX_STL_LIBDIR/libgnustl_static.a
+#LIBS -= -lgnustl_shared
 }
+
 
 # Windows platform
 windows {
@@ -132,6 +138,11 @@ SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
 # BlackBerry10 Platform
 blackberry {
 LIBS += -lbbdevice
+}
+
+# Windows Phone
+winphone {
+# have to be built against curl
 }
 
 # BibleTime Core
