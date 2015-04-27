@@ -3550,7 +3550,7 @@ void BtMiniView::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int 
 {
     Q_D(BtMiniView);
 
-    qDebug() << "BtMiniView::rowsAboutToBeRemoved" << parent << start << end;
+    //qDebug() << "BtMiniView::rowsAboutToBeRemoved" << parent << start << end;
 
     Q_ASSERT(start == end);
     Q_ASSERT(d->_ld->plainMode());
@@ -3573,7 +3573,7 @@ void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     Q_D(BtMiniView);
 
-    qDebug() << "BtMiniView::rowsInserted" << parent << start << end;
+    //qDebug() << "BtMiniView::rowsInserted" << parent << start << end;
 
     Q_ASSERT(start == end);
 	Q_ASSERT(d->_ld->plainMode());
