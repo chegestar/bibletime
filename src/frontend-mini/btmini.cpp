@@ -339,6 +339,7 @@ int main(int argc, char *argv[])
     CSwordBackend *backend = CSwordBackend::createInstance();
     backend->initModules(CSwordBackend::OtherChange);
 
+#ifndef EXCLUDEZLIB
     // check locales and extract from resources, we always need locales because keys stored in localized form
     if(btConfig().value<int>("mini/swordLocalesVersion", 0) < SWORD_VERSION_NUM)
     {
@@ -377,6 +378,7 @@ int main(int argc, char *argv[])
         }
         else qDebug() << "Sword directory does not exists" << d;
     }
+#endif
 
     backend->booknameLanguage(btConfig().value<QString>("language", locale));
     if(btConfig().value<bool>("deleteOrphanedIndices", true))
