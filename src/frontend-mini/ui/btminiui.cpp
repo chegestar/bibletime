@@ -1032,10 +1032,16 @@ void BtMiniUi::modulesReloaded()
                 break;
             }
 
+        // case when the first Bible was installed runtime
         if(haveBible)
         {
             d->_haveBible = true;
+
+            // HACK clear widget set and start all again
             resetWidgets(false, false, true);
+            Q_ASSERT(d->_widgetStack.size() == 1);
+            d->_widgetStack.clear();
+
             activateWorks();
         }
     }
