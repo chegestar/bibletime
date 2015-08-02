@@ -2257,9 +2257,9 @@ public:
     /** User feedback. */
     QPoint                        _mouseLast;
     QPoint                        _mouseStart;
-    bool                          _mouseLeaveZone;
     bool                          _mouseDown;
     int                           _mouseTapping;
+    bool                          _mouseTappingOver;
     QPair<QPoint, qint64>         _mouseScrolling[2];
     QPointF                       _mousePower;
 	
@@ -2372,7 +2372,7 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
 
     d->_mouseLast = d->_mouseStart = e->pos();
 
-    d->_mouseLeaveZone = false;
+    d->_mouseTappingOver = false;
     d->_mouseDown      = true;
 
     d->_mouseTapping             = 0;
@@ -2391,9 +2391,16 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
     if(d->currentSubView()->_selectionMode)
     {
         if(d->currentSubView()->_selectionStartArea.contains(e->pos()))
+        {
             d->currentSubView()->_selectionMoveStartMarker = true;
+            d->_mouseTappingOver = true;
+        }
         if(d->currentSubView()->_selectionEndArea.contains(e->pos()))
+        {
             d->currentSubView()->_selectionMoveEndMarker = true;
+            d->_mouseTappingOver = true;
+        }
+
         return;
     }
 
@@ -2431,7 +2438,7 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     d->_mouseTapping = 0;
     d->_mouseDown = false;
 
-    if(!d->_mouseLeaveZone)
+    if(!d->_mouseTappingOver)
     {
         QPersistentModelIndex index = indexAt(e->pos());
 
@@ -2504,47 +2511,48 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
     {
         d->currentSubView()->_selectionMoveEndMarker = false;
         d->currentSubView()->_selectionMoveStartMarker = false;
-        return;
     }
-
-    // kinetic scrolling
-    d->_mouseScrolling[1].second = d->_timer.elapsed();
-    d->_mouseScrolling[1].first  = e->pos();
-
-    if(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second > 200)
+    else
     {
-        d->_mouseScrolling[0].first  = d->_mouseScrolling[1].first+((d->_mouseScrolling[0].first-\
-            d->_mouseScrolling[1].first) * (200.0f/(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second)));
-        d->_mouseScrolling[0].second = d->_mouseScrolling[1].second - 200;
-    }
+        // kinetic scrolling
+        d->_mouseScrolling[1].second = d->_timer.elapsed();
+        d->_mouseScrolling[1].first  = e->pos();
 
-    QPointF speed(QPointF(d->_mouseScrolling[1].first - d->_mouseScrolling[0].first) /
-        qMax((d->_mouseScrolling[1].second - d->_mouseScrolling[0].second), (qint64)120));
+        if(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second > 200)
+        {
+            d->_mouseScrolling[0].first  = d->_mouseScrolling[1].first+((d->_mouseScrolling[0].first-\
+                d->_mouseScrolling[1].first) * (200.0f/(d->_mouseScrolling[1].second-d->_mouseScrolling[0].second)));
+            d->_mouseScrolling[0].second = d->_mouseScrolling[1].second - 200;
+        }
 
-    // deccelerate
-    d->_mousePower.rx() *= qMin(qAbs(speed.x()) * 200.0f / d->_sizeFactor, (qreal)1.0);
-    d->_mousePower.ry() *= qMin(qAbs(speed.y()) * 200.0f / d->_sizeFactor, (qreal)1.0);
+        QPointF speed(QPointF(d->_mouseScrolling[1].first - d->_mouseScrolling[0].first) /
+            qMax((d->_mouseScrolling[1].second - d->_mouseScrolling[0].second), (qint64)120));
 
-    // stop if different directions
-    if((speed.ry() > 0 && d->_mousePower.ry() < 0) || (speed.ry() < 0 && d->_mousePower.ry() > 0))
-        d->_mousePower.ry() = 0.0;
-    if((speed.rx() > 0 && d->_mousePower.rx() < 0) || (speed.rx() < 0 && d->_mousePower.rx() > 0))
+        // deccelerate
+        d->_mousePower.rx() *= qMin(qAbs(speed.x()) * 200.0f / d->_sizeFactor, (qreal)1.0);
+        d->_mousePower.ry() *= qMin(qAbs(speed.y()) * 200.0f / d->_sizeFactor, (qreal)1.0);
+
+        // stop if different directions
+        if((speed.ry() > 0 && d->_mousePower.ry() < 0) || (speed.ry() < 0 && d->_mousePower.ry() > 0))
+            d->_mousePower.ry() = 0.0;
+        if((speed.rx() > 0 && d->_mousePower.rx() < 0) || (speed.rx() < 0 && d->_mousePower.rx() > 0))
+            d->_mousePower.rx() = 0.0;
+
+        // accelerate
+        d->_mousePower += speed * 50.0f;
+
+        // cut down horizontal kinetic power, for a while
         d->_mousePower.rx() = 0.0;
 
-    // accelerate
-    d->_mousePower += speed * 50.0f;
+        // switch subview if passed horizontal snapping
+        const int xr = d->_mouseStart.x() - e->pos().x() + d->_snappingRight;
+        const int xl = e->pos().x() - d->_mouseStart.x() + d->_snappingLeft;
 
-	// cut down horizontal kinetic power, for a while
-	d->_mousePower.rx() = 0.0;
-
-    // switch subview if passed horizontal snapping
-    const int xr = d->_mouseStart.x() - e->pos().x() + d->_snappingRight;
-    const int xl = e->pos().x() - d->_mouseStart.x() + d->_snappingLeft;
-
-    if(xr > d->_snappingValue)
-        slideRight();
-    if(xl > d->_snappingValue)
-        slideLeft();
+        if(xr > d->_snappingValue)
+            slideRight();
+        if(xl > d->_snappingValue)
+            slideLeft();
+    }
 
     viewport()->update();
 }
@@ -2560,7 +2568,7 @@ void BtMiniView::mouseMoveEvent(QMouseEvent *e)
     if(qAbs(d->_mouseStart.x() - e->x()) > d->_sizeFactor ||
         qAbs(d->_mouseStart.y() - e->y()) > d->_sizeFactor)
     {
-        d->_mouseLeaveZone = true;
+        d->_mouseTappingOver = true;
         d->_mouseTapping   = 0;
 
         d->currentSubView()->_visualCenter = 0.45f;
@@ -2646,7 +2654,7 @@ void BtMiniView::timerEvent(QTimerEvent *e)
     }
 
     // update long press
-    if(d->_mouseDown && !d->_mouseLeaveZone)
+    if(d->_mouseDown && !d->_mouseTappingOver)
     {
         // if there is any connection to longPressed or shortPressed signal, vibrate
 
