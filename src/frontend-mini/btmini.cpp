@@ -332,7 +332,13 @@ int main(int argc, char *argv[])
 
     // Init Sword
     sword::SWLog::setSystemLog(new BtMiniSwordLog);
-    sword::SWLog::getSystemLog()->setLogLevel(btConfig().value<int>("mini/swordDebugLevel", sword::SWLog::LOG_ERROR));
+    sword::SWLog::getSystemLog()->setLogLevel(btConfig().value<int>("mini/swordDebugLevel", 
+#ifdef QT_DEBUG
+		sword::SWLog::LOG_DEBUG
+#else
+		sword::SWLog::LOG_ERROR
+#endif
+		));
 
     sword::StringMgr::setSystemStringMgr(new BtStringMgr);
 
