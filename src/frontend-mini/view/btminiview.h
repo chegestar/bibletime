@@ -68,7 +68,7 @@ public:
     
     /** Set specified options for given level. */
     void setLevelOptions(int level, int itemsOnLine, QString preText, QString postText);
-    
+
     /** Set default role for searching indexes. This function change level options. */
     void setSearchRole(int searchRole = Qt::EditRole, int level = -1);
 

@@ -2400,28 +2400,28 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
             d->currentSubView()->_selectionMoveEndMarker = true;
             d->_mouseTappingOver = true;
         }
-
-        return;
     }
-
-    // calculate snapping
-    QMargins m(d->subViewMargins(d->_currentSubView));
-    d->_snappingLeft  = qMin(0, m.left());
-    d->_snappingRight = qMin(0, m.right());
-
-    // activate subview that is currently pressed
-	bool activated = false;
-    for(int i = 0; i < d->_subViews.size(); ++i)
+    else
     {
-        if(d->_currentSubView != i && d->_subViews[i]->contentsRect().left() < e->x() + d->_vx &&
-            d->_subViews[i]->contentsRect().right() > e->x() + d->_vx)
-        {
-            activateSubView(i);
+        // calculate snapping
+        QMargins m(d->subViewMargins(d->_currentSubView));
+        d->_snappingLeft  = qMin(0, m.left());
+        d->_snappingRight = qMin(0, m.right());
 
-			if(!activated)
-				activated = true;
-			else
-				Q_ASSERT(false);
+        // activate subview that is currently pressed
+        bool activated = false;
+        for(int i = 0; i < d->_subViews.size(); ++i)
+        {
+            if(d->_currentSubView != i && d->_subViews[i]->contentsRect().left() < e->x() + d->_vx &&
+                d->_subViews[i]->contentsRect().right() > e->x() + d->_vx)
+            {
+                activateSubView(i);
+
+                if(!activated)
+                    activated = true;
+                else
+                    Q_ASSERT(false);
+            }
         }
     }
 }
