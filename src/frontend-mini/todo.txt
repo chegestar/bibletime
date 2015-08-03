@@ -23,7 +23,7 @@ kalemas@mail.ru :
     symbian: S60 style draw white text on lime green after restart
         setup emulator
 +   android: sometimes failed to start after app was put into bg
-    end selection when call clear for unused items instead of when set sleep
++   end selection when call clear for unused items instead of when set sleep
     add parallel works for incompatible module types
     do not start tapping when handle was pressed
 +   android: are there fallback fonts, try to fix unrecognized characters?
@@ -33,6 +33,7 @@ kalemas@mail.ru :
         on tablet it should be fixed in physical units lets take 7mm
     < back button return to previous level in install manager and settings
     fullscreen maybe by double tapping
+    instead of diabled arrow in top panel add "+ subview"
 === 1.3.0 ===
     bookmarks
     restore search term during one session

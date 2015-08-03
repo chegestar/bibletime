@@ -2125,7 +2125,7 @@ public:
 
 	/** Cleanup for subviews. */
 	void clearSubView(int subview, bool remove = false, bool onlyUnusedItems = false)
-	{
+    {
 		if(onlyUnusedItems)
 		{
 			// remove unnecessary items of previous view to release memory
@@ -3220,6 +3220,13 @@ void BtMiniView::activateSubView(int id)
 
     if(d->_currentSubView != id)
     {
+        // end selection
+        if(d->_subViews[d->_currentSubView]->_selectionMode)
+        {
+            d->_subViews[d->_currentSubView]->_selectionMode = false;
+            d->_subViews[d->_currentSubView]->clearSelection();
+        }
+
 		d->clearSubView(d->_currentSubView, false, true);
 
 		// free render cache
