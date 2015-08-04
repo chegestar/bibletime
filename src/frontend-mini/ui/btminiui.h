@@ -78,7 +78,7 @@ public slots:
     void activateClippings();
 
     /** Go back, return false if nothing was done. */
-    bool activatePreviousWidget();
+    bool goBack();
 
     /** */
     void applicationStateChanged();

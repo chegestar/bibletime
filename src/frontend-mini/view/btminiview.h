@@ -102,8 +102,8 @@ public slots:
     void setCurrentIndex(const QModelIndex &index);
 
     /** Activate and switch next/prev subview with animation. */
-    void slideLeft();
-    void slideRight();
+    bool slideLeft();
+    bool slideRight();
 
 	/** Reimplemented from QAbstractItemView. "Well documented function". */
 	void doItemsLayout();

@@ -975,8 +975,8 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     connect(view, SIGNAL(shortPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
-    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
-    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
+    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activateInstaller()));
 }
 
@@ -1026,7 +1026,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 		pi = pi.parent();
 	view->scrollTo(pi);
 
-    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closePlaceSelection()));
 }
 
@@ -1254,7 +1254,7 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     l->addWidget(view);
     w->setLayout(l);
 
-    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     connect(view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(moduleContextClicked(const QModelIndex &)));
 }
 
@@ -1325,7 +1325,7 @@ void BtMiniModuleTextModel::closeContext()
     btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
     btConfig().setValue<QStringList>("mini/openInfoModules", modules);
 
-    BtMiniUi::instance()->activatePreviousWidget();
+    BtMiniUi::instance()->goBack();
 }
 
 void BtMiniModuleTextModel::closeModuleSelection()
@@ -1371,7 +1371,7 @@ void BtMiniModuleTextModel::closeModuleSelection()
         }
     }
 
-    BtMiniUi::instance()->activatePreviousWidget();
+    BtMiniUi::instance()->goBack();
 }
 
 void BtMiniModuleTextModel::closePlaceSelection()
@@ -1385,7 +1385,7 @@ void BtMiniModuleTextModel::closePlaceSelection()
     QString np = view->currentIndex().data(BtMini::PlaceRole).toString();
     works->scrollTo(keyIndex(works->currentLevel(), np));
 
-    BtMiniUi::instance()->activatePreviousWidget();
+    BtMiniUi::instance()->goBack();
 }
 
 QModelIndexList BtMiniModuleTextModel::match(const QModelIndex &start, int role, const QVariant &value, int hits,

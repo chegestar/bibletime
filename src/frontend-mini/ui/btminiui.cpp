@@ -221,7 +221,7 @@ public:
             if(e->key() == Qt::Key_Back || (e->modifiers() & Qt::AltModifier
                 && (e->key() == Qt::Key_Backspace || e->key() == Qt::Key_Left)))
             {
-                if(!BtMiniUi::instance()->activatePreviousWidget())
+                if(!BtMiniUi::instance()->goBack())
                 {
                     qDebug() << "close main widget:" << BtMiniUi::instance()->d_func()->_widgetStack;
                     close();
@@ -488,7 +488,7 @@ public:
         QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), _worksWidget->findChild<BtMiniView*>(), SLOT(scrollTo(const QModelIndex &)));
         QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), BtMiniUi::instance(), SLOT(activateWorks()));
-        QObject::connect(pb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        QObject::connect(pb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     }
 
     void createInstallerWidget()
@@ -545,7 +545,7 @@ public:
         _installModel->updateIndicators();
 
         if(_worksWidget)
-            QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+            QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
         else if(bb)
             QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance()->mainWidget(), SLOT(close()));
         QObject::connect(rb, SIGNAL(clicked()), _installModel, SLOT(backgroundDownload()));
@@ -582,7 +582,7 @@ public:
         _settingsWidget->setLayout(vl);
 
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
-        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     }
 
     void createClippingsWidget()
@@ -616,7 +616,7 @@ public:
         _clippingsWidget->setLayout(vl);
 
         QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
-        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activatePreviousWidget()));
+        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     }
 
     void updateMainWidget()
@@ -884,9 +884,14 @@ void BtMiniUi::changeFontSize(QWidget *w, qreal factor)
     w->setFont(f);
 }
 
-bool BtMiniUi::activatePreviousWidget()
+bool BtMiniUi::goBack()
 {
     Q_D(BtMiniUi);
+
+    // check if we could switch previus list in current view
+    BtMiniView * v = d->_mainWidget->currentWidget()->findChild<BtMiniView*>();
+    if(v && v->slideLeft())
+        return true;
 
     if(d->_widgetStack.size() <= 1)
         return false;

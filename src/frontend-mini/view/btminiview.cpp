@@ -3266,16 +3266,30 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
 	scheduleDelayedItemsLayout();
 }
 
-void BtMiniView::slideLeft()
+bool BtMiniView::slideLeft()
 {
     Q_D(BtMiniView);
-    activateSubView(qMax(d->_currentSubView - 1, 0));
+
+    int i = d->_currentSubView - 1;
+    if(i >= 0)
+    {
+        activateSubView(i);
+        return true;
+    }
+    return false;
 }
 
-void BtMiniView::slideRight()
+bool BtMiniView::slideRight()
 {
     Q_D(BtMiniView);
-    activateSubView(qMin(d->_currentSubView + 1, d->_subViews.size() - 1));
+
+    int i = d->_currentSubView + 1;
+    if(i < d->_subViews.size())
+    {
+        activateSubView(i);
+        return true;
+    }
+    return false;
 }
 
 void BtMiniView::setLevelOptions(const int level, int itemPerLine, QString itemPreText, QString itemPostText)
