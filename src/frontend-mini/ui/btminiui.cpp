@@ -176,19 +176,35 @@ public:
     #endif
         }
 
-        void showExpanded()
+        void showNormal()
         {
-        #if defined(Q_OS_WINCE)
+#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID) || defined Q_OS_OSX
+            resize(480, 640);
+            show();
+            raise();
+#else
+            setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
+
+#if defined(Q_OS_WINCE)
             resize(QApplication::desktop()->size());
             show();
             showFullScreen();
-        #elif defined (Q_OS_ANDROID)
+#elif defined (Q_OS_ANDROID)
             showMaximized();
-        #elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
+#elif defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR) || defined(Q_WS_MAEMO_5) || defined(Q_WS_X11)
             showFullScreen();
-        #else
+#else
             show();
-        #endif
+#endif
+#endif
+            _fullscreen = false;
+        }
+
+        void showFullScreen()
+        {
+            QStackedWidget::showFullScreen();
+
+            _fullscreen = true;
         }
 
     protected:
@@ -233,9 +249,22 @@ public:
             QStackedWidget::keyReleaseEvent(e);
         }
 
-    private:
-        int _saveTimer;
+        bool eventFilter(QObject *o, QEvent *e)
+        {
+            Q_ASSERT(o == BtMiniUi::instance()->worksView()->viewport());
 
+            if(e->type() == QEvent::MouseButtonDblClick)
+            {
+                if(_fullscreen)
+                    showNormal();
+                else
+                    showFullScreen();
+            }
+        }
+
+    private:
+        int  _saveTimer;
+        bool _fullscreen;
     };
 
     class BtMiniWidget : public QWidget
@@ -270,15 +299,7 @@ public:
         // TODO qml frontend
 
         _mainWidget = new BtMiniMainWidget;
-
-#if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID) || defined Q_OS_OSX
-        _mainWidget->resize(QSize(480, 640));
-        _mainWidget->show();
-        _mainWidget->raise();
-#else
-        _mainWidget->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
-        _mainWidget->showExpanded();
-#endif
+        _mainWidget->showNormal();
 
         /*  device          resolution          logical dpi         physical dpi
             htc hd2         800x480             138                 254
@@ -441,6 +462,9 @@ public:
 
         QObject::connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
             m, SLOT(modulesReloaded()));
+
+        // this is for double click handling to switch fullscreen
+        v->viewport()->installEventFilter(_mainWidget);
     }
 
     void createSearchWidget()
@@ -1085,3 +1109,4 @@ void BtMiniUi::openWorksMenu()
         break;
     }
 }
+

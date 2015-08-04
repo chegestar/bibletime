@@ -31,7 +31,7 @@ kalemas@mail.ru :
         base size is height of basic font for interface
         on small screen it should be fixed in physical units for example 7mm
         on tablet it should be fixed in physical units lets take 7mm
-    < back button return to previous level in install manager and settings
++   < back button return to previous level in install manager and settings
     fullscreen maybe by double tapping
     instead of diabled arrow in top panel add "+ subview"
 === 1.3.0 ===
