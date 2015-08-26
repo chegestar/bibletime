@@ -2379,13 +2379,6 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
     d->_mouseScrolling[0].first  = e->pos();
     d->_mouseScrolling[0].second = d->_timer.elapsed();
 
-    // update current index to one under pressed point
-    QPersistentModelIndex index = indexAt(e->pos());
-    if(index.isValid())
-    {
-        d->currentSubView()->updateModelIndex(index);
-        emit currentChanged(index);
-    }
 
     // selection
     if(d->currentSubView()->_selectionMode)
@@ -2422,6 +2415,14 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
                 else
                     Q_ASSERT(false);
             }
+        }
+
+        // update current index to one under pressed point
+        QPersistentModelIndex index = indexAt(e->pos());
+        if(index.isValid())
+        {
+            d->currentSubView()->updateModelIndex(index);
+            emit currentChanged(index);
         }
     }
 }
