@@ -253,10 +253,10 @@ public:
 
         bool eventFilter(QObject *o, QEvent *e)
         {
-            Q_ASSERT(o == BtMiniUi::instance()->worksView()->viewport());
-
             if(e->type() == QEvent::MouseButtonDblClick)
             {
+                Q_ASSERT(o == BtMiniUi::instance()->worksView()->viewport());
+
                 if(_fullscreen)
                     showNormal();
                 else
