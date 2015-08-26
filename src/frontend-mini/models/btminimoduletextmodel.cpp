@@ -1,4 +1,4 @@
-/*********
+﻿/*********
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
@@ -228,13 +228,13 @@ public:
     }
 
     /** List for index. */
-    const List * indexList(const QModelIndex &index) const
+    List * indexList(const QModelIndex &index) const
     {
         if(indexDepth(index) == 1)
             return &_lists[index.internalId()];
         else
         {
-			const List *l = reinterpret_cast<const List*>(index.internalId());
+            List *l = reinterpret_cast<List*>(index.internalId());
 #ifdef QT_DEBUG
 			for(int i = 0; i < _lists.size(); ++i)
 				if(&_lists[i] == l)
@@ -368,7 +368,7 @@ public:
 		}
 	}
 
-    QList<List>                 _lists;
+    mutable QList<List>         _lists;
 
     BtMiniLayoutDelegate       *_ld;
 
@@ -737,28 +737,13 @@ void BtMiniModuleTextModel::setModule(QString module)
         d->insertModule(0, module);
 }
 
-void BtMiniModuleTextModel::setIndicators(QWidget *left, QWidget *module, QWidget *place, QWidget *right)
-{
-    Q_D(BtMiniModuleTextModel);
-
-    d->_moduleIndicator = qobject_cast<QAbstractButton*>(module);
-    Q_CHECK_PTR(d->_moduleIndicator);
-    QObject::connect(module, SIGNAL(clicked()), this, SLOT(openModuleSelection()));
-
-    d->_placeIndicator = qobject_cast<QAbstractButton*>(place);
-    Q_CHECK_PTR(d->_placeIndicator);
-    QObject::connect(place, SIGNAL(clicked()), this, SLOT(openPlaceSelection()));
-
-    d->_leftIndicator  = left;
-    d->_rightIndicator = right;
-}
 
 void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 {
     Q_D(BtMiniModuleTextModel);
 
     BtMiniView *v = qobject_cast<BtMiniView *>(sender());
-	Q_CHECK_PTR(v);
+    Q_CHECK_PTR(v);
 
     QString contents = v->currentContents();
     const QString place = v->currentIndex().data(BtMini::PlaceRole).toString();
@@ -856,8 +841,8 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             view->setModel(m);
             view->scrollTo(m->index(0, 0));
 
-			connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
-			connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
+            connect(view, SIGNAL(longPressed(const QModelIndex&)), m, SLOT(openMenu(const QModelIndex&)));
+            connect(view, SIGNAL(shortPressed(const QModelIndex&)), m, SLOT(openContext(const QModelIndex&)));
             connect(b, SIGNAL(clicked()), m, SLOT(closeContext()), Qt::QueuedConnection);
         }
     }
@@ -873,11 +858,11 @@ void BtMiniModuleTextModel::openMenu(const QModelIndex &index)
 
     int level = v->currentLevel();
 
-	QStringList actions;
-	actions << tr("Add Left") << tr("Add Right");
+    QStringList actions;
+    actions << tr("Add Left") << tr("Add Right");
 
-	if(d->_lists.size() > 1)
-		actions << tr("Clear");
+    if(d->_lists.size() > 1)
+        actions << tr("Clear");
 
     actions << tr("Select");
 
@@ -926,109 +911,6 @@ void BtMiniModuleTextModel::selectedIndexes(const QModelIndex &index)
     }
 }
 
-void BtMiniModuleTextModel::openModuleSelection()
-{
-    BtMiniView *works = BtMiniUi::instance()->worksView();
-    works->setSleep(true);
-    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
-
-    QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
-    BtMiniView *view = new BtMiniView(w);
-    view->setInteractive(true);
-    view->setTopShadow(true);
-
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
-    QPushButton *i = BtMiniUi::instance()->makeButton(tr("Install"));
-	QLabel *lb = new QLabel(tr("Select Text:"));
-    lb->setAlignment(Qt::AlignCenter);
-
-    BtMiniPanel *p = new BtMiniPanel;
-    p->addWidget(b, Qt::AlignLeft);
-    p->addWidget(lb, Qt::AlignCenter);
-    p->addWidget(i, Qt::AlignRight);
-
-    QVBoxLayout *l = new QVBoxLayout;
-    l->addWidget(p);
-    l->addWidget(view);
-    w->setLayout(l);
-
-    BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
-    m->setSourceModel(CSwordBackend::instance()->model());
-    m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'><word-breaks/>"
-                        << BtBookshelfModel::ModuleDescriptionHtmlRole << "</font>");
-
-    // if modules more than 4, scrollbar always visible
-	if(m->modules().size() > 4)
-	{
-		BtMiniLevelOption o = view->layoutDelegate()->levelOption();
-		o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
-		view->layoutDelegate()->setLevelOption(o);
-	}
-
-    view->setModel(m);
-
-    QModelIndexList list = m->match(m->index(0, 0), BtBookshelfModel::ModuleNameRole,
-	    cm, 1, Qt::MatchExactly | Qt::MatchRecursive);
-	    
-	if(list.size() > 0 && list[0].isValid())
-	    view->scrollTo(list[0]);
-
-    connect(view, SIGNAL(shortPressed(const QModelIndex&)), this, SLOT(openModuleMenu(const QModelIndex&)));
-    connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closeModuleSelection()));
-    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
-    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
-    connect(i, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(activateInstaller()));
-}
-
-void BtMiniModuleTextModel::openPlaceSelection()
-{
-    BtMiniView *works = BtMiniUi::instance()->worksView();
-    works->setSleep(true);
-
-    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString().section(',', 0, 0);
-    QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
-
-    QWidget *w = BtMiniUi::instance()->activateNewContextWidget();
-    BtMiniView *view = new BtMiniView(w);
-    view->setInteractive(true);
-    view->setTopShadow(true);
-    BtMiniUi::changeFontSize(view, 1.2);
-
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
-
-    BtMiniPanel *p = new BtMiniPanel(w);
-    p->addWidget(b, Qt::AlignLeft);
-
-    BtMiniModuleNavigationModel * m = new BtMiniModuleNavigationModel(cm, view);
-    view->setModel(m);
-
-    CSwordModuleInfo *mi = CSwordBackend::instance()->findModuleByName(cm);
-
-    if(mi && mi->type() != CSwordModuleInfo::Lexicon)
-    {
-        QLabel *c = new QLabel;
-        c->setAlignment(Qt::AlignCenter);
-        m->setIndicator(c);
-        connect(view, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicator(QModelIndex)));
-        p->addWidget(c, Qt::AlignCenter);
-    }
-
-    QVBoxLayout *l = new QVBoxLayout;
-    l->addWidget(p);
-    l->addWidget(view);
-    w->setLayout(l);
-
-
-    // setup current place and scroll to proper place
-	QModelIndex pi = m->keyToIndex(cp);
-	view->setCurrentIndex(pi);
-	while(pi.parent() != QModelIndex())
-		pi = pi.parent();
-	view->scrollTo(pi);
-
-    connect(b, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
-    connect(view, SIGNAL(selected(const QModelIndex &)), this, SLOT(closePlaceSelection()));
-}
 
 void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
 {
@@ -1093,9 +975,62 @@ bool BtMiniModuleTextModel::setData(const QModelIndex &index, const QVariant &va
             emit dataChanged(i, i);
         }
         return true;
+    case BtMini::PlaceRole:
+        {
+            QModelIndex i(d->indexDepth(index) == 2 ? index.parent() : index);
+            BtMiniModuleTextModelPrivate::List *l = d->indexList(i);
+
+            QString place(value.toString());
+            CSwordVerseKey key(l->_module);
+            l->setScope(key.parseVerseList((const char*)place.toUtf8()));
+
+            // module have no such entries
+            if(l->_scopeMap.size() == 0 && !place.isEmpty())
+            {
+                l->_hasScope = false;
+                l->setContents(QString());
+            }
+
+            emit dataChanged(i, i);
+        }
+        return true;
+    case Qt::DisplayRole:
+        {
+            QModelIndex i(d->indexDepth(index) == 2 ? index.parent() : index);
+            BtMiniModuleTextModelPrivate::List *l = d->indexList(i);
+
+            l->setContents(value.toString());
+
+            emit dataChanged(i, i);
+        }
+        return true;
     default:
         return false;
     }
+}
+
+bool BtMiniModuleTextModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    Q_D(BtMiniModuleTextModel);
+
+    Q_ASSERT(!parent.isValid());
+
+    beginInsertRows(parent, row, row + count - 1);
+    for(; count > 0; row++, count--)
+        d->insertModule(row, "");
+    endInsertRows();
+}
+
+bool BtMiniModuleTextModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    Q_D(BtMiniModuleTextModel);
+
+    Q_ASSERT(!parent.isValid());
+
+    beginRemoveRows(QModelIndex(), row, row + count - 1);
+    for(; count > 0; count--)
+        d->eraseModule(row);
+    endRemoveRows();
 }
 
 QHash<int, QByteArray> BtMiniModuleTextModel::roleNames() const

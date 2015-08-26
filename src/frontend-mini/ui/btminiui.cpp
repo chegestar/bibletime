@@ -33,6 +33,7 @@
 #include "models/btminimoduletextmodel.h"
 #include "models/btminisettingsmodel.h"
 #include "view/btminiview.h"
+#include "ui/btminiworkswidget.h"
 
 #if QT_VERSION >= 0x050000
 #include <QAbstractNativeEventFilter>
@@ -180,8 +181,9 @@ public:
         {
 #if defined  Q_OS_WIN32 || (defined Q_OS_LINUX && !defined Q_OS_ANDROID) || defined Q_OS_OSX
             resize(480, 640);
-            show();
-            raise();
+            //show();
+            //raise();
+            QStackedWidget::showNormal();
 #else
             setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
 
@@ -340,131 +342,11 @@ public:
         Q_ASSERT(_worksWidget == 0);
         Q_CHECK_PTR(_mainWidget);
 
-        _worksWidget = new BtMiniWidget(_mainWidget);
+        _worksWidget = new BtMiniWorksWidget(_mainWidget);
         _mainWidget->addWidget(_worksWidget);
 
-        BtMiniView *v = new BtMiniView(_worksWidget);
-        v->setTopShadow(true);
-        v->setContinuousScrolling(btConfig().value<bool>("mini/miniContinuousScrolling", false));
-        v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
-        BtMiniUi::changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 140) / 100.0);
-
-        // Setup controls
-        QPushButton *b1 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowLeft));
-        QPushButton *b2 = q->makeButton("", v->style()->standardIcon(QStyle::SP_ArrowRight));
-        QPushButton *b3 = q->makeButton(BtMiniUi::tr("Work"));
-        QPushButton *b4 = q->makeButton(BtMiniUi::tr("Place"));
-
-        QObject::connect(b1, SIGNAL(clicked()), v, SLOT(slideLeft()));
-        QObject::connect(b2, SIGNAL(clicked()), v, SLOT(slideRight()));
-
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search
-            //<< BtMiniPanel::Options
-            << BtMiniPanel::Installer
-            << BtMiniPanel::Settings << BtMiniPanel::Exit, _worksWidget);
-        p->layout()->setContentsMargins(0, 0, 0, 0);
-        QFont f (p->font());
-        f.setBold(true);
-        p->setFont(f);
-
-        // Put into layout
-        QVBoxLayout *vl = new QVBoxLayout;
-
-        BtMiniPanel *pn = new BtMiniPanel;
-        pn->addWidget(b1, Qt::AlignLeft);
-        pn->addWidget(b3, Qt::AlignCenter);
-        pn->addWidget(b4, Qt::AlignCenter);
-        pn->addWidget(b2, Qt::AlignRight);
-
-        vl->addWidget(pn);
-        vl->addWidget(v);
-        vl->addWidget(p);
-
-        _worksWidget->setLayout(vl);
-
-        // Retrieve last session
-        QStringList modules = btConfig().value<QStringList>("mini/openModules", QStringList() << "KJV");
-        QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1");
-
-        QStringList moduleNames;
-
-        foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-            moduleNames << m->name();
-
-        for(int i = 0; i < modules.size(); ++i)
-        {
-            // parallel module
-            if(modules[i].contains(','))
-            {
-                QStringList sl(modules[i].split(','));
-                QString rs;
-                foreach(QString s, sl)
-                {
-                    if(!moduleNames.contains(s))
-                        qDebug() << "Remove reference to inexistent module in parallel module" << s;
-                    else
-                        rs.append(rs.isEmpty() ? s : ',' + s);
-                }
-
-                modules[i] = rs;
-
-                if(!rs.isEmpty())
-                    continue;
-            }
-
-            if(!moduleNames.contains(modules[i]))
-            {
-                qDebug() << "Remove reference to inexistent module" << modules[i];
-                modules.erase(modules.begin() + i);
-                places.erase(places.begin() + i);
-                --i;
-            }
-        }
-
-        if(modules.size() == 0)
-        {
-            foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-                if(m->type() == CSwordModuleInfo::Bible)
-                {
-                    modules = QStringList() << m->name();
-                    places = QStringList() << btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1")[0];
-                    break;
-                }
-        }
-
-        Q_ASSERT(modules.size() > 0);
-
-        // Setup model
-        BtMiniModuleTextModel *m = new BtMiniModuleTextModel(modules, v);
-
-        v->setModel(m);
-
-        QObject::connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
-        QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
-        QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
-        QObject::connect(v, SIGNAL(selected(const QModelIndex &)), m, SLOT(selectedIndexes(const QModelIndex &)));
-
-        m->setIndicators(b1, b3, b4, b2);
-
-        // Restore last session
-        for(int i = 0, c = btConfig().value<int>("mini/openModule", 0); i < modules.size(); ++i)
-        {
-            QModelIndex index(m->keyIndex(i, places[i]));
-            if(i == c)
-            {
-                v->scrollTo(m->keyIndex(i, places[i]));
-            }
-            else if(index.isValid())
-            {
-                v->setCurrentIndex(index);
-            }
-        }
-
-        QObject::connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
-            m, SLOT(modulesReloaded()));
-
         // this is for double click handling to switch fullscreen
-        v->viewport()->installEventFilter(_mainWidget);
+        BtMiniUi::instance()->worksView()->viewport()->installEventFilter(_mainWidget);
     }
 
     void createSearchWidget()

@@ -41,9 +41,19 @@ public:
     QModelIndex     parent(const QModelIndex &index) const;
     QHash<int, QByteArray> roleNames() const;
     int             rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    /**
+     * @param role BtMini::PlaceRole will set scope for index's list, if value is empty
+     *             scope will be removed (if was set)
+     *             BtMini::ModuleRole will set/change module
+     *             roles above would be set for parent index representing module and child,
+     *             representing verse
+     *             Qt::DisplayRole will set text data for item in non-module/content lists
+     */
     bool            setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-
+    bool            insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    bool            removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
     /** */
     QString indexModule(const QModelIndex &index) const;
     
@@ -58,8 +68,6 @@ public:
     QString getModule() const;
     void setModule(QString module);
 
-    /** */
-    void setIndicators(QWidget *left, QWidget *module, QWidget *place, QWidget *right);
 
 public slots:
     /** */
@@ -73,12 +81,6 @@ public slots:
 
     /** For pressed module in BtBookshelfModel. */
     void openModuleMenu(const QModelIndex &index);
-
-    /** This function works with worksView only. */
-    void openModuleSelection();
-
-    /**  This function works with worksView only. */
-    void openPlaceSelection();
 
     /** Handle items for module context */
     void moduleContextClicked(const QModelIndex &index);

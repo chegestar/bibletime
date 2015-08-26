@@ -24,6 +24,7 @@ SOURCES += \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
     ../../../src/frontend-mini/ui/btministyle.cpp \
     ../../../src/frontend-mini/ui/btminiui.cpp \
+    ../../../src/frontend-mini/ui/btminiworkswidget.cpp
 
 
 HEADERS += \
@@ -39,6 +40,8 @@ HEADERS += \
     ../../../src/frontend-mini/ui/btminipanel.h \
     ../../../src/frontend-mini/ui/btministyle.h \
     ../../../src/frontend-mini/ui/btminiui.h \
+    ../../../src/frontend-mini/ui/btminiworkswidget.h \
+    ../../../src/frontend-mini/ui/btminiwidget.h
 
 
 RESOURCES += \

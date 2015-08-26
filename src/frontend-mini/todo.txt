@@ -28,12 +28,14 @@ kalemas@mail.ru :
 +   do not start tapping when handle was pressed
 +   android: are there fallback fonts, try to fix unrecognized characters?
 ?   adjust base size selection: tablets got too large text
-        base size is height of basic font for interface
-        on small screen it should be fixed in physical units for example 7mm
-        on tablet it should be fixed in physical units lets take 7mm
+    base size is height of basic font for interface
+    on small screen it should be fixed in physical units for example 7mm
+    on tablet it should be fixed in physical units lets take 7mm
 +   < back button return to previous level in install manager and settings
-    fullscreen maybe by double tapping
++   fullscreen maybe by double tapping
+        test on android
     instead of diabled arrow in top panel add "+ subview"
+    mini tries to install in /usr/dhare on linux
 === 1.3.0 ===
     bookmarks
     restore search term during one session
