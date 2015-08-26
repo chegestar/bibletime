@@ -3622,21 +3622,20 @@ void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
 
 		if(start == d->_currentSubView + 1)
         {
-			slideRight();
+            //slideRight();
         }
 		else if(start == d->_currentSubView)
         {
             d->_currentSubView++;
-            d->updateViews();
-			slideLeft();
+            //slideLeft();
         }
 		else
 		{
             Q_ASSERT(false);
-
-			d->updateViews();
 			emit currentChanged(currentIndex());
 		}
+
+        d->updateViews();
     }
 }
 
