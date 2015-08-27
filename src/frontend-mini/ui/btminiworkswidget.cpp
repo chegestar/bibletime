@@ -120,6 +120,7 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     // Retrieve last session
     QStringList modules = btConfig().value<QStringList>("mini/openModules", QStringList() << "KJV");
     QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1");
+    int openModule = btConfig().value<int>("mini/openModule", 0);
 
     QStringList moduleNames;
 
@@ -150,8 +151,13 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
         if(!moduleNames.contains(modules[i]))
         {
             qDebug() << "Remove reference to inexistent module" << modules[i];
+
             modules.erase(modules.begin() + i);
             places.erase(places.begin() + i);
+
+            if(i <= openModule && openModule > 0)
+                openModule--;
+
             --i;
         }
     }
@@ -161,7 +167,7 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
         foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
             if(m->type() == CSwordModuleInfo::Bible)
             {
-                modules = QStringList() << m->name();
+                modules.append(m->name());
                 places = QStringList() << btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1")[0];
                 break;
             }
@@ -180,10 +186,10 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     QObject::connect(d->_view, SIGNAL(selected(const QModelIndex &)), this, SLOT(selectedIndexes(const QModelIndex &)));
 
     // Restore last session
-    for(int i = 0, c = btConfig().value<int>("mini/openModule", 0); i < modules.size(); ++i)
+    for(int i = 0; i < modules.size(); ++i)
     {
         QModelIndex index(d->_worksModel->keyIndex(i, places[i]));
-        if(i == c)
+        if(i == openModule)
         {
             d->_view->scrollTo(index);
         }
