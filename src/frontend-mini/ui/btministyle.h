@@ -548,14 +548,14 @@ public slots:
         {
         case SP_ArrowLeft:
             {
-                QIcon i(":/style-mini/arrow-left.png");
-                i.addFile(":/style-mini/arrow-left-inactive.png", QSize(), QIcon::Disabled);
+                QIcon i(":/style-mini/arrow-left.svg");
+                i.addFile(":/style-mini/arrow-left-inactive.svg", QSize(), QIcon::Disabled);
                 return i;
             }
         case SP_ArrowRight:
             {
-                QIcon i(":/style-mini/arrow-right.png");
-                i.addFile(":/style-mini/arrow-right-inactive.png", QSize(), QIcon::Disabled);
+                QIcon i(":/style-mini/arrow-right.svg");
+                i.addFile(":/style-mini/arrow-right-inactive.svg", QSize(), QIcon::Disabled);
                 return i;
             }
         default:

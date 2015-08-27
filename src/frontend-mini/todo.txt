@@ -29,12 +29,13 @@ kalemas@mail.ru :
 +   android: are there fallback fonts, try to fix unrecognized characters?
 ?   adjust base size selection: tablets got too large text
     base size is height of basic font for interface
-    on small screen it should be fixed in physical units for example 7mm
-    on tablet it should be fixed in physical units lets take 7mm
+        on small screen it should be fixed in physical units for example 7mm
+        on tablet it should be fixed in physical units lets take 7mm
 +   < back button return to previous level in install manager and settings
 +   fullscreen maybe by double tapping
         test on android
     instead of diabled arrow in top panel add "+ subview"
+        there is no standard icon for +, need we to have all icons from app?
     mini tries to install in /usr/dhare on linux
     textual footnote references make <sup>
 +   ievenn main widget t filter move assert inside if()
