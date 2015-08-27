@@ -67,5 +67,6 @@
         <file alias="locales.tar.gz">src/frontend-mini/locales.tar.gz</file>
         <file alias="jGaramond.ttf">src/frontend-mini/ui/jGaramond.ttf</file>
         <file alias="handle.svg">src/frontend-mini/view/handle.svg</file>
+        <file alias="plus.svg">src/frontend-mini/ui/resources/plus.svg</file>
     </qresource>
 </RCC>

@@ -56,6 +56,9 @@ public slots:
     void closeModuleSelection();
     void closePlaceSelection();
 
+    /** Add module and switch subview with animation. */
+    void addWorkLeft();
+    void addWorkRight();
 
 private:
     Q_DECLARE_PRIVATE(BtMiniWorksWidget)

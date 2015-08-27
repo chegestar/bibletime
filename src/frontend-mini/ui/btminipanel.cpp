@@ -187,6 +187,9 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
 
         for(int i = 0; i < d->_widgets.size(); ++i)
         {
+            if(!d->_widgets[i]->isVisible())
+                continue;
+
             QRect r(QPoint(), d->_widgets[i]->sizeHint());
 
             // limit button width
@@ -216,6 +219,9 @@ void BtMiniPanel::resizeEvent(QResizeEvent *e)
         // again, set central widgets
         for(int i = 0, pos = ls; i < d->_widgets.size(); ++i)
         {
+            if(!d->_widgets[i]->isVisible())
+                continue;
+
             if(d->_anchorPoints[i] & Qt::AlignHCenter)
             {
                 QRect r(d->_widgets[i]->geometry());

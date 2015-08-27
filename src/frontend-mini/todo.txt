@@ -34,11 +34,12 @@ kalemas@mail.ru :
 +   < back button return to previous level in install manager and settings
 +   fullscreen maybe by double tapping
         test on android
-    instead of diabled arrow in top panel add "+ subview"
++   instead of diabled arrow in top panel add "+ subview"
         there is no standard icon for +, need we to have all icons from app?
     mini tries to install in /usr/dhare on linux
     textual footnote references make <sup>
 +   ievenn main widget t filter move assert inside if()
+    initial session should contain of two Bible lists
 === 1.3.0 ===
     bookmarks
     restore search term during one session

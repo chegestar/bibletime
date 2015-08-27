@@ -2855,7 +2855,7 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 
     scheduleDelayedItemsLayout();
 
-	if(index.isValid())
+    if(index.isValid())
         emit currentChanged(index);
 }
 

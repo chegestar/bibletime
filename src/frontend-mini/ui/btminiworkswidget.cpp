@@ -55,6 +55,8 @@ public:
     QPushButton           *_buttonSwitchRight;
     QPushButton           *_buttonModule;
     QPushButton           *_buttonPlace;
+    QPushButton           *_buttonPlusLeft;
+    QPushButton           *_buttonPlusRight;
     BtMiniModuleTextModel *_worksModel;
 
 };
@@ -72,14 +74,20 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     d->_view->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
     changeFontSize(d->_view, btConfig().value<int>("mini/fontTextScale", 140) / 100.0);
 
+    QIcon plusIcon(":/plus.svg");
+
     // Setup controls
     d->_buttonSwitchLeft  = BtMiniUi::makeButton("", d->_view->style()->standardIcon(QStyle::SP_ArrowLeft));
     d->_buttonSwitchRight = BtMiniUi::makeButton("", d->_view->style()->standardIcon(QStyle::SP_ArrowRight));
+    d->_buttonPlusLeft    = BtMiniUi::makeButton("", plusIcon);
+    d->_buttonPlusRight   = BtMiniUi::makeButton("", plusIcon);
     d->_buttonModule      = BtMiniUi::makeButton(BtMiniUi::tr("Work"));
     d->_buttonPlace       = BtMiniUi::makeButton(BtMiniUi::tr("Place"));
 
     QObject::connect(d->_buttonSwitchLeft, SIGNAL(clicked()), d->_view, SLOT(slideLeft()));
     QObject::connect(d->_buttonSwitchRight, SIGNAL(clicked()), d->_view, SLOT(slideRight()));
+    QObject::connect(d->_buttonPlusLeft, SIGNAL(clicked()), this, SLOT(addWorkLeft()));
+    QObject::connect(d->_buttonPlusRight, SIGNAL(clicked()), this, SLOT(addWorkRight()));
     QObject::connect(d->_buttonModule, SIGNAL(clicked()), this, SLOT(openModuleSelection()));
     QObject::connect(d->_buttonPlace, SIGNAL(clicked()), this, SLOT(openPlaceSelection()));
 
@@ -97,9 +105,11 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
 
     BtMiniPanel *pn = new BtMiniPanel;
     pn->addWidget(d->_buttonSwitchLeft, Qt::AlignLeft);
+    pn->addWidget(d->_buttonPlusLeft, Qt::AlignLeft);
     pn->addWidget(d->_buttonModule, Qt::AlignCenter);
     pn->addWidget(d->_buttonPlace, Qt::AlignCenter);
     pn->addWidget(d->_buttonSwitchRight, Qt::AlignRight);
+    pn->addWidget(d->_buttonPlusRight, Qt::AlignRight);
 
     vl->addWidget(pn);
     vl->addWidget(d->_view);
@@ -168,8 +178,6 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     QObject::connect(d->_view, SIGNAL(shortPressed(const QModelIndex &)), this, SLOT(openContext(const QModelIndex &)));
     QObject::connect(d->_view, SIGNAL(longPressed(const QModelIndex &)), this, SLOT(openMenu(const QModelIndex &)));
     QObject::connect(d->_view, SIGNAL(selected(const QModelIndex &)), this, SLOT(selectedIndexes(const QModelIndex &)));
-
-    //m->setIndicators(b1, b3, b4, b2);
 
     // Restore last session
     for(int i = 0, c = btConfig().value<int>("mini/openModule", 0); i < modules.size(); ++i)
@@ -336,8 +344,10 @@ void BtMiniWorksWidget::currentIndexChanged(const QModelIndex &index)
 
     // parent index represents current module in the list
     int i = index.parent().row(), s = index.model()->rowCount();
-    d->_buttonSwitchLeft->setEnabled(i > 0);
-    d->_buttonSwitchRight->setEnabled(i < s - 1);
+    d->_buttonSwitchLeft->setVisible(i > 0);
+    d->_buttonSwitchRight->setVisible(i < s - 1);
+    d->_buttonPlusLeft->setVisible(i <= 0);
+    d->_buttonPlusRight->setVisible(i >= s - 1);
 }
 
 void BtMiniWorksWidget::openContext(const QModelIndex &index)
@@ -472,19 +482,21 @@ void BtMiniWorksWidget::openMenu(const QModelIndex &index)
         QApplication::processEvents();
         v->slideLeft();
     }
-    if(actions[r] == ar)
+    else if(actions[r] == ar)
     {
         d->_worksModel->insertRow(level + 1);
         v->slideRight();
     }
-    if(actions[r] == cl)
+    else if(actions[r] == cl)
     {
         d->_worksModel->removeRow(level);
     }
-    if(actions[r] == sl)
+    else if(actions[r] == sl)
     {
         v->selectionStart();
     }
+    else
+        Q_ASSERT(false);
 }
 
 void BtMiniWorksWidget::selectedIndexes(const QModelIndex &index)
@@ -671,4 +683,21 @@ void BtMiniWorksWidget::closePlaceSelection()
 
     QString np = view->currentIndex().data(BtMini::PlaceRole).toString();
     d->_view->scrollTo(d->_worksModel->keyIndex(d->_view->currentLevel(), np));
+}
+
+void BtMiniWorksWidget::addWorkLeft()
+{
+    Q_D(BtMiniWorksWidget);
+
+    d->_worksModel->insertRow(d->_view->currentLevel());
+    QApplication::processEvents();
+    d->_view->slideLeft();
+}
+
+void BtMiniWorksWidget::addWorkRight()
+{
+    Q_D(BtMiniWorksWidget);
+
+    d->_worksModel->insertRow(d->_view->currentLevel() + 1);
+    d->_view->slideRight();
 }
