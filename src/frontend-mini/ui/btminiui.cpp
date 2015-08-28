@@ -262,6 +262,7 @@ public:
                 else
                     showFullScreen();
             }
+            return false;
         }
 
     private:
@@ -609,6 +610,30 @@ public:
         }
     }
 
+    void setupDefaultModules()
+    {
+        // setup default modules if not set
+#define SETUP_STANDARD_MODULE(a, b, c, d) \
+    if(btConfig().getDefaultSwordModuleByType(a) == 0) { \
+        Q_FOREACH(CSwordModuleInfo *m, QList<CSwordModuleInfo*>() << CSwordBackend::instance()->findModuleByName(c) << \
+            CSwordBackend::instance()->findModuleByName(b) << CSwordBackend::instance()->moduleList()) \
+            if(m && d) { btConfig().setDefaultSwordModuleByType(a, m); break; } }
+
+        SETUP_STANDARD_MODULE("standardBible", "KJV", BtMiniUi::tr("KJV", "default Bible module"), m->type() == CSwordModuleInfo::Bible);
+        SETUP_STANDARD_MODULE("standardCommentary", "MHC", BtMiniUi::tr("MHC", "default commentary module"), m->type() == CSwordModuleInfo::Commentary);
+        SETUP_STANDARD_MODULE("standardLexicon", "ISBE", BtMiniUi::tr("ISBE", "default lexicon module"), m->type() == CSwordModuleInfo::Lexicon && \
+            !m->has(CSwordModuleInfo::HebrewDef) && !m->has(CSwordModuleInfo::GreekDef) && \
+            !m->has(CSwordModuleInfo::HebrewParse) && !m->has(CSwordModuleInfo::GreekParse));
+        SETUP_STANDARD_MODULE("standardHebrewStrongsLexicon", "StrongsHebrew", BtMiniUi::tr("StrongsHebrew", "default Hebrew strongs lexicon"), \
+            m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::HebrewDef));
+        SETUP_STANDARD_MODULE("standardGreekStrongsLexicon", "StrongsGreek", BtMiniUi::tr("StrongsGreek", "default Greek morph lexicon"), \
+            m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekDef));
+        SETUP_STANDARD_MODULE("standardHebrewMorphLexicon", "StrongsHebrew", BtMiniUi::tr("StrongsHebrew", "default Hebrew strongs lexicon"), \
+            m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::HebrewParse));
+        SETUP_STANDARD_MODULE("standardGreekMorphLexicon", "StrongsGreek", BtMiniUi::tr("StrongsGreek", "default Greek morph lexicon"), \
+                              m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekParse));
+    }
+
 
     BtMiniMainWidget            *_mainWidget;
     QWidget                     *_worksWidget;
@@ -672,7 +697,10 @@ void BtMiniUi::show()
     if(!d->_haveBible)
         activateInstaller();
     else
+    {
+        d->setupDefaultModules();
         activateWorks();
+    }
 }
 
 QWidget *BtMiniUi::mainWidget()
@@ -957,26 +985,7 @@ void BtMiniUi::modulesReloaded()
         }
     }
 
-    // setup default modules if not set
-#define SETUP_STANDARD_MODULE(a, b, c, d) \
-    if(btConfig().getDefaultSwordModuleByType(a) == 0) { \
-        Q_FOREACH(CSwordModuleInfo *m, QList<CSwordModuleInfo*>() << CSwordBackend::instance()->findModuleByName(c) << \
-            CSwordBackend::instance()->findModuleByName(b) << CSwordBackend::instance()->moduleList()) \
-            if(m && d) { btConfig().setDefaultSwordModuleByType(a, m); break; } }
-
-    SETUP_STANDARD_MODULE("standardBible", "KJV", tr("KJV", "default Bible module"), m->type() == CSwordModuleInfo::Bible);
-    SETUP_STANDARD_MODULE("standardCommentary", "MHC", tr("MHC", "default commentary module"), m->type() == CSwordModuleInfo::Commentary);
-    SETUP_STANDARD_MODULE("standardLexicon", "ISBE", tr("ISBE", "default lexicon module"), m->type() == CSwordModuleInfo::Lexicon && \
-        !m->has(CSwordModuleInfo::HebrewDef) && !m->has(CSwordModuleInfo::GreekDef) && \
-        !m->has(CSwordModuleInfo::HebrewParse) && !m->has(CSwordModuleInfo::GreekParse));
-    SETUP_STANDARD_MODULE("standardHebrewStrongsLexicon", "StrongsHebrew", tr("StrongsHebrew", "default Hebrew strongs lexicon"), \
-        m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::HebrewDef));
-    SETUP_STANDARD_MODULE("standardGreekStrongsLexicon", "StrongsGreek", tr("StrongsGreek", "default Greek morph lexicon"), \
-        m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekDef));
-    SETUP_STANDARD_MODULE("standardHebrewMorphLexicon", "StrongsHebrew", tr("StrongsHebrew", "default Hebrew strongs lexicon"), \
-        m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::HebrewParse));
-    SETUP_STANDARD_MODULE("standardGreekMorphLexicon", "StrongsGreek", tr("StrongsGreek", "default Greek morph lexicon"), \
-                          m->type() == CSwordModuleInfo::Lexicon && m->has(CSwordModuleInfo::GreekParse));
+    d->setupDefaultModules();
 }
 
 void BtMiniUi::openWorksMenu()
