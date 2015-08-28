@@ -1,4 +1,4 @@
-﻿/*********
+/*********
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
@@ -22,6 +22,7 @@
 
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/config/btconfig.h"
+#include "backend/drivers/cswordbiblemoduleinfo.h"
 #include "backend/keys/cswordversekey.h"
 #include "backend/managers/cswordbackend.h"
 #include "frontend/cinfodisplay.h"
@@ -118,14 +119,16 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     setLayout(vl);
 
     // Retrieve last session
-    QStringList modules = btConfig().value<QStringList>("mini/openModules", QStringList() << "KJV");
-    QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1");
+    QStringList modules = btConfig().value<QStringList>("mini/openModules", QStringList() << "");
+    QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "");
     int openModule = btConfig().value<int>("mini/openModule", 0);
 
     QStringList moduleNames;
 
     foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
         moduleNames << m->name();
+
+    Q_ASSERT(!moduleNames.contains(""));
 
     for(int i = 0; i < modules.size(); ++i)
     {
@@ -137,7 +140,10 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
             foreach(QString s, sl)
             {
                 if(!moduleNames.contains(s))
-                    qDebug() << "Remove reference to inexistent module in parallel module" << s;
+                {
+                    if(!s.isEmpty())
+                        qDebug() << "Remove reference to inexistent module in parallel module" << s;
+                }
                 else
                     rs.append(rs.isEmpty() ? s : ',' + s);
             }
@@ -150,7 +156,8 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
 
         if(!moduleNames.contains(modules[i]))
         {
-            qDebug() << "Remove reference to inexistent module" << modules[i];
+            if(!modules[i].isEmpty())
+                qDebug() << "Remove reference to inexistent module" << modules[i];
 
             modules.erase(modules.begin() + i);
             places.erase(places.begin() + i);
@@ -162,15 +169,23 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
         }
     }
 
+    // create initial session
     if(modules.size() == 0)
     {
-        foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-            if(m->type() == CSwordModuleInfo::Bible)
+        CSwordBibleModuleInfo *m = qobject_cast<CSwordBibleModuleInfo *>(btConfig().getDefaultSwordModuleByType("standardBible"));
+        modules.append(m->name());
+        if(m->hasNewTestament())
+        {
+            if(m->hasOldTestament())
             {
                 modules.append(m->name());
-                places = QStringList() << btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1")[0];
-                break;
+                places.append("Genesis 1:1");
+                openModule = 1;
             }
+            places.append("John 1:1");
+        }
+        else
+            places.append("Genesis 1:1");
     }
 
     Q_ASSERT(modules.size() > 0);
