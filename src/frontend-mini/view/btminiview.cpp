@@ -1,4 +1,4 @@
-﻿/*********
+/*********
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
@@ -1436,6 +1436,13 @@ public:
         Q_CHECK_PTR(q->model());
         Q_ASSERT(!index.isValid() || q->model() == index.model());
 
+        // empty model
+        if(q->model()->rowCount() == 0)
+        {
+            clear();
+            return;
+        }
+
         if(!index.isValid())
             parents << q->model()->index(0, 0);
         else
@@ -2367,13 +2374,13 @@ void BtMiniView::mousePressEvent(QMouseEvent *e)
 {
     Q_D(BtMiniView);
 
-    if(e->button() != Qt::LeftButton)
+    if(e->button() != Qt::LeftButton || d->_subViews.size() == 0)
         return;
 
     d->_mouseLast = d->_mouseStart = e->pos();
 
     d->_mouseTappingOver = false;
-    d->_mouseDown      = true;
+    d->_mouseDown        = true;
 
     d->_mouseTapping             = 0;
     d->_mouseScrolling[0].first  = e->pos();
@@ -3034,8 +3041,8 @@ void BtMiniView::doItemsLayout()
     // need to stop delayed layout first, so code below can schedule layout again
     QAbstractItemView::doItemsLayout();
 
-	// if there is no model, it is not time to create subviews...
-	if(!model()) return;
+    // if there is no model or model is empty, it is not time to create subviews...
+    if(!model() || model()->rowCount() == 0) return;
 
     // create views if them not created yet
 	d->activateIndex(QModelIndex(), true);
@@ -3264,7 +3271,7 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
     setVerticalScrollBarPolicy(d->_ld->levelOption().scrollBarPolicy);
     d->activateIndex(index, true);
 
-	scheduleDelayedItemsLayout();
+    scheduleDelayedItemsLayout();
 }
 
 bool BtMiniView::slideLeft()
