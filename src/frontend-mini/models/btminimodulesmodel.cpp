@@ -42,7 +42,7 @@ struct Item
         , _index(copy._index)
         , _repository(copy._repository)
         , _icon(copy._icon)
-		, _children(copy._children) {;}
+        , _children(copy._children) {;}
     ~Item() {;}
 
     bool operator < (const Item &s2) const
@@ -61,10 +61,10 @@ struct Item
 
 QDebug operator<<(QDebug dbg, const Item &item)
 {
-	dbg.nospace() << "Item(" << item._text << ", " << item._repository << ", " 
-		<< (item._index.isValid() ? "has index, " : "no index, ") << item._icon << ", " 
-		<< item._children.size() << " children)";
-	return dbg.space();
+    dbg.nospace() << "Item(" << item._text << ", " << item._repository << ", "
+        << (item._index.isValid() ? "has index, " : "no index, ") << item._icon << ", "
+        << item._children.size() << " children)";
+    return dbg.space();
 }
 
 
@@ -135,26 +135,38 @@ public:
         if(_refreshThread->isRunning()) _refreshThread->terminate();
     }
 
-	// fff      language
-	//    ff    category
-	//      fff module
-	int indexDepth(int id) const
-	{
-		return id > 0xfffff ? 3 : id > 0xfff ? 2 : 1;
-	}
+    /** Calculate index deepest level:
+     *  fff      language
+     *     ff    category
+     *       fff module
+     */
+    int indexDepth(int id) const
+    {
+        return id > 0xfffff ? 3 : id > 0xfff ? 2 : 1;
+    }
 
-	int index(int language, int category = -1, int module = -1) const
-	{
-		return (language + 1) +
-			(category > -1 ? (category + 1) << (4*3) : 0) +
-			(module > -1 ? (module + 1) << (4*5) : 0);
-	}
+    /** Encode index's components into one integer. */
+    int encodeLevels(int language, int category = -1, int module = -1) const
+    {
+        return (language + 1) +
+               (category > -1 ? (category + 1) << (4*3) : 0) +
+               (module > -1 ? (module + 1) << (4*5) : 0);
+    }
 
-	int indexLevel(int id, int level) const
-	{
-		return level == 3 ? ((id & 0xfff00000) >> (4*5)) - 1 : 
-			level == 2 ? ((((id & 0xff000)) - 1) >> (4*3)) : (id & 0xfff) - 1;
-	}
+    /** Decode \param id for the index in the level's list.
+        \param level is 1-based
+    */
+    int indexInLevel(int id, int level) const
+    {
+        switch(level)
+        {
+        case 3 : return ((id & 0xfff00000) >> (4*5)) - 1;
+        case 2 : return (((id & 0xff000)) - 1) >> (4*3);
+        case 1 : return (id & 0xfff) - 1;
+        default:
+            Q_ASSERT(false);
+        }
+    }
 
     void clear()
     {
@@ -204,7 +216,7 @@ public:
     }
 
     void addModel(QAbstractItemModel *model)
-	{
+    {
         Q_Q(BtMiniModulesModel);
 
         _models.append(model);
@@ -274,7 +286,7 @@ public:
         {
             Q_ASSERT(true);
         }
-	}
+    }
 
     QLabel                                        *_indicator;
     QVector<Item>                                  _items;
@@ -284,8 +296,8 @@ public:
     BtInstallMgr                                  *_installManager;
     Thread                                        *_refreshThread;
 
-	Q_DECLARE_PUBLIC(BtMiniModulesModel);
-	BtMiniModulesModel * const                     q_ptr;
+    Q_DECLARE_PUBLIC(BtMiniModulesModel);
+    BtMiniModulesModel * const                     q_ptr;
 };
 
 BtMiniModulesModel* BtMiniModulesModelPrivate::_installModel = 0;
@@ -312,10 +324,10 @@ BtMiniModulesModel::BtMiniModulesModel(bool install, QObject *parent)
 
 BtMiniModulesModel::~BtMiniModulesModel()
 {
-	Q_D(BtMiniModulesModel);
+    Q_D(BtMiniModulesModel);
     if(d->_installModel == this)
         d->_installModel = 0;
-	delete d;
+    delete d;
 }
 
 int BtMiniModulesModel::columnCount(const QModelIndex &parent) const
@@ -325,61 +337,55 @@ int BtMiniModulesModel::columnCount(const QModelIndex &parent) const
 
 int BtMiniModulesModel::rowCount(const QModelIndex &parent) const
 {
-	Q_D(const BtMiniModulesModel);
+    Q_D(const BtMiniModulesModel);
 
     if(!parent.isValid())
         return d->_items.size();
-	else if(d->indexDepth(parent.internalId()) == 1)
-	{
-        return d->_items[d->indexLevel(parent.internalId(), 1)]._children.size();
-	}
-	else if(d->indexDepth(parent.internalId()) == 2)
-	{
-        return d->_items[d->indexLevel(parent.internalId(), 1)]._children[
-			d->indexLevel(parent.internalId(), 2)]._children.size();
-	}
-	else
-		return 0;
+    else switch(d->indexDepth(parent.internalId()))
+    {
+        case 1 : return d->_items[d->indexInLevel(parent.internalId(), 1)]._children.size();
+        case 2 : return d->_items[d->indexInLevel(parent.internalId(), 1)]._children[
+            d->indexInLevel(parent.internalId(), 2)]._children.size();
+        default : return 0;
+    }
 }
 
 QModelIndex BtMiniModulesModel::index(int row, int column, const QModelIndex &parent) const
 {
-	Q_D(const BtMiniModulesModel);
+    Q_D(const BtMiniModulesModel);
 
-	if(!parent.isValid())
-		return createIndex(row, column, d->index(row));
-	else if(d->indexDepth(parent.internalId()) == 1)
-	{
-		return createIndex(row, column, d->index(d->indexLevel(parent.internalId(), 1), row));
-	}
-	else if(d->indexDepth(parent.internalId()) == 2)
-	{
-		return createIndex(row, column, d->index(d->indexLevel(parent.internalId(), 1), 
-			d->indexLevel(parent.internalId(), 2), row));
+    if(!parent.isValid())
+        return createIndex(row, column, d->encodeLevels(row));
+    else switch(d->indexDepth(parent.internalId()))
+    {
+        case 1 : return createIndex(row, column, d->encodeLevels(d->indexInLevel(parent.internalId(), 1), row));
+        case 2 : return createIndex(row, column, d->encodeLevels(d->indexInLevel(parent.internalId(), 1),
+            d->indexInLevel(parent.internalId(), 2), row));
     }
 
     Q_ASSERT(false);
-
-	return QModelIndex();
+    return QModelIndex();
 }
 
 QModelIndex BtMiniModulesModel::parent(const QModelIndex &index) const
 {
-	Q_D(const BtMiniModulesModel);
+    Q_D(const BtMiniModulesModel);
 
-	if(d->indexDepth(index.internalId()) == 1)
-	{
-		return QModelIndex();
-	}
-	else if(d->indexDepth(index.internalId()) == 2)
-	{
-		return createIndex(d->index(d->indexLevel(index.internalId(), 1)), 0, d->index(d->indexLevel(index.internalId(), 1)));
-	}
-	else
-	{
-		return createIndex(d->index(d->indexLevel(index.internalId(), 2)), 0, d->index(d->indexLevel(index.internalId(), 1), 
-			d->indexLevel(index.internalId(), 2)));
-	}
+    switch(d->indexDepth(index.internalId()))
+    {
+        case 1 : return QModelIndex();
+        case 2 :
+        {
+            int l = d->indexInLevel(index.internalId(), 1);
+            return createIndex(l, 0, d->encodeLevels(l));
+        }
+        default :
+        {
+            int c = d->indexInLevel(index.internalId(), 2);
+            int l = d->indexInLevel(index.internalId(), 1);
+            return createIndex(c, 0, d->encodeLevels(l, c));
+        }
+    }
 }
 
 QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
@@ -388,38 +394,38 @@ QVariant BtMiniModulesModel::data(const QModelIndex &index, int role) const
 
     Q_ASSERT(index.model() == this);
 
-	if(!index.isValid() || d->_items.size() == 0)
-		return QVariant();
-	if(d->indexDepth(index.internalId()) == 1)
-	{
-        const Item &l = d->_items[d->indexLevel(index.internalId(), 1)];
-		if(role == Qt::DisplayRole)
+    if(!index.isValid() || d->_items.size() == 0)
+        return QVariant();
+    if(d->indexDepth(index.internalId()) == 1)
+    {
+        const Item &l = d->_items[d->indexInLevel(index.internalId(), 1)];
+        if(role == Qt::DisplayRole)
             return "<word-breaks/>" + l._text;
         if(role == Qt::DecorationRole)
             return l._icon;
-	}
-	if(d->indexDepth(index.internalId()) == 2)
-	{
-        const Item &c = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)];
-		if(role == Qt::DisplayRole)
+    }
+    if(d->indexDepth(index.internalId()) == 2)
+    {
+        const Item &c = d->_items[d->indexInLevel(index.internalId(), 1)]._children[d->indexInLevel(index.internalId(), 2)];
+        if(role == Qt::DisplayRole)
             return "<word-breaks/>" + c._text;
-		if(role == Qt::DecorationRole)
+        if(role == Qt::DecorationRole)
             return c._icon;
-	}
-	if(d->indexDepth(index.internalId()) == 3)
-	{
-        const Item &m = d->_items[d->indexLevel(index.internalId(), 1)]._children[d->indexLevel(index.internalId(), 2)]._children[d->indexLevel(index.internalId(), 3)];
-		if(m._index.isValid())
-		{
+    }
+    if(d->indexDepth(index.internalId()) == 3)
+    {
+        const Item &m = d->_items[d->indexInLevel(index.internalId(), 1)]._children[d->indexInLevel(index.internalId(), 2)]._children[d->indexInLevel(index.internalId(), 3)];
+        if(m._index.isValid())
+        {
             // protect from module installation during remote sources update
             if(d->_refreshThread->isRunning() && role == BtBookshelfModel::ModulePointerRole)
                 return QVariant();
 
-			if(role == BtMini::RepositoryRole)
-				return m._repository;
-			return m._index.data(role);
-		}
-		else if(role == Qt::DisplayRole)
+            if(role == BtMini::RepositoryRole)
+                return m._repository;
+            return m._index.data(role);
+        }
+        else if(role == Qt::DisplayRole)
             return m._text;
     }
 
