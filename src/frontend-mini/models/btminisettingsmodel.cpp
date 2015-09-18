@@ -62,7 +62,7 @@ struct Item
     int            _type;
     QString        _text;
     QVariant       _data;
-    QVector<Item*> _children;
+    QList<Item*>   _children;
 };
 
 
@@ -145,6 +145,7 @@ public:
             delete i;
     }
 
+public:
     QList<Item*>          _items;
     BtMiniLayoutDelegate *_ld;
 };
@@ -196,51 +197,38 @@ QModelIndex BtMiniSettingsModel::parent(const QModelIndex &index) const
     if(!p)
         return QModelIndex();
 
-    QList<QPair<Item*, int> > stack;
-    stack.append(QPair<Item*, int>(0, 0));
+    // we need such stack to get item's parent and parent's index in its parent list
+    typedef QPair<const QList<Item *> *, int> StackItem;
+    QList<StackItem> stack;
+    stack << StackItem(&d->_items, 0);
+
     while(stack.size() > 0)
     {
-        Item *childItem;
-
-        if(stack.last().first == 0)
-        {
-            if(stack.last().second >= d->_items.size())
-            {
-                stack.removeLast();
-                continue;
-            }
-            childItem = d->_items[stack.last().second];
-        }
-        else
-        {
-            if(stack.last().second >= stack.last().first->_children.size())
-            {
-                stack.removeLast();
-                continue;
-            }
-            childItem = stack.last().first->_children[stack.last().second];
-        }
+        Item * currentChild = stack.last().first->at(stack.last().second);
 
         // check
-        if(p == childItem)
+        if(p == currentChild)
         {
-            if(stack.last().first == 0)
+            if(stack.size() <= 1)
                 return QModelIndex();
             else
-                return createIndex(stack[stack.size() - 2].second, 0, stack.last().first);
+            {
+                int parentIndex = stack[stack.size() - 2].second;
+                Item * parentItem = stack[stack.size() - 2].first->at(parentIndex);
+                return createIndex(parentIndex, 0, parentItem);
+            }
         }
 
-        stack.last().second++;
-
-        if(childItem->_children.size() > 0)
-        {
-            stack.append(QPair<Item*, int>(childItem, 0));
-            continue;
-        }
-
+        // move pointer
+        if(currentChild->_children.size() > 0)
+            stack << StackItem(&currentChild->_children, 0); // deeper
+        else
+            while(++stack.last().second >= stack.last().first->size()) // next & out
+                stack.removeLast();
     }
 
     qDebug() << "Settings model can't find parent for item" << index;
+    Q_ASSERT(false);
     return QModelIndex();
 
 }
