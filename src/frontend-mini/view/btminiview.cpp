@@ -808,27 +808,31 @@ public:
     }
 
     /** Work with model. */
-    void setModelIndex(const QModelIndex &index)
+    void setModelIndex(const QModelIndex &parent, const QModelIndex &index)
     {
+        Q_ASSERT(index.isValid() || parent.isValid());
+//        qDebug() << (index.parent() == parent) << parent.internalId() << index.parent().internalId() <<
+//                    parent.row() << index.parent().row();
+//        qDebug() << index.data() << index.parent().data() << parent.data();
+        qDebug() << index.parent() << parent;
+        if(index.isValid() && index.parent() != parent)
+        {
+            index.parent();
+        }
+        Q_ASSERT(!index.isValid() || index.parent() == parent);
+
         _index = index;
-        
-        if(index.isValid())
-        {
-            _parentIndex = index.parent();
-            _rowCount = index.model()->rowCount(_parentIndex);
-        }
-        else
-        {
-            _parentIndex = index;
-            _rowCount = 0;
-        }
+        _parentIndex = parent;
+        _model = _index.isValid() ? _index.model() : _parentIndex.model();
+        _rowCount = _model->rowCount(parent);
 
         clear();
     }
 
     void updateModelIndex(const QModelIndex &index)
     {
-        Q_ASSERT(_index.parent() == index.parent());
+        Q_ASSERT(!_index.isValid() ||
+                 (_index.parent() == index.parent() && index.parent() == _parentIndex));
         _index = index;
     }
 
@@ -839,7 +843,7 @@ public:
 
     QModelIndex modelIndex(const int row) const
     {
-        return _index.model()->index(row, 0, _parentIndex);
+        return _model->index(row, 0, _parentIndex);
     }
 
     inline const QModelIndex & modelParentIndex() const
@@ -970,7 +974,7 @@ public:
     /** Return item index of given model index. If index not created return -1. */
     int indexItem(const QModelIndex &index) const
     {
-        Q_ASSERT(index.parent() == _parentIndex);
+        Q_ASSERT(index.isValid() && index.parent() == _parentIndex);
 
         if(_items.size() == 0 || _items[0]->_row > index.row() ||
             _items[_items.size() - 1]->_row < index.row())
@@ -998,7 +1002,6 @@ public:
     QModelIndex indexAt(const QPoint &point) const
     {
         int i = xyItem(point);
-
         return i == -1 ? QModelIndex() : modelIndex(_items[i]->_row);
     }
 
@@ -1327,9 +1330,10 @@ private:
 
     /** Subview base index in the model used for this view. Index and all 
     items on it's level will be used, not children indexes. */
-    QPersistentModelIndex   _index;
-    QPersistentModelIndex   _parentIndex;
-    int                     _rowCount;
+    QAbstractItemModel     const *_model;
+    QPersistentModelIndex         _index;
+    QPersistentModelIndex         _parentIndex;
+    int                           _rowCount;
 
 };
 
@@ -1465,7 +1469,7 @@ public:
             if(_subViews.size() == 0)
             {
                 for(int r = 0; r < rc; ++r)
-                    q->makeSubView(r, q->model()->index(0, 0, q->model()->index(r, 0)));
+                    q->makeSubView(r, q->model()->index(r, 0), 0);
             }
             else
             {
@@ -1484,7 +1488,7 @@ public:
             for(; id < parents.size() - 1; ++id)
 			{
                 if(_subViews.size() <= id || _subViews[id]->modelParentIndex() != parents[id])
-                    q->makeSubView(id, parents[id + 1]);
+                    q->makeSubView(id, parents[id], parents[id + 1].row());
 
 				if(index.isValid())
 					_subViews[id]->updateModelIndex(parents[id + 1]);
@@ -1497,7 +1501,7 @@ public:
         if(_subViews.size() == 0)
         {
             Q_ASSERT(parents.size() == 2);
-            q->makeSubView(0, parents.back());
+            q->makeSubView(0, parents.front(), parents.back().row());
 		}
 
 		if(index.isValid())
@@ -1876,7 +1880,7 @@ public:
 
         areaChanged(subView, y, y + h, 0);
 
-        Q_ASSERT(v->_items[0]->_newLine);
+        Q_ASSERT(v->_items.size() == 0 || v->_items[0]->_newLine);
     }
     
     /** */
@@ -2502,7 +2506,7 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
                     Q_ASSERT_X(!d->_ld->plainMode(), "", "Model for plain layout must not have children");
 
                     // switch to left subview with children items
-                    makeSubView(d->_currentSubView + 1, index.child(0, 0));
+                    makeSubView(d->_currentSubView + 1, index, 0);
                     activateSubView(d->_currentSubView + 1);
                 }
                 else if(d->_interactive)
@@ -2811,7 +2815,10 @@ void BtMiniView::scroll(float horizontal, float vertical)
         // need to change current index?
         if(receivers(SIGNAL(currentChanged(const QModelIndex &))) > 0)
         {
-            int i = d->currentSubView()->indexItem(d->currentSubView()->modelIndex());
+            const QModelIndex &index(d->currentSubView()->modelIndex());
+            int i = -1;
+            if(index.isValid())
+                d->currentSubView()->indexItem(index);
             if(i != -1)
             {
                 int oi = i;
@@ -3011,9 +3018,10 @@ void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
             {
                 d->clearSubView(i);
 
-                QModelIndex index = topLeft.child(qMin(model()->rowCount(topLeft) - 1, v->modelIndex().row()), 0);
+                QModelIndex index = topLeft.child(qMax(qMin(model()->rowCount(topLeft) - 1,
+                                                            v->modelIndex().row()), 0), 0);
 
-                v->setModelIndex(index);
+                v->setModelIndex(topLeft, index);
 
                 if(d->currentSubView() == v)
                     emit currentChanged(index);
@@ -3123,11 +3131,14 @@ void BtMiniView::doItemsLayout()
 	{
 		BtMiniSubView *v = d->_subViews[d->_currentSubView];
 
-		d->checkIndexCreated(d->_currentSubView, v->modelIndex());
+        QModelIndex i(v->modelIndex());
+
+        if(i.isValid())
+            d->checkIndexCreated(d->_currentSubView, i);
 
 		if(v->_items.size() > 1)
 		{
-			QRect r(v->indexRect(v->modelIndex()));
+            QRect r(v->indexRect(i));
 
 			Q_ASSERT(r.width() > 0);
 
@@ -3144,10 +3155,10 @@ void BtMiniView::doItemsLayout()
 						l = 0;
 				}
 				break;
-				//case QAbstractItemView::EnsureVisible:
-				//    l = v->contentsRect().top() + r.top() + (qMin(r.height(),
-				//        v->baseSize().height()) / 2) - (v->baseSize().height() / 2);
-				//    break;
+            //case QAbstractItemView::EnsureVisible:
+            //    l = v->contentsRect().top() + r.top() + (qMin(r.height(),
+            //        v->baseSize().height()) / 2) - (v->baseSize().height() / 2);
+            //    break;
 			default:
 				Q_ASSERT(false && "Not implemented.");
 			}
@@ -3198,7 +3209,7 @@ int BtMiniView::currentLevel() const
     return d->_currentSubView;
 }
 
-void BtMiniView::makeSubView(int id, const QModelIndex &index)
+void BtMiniView::makeSubView(int id, const QModelIndex &parent, int index)
 {
     Q_D(BtMiniView);
 
@@ -3206,6 +3217,7 @@ void BtMiniView::makeSubView(int id, const QModelIndex &index)
 
     Q_ASSERT(model());
     Q_ASSERT(id <= d->_subViews.size());
+    Q_ASSERT(!parent.isValid() || parent.model() == model());
     
     if(id == d->_subViews.size())
         d->_subViews.append(0);
@@ -3219,7 +3231,7 @@ void BtMiniView::makeSubView(int id, const QModelIndex &index)
             d->_subViews[id]->setContentsLeft(d->_subViews[id - 1]->contentsRect().right() + 1);
     }
 
-    d->_subViews[id]->setModelIndex(index);
+    d->_subViews[id]->setModelIndex(parent, index < 0 ? QModelIndex() : model()->index(index, 0 , parent));
 
 	// clear all subviews after changed subview
     if(!d->_ld->plainMode())
@@ -3382,6 +3394,9 @@ void BtMiniView::paintEvent(QPaintEvent *e)
 		painter.scale(0.5, 0.5);
 		painter.translate(100, 100);
 	}
+
+    //if(d->_subViews.size() == 0)
+    //    painter.drawText(viewport()->rect(), "Empty");
 
     // draw subviews
     foreach(BtMiniSubView *v, d->_subViews)
@@ -3601,18 +3616,45 @@ void BtMiniView::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int 
     Q_ASSERT(start == end);
     Q_ASSERT(d->_ld->plainMode());
 
-    if(!parent.isValid() && d->_ld->plainMode())
+    if(!parent.isValid())
     {
-		d->clearSubView(start, true);
+        d->clearSubView(start, true);
 
-		Q_ASSERT(start == d->_currentSubView);
+        Q_ASSERT(start == d->_currentSubView);
 
-		d->_currentSubView = qMax(0, d->_currentSubView - 1);
+        d->_currentSubView = qMax(0, d->_currentSubView - 1);
 
-		scheduleDelayedItemsLayout();
+        scheduleDelayedItemsLayout();
 
-		d->_needEmitCurrentChanged = true;
+        d->_needEmitCurrentChanged = true;
+
+        return;
     }
+    else if(d->_ld->plainMode())
+    {
+        for(int i = 0; i < d->_subViews.size(); i++)
+        {
+            BtMiniSubView * v = d->_subViews.at(i);
+            if(v->modelParentIndex() == parent)
+            {
+                // shift current index
+                if(v->modelIndex().row() >= start && v->modelIndex().row() <= end)
+                {
+                    if(end < model()->rowCount(parent) - 1)
+                        v->updateModelIndex(model()->index(end + 1, 0, parent));
+                    else if(start > 0)
+                        v->updateModelIndex(model()->index(start - 1, 0, parent));
+                    // else persistent index will be invalidated automatically
+                }
+
+                dataChanged(parent, parent);
+
+                return;
+            }
+        }
+    }
+
+    Q_ASSERT(false);
 }
 
 void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
@@ -3634,7 +3676,7 @@ void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
         if(model()->rowCount(p) > 0)
             i = model()->index(0, 0, p);
         
-		makeSubView(start, i);
+        makeSubView(start, p, i.row());
 
 		if(start == d->_currentSubView + 1)
         {
@@ -3642,17 +3684,20 @@ void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
         }
 		else if(start == d->_currentSubView)
         {
-            d->_currentSubView++;
+            d->_currentSubView = qMin(d->_currentSubView + 1, d->_subViews.size() - 1);
             //slideLeft();
         }
-		else
-		{
+        else
             Q_ASSERT(false);
-			emit currentChanged(currentIndex());
-		}
 
         d->updateViews();
     }
+    else if (!parent.parent().isValid())
+    {
+        dataChanged(parent, parent);
+    }
+    else
+        Q_ASSERT(false);
 }
 
 QString BtMiniView::currentContents() const

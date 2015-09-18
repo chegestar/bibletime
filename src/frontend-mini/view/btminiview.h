@@ -164,7 +164,7 @@ protected:
     void        rowsInserted(const QModelIndex &parent, int start, int end);
     
     /** Make or update view. */
-    void makeSubView(int level, const QModelIndex &index);
+    void makeSubView(int level, const QModelIndex &parent, int index);
 
     /** Activate or create new view if there is no view. */
     void activateSubView(int level);
