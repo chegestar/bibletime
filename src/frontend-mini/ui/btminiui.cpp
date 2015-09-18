@@ -34,6 +34,7 @@
 #include "models/btminisettingsmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
+#include "ui/btminiclippingswidget.h"
 #include "ui/btminiworkswidget.h"
 
 #if QT_VERSION >= 0x050000
@@ -54,7 +55,9 @@ public:
         Installer = 1 << 4,
         Settings = 1 << 5,
         Context = 1 << 6,
-        Clippings = 1 << 7
+        Clippings = 1 << 7,
+
+        Last = 1 << 8
     };
 
 public:
@@ -499,32 +502,8 @@ public:
         Q_ASSERT(_clippingsWidget == 0);
         Q_CHECK_PTR(_mainWidget);
 
-        _clippingsWidget = new BtMiniWidget(_mainWidget);
+        _clippingsWidget = new BtMiniClippingsWidget(_mainWidget);
         _mainWidget->addWidget(_clippingsWidget);
-
-        BtMiniView *v = new BtMiniView(_clippingsWidget);
-        v->setTopShadow(true);
-
-        BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
-        v->setModel(m);
-
-        QPushButton *bb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
-
-        QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
-        lb->setAlignment(Qt::AlignCenter);
-
-        BtMiniPanel *p = new BtMiniPanel;
-        p->addWidget(lb, Qt::AlignCenter);
-        p->addWidget(bb, Qt::AlignLeft);
-
-        QVBoxLayout *vl = new QVBoxLayout;
-        vl->addWidget(p);
-        vl->addWidget(v);
-
-        _clippingsWidget->setLayout(vl);
-
-        QObject::connect(v, SIGNAL(clicked(const QModelIndex &)), m, SLOT(clicked(const QModelIndex &)));
-        QObject::connect(bb, SIGNAL(clicked()), BtMiniUi::instance(), SLOT(goBack()));
     }
 
     void updateMainWidget()
@@ -590,6 +569,11 @@ public:
         {
             _searchWidget->deleteLater();
             _searchWidget = 0;
+        }
+        if(_resetFlag & Rest && _clippingsWidget)
+        {
+            _clippingsWidget->deleteLater();
+            _clippingsWidget = 0;
         }
 
         _resetFlag = 0;
@@ -842,6 +826,7 @@ bool BtMiniUi::goBack()
         case BtMiniUiPrivate::Installer: activateInstaller(); break;
         case BtMiniUiPrivate::Settings: activateSettings(); break;
         case BtMiniUiPrivate::Search: activateSearch(); break;
+        case BtMiniUiPrivate::Clippings: activateClippings(); break;
         case BtMiniUiPrivate::Context:
             d->switchTo(BtMiniUiPrivate::Context);
             d->_mainWidget->setCurrentWidget(d->_contextWidgets.last());

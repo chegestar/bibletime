@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.1.5
+VERSION = 1.2.0
 
 CONFIG += clucene svg xml mini
 
@@ -24,7 +24,8 @@ SOURCES += \
     ../../../src/frontend-mini/ui/btminipanel.cpp \
     ../../../src/frontend-mini/ui/btministyle.cpp \
     ../../../src/frontend-mini/ui/btminiui.cpp \
-    ../../../src/frontend-mini/ui/btminiworkswidget.cpp
+    ../../../src/frontend-mini/ui/btminiworkswidget.cpp \
+    ../../../src/frontend-mini/ui/btminiclippingswidget.cpp
 
 
 HEADERS += \
@@ -41,7 +42,8 @@ HEADERS += \
     ../../../src/frontend-mini/ui/btministyle.h \
     ../../../src/frontend-mini/ui/btminiui.h \
     ../../../src/frontend-mini/ui/btminiworkswidget.h \
-    ../../../src/frontend-mini/ui/btminiwidget.h
+    ../../../src/frontend-mini/ui/btminiwidget.h \
+    ../../../src/frontend-mini/ui/btminiclippingswidget.h
 
 
 RESOURCES += \

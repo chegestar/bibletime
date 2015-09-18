@@ -90,8 +90,8 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
                 bt = tr("Close");
             break;
         case Options:
-                bo = "Options";
-                bt = tr("Options");
+                bo = "...";
+                bt = tr("...");
             break;
         case Exit:
                 bo = "Exit";

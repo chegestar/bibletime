@@ -32,6 +32,7 @@
 #include "models/btminimoduletextmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
+#include "ui/btminiclippingswidget.h"
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
 #include "ui/btminiui.h"
@@ -93,8 +94,8 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     QObject::connect(d->_buttonPlace, SIGNAL(clicked()), this, SLOT(openPlaceSelection()));
 
     BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Search
-        //<< BtMiniPanel::Options
-        << BtMiniPanel::Installer
+        << BtMiniPanel::Options
+        //<< BtMiniPanel::Installer
         << BtMiniPanel::Settings << BtMiniPanel::Exit, this);
     p->layout()->setContentsMargins(0, 0, 0, 0);
     QFont f (p->font());
@@ -123,12 +124,12 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
     QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "");
     int openModule = btConfig().value<int>("mini/openModule", 0);
 
+    Q_ASSERT(modules.size() == places.size() && openModule >= 0 && openModule < modules.size());
+
     QStringList moduleNames;
 
     foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
         moduleNames << m->name();
-
-    Q_ASSERT(!moduleNames.contains(""));
 
     for(int i = 0; i < modules.size(); ++i)
     {
@@ -195,10 +196,10 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
 
     d->_view->setModel(d->_worksModel);
 
-    QObject::connect(d->_view, SIGNAL(currentChanged(const QModelIndex &)), this, SLOT(currentIndexChanged(const QModelIndex &)));
-    QObject::connect(d->_view, SIGNAL(shortPressed(const QModelIndex &)), this, SLOT(openContext(const QModelIndex &)));
-    QObject::connect(d->_view, SIGNAL(longPressed(const QModelIndex &)), this, SLOT(openMenu(const QModelIndex &)));
-    QObject::connect(d->_view, SIGNAL(selected(const QModelIndex &)), this, SLOT(selectedIndexes(const QModelIndex &)));
+    connect(d->_view, SIGNAL(currentChanged(const QModelIndex &)), this, SLOT(currentIndexChanged(const QModelIndex &)));
+    connect(d->_view, SIGNAL(shortPressed(const QModelIndex &)), this, SLOT(openContext(const QModelIndex &)));
+    connect(d->_view, SIGNAL(longPressed(const QModelIndex &)), this, SLOT(openMenu(const QModelIndex &)));
+    connect(d->_view, SIGNAL(selected(const QModelIndex &)), this, SLOT(selectedIndexes(const QModelIndex &)));
 
     // Restore last session
     for(int i = 0; i < modules.size(); ++i)
@@ -214,7 +215,7 @@ BtMiniWorksWidget::BtMiniWorksWidget(QWidget *parent)
         }
     }
 
-    QObject::connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
+    connect(CSwordBackend::instance(), SIGNAL(sigSwordSetupChanged(CSwordBackend::SetupChangedReason)),
         d->_worksModel, SLOT(modulesReloaded()));
 }
 
@@ -525,16 +526,27 @@ void BtMiniWorksWidget::selectedIndexes(const QModelIndex &index)
     BtMiniView *v = qobject_cast<BtMiniView *>(sender());
     Q_CHECK_PTR(v);
 
-    switch(BtMiniMenu::execMenu(QStringList() << tr("Copy") << tr("Cancel")))
+    switch(BtMiniMenu::execMenu(QStringList() << tr("Copy") << tr("Bookmark") << tr("Cancel")))
     {
     case 0:
         QApplication::clipboard()->setText(v->selectedText());
-        v->selectionEnd();
         break;
     case 1:
-        v->selectionEnd();
+        {
+            QModelIndexList l(v->selectedIndexes());
+            CSwordModuleInfo *m(CSwordBackend::instance()->findModuleByName(
+                                l[0].data(BtMini::ModuleRole).toString().section(',', 0, 0)));
+
+            QString k(l[0].data(BtMini::PlaceRole).toString());
+            if(l.size() > 1 && l[0] != l[1])
+                k.append("-"), k.append(l[1].data(BtMini::PlaceRole).toString());
+
+            BtMiniClippingsWidget::insertBookmark(m, k);
+        }
+    case 2:
         break;
     }
+    v->selectionEnd();
 }
 
 void BtMiniWorksWidget::openModuleMenu(const QModelIndex &index)
