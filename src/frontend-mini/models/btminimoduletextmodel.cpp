@@ -531,11 +531,14 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 			switch(d->indexDepth(index))
 			{
 			case 1:
-				return d->_lists[index.internalId()]._module->name();
+                {
+                    const BtMiniModuleTextModelPrivate::List & l = d->_lists[index.internalId()];
+                    return l._module == 0 ? "" : l._module->name();
+                }
 			case 2:
 				{
 					QString r;
-					const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
+                    const BtMiniModuleTextModelPrivate::List *l = d->indexList(index);
 
 					if(l->_module && (l->_module->type() == CSwordModuleInfo::Bible ||
 						l->_module->type() == CSwordModuleInfo::Commentary))
