@@ -91,6 +91,7 @@ public:
     void selectionStart();
     void selectionEnd();
     QString selectedText();
+    QModelIndexList selectedIndexes();
 
 public slots:
     /** Reimplemented from QAbstractItemView. */

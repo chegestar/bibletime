@@ -1,4 +1,4 @@
-/*********
+﻿/*********
 *
 * In the name of the Father, and of the Son, and of the Holy Spirit.
 *
@@ -1305,8 +1305,8 @@ public:
     float                   _visualCenter;
 
     /** Text selection data. When selection mode is active, changes to list should be dropped. */
-    BtMiniViewItem*         _selectionStartItem;
-    BtMiniViewItem*         _selectionEndItem;
+    BtMiniViewItem         *_selectionStartItem;
+    BtMiniViewItem         *_selectionEndItem;
     bool                    _selectionMode;
     /** Those points are in space of view. */
     QRect                   _selectionStartArea;
@@ -2922,6 +2922,15 @@ QString BtMiniView::selectedText()
             break;
     }
     return r;
+}
+
+QModelIndexList BtMiniView::selectedIndexes()
+{
+    Q_D(BtMiniView);
+
+    const QModelIndex &i = d->currentSubView()->modelIndex();
+    return QModelIndexList() << i.model()->index(d->currentSubView()->_selectionStartItem->_row, 0, i.parent())
+                             << i.model()->index(d->currentSubView()->_selectionEndItem->_row, 0, i.parent());
 }
 
 void BtMiniView::scrollTo(QVariant data)
