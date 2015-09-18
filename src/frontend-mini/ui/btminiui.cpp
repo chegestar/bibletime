@@ -32,6 +32,7 @@
 #include "models/btminimodulesmodel.h"
 #include "models/btminimoduletextmodel.h"
 #include "models/btminisettingsmodel.h"
+#include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
 #include "ui/btminiworkswidget.h"
 
@@ -824,7 +825,7 @@ bool BtMiniUi::goBack()
 
     // check if we could switch previus list in current view
     BtMiniView * v = d->_mainWidget->currentWidget()->findChild<BtMiniView*>();
-    if(v && v->slideLeft())
+    if(v && !v->layoutDelegate()->plainMode() && v->slideLeft())
         return true;
 
     if(d->_widgetStack.size() <= 1)
