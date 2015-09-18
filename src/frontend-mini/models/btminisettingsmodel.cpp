@@ -157,6 +157,29 @@ BtMiniSettingsModel::BtMiniSettingsModel(QObject *parent)
     BtMiniLevelOption o = d_ptr->_ld->levelOption();
     o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
     d_ptr->_ld->setLevelOption(o);
+
+
+#ifdef QT_DEBUG
+    // model sanity check example, lets keep it here
+    {
+        QModelIndexList l;
+        l << QModelIndex();
+        for(int i = 0; i < l.size(); i++)
+        {
+            for(int ii = 0; ii < rowCount(l[i]); ii++)
+            {
+                QModelIndex iii(index(ii, 0, l[i]));
+
+                //qDebug() << "c:" << iii.parent().row() << iii.parent().data();
+                //qDebug() << "p:" << l[i].row() << l[i].data();
+
+                Q_ASSERT(iii.parent() == l[i]);
+
+                l << iii;
+            }
+        }
+    }
+#endif
 }
 
 BtMiniSettingsModel::~BtMiniSettingsModel()
