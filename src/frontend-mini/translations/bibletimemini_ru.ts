@@ -214,7 +214,7 @@
         <location filename="../models/btminimoduletextmodel.cpp" line="1153"/>
         <source>heading:</source>
         <comment>Heading search keyword</comment>
-        <translation>загаловок:</translation>
+        <translation>заголовок:</translation>
     </message>
     <message>
         <location filename="../models/btminimoduletextmodel.cpp" line="1154"/>
@@ -463,13 +463,23 @@
         <translation>&lt;h2&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/h2&gt;&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="273"/>
-        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are also another interface styles provided by your platfrom.</source>
-        <translation>&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нарвится.</translation>
+        <location filename="../models/btminisettingsmodel.cpp" line="251"/>
+        <source>Many views in BibleTime Mini recognizes &lt;b&gt;short pressing&lt;/b&gt; by finger and &lt;b&gt;long pressing&lt;/b&gt;. Try to press screen on word you interested in for a second (device should vibrate ones), information (context) view for that word should open. Same for footnotes and cross-references.&lt;br/&gt;Try to press Text view for several seconds before device vibrates twice, service menu should open. Where you will be able to add and remove additional views for parallel (currently unsynchronized) viewing.</source>
+        <translation>Разные окна в приложении распознают &lt;b&gt;короткое нажатие&lt;/b&gt; и &lt;b&gt;долгое нажатие&lt;/b&gt;. Попробуйте нажать пальцем на экране на слове которое вас интересует не более чем на секунду (устройство вибрирует один раз), откроется информационное (контекстное) окно. Так же можно нажать на сносках и перекрестных ссылках. &lt;br/&gt;Попробуйте нажатие на экране Библии в течении нескольких секунд до того как устройство вибрирует дважды, откроется сервисное меню. С помощью сервисного меню можно добавлять и удалять дополнительные окна для просмотра разных мест.</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are alos another interface styles provided by your platfrom.</source>
-        <translation type="obsolete">&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нарвится.</translation>
+        <location filename="../models/btminisettingsmodel.cpp" line="256"/>
+        <source>&lt;b&gt;Context view.&lt;/b&gt; It is consist of two views: word context, and commentary context. Try to slide left/right to observe them. Default modules used for this context could be configured in Module selection window by long pressing.</source>
+        <translation>&lt;b&gt;Контекстное окно.&lt;/b&gt; Оно состоит из двух частей в одном можно просматривать контекст, в другом - комментарий для стиха. Попробуйте листать в право/лево чтобы переключаться между ними. Модули, используемые для контекстного окна, можно настроить в окне выбора текущего модуля по долгому нажатию.</translation>
+    </message>
+    <message>
+        <location filename="../models/btminisettingsmodel.cpp" line="273"/>
+        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color scheme on dark by changing Ui Style on &quot;mini-night&quot;. There are also another interface styles provided by your platform.</source>
+        <translation>&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нравится.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are also another interface styles provided by your platfrom.</source>
+        <translation type="obsolete">&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нравится.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="277"/>
@@ -494,7 +504,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="283"/>
         <source>parallel Bible display, make long tap in module selection dialog and press</source>
-        <translation>параллельный просмотра Библлл, по долгому нажатию в окне выбора модуля и нажатию на</translation>
+        <translation>параллельный просмотра Библии, по долгому нажатию в окне выбора модуля и нажатию на</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="284"/>
@@ -511,19 +521,17 @@
         <translation type="obsolete">&lt;b&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/b&gt;&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="251"/>
         <source>Many views in BibleTime Mini recognizes &lt;b&gt;short pressing&lt;/b&gt; by finger and &lt;b&gt;long pressing&lt;/b&gt;. Try to press screen on word you interested in for a second (device should vibrate ones), information (context) view for that word should open. Same for footnotes and cross-references.&lt;br/&gt;Try to press Text view for several seconds before device vibrates twice, service menu should open. Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.</source>
-        <translation>Разные окна в приложении распознают &lt;b&gt;короткое нажатие&lt;/b&gt; и &lt;b&gt;долгое нажатие&lt;/b&gt;. Попробуйте нажать пальцем на экране на слове которое вас интересует не более чем на секунду (устройство провибрирует один раз), откроется информационное (контекстное) окно. Нак же можно нажать на сносках и перекрестных ссылках. &lt;br/&gt;Попробуйте держать нажатие на экране Библии в течении нескольких секунд до того как устройство провибрирует дважды, откроется сервисное меню. С помощью сервисного меню можно добавлять и удалять дополнительные окна для просмотра разных мест.</translation>
+        <translation type="obsolete">Разные окна в приложении распознают &lt;b&gt;короткое нажатие&lt;/b&gt; и &lt;b&gt;долгое нажатие&lt;/b&gt;. Попробуйте нажать пальцем на экране на слове которое вас интересует не более чем на секунду (устройство вибрирует один раз), откроется информационное (контекстное) окно. Так же можно нажать на сносках и перекрестных ссылках. &lt;br/&gt;Попробуйте нажатие на экране Библии в течении нескольких секунд до того как устройство вибрирует дважды, откроется сервисное меню. С помощью сервисного меню можно добавлять и удалять дополнительные окна для просмотра разных мест.</translation>
     </message>
     <message>
-        <location filename="../models/btminisettingsmodel.cpp" line="256"/>
         <source>&lt;b&gt;Context view.&lt;/b&gt; It is consist of two views: word context, and commentary context. Try to slide left/right to observe them. Default modules used for this context could be configurated in Module selection window by long pressping.</source>
-        <translation>&lt;b&gt;Контекстное окно.&lt;/b&gt; Оно состоит из двух частей в одном можно просматривать контекст, в другом - комментарий для стиха. Попробуйте листать в право/лево чтобы переключаться между ними. Модули, используемые для контекстного окна, можно настроить в окне выбора текущего модуля по долгому нажатию.</translation>
+        <translation type="obsolete">&lt;b&gt;Контекстное окно.&lt;/b&gt; Оно состоит из двух частей в одном можно просматривать контекст, в другом - комментарий для стиха. Попробуйте листать в право/лево чтобы переключаться между ними. Модули, используемые для контекстного окна, можно настроить в окне выбора текущего модуля по долгому нажатию.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="259"/>
         <source>&lt;b&gt;Search.&lt;/b&gt; BibleTime Mini uses CLucene indexed search, this means that you have to wait for some time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to input box at the top your request. Try to use wildcards &quot;*&quot; (like &quot;take*&quot;), keywords (like &quot;strong:G1203&quot; or &quot;footnote:Eve&quot;), and combine several words. Note, you should have keyboard with Enter key on your keyboard to start search, or on some platforms there is way to insert Return Carriage symbol.&lt;br/&gt;Long pressing on item will bring verse to reading window.</source>
-        <translation>&lt;b&gt;Поиск.&lt;/b&gt; BibleTime Mini использует поиск на основе индекса, это значит что нужно подождать определенное время для генерации индекса чтобы получить мнговенный поиск по всей Библии (на устройстве с процессором 1GHz генерация индекса для модуля с номерами стронга занимает 10 минут, на устройстве с процессором 600MHz то же может занять около часа). Переключитесь на поисковое окно и введите запрос в верхней строке. Вы можете использовать знаки подстановки &quot;*&quot; (например, &quot;люб*&quot;), ключевые слова (например, &quot;стронг:G1203&quot; или &quot;footnote:Ева&quot;), совмещать слова. Замечание, поиск активируется клавишей на виртуальной клавиатуре, например, Ввод. На некоторых платформах можно вставить специальный символ Возврата Каретки.&lt;br/&gt;Долгое нажатие на стихе откроет его в Основном окне.</translation>
+        <translation>&lt;b&gt;Поиск.&lt;/b&gt; BibleTime Mini использует поиск на основе индекса, это значит что нужно подождать определенное время для генерации индекса чтобы получить мгновенный поиск по всей Библии (на устройстве с процессором 1GHz генерация индекса для модуля с номерами стронга занимает 10 минут, на устройстве с процессором 600MHz то же может занять около часа). Переключитесь на поисковое окно и введите запрос в верхней строке. Вы можете использовать знаки подстановки &quot;*&quot; (например, &quot;люб*&quot;), ключевые слова (например, &quot;стронг:G1203&quot; или &quot;сноска:Ева&quot;), совмещать слова. Замечание, поиск активируется клавишей на виртуальной клавиатуре, например, Ввод. На некоторых платформах можно вставить специальный символ Возврата Каретки.&lt;br/&gt;Долгое нажатие на стихе откроет его в Основном окне.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="266"/>
@@ -533,7 +541,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="270"/>
         <source>&lt;b&gt;Parallel Bible display.&lt;/b&gt; You would open several Bible texts in one view, with respect of different verse markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like to add, then select &quot;</source>
-        <translation>&lt;b&gt;Парралельный просмотр Библии.&lt;/b&gt; Можно открыть несколько Библейских текстов в одном окне для парралельного просмотра, с учетом разных традиций разделения на стихи. В любом окне где уже открыта Библия, откройте окно выбора модуля и длелайте долгое нажатие на модуле, в сервисном меню выберите &quot;</translation>
+        <translation>&lt;b&gt;Параллельный просмотр Библии.&lt;/b&gt; Можно открыть несколько Библейских текстов в одном окне для параллельного просмотра, с учетом разных традиций разделения на стихи. В любом окне, где уже открыта Библия, откройте окно выбора модуля и сделайте долгое нажатие на модуле, в сервисном меню выберите &quot;</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="272"/>
