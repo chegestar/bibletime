@@ -3,8 +3,18 @@ kalemas@mail.ru :
 +   multi column mode
 +   webkit render: make context work
 +   setting options for views without exiting application
-    resize subview width
-    replace panel with android
+!	prototyping QML user interface
+	centralized parallel processing: 
+		get data from sword
+		install a module
+		refresh remote sources
+		build search index
+		make this suitable for main repo
+    resize subview width, its primarily for tablets
+	make sword text model and instll model suitable for main repo
+	move CInfoDisplay text processing to Core
+
+?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
     add abiblity to combine bookshelves in tree model
     adding functionality using default function parameters is bad practice, when you want to change them
