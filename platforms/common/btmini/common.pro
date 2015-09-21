@@ -8,6 +8,9 @@ CONFIG += webkit clucene svg xml
 DEFINES += BT_MINI
 DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 
+# Sword
+include(../../common/sword/sword.pro)
+
 CLUCENE_PATH = ../../../../clucene/src
 
 INCLUDEPATH += . \

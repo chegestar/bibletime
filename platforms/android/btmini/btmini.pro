@@ -1,6 +1,5 @@
 #CONFIG += qml quick
 
-include(../../common/sword/sword.pro)
 include(../../common/btmini/common.pro)
 
 #qml {
