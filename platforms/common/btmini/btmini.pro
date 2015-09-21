@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.0.1
+VERSION = 1.0.2
 
 CONFIG += clucene svg xml mini
 
@@ -7,8 +7,6 @@ CONFIG += clucene svg xml mini
 # Base section, nothing platform specific
 DEFINES += BT_MINI
 DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
-
-QMAKE_CXXFLAGS_DEBUG += -Wno-switch -Wno-unused-parameter -Wno-unused-variable # useless warning
 
 INCLUDEPATH += . \
     ../../../src/frontend-mini \
