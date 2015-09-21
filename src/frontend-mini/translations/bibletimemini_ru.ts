@@ -159,13 +159,6 @@
     </message>
 </context>
 <context>
-    <name>BtMiniModelsModel</name>
-    <message>
-        <source>Select repository:</source>
-        <translation type="obsolete">Выберите репозиторий:</translation>
-    </message>
-</context>
-<context>
     <name>BtMiniModuleNavigationModel</name>
     <message>
         <location filename="../models/btminimodulenavigationmodel.cpp" line="493"/>
@@ -201,43 +194,61 @@
         <translation>Нет Модуля</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1164"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1172"/>
         <source>Search ...</source>
         <translation>Поиск ...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1170"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1151"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
         <translation>стронг:</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1152"/>
+        <source>footnote:</source>
+        <comment>Footnote search keyword</comment>
+        <translation>сноска:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1153"/>
+        <source>heading:</source>
+        <comment>Heading search keyword</comment>
+        <translation>загаловок:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1154"/>
+        <source>morph:</source>
+        <comment>Morph search keyword</comment>
+        <translation>морф:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1191"/>
         <source>Build index for module?</source>
         <translation>Создать индекс для модуля?</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1191"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1183"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1191"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1187"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1195"/>
         <source>Indexing...</source>
         <translation>Индексирование...</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1248"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1256"/>
         <source>Set default </source>
         <translation>По-умолчанию</translation>
     </message>
     <message>
-        <location filename="../models/btminimoduletextmodel.cpp" line="1251"/>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1259"/>
         <source>Add Parallel</source>
         <translation>Параллель</translation>
     </message>
@@ -245,27 +256,31 @@
 <context>
     <name>BtMiniModulesModel</name>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="175"/>
         <source>All languages:</source>
-        <translation>Все языки:</translation>
+        <translation type="obsolete">Все языки:</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="187"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="188"/>
+        <source>Available languages:</source>
+        <translation>Доступные языки:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="195"/>
         <source>Suggestions:</source>
         <translation>Предложения:</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="444"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="451"/>
         <source>Updating</source>
         <translation>Обновляю</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="465"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="472"/>
         <source>Need module sources</source>
         <translation>Нужны источники модулей</translation>
     </message>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="467"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="474"/>
         <source>Select language:</source>
         <translation>Выберите язык:</translation>
     </message>
@@ -386,7 +401,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="84"/>
         <source>&lt;b&gt;BibleTime Mini&lt;/b&gt; - spend your time with Bible on mobile!</source>
-        <translation>&lt;b&gt;BibleTime Mini&lt;/b&gt; - время с Библией на мобильном.</translation>
+        <translation>&lt;b&gt;BibleTime Mini&lt;/b&gt; - время с Библией на мобильном!</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="85"/>
@@ -562,13 +577,6 @@
         <location filename="../models/btminisettingsmodel.cpp" line="377"/>
         <source>No</source>
         <translation>Нет</translation>
-    </message>
-</context>
-<context>
-    <name>BtMiniView</name>
-    <message>
-        <source>Hello World!</source>
-        <translation type="obsolete">Привет Мир!</translation>
     </message>
 </context>
 <context>
@@ -1101,7 +1109,7 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="223"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="164"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="176"/>
         <source>English</source>
         <extracomment>Language name en</extracomment>
         <translation type="unfinished"></translation>
@@ -1198,14 +1206,14 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="260"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="170"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="182"/>
         <source>Greek, Ancient (to 1453)</source>
         <extracomment>Language name grc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="262"/>
-        <location filename="../models/btminimodulesmodel.cpp" line="168"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="180"/>
         <source>Hebrew</source>
         <extracomment>Language name he</extracomment>
         <translation type="unfinished"></translation>
