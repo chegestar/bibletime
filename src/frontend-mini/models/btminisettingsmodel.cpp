@@ -247,7 +247,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
 {
     switch (data) {
     case tipWorks:
-        return QString("<body>" + tr("<b><center>Usefull tips:</center></b><br/>") +
+        return QString("<body>" + tr("<h2><center>Usefull tips:</center></h2><br/>") +
             tr("Many views in BibleTime Mini recognizes <b>short pressing</b> by finger and <b>long pressing</b>. "
                "Try to press screen on word you interested in for a second (device should vibrate ones), "
                "information (context) view for that word should open. Same for footnotes and cross-references.<br/>"
@@ -270,9 +270,11 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
             tr("<b>Parallel Bible display.</b> You would open several Bible texts in one view, with respect of different verse "
                "markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like "
                "to add, then select \"") + tr("Add Parallel") + "\"." +
+            tr("<b>Dark theme.</b> You could change color sheme on dark by changing Ui Style on \"mini-night\". There are alos another "
+               "interface styles provided by your platfrom.") + "<br/><br/>" +
             QString("</body>"));
     case tipWorksAddon:
-        return QString(tr("<br/>This information you could access again in <b>Settings</b> under the <b>Handbook</b> item."));
+        return QString(tr("Following information you could access again in <b>Settings</b> under the <b>Handbook</b> item.<br/>"));
     case news:
         return QString(tr("<body><b><center>News and Updates:</center></b><br/>") +
                        tr("<b>0.9.5</b> - parallel Bible display, make long tap in module selection dialog "
