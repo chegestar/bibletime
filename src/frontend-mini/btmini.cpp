@@ -958,8 +958,10 @@ void BtMini::installerQuery(const QModelIndex &index)
 
 void BtMini::updateRemoteSources(bool download)
 {
+#ifndef QT_NO_CURSOR
     if(download)
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+#endif
 
     // Setup model
     BtMiniView *v = findView(installerWidget());
@@ -1003,8 +1005,10 @@ void BtMini::updateRemoteSources(bool download)
     if(ss.size() > 0)
         m->updateIndicators(QModelIndex());
 
+#ifndef QT_NO_CURSOR
     if(download)
         QApplication::restoreOverrideCursor();
+#endif
 }
 
 /** Sword debug messages. */
