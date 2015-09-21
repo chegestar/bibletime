@@ -111,9 +111,8 @@
         <translation>введите и нажмите Ввод</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="798"/>
         <source>No Remote Sources</source>
-        <translation>Нет удаленных источников</translation>
+        <translation type="obsolete">Нет удаленных источников</translation>
     </message>
     <message>
         <location filename="../btmini.cpp" line="919"/>
@@ -246,7 +245,27 @@
 <context>
     <name>BtMiniModulesModel</name>
     <message>
-        <location filename="../models/btminimodulesmodel.cpp" line="359"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="175"/>
+        <source>All languages:</source>
+        <translation>Все языки:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="187"/>
+        <source>Suggestions:</source>
+        <translation>Предложения:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="444"/>
+        <source>Updating</source>
+        <translation>Обновляю</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="465"/>
+        <source>Need module sources</source>
+        <translation>Нужны источники модулей</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimodulesmodel.cpp" line="467"/>
         <source>Select language:</source>
         <translation>Выберите язык:</translation>
     </message>
@@ -280,8 +299,12 @@
     </message>
     <message>
         <location filename="../ui/btminipanel.cpp" line="103"/>
+        <source>Update Sources</source>
+        <translation>Обновить Источники</translation>
+    </message>
+    <message>
         <source>Refresh</source>
-        <translation>Обновить</translation>
+        <translation type="obsolete">Обновить</translation>
     </message>
     <message>
         <location filename="../ui/btminipanel.cpp" line="151"/>
@@ -353,7 +376,7 @@
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="80"/>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменения</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="83"/>
@@ -426,8 +449,12 @@
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="273"/>
-        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are alos another interface styles provided by your platfrom.</source>
+        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are also another interface styles provided by your platfrom.</source>
         <translation>&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нарвится.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Dark theme.&lt;/b&gt; You could change color sheme on dark by changing Ui Style on &quot;mini-night&quot;. There are alos another interface styles provided by your platfrom.</source>
+        <translation type="obsolete">&lt;b&gt;Ночной режим.&lt;/b&gt; Можно переключить цветовую схему на темную, переключив Стиль в Опциях на &quot;mini-night&quot;. Так же можно переключить стиль интерфейса на тот который больше нарвится.</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="277"/>
@@ -1074,6 +1101,7 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="223"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="164"/>
         <source>English</source>
         <extracomment>Language name en</extracomment>
         <translation type="unfinished"></translation>
@@ -1170,12 +1198,14 @@
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="260"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="170"/>
         <source>Greek, Ancient (to 1453)</source>
         <extracomment>Language name grc</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../backend/managers/clanguagemgr.cpp" line="262"/>
+        <location filename="../models/btminimodulesmodel.cpp" line="168"/>
         <source>Hebrew</source>
         <extracomment>Language name he</extracomment>
         <translation type="unfinished"></translation>
