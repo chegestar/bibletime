@@ -25,9 +25,9 @@ kalemas@mail.ru :
 +   android: sometimes failed to start after app was put into bg
 +   end selection when call clear for unused items instead of when set sleep
     add parallel works for incompatible module types
-    do not start tapping when handle was pressed
++   do not start tapping when handle was pressed
 +   android: are there fallback fonts, try to fix unrecognized characters?
-    adjust base size selection: tablets got too large text
+?   adjust base size selection: tablets got too large text
         base size is height of basic font for interface
         on small screen it should be fixed in physical units for example 7mm
         on tablet it should be fixed in physical units lets take 7mm
