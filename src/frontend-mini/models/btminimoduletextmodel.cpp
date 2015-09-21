@@ -16,6 +16,7 @@
 #include <QMutexLocker>
 #include <QStringList>
 #include <QStringListModel>
+#include <QThread>
 #include <QtDebug>
 
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
@@ -529,9 +530,16 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
     switch(role)
 	{
+    case BtMini::PreviewUpdateRole:
 	case BtMini::PreviewRole:
 		{
             const BtMiniModuleTextModelPrivate::List *list = d->indexList(index);
+
+            // put to thread processing
+            if(role == BtMini::PreviewUpdateRole)
+            {
+                ;
+            }
 
 
             if(list->_module->type() == CSwordModuleInfo::GenericBook)
@@ -1114,6 +1122,7 @@ QHash<int, QByteArray> BtMiniModuleTextModel::roleNames() const
     rn[BtMini::PlaceRole] = "place";
     rn[BtMini::PlaceShortRole] = "placeShort";
     rn[BtMini::PreviewRole] = "preview";
+    rn[BtMini::PreviewUpdateRole] = "previewUpdate";
     return rn;
 }
 

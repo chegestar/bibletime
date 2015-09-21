@@ -40,7 +40,9 @@ public:
         PlaceShortRole,
 		RepositoryRole,
         /** Preview before thread will calculate item DisplayRole (QString). */
-        PreviewRole
+        PreviewRole,
+        /** Like preview but then chage data via signal. */
+        PreviewUpdateRole
     };
 
     /** */
