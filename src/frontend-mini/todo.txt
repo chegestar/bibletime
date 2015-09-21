@@ -12,8 +12,8 @@ kalemas@mail.ru :
     centralized parallel processing:
         get data from sword
         install a module
-        refresh remote sources
-        create model of available modules
++       refresh remote sources
++       create model of available modules
         build search index (maybe build will be resumeable, maybe index displayed verses)
 		maybe backend reloading
         ability for blocking execution (e.g. first text entry)
@@ -25,9 +25,9 @@ kalemas@mail.ru :
 	search by G25 (strong:G0025), and it is ambiguous G0025 and G25 in search
 		there is bug with highlighting, search for strong:G25 highlights strong:G2523
 +	download locales when refresh sources
-		remove this functionality
-		decide how to do this, because 5 minutes for update is too long
-	android: listen applicationStateChange
++		remove this functionality
++		decide how to do this, because 5 minutes for update is too long
++	android: listen applicationStateChange
 
 ?   replace panel with android
 ?   move all logic from models to btminilogic.cpp
