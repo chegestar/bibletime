@@ -21,7 +21,8 @@ SOURCES += \
     ../../../src/frontend-mini/ui/btminimenu.cpp \
     ../../../src/frontend-mini/view/btminiview.cpp \
     ../../../src/frontend-mini/view/btminilayoutdelegate.cpp \
-    ../../../src/frontend-mini/btmini.cpp
+    ../../../src/frontend-mini/btmini.cpp \
+    ../../../src/bibletimeapp.cpp \
 
 
 HEADERS += \
@@ -33,7 +34,9 @@ HEADERS += \
     ../../../src/frontend-mini/ui/btminimenu.h \
     ../../../src/frontend-mini/view/btminiview.h \
     ../../../src/frontend-mini/view/btminilayoutdelegate.h \
-    ../../../src/frontend-mini/ui/btministyle.cpp
+    ../../../src/frontend-mini/ui/btministyle.cpp \
+    ../../../src/frontend-mini/btmini.h \
+    ../../../src/bibletimeapp.h \
 
 
 RESOURCES += ../../../src/frontend-mini/ui/btministyle.qrc \
