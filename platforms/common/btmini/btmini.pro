@@ -56,9 +56,10 @@ OTHER_FILES += \
     ../../../src/frontend-mini/todo.txt \
 
 
-# BtMini translations
+# Translation
 TRANSLATIONS += \
-	../../../src/frontend-mini/translations/bibletimemini_ru.ts \
+    ../../../i18n/messages/bibletime_ui_ru.ts \
+    ../../../src/frontend-mini/translations/bibletimemini_ru.ts \
 
 
 # Android platform
