@@ -12,39 +12,41 @@ INCLUDEPATH += . \
     ../../../src/frontend-mini \
 
 SOURCES += \
-    ../../../src/frontend-mini/models/btminimoduletextmodel.cpp \
-    ../../../src/frontend-mini/models/btminimodulenavigationmodel.cpp \
-    ../../../src/frontend-mini/models/btminimodelsmodel.cpp \
-    ../../../src/frontend-mini/models/btminisettingsmodel.cpp \
-    ../../../src/frontend-mini/ui/btministyle.cpp \
-    ../../../src/frontend-mini/ui/btminipanel.cpp \
-    ../../../src/frontend-mini/ui/btminimenu.cpp \
-    ../../../src/frontend-mini/view/btminiview.cpp \
-    ../../../src/frontend-mini/view/btminilayoutdelegate.cpp \
-    ../../../src/frontend-mini/btmini.cpp \
     ../../../src/bibletimeapp.cpp \
+    ../../../src/frontend-mini/btmini.cpp \
+    ../../../src/frontend-mini/models/btminimodelsmodel.cpp \
+    ../../../src/frontend-mini/models/btminimodulenavigationmodel.cpp \
+    ../../../src/frontend-mini/models/btminimoduletextmodel.cpp \
+    ../../../src/frontend-mini/models/btminisettingsmodel.cpp \
+    ../../../src/frontend-mini/view/btminilayoutdelegate.cpp \
+    ../../../src/frontend-mini/view/btminiview.cpp \
+    ../../../src/frontend-mini/ui/btminimenu.cpp \
+    ../../../src/frontend-mini/ui/btminipanel.cpp \
+    ../../../src/frontend-mini/ui/btministyle.cpp \
 
 
 HEADERS += \
-    ../../../src/frontend-mini/models/btminimoduletextmodel.h \
-    ../../../src/frontend-mini/models/btminimodulenavigationmodel.h \
+    ../../../src/bibletimeapp.h \
+    ../../../src/frontend-mini/btmini.h \
     ../../../src/frontend-mini/models/btminimodelsmodel.h \
+    ../../../src/frontend-mini/models/btminimodulenavigationmodel.h \
+    ../../../src/frontend-mini/models/btminimoduletextmodel.h \
     ../../../src/frontend-mini/models/btminisettingsmodel.h \
-    ../../../src/frontend-mini/ui/btminipanel.h \
-    ../../../src/frontend-mini/ui/btminimenu.h \
     ../../../src/frontend-mini/view/btminiview.h \
     ../../../src/frontend-mini/view/btminilayoutdelegate.h \
+    ../../../src/frontend-mini/ui/btminimenu.h \
+    ../../../src/frontend-mini/ui/btminipanel.h \
     ../../../src/frontend-mini/ui/btministyle.cpp \
-    ../../../src/frontend-mini/btmini.h \
-    ../../../src/bibletimeapp.h \
 
 
-RESOURCES += ../../../src/frontend-mini/ui/btministyle.qrc \
-    ../../../btmini.qrc
+RESOURCES += \
+    ../../../btmini.qrc \
+    ../../../src/frontend-mini/ui/btministyle.qrc \
 
 
-OTHER_FILES += ../../../src/frontend-mini/todo.txt \
-    ../../../src/display-templates/Basic-Mini.tmpl
+OTHER_FILES += \
+    ../../../src/display-templates/Basic-Mini.tmpl \
+    ../../../src/frontend-mini/todo.txt \
 
 
 # BtMini translations
