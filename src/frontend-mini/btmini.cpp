@@ -502,7 +502,7 @@ QWidget * BtMini::mainWidget(bool fontSizeChanged, QString newStyle)
         w->show();
         w->raise();
 
-        sizeFactor = w->logicalDpiY() / 4.6;
+        sizeFactor = w->logicalDpiY() / 4.2;
 #else
         w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
         w->showExpanded();
@@ -706,8 +706,8 @@ QWidget * BtMini::worksWidget(bool showTip, bool reset)
         // tips
         if(showTip && btConfig().value<int>("mini/showTipAtStartup", true) && !toolTipShown)
         {
-            if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString() +
-                                BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString()) == 1)
+            if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString() +
+                                BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString()) == 1)
                 btConfig().setValue<int>("mini/showTipAtStartup", false);
             toolTipShown = true;
         }
