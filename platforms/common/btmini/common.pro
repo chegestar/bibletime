@@ -11,7 +11,6 @@ DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 # Sword
 include(../../common/sword/sword.pro)
 
-CLUCENE_PATH = ../../../../clucene/src
 
 INCLUDEPATH += . \
     ../../../src/frontend-mini \
