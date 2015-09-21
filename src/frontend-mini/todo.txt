@@ -15,6 +15,8 @@ kalemas@mail.ru :
         refresh remote sources
         build search index
         make this suitable for main repo
+        should know what is current view (text/install), current text, probably via signals/slots
+        i'd preffer to make it in c++ layer
     resize subview width, its primarily for tablets
     make sword text model and instll model suitable for main repo
     move CInfoDisplay text processing to Core
