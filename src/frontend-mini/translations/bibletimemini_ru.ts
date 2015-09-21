@@ -419,8 +419,8 @@
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="250"/>
-        <source>&lt;h2&gt;&lt;center&gt;Usefull tips:&lt;/center&gt;&lt;/h2&gt;&lt;br/&gt;</source>
-        <translation>&lt;h2&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/h2&gt;&lt;br/&gt;</translation>
+        <source>&lt;h3&gt;&lt;center&gt;Usefull tips:&lt;/center&gt;&lt;/h3&gt;&lt;br/&gt;</source>
+        <translation>&lt;h3&gt;&lt;center&gt;Полезная информация:&lt;/center&gt;&lt;/h3&gt;&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../models/btminisettingsmodel.cpp" line="251"/>
