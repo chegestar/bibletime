@@ -216,7 +216,7 @@ public:
 
             if(!greekItem._text.isEmpty()) _items.prepend(greekItem);
             if(!hebrewItem._text.isEmpty()) _items.prepend(hebrewItem);
-            if(!englishItem._text.isEmpty()) _items.prepend(englishItem);
+            if(!englishItem._text.isEmpty() && currentItem._text != englishItem._text) _items.prepend(englishItem);
             if(!currentItem._text.isEmpty()) _items.prepend(currentItem);
 
             _items.prepend(Item("<font size=\"66%\"><center><b>" + BtMiniModulesModel::tr("Suggestions:") + "</b></center></font>"));
