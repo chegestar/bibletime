@@ -47,6 +47,7 @@ struct Item
         UseWebKit,
         SearchType,
         Style,
+        KeepAwake,
         Forum
     };
 
@@ -110,6 +111,10 @@ public:
 #endif
         _items.append(new Item(Item::Style, tbs + BtMiniSettingsModel::tr("Ui style:") +
             "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
+#ifdef Q_OS_ANDROID
+        _items.append(new Item(Item::KeepAwake, tbs + BtMiniSettingsModel::tr("Keep screen awake:") +
+            "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
+#endif
         _items.append(new Item(Item::None, "<b>" + tbs + BtMiniSettingsModel::tr("Handbook:") +
             "</td> <td align=\"right\"> > </td></tr></table></b>"));
         _items.last()->_children.append(new Item(Item::None, BtMiniSettingsModel::standardData(BtMiniSettingsModel::TipWorks).toString()));
@@ -261,6 +266,15 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
             return i->_text.arg(btConfig().value<bool>("mini/miniContinuousScrolling", false) ? tr("on") : tr("off"));
         case Item::Style:
             return i->_text.arg(btConfig().value<QString>("mini/miniStyle", "mini"));
+        case Item::KeepAwake:
+            {
+                const int v = btConfig().value<int>("mini/keepScreenAwake", -1);
+                if(v == -1)
+                    return i->_text.arg("No");
+                if(v == 0)
+                    return i->_text.arg("Keep");
+                return i->_text.arg(QString(v / 60) + " min");
+            }
         case Item::Threads:
             return i->_text.arg(btConfig().value<bool>("mini/threadedTextRetrieving", true) ? tr("on") : tr("off"));
 #ifndef BT_NO_CLUCENE
@@ -438,6 +452,29 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
             emit dataChanged(index, index);
 
             BtMiniUi::instance()->resetWidgets(true, true, true);
+        }
+        break;
+
+    case Item::KeepAwake:
+        {
+            int v = btConfig().value<int>("mini/keepScreenAwake", -1);
+            if(v == 0)
+            {
+                v = -1;
+            }
+            else if(v == -1)
+            {
+                v = 600;
+            }
+            else
+            {
+                v = 0;
+            }
+
+            BtMini::keepScreenAwake(v);
+
+            btConfig().setValue("mini/keepScreenAwake", v);
+            emit dataChanged(index, index);
         }
         break;
 

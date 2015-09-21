@@ -87,6 +87,10 @@ public:
             QObject::connect(QApplication::instance(), SIGNAL(applicationStateChanged(Qt::ApplicationState)),
                     BtMiniUi::instance(), SLOT(applicationStateChanged()));
 #endif
+
+            const int v = btConfig().value<int>("mini/keepScreenAwake", -1);
+            if(v >= 0)
+                BtMini::keepScreenAwake(v);
         }
 
         ~BtMiniMainWidget()
@@ -225,6 +229,7 @@ public:
                 e->accept();
                 return;
             }
+
             QStackedWidget::keyReleaseEvent(e);
         }
 

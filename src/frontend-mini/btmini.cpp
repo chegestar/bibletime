@@ -165,6 +165,16 @@ void BtMini::vibrate(int milliseconds)
 #endif
 }
 
+
+void BtMini::keepScreenAwake(int seconds)
+{
+#ifdef Q_OS_ANDROID
+    QAndroidJniObject::callStaticMethod<void>("org/qtproject/bibletimemini/MiniActivity",
+                                           "keepScreenAwake", "(J)V", (jlong)seconds);
+#endif
+}
+
+
 bool eventFilterFunction(void *message, long *result)
 {
 #ifdef Q_OS_WINCE

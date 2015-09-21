@@ -30,6 +30,7 @@ namespace BtMini
     };
 
     void vibrate(int miliseconds);
+    void keepScreenAwake(int seconds);
 };
 
 #endif
