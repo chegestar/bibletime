@@ -149,5 +149,9 @@ winphone {
 # BibleTime Core
 include(../../common/core/core.pro)
 
+# QtQuick definitions, maybe separate into different project?
+qml:DEFINES += BT_MINI_QML
+qml:QT += qml quick
+
 # show translations in project explorer
 OTHER_FILES += $${TRANSLATIONS}
