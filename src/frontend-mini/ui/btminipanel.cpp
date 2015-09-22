@@ -133,11 +133,11 @@ void BtMiniPanel::controlActivated()
         if(BtMiniMenu::execQuery(tr("Exit?"), QStringList() << tr("Yes") << tr("No")) == 0)
             BtMini::mainWidget()->close();
         break;
-	case Search:
-		BtMini::setActiveWidget(BtMini::searchWidget());
-		break;
-	case Close:
-		BtMini::setActiveWidget(BtMini::worksWidget());
-		break;
+    case Search:
+        BtMini::setActiveWidget(BtMini::searchWidget());
+        break;
+    case Close:
+        BtMini::setActiveWidget(BtMini::worksWidget());
+        break;
     }
 }

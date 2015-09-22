@@ -9,20 +9,32 @@
 *
 **********/
 
+#include <QAbstractTextDocumentLayout>
 #include <QApplication>
 #include <QElapsedTimer>
 #include <QMargins>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollBar>
-#include <QStyleOptionSlider>
 #include <QTextDocument>
+#include <QVariant>
 #include <QtCore/qmath.h>
 #include <QtDebug>
 
 #include "btminilayoutdelegate.h"
 #include "btminiview.h"
 
+#ifndef QT_NO_WEBKIT
+//#define USE_WEBKIT
+#endif
+
+#ifdef USE_WEBKIT
+#include <QWebElement>
+#include <QWebFrame>
+#include <QWebHitTestResult>
+#include <QWebPage>
+#include <QWebSettings>
+#endif
 
 // vibration
 #ifdef Q_OS_WINCE
@@ -44,27 +56,24 @@ void __leds(bool on, int id)
 #endif
 
 #define TURN_OFF_CACHED_ITEMS
-#define LONG_PRESS_DELAY         12
-#define SERVICE_PRESS_DELAY      30
+#define SHORT_PRESS_DELAY        13
+#define LONG_PRESS_DELAY         32
 #define SCROLL_SNAPPING_SPEED    0.3f
+#define SCROLL_ATTENUATION       0.93
 
-// those values are cross influenced
-//#define SCROLL_ATTENUATION       0.9f
-//#define SCROLL_BACK_ATTENUATION  8.99999
-#define SCROLL_ATTENUATION       0.93f
-#define SCROLL_BACK_ATTENUATION  13.2857
-//#define SCROLL_ATTENUATION       0.94f
-//#define SCROLL_BACK_ATTENUATION  15.6667
-//#define SCROLL_ATTENUATION       0.95f
-//#define SCROLL_BACK_ATTENUATION  19.0
-//#define SCROLL_ATTENUATION       0.96f
-//#define SCROLL_BACK_ATTENUATION  24.0
+qreal scroll_back_attenuation()
+{ qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t; }
+#define SCROLL_BACK_ATTENUATION  (scroll_back_attenuation())
+
 
 class BtMiniViewItem
 {
 public:
     BtMiniViewItem()
     {
+#ifdef USE_WEBKIT
+        _wp          = 0;
+#endif
         _selected    = false;
         _interactive = false;
         _active      = true;
@@ -76,12 +85,54 @@ public:
     
     virtual ~BtMiniViewItem()
     {
+#ifdef USE_WEBKIT
+        if(_wp)
+            delete _wp;
+#endif
         if(_doc)
             delete _doc;
     }
     
     void setText(const QString &text, QWidget *parent = 0)
     {
+        _iconSize = parent->font().pixelSize();
+
+#ifdef USE_WEBKIT
+        if(text.size() > 64)
+        {
+            QWebPage *wp = new QWebPage(parent);
+            
+            if(wp == 0)
+            {
+                qDebug("BtMiniViewItem::setText Can't allocate QWebPage");
+                return;
+            }
+
+            wp->settings()->setFontFamily(QWebSettings::StandardFont, parent->font().family());
+            wp->settings()->setFontSize(QWebSettings::DefaultFontSize, parent->font().pixelSize());
+            wp->settings()->setFontSize(QWebSettings::DefaultFixedFontSize, parent->font().pixelSize());
+            
+            wp->setPreferredContentsSize(QSize(_width, 1));
+            wp->mainFrame()->setHtml(text);
+
+            wp->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+            wp->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+
+            _height = wp->mainFrame()->contentsSize().height();
+
+            wp->setPreferredContentsSize(QSize(_width, _height));
+            wp->setViewportSize(QSize(_width, _height));
+
+            wp->moveToThread(QApplication::instance()->thread());
+
+            qSwap(_wp, wp);
+
+            if(wp)
+                delete wp;
+
+            return;
+        }
+#endif
         QTextDocument *doc(0);
         
         if(!text.isEmpty())
@@ -98,34 +149,40 @@ public:
 
             doc->setDefaultFont(parent->font());
             doc->setHtml(text);
-            doc->setTextWidth(_width);
 
-            _height = doc->size().height();
-
-            doc->moveToThread(QApplication::instance()->thread());
+            //doc->setTextWidth(_icon.isNull() ? _width : _width - _iconSize);
+            //_height = doc->size().height();
         }
         
         qSwap(_doc, doc);
-        
+
+        resize(size());
+
         if(doc)
             delete doc;
+
+        if(_doc)
+            _doc->moveToThread(QApplication::instance()->thread());
+    }
+
+    /** */
+    void setIcon(QIcon &icon)
+    {
+        _icon = icon;
+        resize(size());
     }
 
     /** Size Routines. */
-    inline quint16 width() const
-    {
-        return _width;
-    }
-    inline quint16 height() const
-    {
-        return _height;
-    }
-    QSize size() const
-    {
-        return QSize(_width, _height);
-    }
+    inline quint16 width() const { return _width; }
+    inline quint16 height() const { return _height; }
+    inline QSize size() const { return QSize(_width, _height); }
+    inline void resize(QSize &newSize) { resize(newSize.width(), newSize.height()); }
     QSize contentsSize() const
     {
+#ifdef USE_WEBKIT
+        if(_wp)
+            return _wp->mainFrame()->contentsSize();
+#endif
         if(_doc)
             return QSize(_doc->idealWidth(), _doc->size().height());
         return QSize();
@@ -134,27 +191,63 @@ public:
     {
         _width = width;
 
+        int w = _width;
+
+        if(!_icon.isNull())
+            w -= _iconSize;
+
+#ifdef USE_WEBKIT
+        if(_wp)
+        {
+            _wp->setPreferredContentsSize(QSize(w, 1));
+            _height = _wp->mainFrame()->contentsSize().height();
+
+            _wp->setPreferredContentsSize(QSize(w, _height));
+            _wp->setViewportSize(QSize(w, _height));
+
+            return;
+        }
+#endif
         if(_doc)
         {
-            _doc->setTextWidth(_width);
+            _doc->setTextWidth(w);
             _height = qMax(height, (int)_doc->size().height());
         }
         else
             _height = height;
     }
-    void resize(QSize &newSize)
-    {
-        resize(newSize.width(), newSize.height());
-    }
 
     /** Rendering. */
     virtual void paint(QPainter *painter, const QPoint &point, const QRect &clipping)
     {
+        int d = 0;
+
+        if(!_icon.isNull())
+        {
+            QRect rect(0, 0, _iconSize, _iconSize);
+            if(!rect.intersected(clipping).isEmpty())
+            {
+                rect.translate(point);
+                _icon.paint(painter, rect);
+            }
+
+            d += _iconSize;
+        }
+
+#ifdef USE_WEBKIT
+        if(_wp)
+        {
+            painter->save();
+            painter->translate(point.x() + d, point.y());
+            _wp->mainFrame()->render(painter, clipping);
+            painter->restore();
+        }
+#endif
         if(_doc)
         {
             painter->save();
-            painter->translate(point);
-            _doc->drawContents(painter, clipping);
+            painter->translate(point.x() + d, point.y());
+            _doc->drawContents(painter, clipping.translated(-d, 0));
             painter->restore();
         }
     }
@@ -164,8 +257,7 @@ public:
     bool             _interactive;
     bool             _active;
 
-    /** Item is placed at the beginning of line. First item on line always responsible 
-        for whole line height. */
+    /** Item is placed at the beginning of line. All line items have same height. */
     bool             _newLine;
     
     qint32           _row;
@@ -174,6 +266,13 @@ public:
     quint16          _height;
 
     QTextDocument   *_doc;
+
+    QIcon            _icon;
+    quint16          _iconSize;
+
+#ifdef USE_WEBKIT
+    QWebPage        *_wp;
+#endif
 
 };
 
@@ -225,7 +324,7 @@ public:
 
     void clear()
     {
-        _cachedLastItem = _cachedTopItem = _cachedBottomItem = QPair<int, int>(0, 0);
+        _cachedLastItem = _cachedTopItem = _cachedBottomItem = qMakePair(0, 0);
         _resizeCursor   = -1;
 
         _rect.setHeight(0);
@@ -676,6 +775,7 @@ public:
 			id -= 1;
         }
 
+        // if there is nothing
         if(_subViews.size() == 0)
         {
             Q_ASSERT(parents.size() == 2);
@@ -693,27 +793,44 @@ public:
 			_needScroll = true;
 			_scrollHint = hint;
         }
-
-		q->scheduleDelayedItemsLayout();
     }
 
     /** */
-    void checkViewStates()
+    void updateViews()
     {
         Q_Q(BtMiniView);
 
-		foreach(BtMiniSubView *v, _subViews)
-		{
-			if(v->baseSize() != q->viewport()->size())
-				v->setBaseSize(q->viewport()->size());
-		}
+        //qDebug() << "updateViews";
 
 		if(_subViews.size() > 0)
-		{
-			rearrangeSubViews();
-
+        {
 			q->setVerticalScrollBarPolicy(_ld->levelOption(_currentSubView).allowScrollBar ?
 				Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
+
+            // rearrange subviews
+            for(int i = 0; i < _subViews.size(); ++i)
+            {
+                if(i > 0)
+                {
+                    const int d = _subViews[i - 1]->contentsRect().right() + 1 - _subViews[i]->contentsRect().left();
+                    if(d != 0)
+                    {
+                        _subViews[i]->setContentsLeft(_subViews[i - 1]->contentsRect().right() + 1);
+                        if(i == _currentSubView)
+                            _vx += d;
+                    }
+                }
+                else
+                {
+                    const int d = -_subViews[0]->contentsRect().left();
+                    if(d != 0)
+                    {
+                        _subViews[i]->setContentsLeft(0);
+                        if(i == _currentSubView)
+                            _vx += d;
+                    }
+                }
+            }
 
 			updateScrollBars();
 		}
@@ -738,35 +855,58 @@ public:
 
 		const int oldHeight = v->contentsRect().height();
 
-		//qDebug() << "updateHeight" << from << to << height << v->contentsRect();
+		//qDebug() << "updateHeight" << from << to << d << height << v->contentsRect();
 
 		v->setContentsSize(v->contentsRect().width(), oldHeight + d);
-        
-		if(oldHeight == 0 && from == to && d > 0)
-		{
-			//qDebug() << "zero";
-			v->setContentsTop(0);
-		}
-		else if(from == 0)
-		{
-			//qDebug() << "top";
-			v->setContentsTop(v->contentsRect().top() - d);
-		}
-		else if(to == oldHeight)
-		{
-			//qDebug() << "bottom";
-			v->updateCachedItems();
-		}
-		else if(v->contentsRect().top() + to <= 0)
-		{
-			//qDebug() << "above";
-			v->setContentsTop(v->contentsRect().top() - d);
-		}
-		else
-		{
-			//qDebug() << "below";
-			v->updateCachedItems();
-		}
+
+        if(true)
+        {
+            if(from == to)       // add
+            {
+                if(oldHeight == 0)
+                    v->setContentsTop(0);
+                else if(from == 0)
+                    v->setContentsTop(v->contentsRect().top() - d);
+            }
+            else if(height == 0) // remove
+            {
+                if(from == 0)
+                    v->setContentsTop(v->contentsRect().top() - d);
+            }
+            else                 // resize
+            {
+                if(v->contentsRect().top() + to < 0)
+                    v->setContentsTop(v->contentsRect().top() - d);
+            }
+        }
+        else
+        {
+		    if(oldHeight == 0 && from == to && d > 0)
+		    {
+			    //qDebug() << "zero";
+			    v->setContentsTop(0);
+		    }
+		    else if(from == 0)
+		    {
+			    //qDebug() << "top";
+			    v->setContentsTop(v->contentsRect().top() - d);
+		    }
+		    else if(to == oldHeight)
+		    {
+			    //qDebug() << "bottom";
+			    v->updateCachedItems();
+		    }
+		    else if(v->contentsRect().top() + to <= 0)
+		    {
+			    //qDebug() << "above";
+			    v->setContentsTop(v->contentsRect().top() - d);
+		    }
+		    else
+		    {
+			    //qDebug() << "below";
+			    v->updateCachedItems();
+		    }
+        }
 
 		updateScrollBars();
     }
@@ -864,25 +1004,37 @@ public:
     {
         Q_Q(BtMiniView);
         
-        QVariant vt = index.data();
-        QString text;
-        
-        if(vt.isValid() && vt.canConvert(QVariant::String))
-            text = vt.toString();
-
         BtMiniSubView  *v  = _subViews[subView];
 
+        // insert at beginning or end supported for now
         Q_ASSERT(insertAt == 0 || insertAt == v->_items.size());
 
-        BtMiniViewItem *it = new BtMiniViewItem;
+        BtMiniViewItem *item = new BtMiniViewItem;
         
-        it->_row = index.row();
-        it->resize(width, 0);
+        item->_row = index.row();
+        item->resize(width, 0);
 
         const BtMiniLayoutOption &o = _ld->levelOption(subView);
 
-        it->setText(o.preText + text + o.postText, q);
+        // Icon
+        QVariant decoration = index.data(Qt::DecorationRole);
+        QIcon icon;
+        if(decoration.canConvert(QVariant::Icon))
+            icon = decoration.value<QIcon>();
 
+        if(!icon.isNull())
+            item->setIcon(icon);
+
+        // Text
+        QVariant display = index.data();
+        QString text;
+
+        if(display.canConvert(QVariant::String))
+            text = display.toString();
+
+        item->setText(o.preText + text + o.postText, q);
+
+        // New line
         bool newLine = true;
 
         if(o.perLine > 1)
@@ -903,9 +1055,9 @@ public:
                     newLine = true;
                 else
                     newLine = v->_items.size() == 0 || v->contentsRect().width() <
-                        (width + it->contentsSize().width());
+                        (width + item->contentsSize().width());
 
-                it->_newLine = newLine;
+                item->_newLine = newLine;
             }
             else if(v->_items.size() > 0)
             {
@@ -919,22 +1071,23 @@ public:
                     width += v->_items[i]->contentsSize().width();
                 }
 
-                it->_newLine = true;
+                item->_newLine = true;
 
-                if(v->contentsRect().width() > (width + it->contentsSize().width()) && i < o.perLine)
+                if(v->contentsRect().width() > (width + item->contentsSize().width()) && i < o.perLine)
                 {
                     newLine = v->_items[0]->_newLine = false;
-                    it->resize(it->width(), v->_items[0]->height());
+                    item->resize(item->width(), v->_items[0]->height());
                 }
             }
         }
 
-        v->_items.insert(insertAt, it);
+        v->_items.insert(insertAt, item);
 
+        // Update subview height
         if(newLine)
         {
             const int p = insertAt == 0 ? 0 : v->contentsRect().height();
-            updateHeight(subView, p, p, it->size().height());
+            updateHeight(subView, p, p, item->height());
         }
         else
         {
@@ -1079,9 +1232,6 @@ public:
 		{
 			q->verticalScrollBar()->setMaximum(currentSubView()->rowCount() - 1);
 			q->verticalScrollBar()->setValue(currentSubView()->modelIndex().row());
-
-			//qDebug() << "update scroll" << currentSubView()->modelIndex().row() <<
-			//	currentSubView()->rowCount();
 		}
 		else
 		{
@@ -1093,34 +1243,6 @@ public:
 		}
 
         _vt = q->verticalScrollBar()->value();
-    }
-
-    /** Ensure there is no spaces or overlapping between subviews. */
-    void rearrangeSubViews()
-    {
-        for(int i = 0; i < _subViews.size(); ++i)
-        {
-			if(i > 0)
-			{
-				const int d = _subViews[i - 1]->contentsRect().right() + 1 - _subViews[i]->contentsRect().left();
-				if(d != 0)
-				{
-					_subViews[i]->setContentsLeft(_subViews[i - 1]->contentsRect().right() + 1);
-					if(i == _currentSubView)
-						_vx += d;
-				}
-			}
-			else
-			{
-				const int d = -_subViews[0]->contentsRect().left();
-				if(d != 0)
-				{
-					_subViews[i]->setContentsLeft(0);
-					if(i == _currentSubView)
-						_vx += d;
-				}
-            }
-        }
     }
 
     /** */
@@ -1142,7 +1264,6 @@ public:
                 else
                     updateLine(subView, v->_resizeCursor++);
             }
-
         }
 
         const BtMiniLayoutOption &o = _ld->levelOption(subView);
@@ -1371,13 +1492,13 @@ void BtMiniView::mouseReleaseEvent(QMouseEvent *e)
         if(selectionModel())
             selectionModel()->select(index, selectionCommand(index, e));
 
-        if(tapping >= SERVICE_PRESS_DELAY)
-        {
-            emit servicePressed(index);
-        }
-        else if(tapping >= LONG_PRESS_DELAY)
+        if(tapping >= LONG_PRESS_DELAY)
         {
             emit longPressed(index);
+        }
+        else if(tapping >= SHORT_PRESS_DELAY)
+        {
+            emit shortPressed(index);
         }
         else
         {
@@ -1480,19 +1601,19 @@ void BtMiniView::timerEvent(QTimerEvent *e)
     // update long press
     if(d->_mouseDown && !d->_mouseLeaveZone)
     {
-        // if there is any connection to longPressed or servicePressed signal, vibrate
-        if(d->_mouseTapping == SERVICE_PRESS_DELAY)
+        // if there is any connection to longPressed or shortPressed signal, vibrate
+        if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(servicePressed(const QModelIndex &))) > 0)
+            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
             {
 #ifdef Q_OS_WINCE
                 __leds(true, 1), Sleep(30), __leds(false, 1);
 #endif
             }
         }
-        else if(d->_mouseTapping == LONG_PRESS_DELAY)
+        else if(d->_mouseTapping == SHORT_PRESS_DELAY)
         {
-            if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
+            if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0)
             {
 #ifdef Q_OS_WINCE
                 __leds(true, 1), Sleep(30), __leds(false, 1);
@@ -1503,6 +1624,8 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         d->_mouseTapping++;
         viewport()->update();
     }
+
+    bool calmly = false;
         
     // snap to borders of active subview
     if(!d->_mouseDown)
@@ -1533,6 +1656,8 @@ void BtMiniView::timerEvent(QTimerEvent *e)
             {
                 if(m.left() > 0)
                     scroll(-m.left() * SCROLL_SNAPPING_SPEED, 0.0f);
+                else
+                    calmly = true;
             }
             else if(m.right() > 0 && d->_currentSubView == d->_subViews.size() - 1)
                 scroll(m.right() * SCROLL_SNAPPING_SPEED, 0.0f);
@@ -1540,6 +1665,8 @@ void BtMiniView::timerEvent(QTimerEvent *e)
                 scroll(-m.left() * SCROLL_SNAPPING_SPEED, 0.0f);
             else if(m.right() < 0)
                 scroll(m.right() * SCROLL_SNAPPING_SPEED, 0.0f);
+            else
+                calmly = true;
         }
         else
         {
@@ -1547,10 +1674,13 @@ void BtMiniView::timerEvent(QTimerEvent *e)
                 scroll(m.right() * SCROLL_SNAPPING_SPEED, 0.0f);
             else if(m.left() > 0)
                 scroll(-m.left() * SCROLL_SNAPPING_SPEED, 0.0f);
+            else
+                calmly = true;
         }
     }
 
-    d->updateSubView(d->_currentSubView);
+    if(calmly)
+        d->updateSubView(d->_currentSubView);
 }
 
 void BtMiniView::scroll(float horizontal, float vertical)
@@ -1580,8 +1710,21 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
     
     d->activateIndex(index, false, hint);
 
+    scheduleDelayedItemsLayout();
+
 	if(index.isValid())
 		emit currentChanged(index);
+}
+
+void BtMiniView::scrollTo(QVariant data)
+{
+    Q_D(BtMiniView);
+
+    QModelIndexList list = model()->match(model()->index(0, 0, d->currentSubView()->modelParentIndex()),
+        d->_ld->levelOption(d->_currentSubView).searchRole, data);
+
+    if(list.size() == 1)
+        scrollTo(list[0]);
 }
 
 QModelIndex BtMiniView::indexAt(const QPoint &point) const
@@ -1654,11 +1797,26 @@ void BtMiniView::doItemsLayout()
 
 	//qDebug() << "doItemsLayout";
 
+    // need to stop delayed layout first, so code below can schedule layout again
+    QAbstractItemView::doItemsLayout();
+
+    // create views if them not created yet
 	d->activateIndex(QModelIndex(), true);
-	d->checkViewStates();
+
+    // resize new subviews
+    foreach(BtMiniSubView *v, d->_subViews)
+        if(v->baseSize().isEmpty())
+            v->setBaseSize(viewport()->size());
+
+    // check if size is not equal to viewport size
+    if(d->currentSubView()->baseSize() != viewport()->size())
+        d->currentSubView()->setBaseSize(viewport()->size());
+
+    d->updateViews();
 
 	Q_ASSERT(d->_currentSubView < d->_subViews.size());
 	
+    // check if we need to update layout
 	bool needLayout = false;
 	bool layoutMaked = false;
 
@@ -1741,8 +1899,6 @@ void BtMiniView::doItemsLayout()
 		}
 	}
 
-	QAbstractItemView::doItemsLayout();
-
 	if(needLayout)
 		scheduleDelayedItemsLayout();
 
@@ -1800,7 +1956,7 @@ void BtMiniView::makeSubView(int id, const QModelIndex &index)
     if(!d->_subViews[id])
     {
         d->_subViews[id] = new BtMiniSubView;
-        d->_subViews[id]->setBaseSize(viewport()->size());
+        //d->_subViews[id]->setBaseSize(viewport()->size());
         
         if(id > 0)
             d->_subViews[id]->setContentsLeft(d->_subViews[id - 1]->contentsRect().right() + 1);
@@ -1831,20 +1987,31 @@ void BtMiniView::activateSubView(int id)
     {
         //qDebug() << "activateSubView" << id;
 
+        // remove unnecessary items of previous view to release memory
+        BtMiniSubView *v = d->currentSubView();
+        while(v->_items.size() > 0 && v->contentsRect().bottom() -
+            v->_items[v->_items.size() - 1]->height() > height())
+            d->removeItem(d->_currentSubView, v->_items.size() - 1);
+        while(v->_items.size() > 0 && v->contentsRect().top() +
+            v->_items[0]->height() < 0)
+            d->removeItem(d->_currentSubView, 0);
+
         d->_currentSubView = id;
         d->_mousePower = QPointF();
+
+        d->updateViews();
+        
+        scheduleDelayedItemsLayout();
+
+        emit currentChanged(currentIndex());
     }
-
-	d->checkViewStates();
-
-	emit currentChanged(currentIndex());
 }
 
 void BtMiniView::reset()
 {
     Q_D(BtMiniView);
 
-    qDebug() << "BtMiniView::reset";
+    //qDebug() << "BtMiniView::reset";
 
     d->clear();
     QAbstractItemView::reset();
@@ -1854,18 +2021,18 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
 {
     Q_D(BtMiniView);
 
-    qDebug() << "BtMiniView::setRootIndex" << index;
+    //qDebug() << "BtMiniView::setRootIndex" << index;
 
     BtMiniLayoutDelegate *ld = model()->findChild<BtMiniLayoutDelegate*>();
     if(ld)
     {
-        qDebug() << "\t set layout delegate" << ld;
+        //qDebug() << "\t set layout delegate" << ld;
         setLayoutDelegate(ld);
     }
 
-    d->checkViewStates();
-
     d->activateIndex(index, true);
+
+    scheduleDelayedItemsLayout();
 }
 
 void BtMiniView::slideLeft()
@@ -1886,13 +2053,36 @@ void BtMiniView::setLevelOptions(const int level, int itemPerLine, QString itemP
 {
     Q_D(BtMiniView);
 
-    BtMiniLayoutOption o(d->_ld->levelOption(level));
-    
-    o.perLine  = itemPerLine;
-    o.preText  = itemPreText;
-    o.postText = itemPostText;
-    
-    d->_ld->setLevelOption(level, o);
+    for(int i = 0; i < d->_ld->levelOptionsCount(); ++i)
+    {
+        if(!(level == -1 || level == i))
+            continue;
+
+        BtMiniLayoutOption o(d->_ld->levelOption(i));
+
+        o.perLine  = itemPerLine;
+        o.preText  = itemPreText;
+        o.postText = itemPostText;
+
+        d->_ld->setLevelOption(i, o);
+    }
+}
+
+void BtMiniView::setSearchRole(int searchRole, int level)
+{
+    Q_D(BtMiniView);
+
+    for(int i = 0; i < d->_ld->levelOptionsCount(); ++i)
+    {
+        if(!(level == -1 || level == i))
+            continue;
+
+        BtMiniLayoutOption o(d->_ld->levelOption(i));
+
+        o.searchRole = searchRole;
+
+        d->_ld->setLevelOption(i, o);
+    }
 }
 
 void BtMiniView::showEvent(QShowEvent *e)
@@ -1901,7 +2091,7 @@ void BtMiniView::showEvent(QShowEvent *e)
 
     //qDebug() << "BtMiniView::showEvent" << rect();
 
-    d->checkViewStates();
+    //d->updateViews();
 }
 
 void BtMiniView::setBatchedLayout(int itemsPerCycle, bool useLimits)
@@ -1996,12 +2186,11 @@ void BtMiniView::paintEvent(QPaintEvent *e)
         
         painter.setPen(Qt::NoPen);
         painter.setBrush(g);
-        
         painter.drawRect(r);
     }
 
     // draw tapping
-    if(d->_mouseDown && d->_mouseTapping > 0 && d->_mouseTapping <= SERVICE_PRESS_DELAY * 1.4)
+    if(d->_mouseDown && d->_mouseTapping > 0 && d->_mouseTapping <= LONG_PRESS_DELAY * 1.4)
     {
         QRect z(d->_mouseLast, QSize());
         const int m = d->_sizeFactor * 2;
@@ -2016,11 +2205,7 @@ void BtMiniView::paintEvent(QPaintEvent *e)
             QPoint p(z.center() + (QPointF(qCos(i / 1.7), qSin(i / 1.7)) * (z.width() / 2)).toPoint());
             QRect r(p.x()-(m*0.25), p.y()-(m*0.25), m*0.5, m*0.5);
 
-            QColor c(Qt::black);
-            c.setAlphaF(0.8 / (mt - i + 1));
-
-            painter.setBrush(c);
-
+            painter.setBrush(QColor(0, 0, 0, (255 * 0.8) / (mt - i + 1)));
             painter.drawEllipse(r);
         }
     }
@@ -2032,8 +2217,6 @@ void BtMiniView::resizeEvent(QResizeEvent *e)
 
     //qDebug() << "BtMiniView::resizeEvent" << e->oldSize() << e->size();
 
-    QApplication::postEvent(this, new QShowEvent);
-
     d->_snappingValue = qMin(e->size().width(), e->size().height()) / 4;
 
     verticalScrollBar()->setPageStep(e->size().height());
@@ -2043,7 +2226,9 @@ void BtMiniView::resizeEvent(QResizeEvent *e)
     d->_limitHeightTop = e->size().height() * 1.5;
     d->_limitHeightBottom = e->size().height() * 2.5;
 
-    viewport()->update();
+    scheduleDelayedItemsLayout();
+
+    QAbstractItemView::resizeEvent(e);
 }
 
 void BtMiniView::setLayoutDelegate(BtMiniLayoutDelegate *ld)
@@ -2152,15 +2337,223 @@ void BtMiniView::rowsInserted(const QModelIndex &parent, int start, int end)
 		else if(start == d->_currentSubView)
         {
             d->_currentSubView++;
-            d->checkViewStates();
+            d->updateViews();
 			slideLeft();
         }
 		else
 		{
             Q_ASSERT(false);
 
-			d->checkViewStates();
+			d->updateViews();
 			emit currentChanged(currentIndex());
 		}
     }
+}
+
+QString BtMiniView::currentContents() const
+{
+    Q_D(const BtMiniView);
+
+    foreach(BtMiniSubView *v, d->_subViews)
+    {
+        const QPoint gp(d->_mouseLast + QPoint(d->_vx, 0));
+        if(v->contentsRect().contains(gp))
+        {
+            const QPoint vp(gp - v->contentsRect().topLeft().toPoint());
+            int i = v->xyItem(vp);
+
+            if(i >= 0)
+            {
+                const QPoint pp(vp - v->itemXy(i));
+
+#ifdef USE_WEBKIT
+                QWebPage *wp(v->_items[i]->_wp);
+                if(wp)
+                {
+                    //QWebHitTestResult r(wp->mainFrame()->hitTestContent(pp));
+
+                    //qDebug() << r.alternateText() << r.element().attributeNames() << r.linkText();
+                    //qDebug() << r.element().classes() << r.element().toPlainText();
+                    //qDebug() << r.isNull() /*<< r.element().toInnerXml() << r.element().toOuterXml()*/;
+                    //qDebug() << r.linkElement().attributeNames() << r.linkElement().classes() << r.linkElement().toPlainText();
+                    //qDebug() << r.element().parent().classes() << r.element().parent().toPlainText();
+
+                    //qDebug() << r.title() << r.linkText() << r.alternateText();
+
+                    //for(QWebElement e = r.element(); !e.isNull(); e = e.parent())
+                    //    qDebug() << e.tagName() << e.classes() << e.attributeNames() << e.toPlainText();
+
+
+                    //QVariant v = wp->mainFrame()->evaluateJavaScript(QString("document.elementFromPoint(%1, %2);").arg(pp.x()).arg(pp.y()));
+                    //qDebug() << v.toMap().keys();
+
+                    QList<QWebElement> el;
+                    el << wp->mainFrame()->documentElement();
+                    for(int i = 0; i < el.size(); ++i)
+                    {
+                        QWebElement e = el[i];
+                        
+                        //qDebug() << e.tagName() << e.geometry() << e.classes() << e.attributeNames() << e.toPlainText();
+                        
+                        for(QWebElement c = e.firstChild(); !c.isNull(); c = c.nextSibling())
+                            if(c.geometry().contains(pp) && c.geometry().height() <= e.geometry().height())
+                                el += c;
+                    }
+
+                    return el[el.size() - 1].toOuterXml();
+                }
+#endif
+
+                QTextDocument *doc(v->_items[i]->_doc);
+                if(doc)
+                {
+                    int sp = doc->documentLayout()->hitTest(pp, Qt::ExactHit);
+
+                    if(sp < 0)
+                        return QString();
+
+                    QString &st = doc->toPlainText();
+                    QChar c = st[sp];
+
+                    if(c.isSpace())
+                        return QString();
+
+                    // find correspondence between strings using character occurrences count
+                    int sc = 0;
+                    int si = 0;
+
+                    for(int ii = 0; ii < st.size(); ++ii)
+                    {
+                        if(st[ii] == c)
+                        {
+                            if(ii == sp)
+                                si = sc;
+                            ++sc;
+                        }
+                    }
+
+                    QString dt = d->currentSubView()->modelIndex(v->_items[i]->_row).data().toString();
+
+                    // erase css style sheet in text
+                    dt = dt.left(dt.indexOf("<head>", Qt::CaseInsensitive)) +
+                        dt.mid(dt.indexOf("</head>", Qt::CaseInsensitive) + 7);
+                    
+                    int dc = 0;
+                    int dp = 0;
+                    bool skip = false;
+
+                    for(int ii = 0; ii < dt.size(); ++ii)
+                    {
+                        if(dt[ii] == '<')
+                            skip = true;
+                        else if(dt[ii] == '>')
+                            skip = false;
+                        else if(!skip && dt[ii] == c)
+                        {
+                            if(si == dc)
+                                dp = ii;
+                            ++dc;
+                        }
+                    }
+
+                    if(dc != sc)
+                    {
+                        Q_ASSERT(false);
+                        qDebug() << "Can't find correspondence " << st << dt << c << sc << dc;
+                    }
+
+                    int from = dt.lastIndexOf('<', dp);
+
+                    // first tag must not be closing tag
+                    if(dt[from + 1] != '/')
+                    {
+#if 0
+                        // break on parts
+                        QStringList tags("");
+                        int ti;
+                        
+                        for(int i = 0; i < dt.size(); ++i)
+                        {
+                            if(dt[i] == '<' && tags.last().size() > 0 && tags.last()[0] != '<')
+                                tags.append("");
+
+                            tags.last() += dt[i];
+
+                            if(i == dp)
+                                ti = tags.size() - 1;
+
+                            if(dt[i] == '>' && tags.last().size() > 0)
+                                tags.append("");
+                        }
+
+                        if(tags.last().size() == 0)
+                            tags.removeLast();
+
+                        Q_ASSERT(tags[ti][0] != '<');
+
+                        // remove unnecessary tags
+                        for(int i = 0, st = 0; i < tags.size(); ++i)
+                        {
+                            if(i == ti)
+                                continue;
+
+                            if(tags[i][0] == '<')
+                            {
+                                if(tags[i][1] == '/')
+                                {
+                                    int st = i;
+
+                                    QString tn = tags[i].left(tags[i].size() - 1).mid(2);
+
+                                    while(st-- > 0)
+                                    {
+                                        if(tags[st][0] != '<' || tags[st][1] == '/' ||
+                                            tags[st][tags[st].size() - 2] == '/')
+                                            continue;
+
+                                        QString otherName = tags[st].left(tags[st].size() - 1).mid(
+                                            1).split(" ")[0].remove('/');
+
+                                        if(otherName == tn)
+                                            break;
+                                    }
+
+                                    if(!(st < ti && i > ti))
+                                    {
+                                        tags.erase(tags.begin() + st, tags.begin() + i + 1);
+                                        if(i <= ti)
+                                            ti -= i - st + 1;
+                                        i -= i - st + 1;
+
+                                        Q_ASSERT(ti > 0);
+                                    }
+                                }
+                                else if(tags[i][tags[i].size() - 2] == '/')
+                                {
+                                    tags.erase(tags.begin() + i);
+                                    if(i <= ti)
+                                        --ti;
+                                    --i;
+                                }
+                            }
+                            else
+                            {
+                                tags.erase(tags.begin() + i);
+                                if(i <= ti)
+                                    --ti;
+                                --i;
+                            }
+                        }
+                        
+                        return tags.join("");
+#endif
+
+                        return dt.mid(from, dt.indexOf('>', dp) - from + 1);
+                    }
+                }
+            }
+        }
+    }
+
+    return QString();
 }

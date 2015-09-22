@@ -28,20 +28,17 @@ struct BtMiniLayoutOption
     QString postText;
 
     int     perLine;
-    int     maxItems;
     int     perCycle;
     bool    limitItems;
     
-    bool    allowInputBox;
 	bool    allowScrollBar;
     bool    scrollPerItem;
 
     bool    useThread;
     int     previewRole;
-
-    QString backgroundText;
-
-	bool    contentsNumbers;
+    
+    bool    allowInputBox;
+    int     searchRole;
 };
 
 /** Class that controls layout of subviews and items in view.
@@ -57,19 +54,18 @@ public:
     
     /** Get/set options for given layout level. Levels are usually represents
         subviews. */
-    const BtMiniLayoutOption & levelOption(const int level = 0) const;
-    int levelOptionsCount() const;
-    void setLevelOption(const int level, BtMiniLayoutOption &option);
+    const BtMiniLayoutOption & levelOption(int level = 0) const;
+    void setLevelOption(int level, BtMiniLayoutOption &option);
     void setLevelOption(BtMiniLayoutOption &option);
-    void eraseLevelOption(const int level);
+    void eraseLevelOption(int level);
+    inline int levelOptionsCount() const { return _options.size(); }
     
     /** Plain or Tree layout mode.
-        Layout all subviews at time using first child of every item in first row.
-        Otherwise use tree mode, layout first row, on item activation layout
-        subview of activated item children, allow any folding depth. */
-    bool plainMode() const;
-    void setPlainMode(bool mode);
-    
+        Plain layout should have first row of items that will not be displayed, view
+        will have subview for each of that items, contain their children. */
+    inline bool plainMode() const { return _plain; }
+    inline void setPlainMode(bool mode) { _plain = mode; }
+
 
 protected:
     QVector<BtMiniLayoutOption> _options;

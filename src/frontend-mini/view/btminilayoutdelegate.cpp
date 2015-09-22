@@ -14,15 +14,14 @@
 BtMiniLayoutOption::BtMiniLayoutOption()
 {
     perLine         = 1;
-    maxItems        = 0;
     allowScrollBar  = true;
     allowInputBox   = false;
     perCycle        = 0;
     limitItems      = false;
     useThread       = false;
     previewRole     = BtMini::PreviewRole;
-	contentsNumbers = false;
 	scrollPerItem   = false;
+	searchRole      = BtMini::PlaceRole;
 }
 
 BtMiniLayoutDelegate::BtMiniLayoutDelegate(QObject *parent) : QObject(parent)
@@ -42,11 +41,6 @@ void BtMiniLayoutDelegate::setLevelOption(BtMiniLayoutOption &option)
     _options[0] = option;
 }
 
-int BtMiniLayoutDelegate::levelOptionsCount() const
-{
-    return _options.size();
-}
-
 void BtMiniLayoutDelegate::setLevelOption(const int level, BtMiniLayoutOption &option)
 {
     Q_ASSERT(_options.size() > 0);
@@ -62,16 +56,6 @@ const BtMiniLayoutOption & BtMiniLayoutDelegate::levelOption(const int level) co
     Q_CHECK_PTR(this);
 
     return _options[qMin(level, _options.size() - 1)];
-}
-
-bool BtMiniLayoutDelegate::plainMode() const
-{
-    return _plain;
-}
-
-void BtMiniLayoutDelegate::setPlainMode(bool mode)
-{
-    _plain = mode;
 }
 
 void BtMiniLayoutDelegate::eraseLevelOption(const int level)

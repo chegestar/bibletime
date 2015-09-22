@@ -11,20 +11,30 @@ kalemas@mail.ru :
 +		in search term add: *term* AND *otherTerm*
 +		scrollbar changes current index
 +		highlight search term and remove section headings
++	testament persitence check
++	sometimes view resized more than mainWidget
++	add ability to use QWebPage instead of QTextDocument(memory concurmption twice more)
++	remake search in BtBookShelfTreeModel on match()
++	icon rendering for view
++	fix resize on scrollbars
++	use dialog util to display messages on screen
+?	footnote displayed using icon
++	CSwordBibleModuleInfo bounds information caching
+	modules model
+	optimize power consurmption: timer to stop update
 	improve BT modularity
 		Install manager - information of repos/modules, manage modules
 		Bookmarks
-	context view
-	restore original BT paths
+		move all model roles to global header
+	restore original BT paths, or dirs in resources
 	current subview indication
 	context menu: add left(+), add right(+), clear(+), bookmark, select
 	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
-	combined subViews
-	rendering caching
 	modules model: module manager button, category / language+modules layout
-	sometimes view resized more than mainWidget
-	preview role and threaded data retrieving
 	selecting items and active item
+	rendering caching
+	preview role and threaded data retrieving
+	combined subViews
 ?	layout n items on line without account of contents width
 		
 	model/view architecture for lists
@@ -53,78 +63,31 @@ kalemas@mail.ru :
 				Search Type (CLucene, Sword Plain Search)
 				Module prior Category Language
 				Display Tips
-		BtMiniSearchModel
-			Settings
-			Results
-				long tap will follow place
+	long tap in Search will follow place
 	            
 
-	tips: ItemView to show scrollable text item
 	memory leaking
 		crtdebug detect leaking starting from QApplication init
-?	buttons instead label in header
-	application settings dialog
-		search type
-		font size
-	lexicon/dictionary view
-	open details view on long tap
-	scrollbar
-		count list height, if listStartConstructed and listEndConstructed
-		proper method to scroll list
-?		QScrollArea
-		show on mouse press, then hide afer delay
 	QTextDocument issues
 		not load external style sheet
 		font enumeration in font-family dont work
-	try webkit for wince (QWebFrame instead QTextDocument)
 	replace unistd.h with io.h/direct.h
-	fix stretch surface
 	translation
+	megre linked verses in model
 	
 === known tasks ================================================================
-	module features controls, global sword options for module in expanding panel
 	dialog looses event filter for qapplication after minimize/maximize
 	keypad support for dialogs and menus
-	panel conception
-		4 buttons are always on panel, buttons could be folded press on button
-		causes its action, hold or second tap if button is view switcher popup
-		folded items, hold and move on folded button activates item
-		tools: Magnifier, Pointer(Selector)
 	Symbian build
-	lexicon / dictionary modules
-	testament persitence check
-	verse persistance check and range of verse
-	automatic sbItem width, remove from constructor
-	remove somehow xmlParser dependency, change Features storage format
-	sbList: show verse selection for books with one chapter
-	remove module menu
 	loading all locales takes too long
 	keypad/volume buttons scrolling
-	different long item expantion, stays first on screen and expands down
 	qt: window raisement on startup on device
-	add QLayout-s stretch factors based on text length
-	hierarhical module installer, language/type/module
-	in chapter selection dialog on book expanding , move book item up
-
-=== tasks for public release ===================================================
-	to test
-		other locales, utf encoding
-		paths with locale characters
-		other language modules:
-			Hebrew
-				right alignment for verse items
-			Greek
 
 === tasks for future ===========================================================
 	daily devotionals
 	reading plans
 	genbooks
 	map and image modules
-	design improvements:
-		like wp7 metro style
-		remove Home Screen , start from last place
-	new place select dialog
-		three scrollers: book/chapter/verse
 	verse features
 		bookmarks
 			nested bookmarks folders
@@ -132,14 +95,9 @@ kalemas@mail.ru :
 			place in uri format (sword://Module/Key)
 			static / dynamic
 		verse colors
-	icons and graphics
-		graphics theme uses large png file
-		remove built-in theme, application will not run if theme not found
 	unlock locked modules
 
-
 	re-concept interface
-
 
 	Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
 		maybe need Sword change that every verse in Bibile at every v11n has unique id
@@ -196,7 +154,6 @@ interface, comfortable.
 
 === SWORD ======================================================================
 	load locales on demand
-	InsrallMgr::updateLocales
 %	av11n mappings
 	load av11n on demand from file
 	make more steps for search

@@ -32,6 +32,7 @@
 #include "backend/managers/cswordbackend.h"
 #include "backend/managers/btstringmgr.h"
 #include "util/directory.h"
+#include "util/cresmgr.h"
 
 #include <SWLog.h>
 
@@ -50,6 +51,9 @@ public:
 	    setAttribute(Qt::WA_DeleteOnClose);
 	    setFrameStyle(QFrame::NoFrame);
         _saveTimer = startTimer(5*60*1000);
+        
+        setWindowTitle("BibleTime Mini");
+        setWindowIcon(util::directory::getIcon(CResMgr::mainWindow::icon));
 	}
 	
     ~BtMiniMainWidget()
@@ -104,6 +108,32 @@ private:
 
 };
 
+class BtMiniWidget : public QWidget
+{
+public:
+    BtMiniWidget(QWidget *parent=0) : QWidget(parent)
+    {
+        qobject_cast<QStackedWidget*>(BtMini::mainWidget())->addWidget(this);
+    }
+
+    ~BtMiniWidget()
+    {
+        ;
+    }
+
+protected:
+    QSize sizeHint() const
+    {
+        return QWidget::sizeHint().boundedTo(BtMini::mainWidget()->size());
+    }
+
+    QSize minimumSizeHint() const
+    {
+        return QWidget::minimumSizeHint().boundedTo(BtMini::mainWidget()->size());
+    }
+
+};
+
 QWidget * BtMini::mainWidget()
 {
     static BtMiniMainWidget *w = 0;
@@ -140,17 +170,11 @@ QWidget * BtMini::mainWidget()
 
 QWidget * BtMini::worksWidget()
 {
-    static QWidget *w = 0;
+    static BtMiniWidget *w = 0;
     
     if(!w)
     {
-        w = new QWidget(mainWidget());
-
-        //w->resize(QSize(480, 640));
-        //w->setMaximumSize(QSize(480, 640));
-        //w->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-		qobject_cast<QStackedWidget*>(mainWidget())->addWidget(w);
+        w = new BtMiniWidget(mainWidget());
 
         BtMiniView *v = new BtMiniView(w);
 
@@ -244,8 +268,8 @@ QWidget * BtMini::worksWidget()
 		v->setModel(m);
 
 		QObject::connect(v, SIGNAL(currentChanged(const QModelIndex &)), m, SLOT(updateIndicators(const QModelIndex &)));
-		QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
-		QObject::connect(v, SIGNAL(servicePressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
+		QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
+		QObject::connect(v, SIGNAL(longPressed(const QModelIndex &)), m, SLOT(openMenu(const QModelIndex &)));
 
 		m->setIndicators(b1, b3, b4, b2);
 
@@ -269,18 +293,23 @@ QWidget * BtMini::worksWidget()
 
 QWidget * BtMini::searchWidget()
 {
-	static QWidget *w = 0;
+	static BtMiniWidget *w = 0;
 
 	if(!w)
 	{
-		w = new QWidget(mainWidget());
-		qobject_cast<QStackedWidget*>(mainWidget())->addWidget(w);
+		w = new BtMiniWidget(mainWidget());
 
 		BtMiniView *v = new BtMiniView(w);
 		v->setTopShadowEnabled(true);
 
 		// Setup controls
 		QLineEdit *le = new QLineEdit(w);
+
+        le->setAlignment(Qt::AlignCenter);
+
+		QFont f(le->font());
+		f.setPixelSize(f.pixelSize() * 1.3);
+		le->setFont(f);
 
 		BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
 
@@ -300,6 +329,7 @@ QWidget * BtMini::searchWidget()
 
 		QObject::connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
 		QObject::connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
+        QObject::connect(v, SIGNAL(shortPressed(const QModelIndex &)), m, SLOT(openContext(const QModelIndex &)));
 	}
 
 	return w;
@@ -412,8 +442,8 @@ int main(int argc, char *argv[])
 
 	CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
 	backend->deleteOrphanedIndices();
-
-    // Let's run...
+	
+	// Let's run...
     BtMini::setActiveWidget(BtMini::worksWidget());
     
     return app.exec();

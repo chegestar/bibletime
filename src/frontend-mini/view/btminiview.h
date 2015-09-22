@@ -40,7 +40,8 @@ public:
         also current. */
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     
-    /** Return content under pointer, used for word/strong lookup. */
+    /** Return content under pointer, used for word/strong lookup. Will throw if pointer
+        isn't down. */
     QString currentContents() const;
     
     /** */
@@ -48,32 +49,36 @@ public:
 
     /** */
     int currentLevel() const;
-    
-    /** Set batch mode for layout items. \param useLimits Respect items amount and
-        list height to limit items count. Otherwise layout whole list. This function
-        change level options. */
-    void setBatchedLayout(int itemsPerCycle = 1, bool useLimits = true);
 
     /** Set mode of view to contain action items. Activating any item in view will 
         cause view to close and currentIndex() will return pressed model index. */
     void setInteractive(bool mode = true);
-
-    /** This function does not take ownership of delegate. Also layout delegate can
-        be attached automatic if model has children of BtMiniLayoutDelegate type. */
-    void setLayoutDelegate(BtMiniLayoutDelegate *layoutDelagate);
-
-    /** Set specified options for given level. */
-    void setLevelOptions(const int level, int itemsOnLine, QString preText, QString postText);
-    
-    /** Using thread will work for active view only. \param previewRole Make preview
-        before thread calculates contents. This function change level options. */
-    void setThreadedLayout(bool useThread = true, const int previewRole = BtMini::PreviewRole);
     
     /** */
     void setRenderCaching(bool mode);
 
     /** */
     void setTopShadowEnabled(bool mode);
+
+    /** This function does not take ownership of delegate. Also layout delegate can be
+        attached automaticaly if model has a children of BtMiniLayoutDelegate type. */
+    void setLayoutDelegate(BtMiniLayoutDelegate *layoutDelagate);
+    
+    /** Set specified options for given level. */
+    void setLevelOptions(int level, int itemsOnLine, QString preText, QString postText);
+
+    /** Set batch mode for layout items. \param useLimits Respect items amount and
+        list height to limit items count. Otherwise layout whole list. This function
+        change level options. */
+    void setBatchedLayout(int itemsPerCycle = 1, bool useLimits = true);
+    
+    /** Using thread will work for active view only. \param previewRole Make preview
+        before thread calculates contents. This function change level options. */
+    void setThreadedLayout(bool useThread = true, int previewRole = BtMini::PreviewRole);
+    
+    /** Set default role for searching indexes. This function change level options. */
+    void setSearchRole(int searchRole = Qt::EditRole, int level = -1);
+
 
 public slots:
     /** Reimplemented from QAbstractItemView. */
@@ -88,25 +93,22 @@ public slots:
     void slideLeft();
     void slideRight();
 
-	/** Very strange function. */
+	/** Reimplemented from QAbstractItemView. "Well documented function". */
 	void doItemsLayout();
 
-//protected slots:
-//    /** Reimplemented from QAbstractItemView. */
-//    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+	/** This function will search model for specified \param data with match() and
+	    then scroll to the first occurrence. Only active subview is used. Role for 
+	    match() can be set using setSearchRole(). */
+	void scrollTo(QVariant data);
 
 signals:    
-    /** Emitted when user have long pressed item.
-        In Bible Place selection or Search Results long press should follow place.
-        In Text reader should popup Text Context (commentary/lexicon/dictionary), then
-            long press should popup module selection dialog.
-        In Module selection - popup menu with Remove, Set Default, About.*/
-    void longPressed(const QModelIndex &index);
+    /** Emitted when user have long pressed item.*/
+    void shortPressed(const QModelIndex &index);
     
     /** Very long press. */
-    void servicePressed(const QModelIndex &index);
+    void longPressed(const QModelIndex &index);
 
-    /** */
+    /** Emitted when user press item or slide view. */
     void currentChanged(const QModelIndex &index);
     
 
@@ -133,10 +135,10 @@ protected:
     void        rowsInserted(const QModelIndex &parent, int start, int end);
     
     /** Make or update view. */
-    void makeSubView(int id, const QModelIndex &parent);
+    void makeSubView(int level, const QModelIndex &index);
 
     /** Activate or create new view if there is no view. */
-    void activateSubView(int id);
+    void activateSubView(int level);
 
     /** Scroll contents. Vertical scrolling will slide active subview up/down, 
         horizontal will slide subviews left/right. */

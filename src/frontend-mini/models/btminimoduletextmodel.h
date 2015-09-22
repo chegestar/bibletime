@@ -57,6 +57,9 @@ public slots:
     /** */
     void openMenu(const QModelIndex &index);
 
+    /** For pressed module in BtBookshelfModel. */
+    void openModuleMenu(const QModelIndex &index);
+
     /** This function works with worksView only. */
     void openModuleSelection();
 

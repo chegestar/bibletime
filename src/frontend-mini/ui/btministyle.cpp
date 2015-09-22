@@ -26,17 +26,6 @@ public:
     BtMiniStyle()
     {
         Q_INIT_RESOURCE(btministyle);
-
-        QPalette defaultPalette(QCommonStyle::standardPalette());
-
-        defaultPalette.setColor(QPalette::Window, Qt::white);
-        defaultPalette.setColor(QPalette::Button, Qt::white);
-        defaultPalette.setColor(QPalette::WindowText, QColor("#333333"));
-        defaultPalette.setColor(QPalette::ButtonText, QColor("#333333"));
-        defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-        defaultPalette.setColor(QPalette::HighlightedText, QColor("#333333"));
-
-        QApplication::setPalette(defaultPalette);
     }
     ~BtMiniStyle()
     {
@@ -170,9 +159,22 @@ public:
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 
+        if(QString(widget->metaObject()->className()) == "BtMiniMainWidget")
+        {
+            QPalette defaultPalette = QCommonStyle::standardPalette();
+
+            defaultPalette.setColor(QPalette::Window, Qt::white);
+            defaultPalette.setColor(QPalette::Button, Qt::white);
+            defaultPalette.setColor(QPalette::WindowText, QColor("#333333"));
+            defaultPalette.setColor(QPalette::ButtonText, QColor("#333333"));
+            defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+            defaultPalette.setColor(QPalette::HighlightedText, QColor("#333333"));
+
+            widget->setPalette(defaultPalette);
+        }
+
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
-		//if(widget->backgroundRole() == QPalette::Button)
         {
             QPalette p = widget->palette();
 
@@ -236,7 +238,7 @@ public:
 
                             const float vh = scrollbar->rect.height();
                             const float hh = scrollbar->maximum - scrollbar->minimum;
-                            const int   sh = qMin(scrollbar->rect.height() / 3,
+                            const int   sh = qMin(scrollbar->rect.height() / 3 * 2,
 								qMax((int)(vh * (vh / (hh + vh))),scrollbar->rect.width()));
                             const float vv = scrollbar->sliderPosition;
                             const float sp = qRound((vh - sh) * (vv / hh));
