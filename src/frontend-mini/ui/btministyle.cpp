@@ -236,7 +236,8 @@ public:
 
                             const float vh = scrollbar->rect.height();
                             const float hh = scrollbar->maximum - scrollbar->minimum;
-                            const int   sh = qMax((int)(vh * (vh / (hh + vh))), scrollbar->rect.width());
+                            const int   sh = qMin(scrollbar->rect.height() / 3,
+								qMax((int)(vh * (vh / (hh + vh))),scrollbar->rect.width()));
                             const float vv = scrollbar->sliderPosition;
                             const float sp = qRound((vh - sh) * (vv / hh));
 

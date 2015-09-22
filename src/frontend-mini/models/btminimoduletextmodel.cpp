@@ -15,33 +15,36 @@
 
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/config/cbtconfig.h"
-#include "backend/managers/cswordbackend.h"
+#include "backend/cswordmodulesearch.h"
 #include "backend/drivers/cswordbiblemoduleinfo.h"
+#include "backend/managers/cswordbackend.h"
 #include "backend/rendering/centrydisplay.h"
 #include "btglobal.h"
 
 #include "btmini.h"
 #include "btminimoduletextmodel.h"
-#include "ui/btminimenu.h"
 #include "models/btminimodulenavigationmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
+#include "ui/btminimenu.h"
 
 struct List
 {
     List()
     {
-        _moduleName = "";
+        _name = "";
         _module = 0;
         _maxEntries = 0;
         _firstEntry = 0;
+		_hasScope = false;
     }
 
     List(QString &module)
     {
-        _moduleName = module;
+        _name = module;
         _module = CSwordBackend::instance()->findModuleByName(module);
         _firstEntry = 0;
+		_hasScope = false;
 
         // \todo view now not supports row without items at all
         _maxEntries = 1;
@@ -49,7 +52,11 @@ struct List
         _displayOptions = CBTConfig::getDisplayOptionDefaults();
         _filterOptions = CBTConfig::getFilterOptionDefaults();
 
-        if(_module)
+		if(module == "[Search]")
+		{
+			_displayOptions.verseNumbers = 2;
+		}
+		else if(_module)
             setModule(_module);
     }
 
@@ -66,17 +73,34 @@ struct List
             _displayOptions.verseNumbers = true;
         }
     }
-    
-    // _bm, _module
 
-    CSwordModuleInfo *_module;
-    QString           _moduleName;
-    
-    long              _maxEntries;
-    long              _firstEntry;
+	/** */
+	void setScope(sword::ListKey &list)
+	{
+		_hasScope = list.Count() > 0;
 
-    DisplayOptions    _displayOptions;
-    FilterOptions     _filterOptions;
+		if(_hasScope)
+		{
+			_scopeMap.clear();
+			for(int i = 0; i < list.Count(); ++i)
+				_scopeMap.append(list.GetElement(i)->Index());
+		}
+		else
+			_scopeMap.clear();
+	}
+    
+	QString             _name;
+
+    CSwordModuleInfo   *_module;
+    
+    long                _maxEntries;
+    long                _firstEntry;
+
+    DisplayOptions      _displayOptions;
+    FilterOptions       _filterOptions;
+
+	bool                _hasScope;
+	QVector<int>        _scopeMap;
 };
 
 class BtMiniModuleTextModelPrivate
@@ -84,7 +108,7 @@ class BtMiniModuleTextModelPrivate
 public:
     BtMiniModuleTextModelPrivate()
     {
-        ;
+		_isSearch = false;
     }
     
     ~BtMiniModuleTextModelPrivate()
@@ -100,8 +124,16 @@ public:
 
         CSwordVerseKey key(l->_module);
 
-        key.Headings(1);
-        key.Index(index.row() + l->_firstEntry);
+		if(l->_hasScope)
+		{
+			key.Headings(1);
+			key.Index(l->_scopeMap[index.row()]);
+		}
+		else
+		{
+			key.Headings(1);
+			key.Index(index.row() + l->_firstEntry);
+		}
 
         return key;
     }
@@ -147,9 +179,21 @@ public:
 
         BtMiniLayoutOption o(_ld->levelOption(i));
 
-        o.allowScrollBar = false;
-        o.limitItems     = true;
-        o.perCycle       = 1;
+		if(module == "[Search]")
+		{
+			o.allowScrollBar = true;
+			o.limitItems     = true;
+			o.perCycle       = 1;
+			o.scrollPerItem  = true;
+
+			_isSearch        = true;
+		}
+		else
+		{
+			o.allowScrollBar = false;
+			o.limitItems     = true;
+			o.perCycle       = 1;
+		}
 
 		os.insert(i, o);
 
@@ -164,6 +208,27 @@ public:
         _lists.erase(_lists.begin() + i);
     }
 
+	/** */
+	static void searchProgress(char percent, void *data)
+	{
+		typedef QPair<BtMiniMenu*, CSwordModuleInfo*> Pair;
+		
+		Pair *p = reinterpret_cast<Pair*>(data);
+
+		if(!p)
+			return;
+
+		BtMiniMenu *dialog = p->first;
+		CSwordModuleInfo *m = p->second;
+
+		if(dialog && m)
+		{
+			if(dialog->wasCanceled())
+				m->module()->terminateSearch = true;
+			dialog->setValue(percent);
+		}
+	}
+
     QList<List>                 _lists;
 
     BtMiniLayoutDelegate       *_ld;
@@ -172,6 +237,9 @@ public:
     QPointer<QAbstractButton>   _moduleIndicator;
     QPointer<QAbstractButton>   _placeIndicator;
     QPointer<QWidget>           _rightIndicator;
+
+	QString                     _searchText;
+	bool                        _isSearch;
 };
 
 BtMiniModuleTextModel::BtMiniModuleTextModel(QStringList &modules, QObject *parent)
@@ -207,8 +275,13 @@ int BtMiniModuleTextModel::rowCount(const QModelIndex &parent) const
     case 0:
         return d->_lists.size();
     case 1:
-        return d->_lists[parent.internalId()]._maxEntries - 
-            d->_lists[parent.internalId()]._firstEntry;
+		{
+			if(d->_lists[parent.internalId()]._hasScope)
+				return d->_lists[parent.internalId()]._scopeMap.size();
+
+			return d->_lists[parent.internalId()]._maxEntries - 
+				d->_lists[parent.internalId()]._firstEntry;
+		}
     }
 
     return 0;
@@ -283,6 +356,9 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 								r += display->Rendering::CEntryDisplay::text(QList<const CSwordModuleInfo*>() << l->_module, 
                                     QString::fromUtf8(key.getText()),
                                     l->_displayOptions, l->_filterOptions);
+
+								if(d->_isSearch && !d->_searchText.isEmpty())
+									r = CSwordModuleSearch::highlightSearchedText(r, d->_searchText);
                             }
                         }
                     }
@@ -349,6 +425,8 @@ QModelIndex BtMiniModuleTextModel::keyIndex(int i, QString key) const
 
     if(key.isEmpty())
         return QModelIndex();
+
+	Q_ASSERT(!d->_lists[i]._hasScope);
 
     CSwordVerseKey verse(d->_lists[i]._module);
     
@@ -585,4 +663,100 @@ bool BtMiniModuleTextModel::setData(const QModelIndex &index, const QVariant &va
     }
 
     return false;
+}
+
+void BtMiniModuleTextModel::setSearchText(const QString &text)
+{
+	Q_D(BtMiniModuleTextModel);
+
+	d->_searchText = text;
+}
+
+void BtMiniModuleTextModel::startSearch()
+{
+	Q_D(BtMiniModuleTextModel);
+
+	BtMiniView *works = BtMini::findView(BtMini::worksWidget());
+
+	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+	CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm);
+
+	//qDebug() << "Start search" << cm << d->_searchText;
+
+	sword::ListKey results;
+	sword::ListKey scope;
+	
+	if(CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(m))
+	{
+		sword::VerseKey key(bm->lowerBound());
+		key.LowerBound(bm->lowerBound());
+		key.UpperBound(bm->upperBound());
+		scope = key;
+	}
+
+	if(d->_searchText.isEmpty())
+		;
+	else if(CBTConfig::get(CBTConfig::searchUsingSword))
+	{
+		QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Search ..."));
+		dialog->show();
+
+		m->module()->createSearchFramework();
+
+		results = m->module()->search(d->_searchText.toUtf8(), 0, 0,
+			&scope, 0, &BtMiniModuleTextModelPrivate::searchProgress, &QPair<BtMiniMenu*,
+			CSwordModuleInfo*>(dialog.data(), m));
+
+		if(dialog->wasCanceled() || m->module()->terminateSearch)
+			results = sword::ListKey();
+	}
+	else
+	{
+		CSwordModuleSearch searcher;
+		bool ok = true;
+
+		// build index if abcent
+		if(!m->hasIndex())
+		{
+			if(BtMiniMenu::execQuery("Build index for module?", QStringList() << "Yes" << "No") != 0)
+				ok = false;
+			else
+			{
+				QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Indexing..."));
+
+				QObject::connect(dialog.data(), SIGNAL(canceled()), m, SLOT(cancelIndexing()));
+				QObject::connect(m, SIGNAL(indexingProgress(int)), dialog.data(), SLOT(setValue(int)));
+
+				dialog->show();
+
+				if(!m->buildIndex() || dialog->wasCanceled())
+				{
+					if (m->hasIndex())
+						m->deleteIndex();
+					ok = false;
+				}
+			}
+		}
+
+		if(ok)
+		{
+			// set the search parameters
+			searcher.setSearchedText(d->_searchText);
+			searcher.setModules(QList<const CSwordModuleInfo*>() << m);
+			searcher.setSearchScope(scope);
+
+			searcher.startSearch();
+
+			results = searcher.results()[m];
+		}
+	}
+
+	Q_ASSERT(d->_lists.size() == 1 && d->_lists[0]._name == "[Search]");
+
+	d->_lists[0]._module = results.Count() > 0 ? m : 0;
+	
+	d->_lists[0].setScope(results);
+
+	QModelIndex i = index(0, 0);
+	emit dataChanged(i, i);
 }

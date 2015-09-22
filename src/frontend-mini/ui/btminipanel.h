@@ -25,7 +25,8 @@ public:
     {
         None = 0,
         Search,
-        Exit
+        Exit,
+		Close
     };
 
     typedef QVector<Activity> Activities;

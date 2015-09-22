@@ -32,8 +32,9 @@ struct BtMiniLayoutOption
     int     perCycle;
     bool    limitItems;
     
-    bool    allowScrollBar;
     bool    allowInputBox;
+	bool    allowScrollBar;
+    bool    scrollPerItem;
 
     bool    useThread;
     int     previewRole;

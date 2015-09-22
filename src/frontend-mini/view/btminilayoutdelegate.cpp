@@ -22,6 +22,7 @@ BtMiniLayoutOption::BtMiniLayoutOption()
     useThread       = false;
     previewRole     = BtMini::PreviewRole;
 	contentsNumbers = false;
+	scrollPerItem   = false;
 }
 
 BtMiniLayoutDelegate::BtMiniLayoutDelegate(QObject *parent) : QObject(parent)

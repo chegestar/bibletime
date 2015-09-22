@@ -6,12 +6,13 @@ kalemas@mail.ru :
 +	restore red letter words
 +	correct rows insert/remove for plain layout
 -	contents of numbers for subView
-	decide how to render entries with SimpleKey
-	search view
-		in search term add: *term* AND *otherTerm*
++	decide how to render entries with SimpleKey
++	search view
++		in search term add: *term* AND *otherTerm*
++		scrollbar changes current index
++		highlight search term and remove section headings
 	improve BT modularity
 		Install manager - information of repos/modules, manage modules
-		Search
 		Bookmarks
 	context view
 	restore original BT paths

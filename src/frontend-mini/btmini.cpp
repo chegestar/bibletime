@@ -182,13 +182,11 @@ QWidget * BtMini::worksWidget()
         b4->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << 
-            /*BtMiniPanel::Search <<*/ BtMiniPanel::Exit, w);
+            BtMiniPanel::Search << BtMiniPanel::Exit, w);
 
         // Put into layout
         QHBoxLayout *hl = new QHBoxLayout;
         QVBoxLayout *vl = new QVBoxLayout;
-
-        vl->setSizeConstraint(QLayout::SetMaximumSize);
 
         hl->addWidget(b1, Qt::AlignLeft);
         hl->addWidget(b3, Qt::AlignCenter);
@@ -271,8 +269,40 @@ QWidget * BtMini::worksWidget()
 
 QWidget * BtMini::searchWidget()
 {
-    Q_ASSERT(false);
-    return 0;
+	static QWidget *w = 0;
+
+	if(!w)
+	{
+		w = new QWidget(mainWidget());
+		qobject_cast<QStackedWidget*>(mainWidget())->addWidget(w);
+
+		BtMiniView *v = new BtMiniView(w);
+		v->setTopShadowEnabled(true);
+
+		// Setup controls
+		QLineEdit *le = new QLineEdit(w);
+
+		BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+
+		// Put into layout
+		QVBoxLayout *vl = new QVBoxLayout;
+
+		vl->addWidget(le);
+		vl->addWidget(v);
+		vl->addWidget(p);
+
+		w->setLayout(vl);
+
+		// Setup model
+		BtMiniModuleTextModel *m = new BtMiniModuleTextModel(QStringList() << "[Search]", v);
+
+		v->setModel(m);
+
+		QObject::connect(le, SIGNAL(textChanged(const QString &)), m, SLOT(setSearchText(const QString &)));
+		QObject::connect(le, SIGNAL(returnPressed()), m, SLOT(startSearch()));
+	}
+
+	return w;
 }
 
 void BtMini::setActiveWidget(QWidget *widget)

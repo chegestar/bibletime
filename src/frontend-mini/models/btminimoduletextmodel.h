@@ -57,14 +57,22 @@ public slots:
     /** */
     void openMenu(const QModelIndex &index);
 
-    /** This function work with worksView only. */
+    /** This function works with worksView only. */
     void openModuleSelection();
 
-    /**  This function work with worksView only. */
+    /**  This function works with worksView only. */
     void openPlaceSelection();
 
     /** */
     void updateIndicators(const QModelIndex &index);
+
+	/** Set text to search. */
+	void setSearchText(const QString &text);
+
+	/** Perform search and fill model with results. Model should be initialized
+		with only one "[Search]" item. Search module will be taken from current
+		workWidget module. */
+	void startSearch();
 
 protected:
 

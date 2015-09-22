@@ -261,6 +261,8 @@ public:
     {
         Q_ASSERT(_index.parent() == index.parent());
 
+		//qDebug() << "updateModelIndex" << index;
+
         _index = index;
     }
     inline const QModelIndex & modelIndex() const
@@ -1073,11 +1075,22 @@ public:
         q->horizontalScrollBar()->setValue(qMax((qreal)q->horizontalScrollBar()->minimum(),
             qMin((qreal)q->horizontalScrollBar()->maximum(), _vx)));
 
-        q->verticalScrollBar()->setMaximum(qMax((qreal)0,
-            currentSubView()->contentsRect().height() - q->viewport()->height()));
+		if(_ld->levelOption(_currentSubView).scrollPerItem)
+		{
+			q->verticalScrollBar()->setMaximum(currentSubView()->rowCount() - 1);
+			q->verticalScrollBar()->setValue(currentSubView()->modelIndex().row());
 
-        q->verticalScrollBar()->setValue(qMax((qreal)q->verticalScrollBar()->minimum(),
-            qMin((qreal)q->verticalScrollBar()->maximum(), -currentSubView()->contentsRect().top())));
+			//qDebug() << "update scroll" << currentSubView()->modelIndex().row() <<
+			//	currentSubView()->rowCount();
+		}
+		else
+		{
+			q->verticalScrollBar()->setMaximum(qMax((qreal)0,
+				currentSubView()->contentsRect().height() - q->viewport()->height()));
+
+			q->verticalScrollBar()->setValue(qMax((qreal)q->verticalScrollBar()->minimum(),
+				qMin((qreal)q->verticalScrollBar()->maximum(), -currentSubView()->contentsRect().top())));
+		}
 
         _vt = q->verticalScrollBar()->value();
     }
@@ -1563,7 +1576,7 @@ void BtMiniView::scrollTo(const QModelIndex &index, ScrollHint hint)
 {
     Q_D(BtMiniView);
 
-    qDebug() << "ScrollTo" << index;
+    //qDebug() << "ScrollTo" << index;
     
     d->activateIndex(index, false, hint);
 
@@ -1618,11 +1631,16 @@ void BtMiniView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
         {
             v->clear();
 
-			QModelIndex index = v->modelParentIndex().child(v->modelIndex().row(), 0);
-            v->setModelIndex(index);
+			QModelIndex i = topLeft.child(qMin(model()->rowCount(topLeft) - 1, 
+				v->modelIndex().row()), 0);
+
+            v->setModelIndex(i);
 
 			if(d->currentSubView() == v)
-				emit currentChanged(index);
+				emit currentChanged(i);
+
+			scheduleDelayedItemsLayout();
+
             return;
         }
     }
@@ -1931,9 +1949,16 @@ void BtMiniView::paintEvent(QPaintEvent *e)
     // update according vertical scrollbar
     if(d->_vt != verticalScrollBar()->value())
     {
-        scroll(0.0f, d->_vt - verticalScrollBar()->value());
-        d->_vt = verticalScrollBar()->value();
-        d->_mousePower.ry() = 0.0f;
+		if(d->_ld->levelOption(d->_currentSubView).scrollPerItem)
+		{
+			scrollTo(d->currentSubView()->modelIndex(verticalScrollBar()->value()));
+		}
+		else
+		{
+			scroll(0.0f, d->_vt - verticalScrollBar()->value());
+			d->_vt = verticalScrollBar()->value();
+			d->_mousePower.ry() = 0.0f;
+		}
     }
 
     QPainter painter(viewport());

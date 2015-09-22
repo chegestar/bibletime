@@ -71,14 +71,22 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
     {
         switch(a)
         {
-        case Exit:
-            {
-                QPushButton *b = new QPushButton(QString(tr("Exit")), this);
-                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-                d->addActivity(a, b);
-                l->addWidget(b);
-            }
-            break;
+		case Close:
+			{
+				QPushButton *b = new QPushButton(QString(tr("Close")), this);
+				connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
+				d->addActivity(a, b);
+				l->addWidget(b);
+			}
+			break;
+		case Exit:
+			{
+				QPushButton *b = new QPushButton(QString(tr("Exit")), this);
+				connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
+				d->addActivity(a, b);
+				l->addWidget(b);
+			}
+			break;
         case Search:
             {
                 QPushButton *b = new QPushButton(QString(tr("Search")), this);
@@ -125,8 +133,11 @@ void BtMiniPanel::controlActivated()
         if(BtMiniMenu::execQuery(tr("Exit?"), QStringList() << tr("Yes") << tr("No")) == 0)
             BtMini::mainWidget()->close();
         break;
-    case Search:
-        BtMini::setActiveWidget(BtMini::searchWidget());
-        break;
+	case Search:
+		BtMini::setActiveWidget(BtMini::searchWidget());
+		break;
+	case Close:
+		BtMini::setActiveWidget(BtMini::worksWidget());
+		break;
     }
 }
