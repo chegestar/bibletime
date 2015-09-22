@@ -1,0 +1,200 @@
+kalemas@mail.ru :
+=== commited ===================================================================
++	sometime DrawCache mix up items
++	line breaks. do not break lines if there is only one character on the next line.
++	sbItem::getItem (sbDirection) global directions NEXT, PREV, LEFT, RIGHT
++	better enumeration of modules in module selection and module installer
++	warning war - clean build log from warnings
++	module manager
++		raise connection
++	create patch for ftplibt
++	mods.d and modules creation if not exists
+
+=== current tasks ==============================================================
++	Qt Port
+-	opengl-es or openvg graphics sytem for qt (faster, but unstable)
+%	fix long-height item expansion
++	switch to sword utf8 locale
++	interface based on qt
++		install module dialog
++		module installation progress
++		restore input for search
++		restore slide left/right arrows
++		focus loose in search lineedit
++	drawing slow enought
++		divide interface on widgets
++		all items based on qtextdocument
++	use bibletime sword backend
++	css for application
++	different screens and runtime orientation change
++	cdisplayentry
++		add bottom margin to last entry in chapter
++		show verse number only
++	menu
++	own modern finger-oriented QStyle
++	search - clucence
++	power consurmption on device
+-		activate/deactivate events dont work on wince
++			fix: make test on timer for active window
+	make device to vibrate
+	tips
+		check box for style
+		ItemView to show scrollable text item
+		on search view: how to set range
++		on module view: sliding left/right to add module views
+	memory leaking
+		crtdebug detect leaking starting from QApplication init
+	fix stretch surface
+?	buttons instead label in header
+	application settings dialog
+	model/view architecture for lists
+		at least view for sbList
+	scrollbar
+		count list height, if listStartConstructed and listEndConstructed
+		proper method to scroll list
+?		QScrollArea
+		show on mouse press, then hide afer delay
+	QTextDocument issues
+		not load external style sheet
+		font enumeration in font-family dont work
+	try webkit for wince (QWebFrame instead QTextDocument)
+	replace unistd.h with io.h/direct.h
+	
+=== known tasks ================================================================
+	module features controls, global sword options for module in expanding panel
+	dialog looses event filter for qapplication after minimize/maximize
+	keypad support for dialogs and menus
+	panel conception
+		4 buttons are always on panel, buttons could be folded press on button
+		causes its action, hold or second tap if button is view switcher popup
+		folded items, hold and move on folded button activates item
+		tools: Magnifier, Pointer(Selector)
+	Symbian build
+	lexicon / dictionary modules
+	testament persitence check
+	verse persistance check and range of verse
+	automatic sbItem width, remove from constructor
+	remove somehow xmlParser dependency, change Features storage format
+	sbList: show verse selection for books with one chapter
+	remove module menu
+	loading all locales takes too long
+	keypad/volume buttons scrolling
+	different long item expantion, stays first on screen and expands down
+	qt: window raisement on startup on device
+	add QLayout-s stretch factors based on text length
+	hierarhical module installer, language/type/module
+	in chapter selection dialog on book expanding , move book item up
+
+=== tasks for public release ===================================================
+	to test
+		other locales, utf encoding
+		paths with locale characters
+		other language modules:
+			Hebrew
+				right alignment for verse items
+			Greek
+
+=== tasks for future ===========================================================
+	daily devotionals
+	reading plans
+	genbooks
+	map and image modules
+	design improvements:
+		like wp7 metro style
+		remove Home Screen , start from last place
+	new place select dialog
+		three scrollers: book/chapter/verse
+	verse features
+		bookmarks
+			nested bookmarks folders
+			date created (for sorting)
+			place in uri format (sword://Module/Key)
+			static / dynamic
+		verse colors
+	icons and graphics
+		graphics theme uses large png file
+		remove built-in theme, application will not run if theme not found
+	unlock locked modules
+
+
+	re-concept interface
+
+
+	Link, like Opera Link to synchronize bookmarks and all Per Verse Data among all user devices
+		maybe need Sword change that every verse in Bibile at every v11n has unique id
+	another platform : android , mac os x ,  openembedded , symbian , maemo , ...
+	multitouch
+	linked lists
+		slide list and stroke down/up to link
+		link neighbor lists: items will be fitted by height, empty verses will be displayed hollow
+	random verse on Home view
+	verse features
+		ratings/favourite
+			no ranges, byte-array
+		readings
+			reading should be as restoreable view
+			get / set (on switch and destroy) place
+			remember module also
+			place, module, date started, date visited
+?		colors
+		reading count
+			created as byte-array for every versification
+?			increased when exceed 256-bound
+?			converted beetwheen v11ns on call
+			or maybe implement this throught history
+			
+?	sliding, animated backgrounds
+?	read html / txt / rtf / doc formats
+
+
+=== application name development ===============================================
+Title: specify Bible software, simple, short, memorizeable, apealing.
+
+BibleTime Mini - your time with Bible anywhere
+BibleTime Mobile
+Bibliarium - place to study biblical texts / biblical texts library
+	like a term
+SlideBible
+	modern
+Mobi - Mobile Bible
+
+BibleTouch, BiSlide, BeSlide, Touch Bible,
+Bible Touch, Bible Reader, Sword Reader, DayBible, BibleDay, Contemple, ArcBible
+Priest Bible, iBible, e-Sword, BibleSlide, RoundBible, Round SWord, Sworeader,
+HSReader, Bread, Everyday Bible, Swrod, Everyday Devotionals, Scripture, Gospel,
+Evangel, BeBible, Beeble, Evangeliel, Swread, Glider Bible, Swreeter, Reeter -
+day to day Bible reading suite, read Bibe day after day, Reeder - every day Bible
+reading, Qt Bible Reader, Mobile Bible Reader, Clean Looks, Clean Reads, Ecclesia,
+Humos, Logos, Bible Study, Augustine, Gorium, Librarium, Libra, Biblary,
+Holy Scriptures Library, Time for Bible, Time to read Bible, Place to read Bible,
+Bibliarim, SiBi, Raed, Roombi, Gospel Traveler, Gospel Day, Day Word,
+BibleStudy
+
+Main purpose: every day Bible Reading, nice looking, responsible, intuitive
+interface, comfortable.
+
+=== SWORD ======================================================================
+	load locales on demand
+	InsrallMgr::updateLocales
+%	av11n mappings
+	load av11n on demand from file
+	make more steps for search
+
+=== remarks ====================================================================
+Issues
+.	Since sip panel didn't raise sip button it is not able to change software
+	keyboard in the application. also default keyboard should have
+	enter/return key to launch search. (wince)
+.	To enable g-sensor support for runtime orientation change use third party
+	applications like G-Config. (wince)
+Qt
+	we get nothing on application deactivation under wince
+		handle WM_ACTIVATEAPP code in WM_ACTIVATE cause not working popups
+		maybe replace WM_ACTIVATEAPP with WM_NCACTIVATE = 0x0086?
+	QFont::setPointSize don't work on wince
+	SIP adjusted to the bottom of screen
+Sword
+	exception with /MD option and signed c-strings, require /J
+BibleTime
+	set BT_MINI where needed
+	static QDir initialization in directory.cpp causes exception on wince
