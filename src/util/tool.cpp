@@ -40,6 +40,7 @@ bool savePlainFile(const QString & filename,
 
     QFile saveFile(filename);
 
+#ifndef BT_MINI
     if (saveFile.exists()) {
         if (!forceOverwrite
             && message::showQuestion(0, QObject::tr("Overwrite File?"),
