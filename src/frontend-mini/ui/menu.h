@@ -49,9 +49,9 @@ public slots:
     void show();
     void hide();
 
-    void finish();
+    void cancel();
 
-    void setPercent(int percent);
+    void setValue(int percent);
     void setText(QString text);
 	
 private slots:

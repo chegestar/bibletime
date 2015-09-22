@@ -22,7 +22,9 @@
 #include <QProgressBar>
 #include <QPushButton>
 #include <QStyle>
+#include <QStyleOptionButton>
 #include <QStyleOptionFrame>
+#include <QStyleOptionMenuItem>
 #include <QtDebug>
 
 #include "menu.h"
@@ -35,6 +37,7 @@ public:
         _result = -1;
 		_eventLoop = 0;
         _modal = false;
+		_canceled = false;
     }
     
     ~MenuPrivate()
@@ -60,6 +63,7 @@ public:
     int              _result;
 	QEventLoop      *_eventLoop;
     bool             _modal;
+	bool             _canceled;
 
 };
 
@@ -70,6 +74,9 @@ Menu::Menu() : d_ptr(new MenuPrivate), QWidget(MenuPrivate::mainWidget(), Qt::Fr
     //setAutoFillBackground(false);
 	//setAttribute(Qt::WA_MouseNoMask);
 	//setAttribute(Qt::WA_NoMousePropagation);
+
+	if(parentWidget())
+		setMaximumSize(parentWidget()->size());
 
     QFont f = font();
     f.setBold(true);
@@ -161,11 +168,18 @@ Menu * Menu::createQuery(QString text, QStringList actions)
 {
     Menu *dialog = new Menu;
     
-    QVBoxLayout *vl = new QVBoxLayout;
+    QVBoxLayout *v = new QVBoxLayout;
     
+    // add menu text
     if(!text.isEmpty())
-        vl->addWidget(new QLabel(text, dialog), 0, Qt::AlignCenter);
+    {
+        QLabel *l = new QLabel(text, dialog);
+        l->setWordWrap(true);
+        l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        v->addWidget(l, 0, Qt::AlignCenter);
+    }
     
+    // add actions
     if(actions.size())
     {
         QLayout *l;
@@ -173,7 +187,7 @@ Menu * Menu::createQuery(QString text, QStringList actions)
         if(!text.isEmpty())
             l = new QHBoxLayout;
         else
-            l = vl;
+            l = v;
         
         foreach(QString string, actions)
         {
@@ -184,10 +198,10 @@ Menu * Menu::createQuery(QString text, QStringList actions)
         }
         
         if(!text.isEmpty())
-            vl->addLayout(l);
+            v->addLayout(l);
     }
     
-	dialog->setLayout(vl);
+	dialog->setLayout(v);
 	
     return dialog;
 }
@@ -209,15 +223,24 @@ int Menu::execMenu(QStringList actions)
 void Menu::paintEvent(QPaintEvent *e)
 {
     QPainter p(this);
-    const int fw = style()->pixelMetric(QStyle::PM_MenuPanelWidth, 0, this);
-    if (fw) {
-        //QRegion borderReg;
-        //borderReg += QRect(0, 0, fw, height()); //left
-        //borderReg += QRect(width()-fw, 0, fw, height()); //right
-        //borderReg += QRect(0, 0, width(), fw); //top
-        //borderReg += QRect(0, height()-fw, width(), fw); //bottom
-        //p.setClipRegion(borderReg);
-        //emptyArea -= borderReg;
+    
+    // QStyle::PE_PanelMenu on windows is hollow
+#ifdef Q_WS_WIN
+    QStyleOptionButton opt;
+    opt.initFrom(this);
+    style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
+#else
+    QStyleOptionMenuItem opt;
+    opt.initFrom(this);
+    opt.state = QStyle::State_None;
+    opt.checkType = QStyleOptionMenuItem::NotCheckable;
+    opt.maxIconWidth = 0;
+    opt.tabWidth = 0;
+    style()->drawPrimitive(QStyle::PE_PanelMenu, &opt, &p, this);
+#endif
+
+    if(const int fw = style()->pixelMetric(QStyle::PM_MenuPanelWidth, 0, this))
+    {
         QStyleOptionFrame frame;
         frame.rect = rect();
         frame.palette = palette();
@@ -274,11 +297,11 @@ Menu * Menu::createProgress(QString text)
 
     QProgressBar *pb = new QProgressBar(dialog);
     pb->setRange(0, 100);
+	pb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
     vl->addWidget(pb, 0, Qt::AlignCenter);
 
     QPushButton *b = new QPushButton("Cancel", dialog);
-    connect(b, SIGNAL(clicked()), dialog, SIGNAL(canceled()));
-    connect(b, SIGNAL(clicked()), dialog, SLOT(hide()));
+    connect(b, SIGNAL(clicked()), dialog, SLOT(cancel()));
     vl->addWidget(b, 0, Qt::AlignCenter);
 
     dialog->setLayout(vl);
@@ -288,7 +311,7 @@ Menu * Menu::createProgress(QString text)
     return dialog;
 }
 
-void Menu::setPercent(int percent)
+void Menu::setValue(int percent)
 {
     QProgressBar *pb = findChild<QProgressBar*>();
     if(pb)
@@ -307,11 +330,12 @@ void Menu::setText(QString text)
 
 bool Menu::wasCanceled()
 {
-    return d_ptr->_result < 0;
+    return d_ptr->_canceled;
 }
 
-void Menu::finish()
+void Menu::cancel()
 {
-    d_ptr->_result = 1;
+	d_ptr->_canceled = true;
     hide();
+    emit canceled();
 }

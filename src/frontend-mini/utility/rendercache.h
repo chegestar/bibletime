@@ -126,7 +126,7 @@ public:
 
 			int memoryUse = atoi((*Core_->getOptions())["General"].getWithDefault("DrawCacheSize","0"));
 
-			if(memoryUse == 0)
+			if(memoryUse == -1)
                 memoryUse = Core_->getRect().width() * Core_->getRect().height() * 3 /*bits per pixel*/ * 5 /*multiplier*/;
 
 			width = Core_->getRect().width();

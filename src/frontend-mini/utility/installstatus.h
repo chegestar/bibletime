@@ -24,31 +24,35 @@
 class InstallStatus : public sword::StatusReporter
 {
 public:
-    InstallStatus(){;}
-    ~InstallStatus(){;}
+	InstallStatus() : _dialog(0)
+	{
+		;
+	}
+
+    ~InstallStatus()
+	{
+		;
+	}
 
     void preStatus(long totalBytes, long completedBytes, const char *message)
     {
-        QProgressDialog *dialog = qobject_cast<QProgressDialog*>(_dialog);
+        Menu *dialog = qobject_cast<Menu*>(_dialog);
         if(dialog)
-        {
-            QApplication::processEvents();
+		{
+			dialog->setText(message);
             if(dialog->wasCanceled())
                 Core_->getInstallMgr()->terminate();
-            dialog->setLabelText(message);
         }
     }
 
     void statusUpdate(double dtTotal, double dlNow)
     {
-        QProgressDialog *dialog = qobject_cast<QProgressDialog*>(_dialog);
+        Menu *dialog = qobject_cast<Menu*>(_dialog);
         if(dialog)
-        {
-            QApplication::processEvents();
+		{
+			dialog->setValue(dlNow*100/dtTotal);
             if(dialog->wasCanceled())
                 Core_->getInstallMgr()->terminate();
-            dialog->setMaximum(dtTotal);
-            dialog->setValue(dlNow);
         }
     }
 

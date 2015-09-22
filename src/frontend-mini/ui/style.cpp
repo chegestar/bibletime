@@ -52,8 +52,6 @@ public:
     {
         switch(element)
         {
-        case PE_Frame:
-            break;
         case PE_FrameMenu:
             if(const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame*>(opt))
             {
@@ -62,9 +60,8 @@ public:
             }
             return;
         case PE_PanelButtonCommand:
-            return;
         case PE_PanelMenu:
-            break;
+            return;
         }
         QCommonStyle::drawPrimitive(element, opt, p, widget);
     }
@@ -101,6 +98,11 @@ public:
             return 0;
         case PM_MenuPanelWidth:
             return _menuFrameWidth;
+        case PM_MaximumDragDistance:
+            return -1;
+        case PM_SliderThickness:
+        case PM_ScrollBarExtent:
+            return 0;
         }
         return QCommonStyle::pixelMetric(metric, option, widget);
     }
@@ -124,7 +126,9 @@ public:
 
         if(QString(widget->metaObject()->className()) == "Menu")
         {
-            widget->setContentsMargins(_menuFrameWidth, _menuFrameWidth, _menuFrameWidth, _menuFrameWidth);
+			QMargins m = widget->contentsMargins();
+			widget->setContentsMargins(m.left()+_menuFrameWidth, m.top()+_menuFrameWidth,
+				m.right()+_menuFrameWidth, m.bottom()+_menuFrameWidth);
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
 

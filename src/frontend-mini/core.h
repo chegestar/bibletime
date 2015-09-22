@@ -13,8 +13,8 @@
  * General Public License for more details.
  ************************************************************************/
 
-#ifndef _SB_CORE_H_
-#define _SB_CORE_H_
+#ifndef BT_MINI_CORE_H
+#define BT_MINI_CORE_H
 
 #include <QApplication>
 #include <QDebug>
@@ -27,6 +27,8 @@
 #include <ftptrans.h>
 #include <versekey.h>
 
+#include "frontend/bookshelfmanager/btinstallmgr.h"
+
 #include "utility/personalization.h" // move to cpp
 
 #define BT_VERSION "2.9.0"
@@ -38,25 +40,9 @@ class sbList;
 class Core : public QApplication
 {
 	Q_OBJECT
+    Q_DECLARE_PRIVATE(Core)
 
 public:	
-	struct Input
-	{
-		Input ()
-		{
-			memset (this, 0, sizeof(Input));
-		}
-
-		bool                     mousePressed;
-		QPoint                   start;
-        QPoint                   last;
-		bool                     leaveZone;
-		int                      tapCounter;
-		mutable bool             block;
-		int                      scrollDataY [2];
-		int                      scrollDataTicks [2];
-	};
-
 	Core(int argc, char *argv[]);
     ~Core();
 	
@@ -78,16 +64,18 @@ public:
     // TODO remove
 	const char *                 holdString        ( const char * string );
 
-    Q_DECLARE_PRIVATE(Core)
-
 public slots:
 	void                         saveConfiguration ();
     void                         setModulePlace    (QVariant place);
     void                         switchList        (QVariant to);
+
+    /** move controls panel up on SIP panel raise on WinCE */
 	void                         desktopResized    (int);
 
 protected:
 	bool                         event             (QEvent *e);
+    
+    /** this should fix application deactivation on WinCE */
     void                         timerEvent        (QTimerEvent *e);
 
 public:

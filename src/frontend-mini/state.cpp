@@ -13,16 +13,21 @@
  * General Public License for more details.
  ************************************************************************/
 
-#include <algorithm>
-
 #include <QApplication>
+#include <QBitArray>
 #include <QCheckBox>
 #include <QDateTime>
 #include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
+#include <QStandardItem>
+#include <QStandardItemModel>
 #include <QStyle>
 #include <QtCore/qmath.h>
+
+#include <algorithm>
+
+#include <swversion.h>
 
 #include "backend/config/cbtconfig.h"
 #include "backend/managers/cswordbackend.h"
@@ -30,12 +35,11 @@
 #include "backend/cswordmodulesearch.h"
 #include "btglobal.h"
 
-#include <swversion.h>
-
 #include "core.h"
 #include "item.h"
 #include "state.h"
 #include "ui/button.h"
+#include "ui/itemview.h"
 #include "ui/menu.h"
 #include "utility/rendercache.h"
 #include "utility/installstatus.h"
@@ -85,10 +89,9 @@ public:
 
     static void searchProgress(char percent, void *data)
     {
-        QProgressDialog *dialog = reinterpret_cast<QProgressDialog*>(data);
+        Menu *dialog = reinterpret_cast<Menu*>(data);
         if(dialog)
         {
-            QApplication::processEvents();
             if(dialog->wasCanceled())
                 Core_->currentModule->terminateSearch = true;
             dialog->setValue(percent);
@@ -136,20 +139,16 @@ sbList::sbList(View::Type _type_) : d_ptr(new sbListPrivate), type(_type_)
 	case View::TYPE_MODULE_INSTALLER_DISCLAIMER:
         d->_controls << "moduleinstaller: accept" << "moduleinstaller: decline";
 		break;
-	case View::TYPE_MODULE_INSTALLER:
-        d->_controls << "back";
-		break;
 	case View::TYPE_MODULE_VIEW:
         d->_controls << "open navigation" << "open options" << "home";
         d->_indicators << "arrow left" << "module: label" << "arrow right";
 		after.constructed = before.constructed = false;
 		break;
+	case View::TYPE_MODULE_INSTALLER:
+	case View::TYPE_MENU_OPTIONS:
 	case View::TYPE_READINGS:
 	case View::TYPE_HISTORY:
-        d->_controls << "back";
-		break;
-	case View::TYPE_MENU_OPTIONS:
-        d->_controls << "back";
+	    d->_controls << "back";
 		break;
 	case View::TYPE_HOME:
 		d->_controls << "open navigation" << "open history" << "exit";
@@ -299,7 +298,8 @@ void sbList::render(QPainter *painter, int sideDisplacement)
                     painter->setBrush(QApplication::palette().highlight());
                     painter->drawRect(workRect);
                 }
-				if (workItem->type != sbItem::TYPE_VERSE || workItem->text.size() == 0 || workItem->expanding != 0 || !workItem->processed)
+				if (workItem->type != sbItem::TYPE_VERSE || workItem->text.size() == 0 || \
+				    workItem->expanding != 0 || !workItem->processed)
 					workItem->render(painter, xy, workRect);
 				else if (!DrawCache.blit(painter, workItem, xy, workRect))
 					workItem->render(painter, xy, workRect);
@@ -374,15 +374,15 @@ bool sbList::scroll(float amount)
 	int oldDisplace = static_cast<int>(displace);
 
 	// don't allow scroll further then list is
-	if(amount < 0 && itemCurrent->next == NULL && itemCurrent->size().height()+d->_separatorHeight+displace+amount < 0)
+	if(amount < 0.0 && itemCurrent->next == NULL && itemCurrent->size().height()+d->_separatorHeight+displace+amount < 0)
 	{
 		amount = -(itemCurrent->size().height()+d->_separatorHeight+displace);
-		Q_ASSERT(amount <= 0);
+		Q_ASSERT(amount <= 0.0);
 	}
-	if(amount > 0 && itemCurrent->prev == NULL)
+	if(amount > 0.0 && itemCurrent->prev == NULL)
 	{
 		amount = qMin(amount, rect.height()-displace);
-		Q_ASSERT(amount >= 0);
+		Q_ASSERT(amount >= 0.0);
 	}
 
 	if(qAbs(amount) > rect.height()/3)
@@ -464,7 +464,7 @@ void sbList::onPressed( int x, int y)
  */
 void sbList::onReleased(int x, int y)
 {
-	if (itemHover)
+	if(itemHover)
 	{
 		itemHover = 0;
 		Core_->getContentsWidget()->update();
@@ -503,31 +503,52 @@ void sbList::onItem(sbItem *item)
 
 			sword::SWModule *module = reinterpret_cast<sword::SWModule*>(item->index);
 
-			if(Menu::execQuery(QString("Dou you want to install %1 of size %2 KB ?").arg(module->Name()).arg(module->getConfigEntry("InstallSize")), \
+			if(Menu::execQuery(QString("<small>Do you want to install %1 of size %2 KB ?</small>").arg(module->Name()).arg(module->getConfigEntry("InstallSize")),
 			    QStringList() << "Yes" << "No") == 0)
 			{
-				QProgressDialog *dialog = new QProgressDialog(Core_->getMainWidget());
-
-				dialog->setAutoClose(false);
-				dialog->setCancelButtonText("Cancel");
-				dialog->setLabelText(QString("Installing %1").arg(module->Name()));
+				QScopedPointer<Menu> dialog(Menu::createProgress(QString("Installing %1").arg(module->Name())));
 				dialog->show();
-				dialog->repaint();
 
-				Core_->installStatus->setDialog(dialog);
+                //BtInstallThread* installThread = new BtInstallThread(module->name(), sourceName, destination);
+
+				Core_->installStatus->setDialog(dialog.data());
+                //QObject::connect(Core_->getInstallMgr(), SIGNAL(percentCompleted(int, int)), dialog, SLOT(setValue(int)));
+                //QObject::connect(dialog, SIGNAL(canceled()), installThread, SLOT(slotStopInstall()), Qt::QueuedConnection);
+                //QObject::connect(installThread, SIGNAL(installStopped()), dialog, SLOT(hide()), Qt::QueuedConnection);
 
 				success = Core_->getInstallMgr()->installModule(Core_->getSword(), "", module->Name(), source);
 
-				delete dialog;
-
-				if (success >= 0)
+				if(success >= 0)
 				{
-                    // TODO reinit sword
+					// reload modules and restore default module, since pointer
+					// was invalidated after reload
+					QString m;
+					if(Core_->defaultModule)
+						m = Core_->defaultModule->Name();
+					
+					CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+
+					if(m.isEmpty())
+					{
+						foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+						{
+							if(m->category() == CSwordModuleInfo::Bibles)
+							{
+								Core_->defaultModule = m->module();
+								break;
+							}
+						}
+					}
+					else if(!dialog->wasCanceled())
+					{
+						Core_->defaultModule = CSwordBackend::instance()->findModuleByName(m)->module();
+					}
+
 					Core_->switchList(View::TYPE_SELECT_MODULE);
 				}
 				else
 				{
-				    Menu::execQuery(QString("Failed to install %1 (error code: %2)").arg(module->Name()).arg(success));
+				    Menu::execQuery(QString("<small><center>Failed to install %1 (error code: %2)</center></small>").arg(module->Name()).arg(success));
 				}
 			}
 
@@ -551,7 +572,7 @@ void sbList::onItem(sbItem *item)
 					if (std::find(sl.begin(), sl.end(), (*it).first->Type()) == sl.end())
 					{
 						sl.push_back((*it).first->Type());
-						lastItem->attach(sbItem::create(sbItem::LOOK_SEPARATOR, QString((*it).first->Type()),rect.width()),DIRECTION_NEXT);
+						lastItem->attach(sbItem::create(sbItem::LOOK_SEPARATOR, QString("<center><small>%1</small></center>").arg((*it).first->Type()),rect.width()),DIRECTION_NEXT);
 						lastItem = lastItem->next;
 
 						for(std::map<sword::SWModule*, int>::iterator im = it; im != diff.end(); im++)
@@ -560,12 +581,12 @@ void sbList::onItem(sbItem *item)
 							{
 								if ( (*im).second & sword::InstallMgr::MODSTAT_NEW )
 								{
-									lastItem->attach(new sbItem(sbItem::TYPE_MODULE_INSTALLER_MODULE, QString("%1\n<s t=\"6\">%2</s>").arg((*im).first->Name()).arg((*im).first->Description()), rect.width(), (long)(*im).first), DIRECTION_NEXT);
+									lastItem->attach(new sbItem(sbItem::TYPE_MODULE_INSTALLER_MODULE, QString("%1<small><br/>%2</small>").arg((*im).first->Name()).arg((*im).first->Description()), rect.width(), (long)(*im).first), DIRECTION_NEXT);
 									lastItem = lastItem->next;
 								}
 								else if((*im).second & sword::InstallMgr::MODSTAT_UPDATED)
 								{
-									lastItem->attach(new sbItem(sbItem::TYPE_MODULE_INSTALLER_UPDATE, QString("%1<s t=\"6\"> - Update\n%2</s>").arg((*im).first->Name()).arg((*im).first->Description()),rect.width(), (long)(*im).first), DIRECTION_NEXT);
+									lastItem->attach(new sbItem(sbItem::TYPE_MODULE_INSTALLER_UPDATE, QString("%1<small> - Update<br/>%2</small>").arg((*im).first->Name()).arg((*im).first->Description()),rect.width(), (long)(*im).first), DIRECTION_NEXT);
 									lastItem = lastItem->next;
 								}
 							}
@@ -823,6 +844,17 @@ void sbList::onTapped(int x, int y)
                 break;
             }
             break;
+		case 3:
+			{
+				if(Menu::execQuery(QString("You really want to remove %1").arg(module->name()), QStringList() << "Yes" << "No") == 0)
+				{
+					Core_->getInstallMgr()->removeModule(CSwordBackend::instance(), module->name().toLatin1());
+					CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+					//Core_->switchList(type);
+					onActivate();
+				}
+			}
+			break;
         }
     }
 }
@@ -1200,27 +1232,46 @@ void sbList::onActivate()
 	case View::TYPE_MODULE_INSTALLER_DISCLAIMER:
 		{
 			clear();
-			itemCurrent = new sbItem (sbItem::DO_NONE, QString("WARNING\n \nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users.\n \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD <b>NOT</b> USE INSTALL MANAGER'S REMOTE SOURCE FEATURES.\n \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content.\n \nIf you understand this and are willing to enable remote source features then type yes at the prompt."),rect.width());
+			itemCurrent = new sbItem (sbItem::DO_NONE, QString("<center>WARNING!</center>"
+				"<br/><br/>Although Install Manager provides a convenient way for installing "
+				"and upgrading SWORD components, it also uses a systematic method for "
+				"accessing sites which gives packet sniffers a target to lock into for "
+				"singling out users.<br/><br/>IF YOU LIVE IN A PERSECUTED COUNTRY AND DO "
+				"NOT WISH TO RISK DETECTION, YOU SHOULD <b>NOT</b> USE INSTALL MANAGER'S "
+				"REMOTE SOURCE FEATURES.<br/><br/>Also, Remote Sources other than CrossWire "
+				"may contain less than quality modules, modules with unorthodox content, "
+				"or even modules which are not legitimately distributable. Many "
+				"repositories contain wonderfully useful content. These repositories simply "
+				"are not reviewed or maintained by CrossWire and CrossWire cannot be held "
+				"responsible for their content.<br/><br/>If you understand this and are "
+				"willing to enable remote source features then hit Accept button."), rect.width());
 		}
 		break;
 
 	case View::TYPE_MODULE_INSTALLER:
 		{
-            Core_->getInstallMgr()->setUserDisclaimerConfirmed(true);
-
-			sbItem *tempItem;
-			bool refreshed = atoi((*Core_->getInstallMgr()->installConf)["General"].getWithDefault("Refreshed","0"))  == 0 ? false : true;
-
 			clear();
 
+			QScopedPointer<Menu> dialog(Menu::createQuery(" ... "));
+			dialog->show();
+
+			qApp->processEvents();
+
+			Core_->getInstallMgr()->setUserDisclaimerConfirmed(true);
+
+			bool refreshed = atoi((*Core_->getInstallMgr()->installConf)["General"].getWithDefault("Refreshed","0"))  == 0 ? false : true;
 			int success;
+
 			if(!refreshed)
+			{
 			    success = Core_->getInstallMgr()->refreshRemoteSourceConfiguration();
+				if(success != 0)
+				{
+					Menu::execQuery(QString("<small>Failed to refresh repository list<br/>[error %1]</small>").arg(success));
+				}
+			}
 
-			if(success != 0)
-			    qDebug("Install Manager Refresh Sources : %i\n", success);
-
-			tempItem = itemCurrent = sbItem::create(sbItem::LOOK_SEPARATOR, QString("Available repositories:"),rect.width());
+			sbItem *tempItem = itemCurrent = sbItem::create(sbItem::LOOK_SEPARATOR, QString("<center><small>Available repositories:</small></center>"),rect.width());
 			
 			for(sword::InstallSourceMap::iterator it = Core_->getInstallMgr()->sources.begin(); it != Core_->getInstallMgr()->sources.end(); it++)
 			{
@@ -1233,7 +1284,7 @@ void sbList::onActivate()
 				Core_->getInstallMgr()->getModuleStatus(*Core_->getSword(),*(*it).second->getMgr());
 			}
 
-			if (Core_->getInstallMgr()->sources.size() > 0)
+			if(Core_->getInstallMgr()->sources.size() > 0)
 				(*Core_->getInstallMgr()->installConf)["General"]["Refreshed"] = "1";
 		}
 		break;
@@ -1265,7 +1316,7 @@ void sbList::onActivate()
 
             itemCurrent = new sbItem(sbItem::DO_NONE, QString("<div class=\"item\"><center><h3>Welcome to</h3><h2>BibleTime Mini!</h2></center></div>"));
 			
-			if(Core_->defaultModule != NULL)
+			if(Core_->defaultModule)
 			{
 				sword::VerseKey workKey(Core_->defaultModule->getKey());
 
@@ -1294,12 +1345,12 @@ void sbList::onActivate()
 			}
 			else
 			{
-				itemCurrent->attach(new sbItem (sbItem::DO_NONE, QString("No modules Found!\n\nPlease download any Bible module from www.crosswire.org and put \"mods.d\" and \"modules\" folders into application folder."), rect.width()), DIRECTION_NEXT);
+				itemCurrent->attach(new sbItem (sbItem::DO_NONE, QString("<small><br/></small><center><b>No modules Found!</b></center><br/><small><br/>Please, download any Bible module from www.crosswire.org and put \"mods.d\" and \"modules\" folders into \"sword\" folder in application folder.<br/><br/>Or use Install Manager below:</small>"), rect.width()), DIRECTION_NEXT);
 				itemCurrent = itemCurrent->next;
-				itemCurrent->attach(new sbItem (sbItem::TYPE_OPEN_MODULE_INSTALLER, QString("<b><center>Install Modules ...</center></b>"), rect.width()),DIRECTION_NEXT);
+				itemCurrent->attach(new sbItem (sbItem::TYPE_OPEN_MODULE_INSTALLER, QString("<br/><b><center>Install Modules ...</center></b><br/> "), rect.width()),DIRECTION_NEXT);
 				itemCurrent = itemCurrent->next;
             }
-            itemCurrent->attach(new sbItem (sbItem::DO_NONE, QString("<div class=\"item\"><small><center>About :<br/>"
+            itemCurrent->attach(new sbItem (sbItem::DO_NONE, QString("<div class=\"item\"><small><center>"
                 "Built on %1<br/>Using versions: Sword %2, Qt %3, BibleTime %4<br/>Send your feedback to kalemas@mail.ru</center></small></div>" \
                 ).arg(__DATE__).arg(sword::SWVersion::currentVersion.getText()).arg(QT_VERSION_STR).arg(BT_VERSION), rect.width()), DIRECTION_NEXT);
 			itemCurrent = itemCurrent->next;
@@ -1472,35 +1523,40 @@ void sbList::onActivate()
 		{
 			clear();
 
-			sword::StringList sl;
+			QStringList sl;
 			sbItem * tempItem;
 
-			for(sword::ModMap::iterator it = Core_->getSword()->Modules.begin(); it != Core_->getSword()->Modules.end(); it++)
+			//for(sword::ModMap::iterator it = Core_->getSword()->Modules.begin(); it != Core_->getSword()->Modules.end(); it++)
+			foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
 			{
-				if(std::find(sl.begin(),sl.end(),(*it).second->Type()) == sl.end())
+				QString c(m->categoryName(m->category()));
+				if(qFind(sl.begin(), sl.end(), c) == sl.end())
 				{
-					sl.push_back((*it).second->Type());
-					tempItem = sbItem::create(sbItem::LOOK_SEPARATOR, QString((*it).second->Type()),rect.width());
+					sl << c;
+					tempItem = sbItem::create(sbItem::LOOK_SEPARATOR, QString("<small><center>%1</center></small>").arg(c),rect.width());
 
 					if(itemCurrent == NULL)
 						itemCurrent = tempItem;
 					else
 						itemCurrent->attach(tempItem,DIRECTION_NEXT), itemCurrent = itemCurrent->next;
 					
-					for(sword::ModMap::iterator im = it; im != Core_->getSword()->Modules.end(); im++)
+					//for(sword::ModMap::iterator im = it; im != Core_->getSword()->Modules.end(); im++)
+					foreach(CSwordModuleInfo *mm, CSwordBackend::instance()->moduleList())
 					{
-						if(!strcmp((*it).second->Type(),(*im).second->Type()))
+						if(mm->category() == m->category())
 						{
-							itemCurrent->attach(new sbItem (sbItem::TYPE_BUTTON_SELECTION_MODULE, QString("<b>%1</b><br/><small>%2</small>").arg((*im).second->Name()).arg((*im).second->Description()), rect.width(), (long)(*im).second), DIRECTION_NEXT);
+							itemCurrent->attach(new sbItem (sbItem::TYPE_BUTTON_SELECTION_MODULE, 
+								QString("<b>%1</b><br/><small>%2</small>").arg(mm->name()).arg(mm->module()->Description()),
+								rect.width(), (long)(mm->module())), DIRECTION_NEXT);
 							itemCurrent = itemCurrent->next;
 
-							if(Core_->currentModule == (*im).second)
+							if(Core_->currentModule == mm->module())
 							    itemCurrent->highlighted = true;
 						}
 					}
 				}
 			}
-			tempItem = sbItem::create (sbItem::TYPE_OPEN_MODULE_INSTALLER, QString("<b><center>Install Modules ...</center></b>"), rect.width());
+			tempItem = sbItem::create (sbItem::TYPE_OPEN_MODULE_INSTALLER, QString("<br/><b><center>Install Modules ...</center></b><br/> "), rect.width());
 
 			itemCurrent == NULL ? itemCurrent = tempItem : itemCurrent->attach(tempItem, DIRECTION_NEXT);
 
@@ -1631,25 +1687,44 @@ void sbList::onActivate()
 	Core_->getContentsWidget()->update();
 
     // show tips
-    if(type == View::TYPE_MODULE_VIEW && CBTConfig::get(CBTConfig::showTipAboutModules))
+	QString tipText;
+	CBTConfig::bools tipId;
+    static QBitArray tipShown(View::TYPES_COUNT);
+
+	if(type == View::TYPE_MODULE_VIEW && CBTConfig::get(tipId = CBTConfig::showTipAboutModules))
+		tipText = "Texts Window\nYou can scroll up/down to read text and slide left/right "
+			"for texts switching. By sliding active view left or right, you will get an empty "
+			"view, where you can create, for example, commentary for verse from Bible view. "
+			"Current verse and module selection and also search is accessible by GOTO button.";
+	if(type == View::TYPE_SEARCH && CBTConfig::get(tipId = CBTConfig::showTipAboutSearch))
+		tipText = "Search Window\nYou should have default virtual keyboard with Enter key to "
+			"perform search. To setup search range go to Place selection window by pressing "
+			"BOOK button and make a long tap on book or chapter you want to make start or "
+			"end of search.";
+
+    if(!tipText.isEmpty() && !tipShown[type])
     {
         QScopedPointer<Menu> dialog(new Menu);
         QVBoxLayout *v = new QVBoxLayout;
+        
+		QFont f;
+        
+        ItemView *lv = new ItemView(dialog.data());
 
-        QLabel *l = new QLabel("Here are texts. You can scroll up/down to read text and "
-            "slide left/right to switch texts. By sliding active view left or right, you "
-            "will get an empty view, where you can create, for example, commentary for "
-            "verse from Bible view. Current verse and module selection and also search is "
-            "accessible by Goto button.", dialog.data());
+		lv->setAttribute(Qt::WA_InputMethodEnabled, false);
+        lv->setMinimumWidth(Core_->getMainWidget()->width()*0.7);
+        lv->setMinimumHeight(Core_->getMainWidget()->height()*0.5);
+		
+		f = lv->font();
+		f.setPixelSize(f.pixelSize() * 0.6);
+		f.setBold(false);
+		lv->setFont(f);
 
-        l->setWordWrap(true);
-        l->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        QStandardItemModel *sm = new QStandardItemModel;
+        sm->invisibleRootItem()->appendRow(new QStandardItem(tipText));
 
-        QFont f = l->font();
-        f.setPixelSize(f.pixelSize() * 0.75);
-        f.setBold(false);
-        l->setFont(f);
-
+        lv->setModel(sm);
+     
         QCheckBox *cb = new QCheckBox("show again", dialog.data());
 
         cb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
@@ -1660,7 +1735,7 @@ void sbList::onActivate()
         f.setBold(true);
         cb->setFont(f);
 
-        v->addWidget(l, 0, Qt::AlignCenter);
+        v->addWidget(lv, 0, Qt::AlignCenter);
         v->addWidget(cb, 0, Qt::AlignCenter);
 
         dialog->setLayout(v);
@@ -1668,7 +1743,8 @@ void sbList::onActivate()
         dialog->exec();
 
         if(!cb->isChecked())
-            CBTConfig::set(CBTConfig::showTipAboutModules, false);
+			CBTConfig::set(tipId, false);
+        tipShown[type] = true;
     }
 }
 
@@ -1744,97 +1820,84 @@ bool sbList::onKey ( int key )
 
 void sbList::performSearch(QString request)
 {
-    CSwordModuleSearch searcher;
+	if(request.isEmpty())
+		return;
 
-    CSwordModuleInfo *m = CSwordBackend::instance()->findSwordModuleByPointer(Core_->currentModule);
+	qDebug() << "Start search" << request;
+	
+	sword::ListKey result;
 
-    if(!m->hasIndex())
-    {
-        if(Menu::execQuery("Build index for module?", QStringList() << "Yes" << "No") != 0)
-            return;
+	if(CBTConfig::get(CBTConfig::searchUsingSword))
+	{
+	    // Sword search
+		QScopedPointer<Menu> dialog(Menu::createProgress("Search ..."));
+		dialog->show();
 
-        QScopedPointer<Menu> dialog(Menu::createProgress("Indexing..."));
+		Core_->currentModule->createSearchFramework();
+		result = Core_->currentModule->search(request.toUtf8(), 0, 0, \
+		  &Core_->searchRange, 0, &sbListPrivate::searchProgress, dialog.data());
+		
+		// we don't want to delete index
+		//Core_->currentModule->deleteSearchFramework();
 
-        QObject::connect(dialog.data(), SIGNAL(canceled()), m, SLOT(cancelIndexing()));
-        QObject::connect(m, SIGNAL(indexingFinished()), dialog.data(), SLOT(finish()));
-        QObject::connect(m, SIGNAL(indexingProgress(int)), dialog.data(), SLOT(setPercent(int)));
+		if(dialog->wasCanceled() || Core_->currentModule->terminateSearch)
+			return;
+	}
+	else
+	{
+		// BibleTime search
+		CSwordModuleSearch searcher;
 
-        dialog->show();
+		CSwordModuleInfo *m = CSwordBackend::instance()->findSwordModuleByPointer(Core_->currentModule);
 
-        if(!m->buildIndex() || dialog->wasCanceled())
-        {
-            if (m->hasIndex())
-                m->deleteIndex();
-            return;
-        }
-    }
+        // build index if abcent
+		if(!m->hasIndex())
+		{
+			if(Menu::execQuery("Build index for module?", QStringList() << "Yes" << "No") != 0)
+				return;
 
-    // Set the search options:
-    searcher.setSearchedText(request);
-    searcher.setModules(QList<const CSwordModuleInfo*>() << m);
-    searcher.setSearchScope(Core_->searchRange);
-    
-    searcher.startSearch();
+			QScopedPointer<Menu> dialog(Menu::createProgress("Indexing..."));
 
-    clear();
+			QObject::connect(dialog.data(), SIGNAL(canceled()), m, SLOT(cancelIndexing()));
+			QObject::connect(m, SIGNAL(indexingProgress(int)), dialog.data(), SLOT(setValue(int)));
 
-    // Display the search results:
-    foreach(sword::ListKey r, searcher.results())
-    {
-        for(int i=0; i < r.Count(); ++i)
-        {
-            sbItem *item = new sbItem (sbItem::TYPE_BUTTON_BOOKMARK, QString::fromUtf8(r.GetElement(i)->getText()), rect.width(), r.GetElement(i)->Index());
-    	    if(itemCurrent)
-    	    {
-    		    itemCurrent->attach(item, DIRECTION_NEXT);
-    		    itemCurrent = itemCurrent->next;
-    	    }
-    	    else
-    		    itemCurrent = item;
-        }
-    }
-    while(itemCurrent && itemCurrent->prev)
-    	itemCurrent = itemCurrent->prev;
+			dialog->show();
 
-    Core_->getContentsWidget()->update();
+			if(!m->buildIndex() || dialog->wasCanceled())
+			{
+				if (m->hasIndex())
+					m->deleteIndex();
+				return;
+			}
+		}
 
-	//if(request.isEmpty())
-	//	return;
+		// set the search parameters
+		searcher.setSearchedText(request);
+		searcher.setModules(QList<const CSwordModuleInfo*>() << m);
+		searcher.setSearchScope(Core_->searchRange);
 
-	//qDebug() << "Start search" << request;
+		searcher.startSearch();
+		
+		result = searcher.results()[m];
+	}
+	
+	// put data into view
+	clear();
 
-	//QProgressDialog *dialog = new QProgressDialog(Core_->getMainWidget());
+	for(int i=0; i < result.Count(); ++i)
+	{
+		sbItem *item = new sbItem (sbItem::TYPE_BUTTON_BOOKMARK, QString::fromUtf8(result.GetElement(i)->getText()), rect.width(), result.GetElement(i)->Index());
+		if(itemCurrent)
+		{
+			itemCurrent->attach(item, DIRECTION_NEXT);
+			itemCurrent = itemCurrent->next;
+		}
+		else
+			itemCurrent = item;
+	}
+	
+	while(itemCurrent && itemCurrent->prev)
+		itemCurrent = itemCurrent->prev;
 
-	//dialog->setMaximum(100);
-	//dialog->setAutoClose(false);
-	//dialog->setCancelButtonText("Cancel");
-	//dialog->setLabelText(QString("Search for %1").arg(request));
-	//dialog->show();
-	//dialog->repaint();
-
-	//Core_->currentModule->createSearchFramework();
-	//
-	//sword::ListKey result = Core_->currentModule->search(request.toUtf8(), 0, 0, \
-    //  &Core_->searchRange, 0, &sbListPrivate::searchProgress, dialog);
-	//
-	//Core_->currentModule->deleteSearchFramework();
-
-	//delete dialog;
-
-	//clear();
-	//for(int i=0; i < result.Count(); ++i)
-	//{
-	//	sbItem *item = new sbItem (sbItem::TYPE_BUTTON_BOOKMARK, QString::fromUtf8(result.GetElement(i)->getText()), rect.width(), result.GetElement(i)->Index());
-	//	if(itemCurrent)
-	//	{
-	//		itemCurrent->attach(item, DIRECTION_NEXT);
-	//		itemCurrent = itemCurrent->next;
-	//	}
-	//	else
-	//		itemCurrent = item;
-	//}
-	//while(itemCurrent && itemCurrent->prev)
-	//	itemCurrent = itemCurrent->prev;
-
-    //Core_->getContentsWidget()->update();
+	Core_->getContentsWidget()->update();
 }

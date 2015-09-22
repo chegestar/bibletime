@@ -36,17 +36,18 @@ kalemas@mail.ru :
 +	power consurmption on device
 -		activate/deactivate events dont work on wince
 +			fix: make test on timer for active window
-	make device to vibrate
++	make device to vibrate
 	tips
-		check box for style
+*		check box for style
 		ItemView to show scrollable text item
-		on search view: how to set range
++		on search view: how to set range
 +		on module view: sliding left/right to add module views
 	memory leaking
 		crtdebug detect leaking starting from QApplication init
-	fix stretch surface
 ?	buttons instead label in header
 	application settings dialog
+		search type
+		font size
 	model/view architecture for lists
 		at least view for sbList
 	scrollbar
@@ -59,6 +60,8 @@ kalemas@mail.ru :
 		font enumeration in font-family dont work
 	try webkit for wince (QWebFrame instead QTextDocument)
 	replace unistd.h with io.h/direct.h
+	fix stretch surface
+	translation
 	
 === known tasks ================================================================
 	module features controls, global sword options for module in expanding panel

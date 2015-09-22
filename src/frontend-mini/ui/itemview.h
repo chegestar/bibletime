@@ -16,17 +16,33 @@
 #ifndef BT_MINI_ITEMVIEW_H
 #define BT_MINI_ITEMVIEW_H
 
-#include <QAbstractItemView>
+#include <QApplication>
 #include <QAbstractListModel>
+#include <QListView>
 #include <QTextDocument>
 
-class ItemView : public QAbstractItemView
+class ItemViewPrivate;
+
+class ItemView : public QListView
 {
     Q_OBJECT
 
 public:
     ItemView(QWidget *parent = 0);
     ~ItemView();
+
+    void scroll(float amount);
+
+protected:
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+
+    void timerEvent(QTimerEvent *e);
+
+private:
+    Q_DECLARE_PRIVATE(ItemView)
+    ItemViewPrivate * const d_ptr;
 
 };
 
@@ -54,7 +70,7 @@ public:
 
         if(!_size.isNull())
         {
-            td->setTextWidth(_size().width());
+            td->setTextWidth(_size.width());
             _size.setHeight(td->size().height());
         }
 

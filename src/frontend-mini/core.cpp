@@ -1,6 +1,5 @@
 /*************************************************************************
- * core.cpp - application
- *            initial initialization and final deinitialization
+ * core.cpp - application initial initialization and final deinitialization
  *
  * author: Konstantin Maslyuk "Kalemas" mailto:kalemas@mail.ru
  *
@@ -133,8 +132,8 @@ protected:
 		{
 			Core_->dumpObjectTree();
 			Core_->dumpObjectInfo();
-			Core_->d_func()->_mainWidget->dumpObjectTree();
-			Core_->d_func()->_mainWidget->dumpObjectInfo();
+			dumpObjectTree();
+			dumpObjectInfo();
 		}
     }
 
@@ -183,7 +182,7 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
 	changedGlobalOptions = false;
 	waitMode             = false;
 
-    setApplicationName("SlideBible");
+    setApplicationName("BibleTime Mini");
     setOrganizationName("Crosswire");
 	setApplicationVersion(BT_VERSION);
     setAutoSipEnabled(true);
@@ -231,27 +230,12 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
 	CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
 	backend->deleteOrphanedIndices();
 
-    //defaultModule = backend->findModuleByName((*d->options)["Sword"].getWithDefault("DefaultModule", "KJV").c_str())->module();
-	//if(!defaultModule)
-	//{
-	//	foreach(CSwordModuleInfo *m, backend->moduleList())
-	//	{
-	//		if(m->category() == CSwordModuleInfo::Bibles)
-	//		{
-	//			defaultModule = m->module();
-	//			break;
-	//		}
-	//	}
-	//}
-	
-    CSwordModuleInfo *defaultInfo = CBTConfig::get(CBTConfig::standardBible);
-    
-    if(defaultInfo)
-        defaultModule = defaultInfo->module();
+	defaultModule = 0;
+    if(CBTConfig::get(CBTConfig::standardBible))
+        defaultModule = CBTConfig::get(CBTConfig::standardBible)->module();
     else
     {
-        qWarning("InitCore: failed to get default module");
-    	foreach(CSwordModuleInfo *m, backend->moduleList())
+        foreach(CSwordModuleInfo *m, backend->moduleList())
     		if(m->category() == CSwordModuleInfo::Bibles)
     		{
     			defaultModule = m->module();
@@ -261,17 +245,8 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
 
 	features.load();
 
-#ifndef Q_OS_WINCE
-    QFile styleSheet(util::directory::getPicsDir().absolutePath()+"/application.css");
-
-    if (!styleSheet.open(QIODevice::ReadOnly))
-        qWarning(("Init Core: unable to open "+styleSheet.fileName()).toLatin1());
-    else
-        setStyleSheet(styleSheet.readAll());
-#endif
-
     // select window and font size, according to screen resolution and physical size
-    QSize size(300, 400);
+    QSize size(240, 320);
 
 #ifdef Q_WS_WINCE
     size = QApplication::desktop()->size();
@@ -327,36 +302,22 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
 		b10->setObjectName("moduleinstaller: accept");
 		b11->setObjectName("moduleinstaller: decline");
 
-		QObject::connect(e1, SIGNAL(returnPressed()), d->_contentsWidget, SLOT(performSearch()));
+        // setup signals
+        foreach(Button *b, QList<Button*>() << b1 << b2 << b3 << b4 << b5 << b6 << b7 << b8 <<
+            b10 << b11)
+            connect(b, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
+        connect(e1, SIGNAL(returnPressed()), d->_contentsWidget, SLOT(performSearch()));
+		connect(b9, SIGNAL(clicked()), exitQuery, SLOT(exec()));
 
-		QObject::connect(b1, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b2, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b3, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b4, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b5, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b6, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b7, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b8, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b9, SIGNAL(clicked()), exitQuery, SLOT(exec()));
-		QObject::connect(b10, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-		QObject::connect(b11, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
-
+        // put into widget
 		QVBoxLayout *verticalLayout = new QVBoxLayout();
 		QHBoxLayout *controlsLayout = new QHBoxLayout();
 
 		verticalLayout->addWidget(e1);
 
-		controlsLayout->addWidget(b1);
-		controlsLayout->addWidget(b2);
-		controlsLayout->addWidget(b3);
-		controlsLayout->addWidget(b4);
-		controlsLayout->addWidget(b5);
-		controlsLayout->addWidget(b6);
-		controlsLayout->addWidget(b7);
-		controlsLayout->addWidget(b8);
-		controlsLayout->addWidget(b9);
-		controlsLayout->addWidget(b10);
-		controlsLayout->addWidget(b11);
+        foreach(QPushButton *b, QList<QPushButton*>() << b1 << b2 << b3 << b4 << b5 << b6 <<
+            b7 << b8 << b9 << b10 << b11)
+            controlsLayout->addWidget(b);
 		
 		foreach(QObject *o, d->_controlsWidget->children())
 		    if(QWidget *w = qobject_cast<QWidget*>(o))
@@ -364,6 +325,7 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
 
 		verticalLayout->addLayout(controlsLayout);
 
+        // HACK to make correct work of SIP panel on WinCE
 		d->_sipSpacer = new QSpacerItem(d->_mainWidget->width(), 0);
 		verticalLayout->addItem(d->_sipSpacer);
 
@@ -384,11 +346,13 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
         QObject::connect(b1, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
         QObject::connect(b2, SIGNAL(clicked(QVariant)), Core_, SLOT(switchList(QVariant)));
 
-        const int s = qMin(size.width(), size.height())/6;
-        b1->setMaximumWidth(s);
-        b1->setMaximumHeight(s);
-        b2->setMaximumWidth(s);
-        b2->setMaximumHeight(s);
+        const int maxSize = qMin(size.width(), size.height())/6;
+        const QSize iconSize(font().pixelSize()*1.3, font().pixelSize()*1.3);
+        b1->setMaximumSize(maxSize, maxSize);
+        b1->setIconSize(iconSize);
+        b2->setMaximumSize(maxSize, maxSize);
+        b2->setIconSize(iconSize);
+
 
         b1->setObjectName("arrow left");
         b2->setObjectName("arrow right");
@@ -424,8 +388,7 @@ Core::Core(int argc, char *argv[]) : QApplication(argc, argv), d_ptr(new CorePri
     layout->addWidget(d->_controlsWidget);
     
     d->_mainWidget->setLayout(layout);
- 
-	d->_mainWidget->resize(size);
+ 	d->_mainWidget->resize(size);
 
 #ifdef Q_OS_WINCE
     d->_mainWidget->show();
@@ -594,7 +557,8 @@ sword::InstallMgr * Core::getInstallMgr()
 	if (d->installManager == NULL) 
     {
         installStatus = new InstallStatus;
-		d->installManager = new sword::InstallMgr ("./install/", installStatus);
+        d->installManager = new sword::InstallMgr("./install/", installStatus);
+		//d->installManager = new BtInstallMgr();
     }
 	return d->installManager;
 }
@@ -647,9 +611,12 @@ void Core::setModulePlace(QVariant place)
 void Core::desktopResized(int screen)
 {
 	Q_D(Core);
-	QRect availableGeometry = QApplication::desktop()->availableGeometry();
-	d->_sipSpacer->changeSize(d->_mainWidget->width(), d->_mainWidget->height()-availableGeometry.bottom()-1);
-	d->_controlsWidget->layout()->invalidate();
+    if(d->_sipSpacer)
+    {
+	    QRect availableGeometry = QApplication::desktop()->availableGeometry();
+	    d->_sipSpacer->changeSize(d->_mainWidget->width(), d->_mainWidget->height()-availableGeometry.bottom()-1);
+	    d->_controlsWidget->layout()->invalidate();
+    }
 }
 
 void Core::timerEvent(QTimerEvent *e)

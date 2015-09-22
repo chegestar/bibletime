@@ -1,5 +1,5 @@
 /*************************************************************************
-* view.cpp - contents widget
+* contents.cpp - contents widget
 *
 * author: Konstantin Maslyuk "Kalemas" mailto:kalemas@mail.ru
 *
@@ -13,11 +13,8 @@
 * General Public License for more details.
 ************************************************************************/
 
-#include <QElapsedTimer>
 #include <QDateTime>
-#ifdef Q_OS_WINCE
-#include <QLibrary>
-#endif
+#include <QElapsedTimer>
 #include <QLineEdit>
 #include <QListView>
 #include <QMap>
@@ -27,9 +24,39 @@
 #include <QStack>
 #include <QtCore/qmath.h>
 
+
 #include "contents.h"
 #include "core.h" // remove if possible
 #include "state.h"
+
+
+// vibration
+#ifdef Q_OS_WINCE
+#include  <windows.h>
+#include  <nled.h>
+
+// from the platform builder <Pwinuser.h>
+extern "C"
+{
+	BOOL WINAPI NLedGetDeviceInfo(UINT nInfoId, void *pOutput);
+	BOOL WINAPI NLedSetDevice(UINT nDeviceId, void *pInput);
+};
+
+void LedOn(int id)
+{
+	NLED_SETTINGS_INFO settings;
+	settings.LedNum = id;
+	settings.OffOnBlink = 1;
+	NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
+}
+void LedOff(int id)
+{
+	NLED_SETTINGS_INFO settings;
+	settings.LedNum = id;
+	settings.OffOnBlink = 0;
+	NLedSetDevice(NLED_SETTINGS_INFO_ID, &settings);
+}
+#endif
 
 class ViewPrivate
 {
@@ -141,9 +168,9 @@ void ContentsWidget::paintEvent(QPaintEvent *e)
             d->_views[d->_currentView]->render(&painter, -d->_viewShift);
 
             if(d->_viewShift > 0)
-                d->_views[d->_currentView]->getNext()->render(&painter, -d->_viewShift+d->_rect.width());
+                d->_views[d->_currentView]->getNext()->render(&painter, -d->_viewShift + rect().width());
             else
-                d->_views[d->_currentView]->getPrev()->render(&painter, -d->_viewShift-d->_rect.width());
+                d->_views[d->_currentView]->getPrev()->render(&painter, -d->_viewShift - rect().width());
         }
 
         if(d->_views[d->_currentView]->needScroll != 0)
@@ -333,7 +360,7 @@ void ContentsWidget::mouseMoveEvent(QMouseEvent *e)
 
     if(d->_views[d->_currentView] != NULL)
     {
-        if(qAbs(d->_mouseStart.x()-e->x()) > (d->_rect.right()/6)+(qAbs(d->_mouseStart.y()-e->y())/2))
+        if(qAbs(d->_mouseStart.x()-e->x()) > (rect().right()/6)+(qAbs(d->_mouseStart.y()-e->y())/2))
             d->_viewShift = d->_mouseStart.x()-e->x();
         else
             d->_viewShift = 0;
@@ -371,32 +398,9 @@ void ContentsWidget::timerEvent(QTimerEvent *e)
         if(d->_mouseTapping == 11)
         {
 #ifdef Q_OS_WINCE
-			typedef struct
-			{
-				WORD wDuration;
-				BYTE bAmplitude;
-				BYTE bFrequency;
-			} VIBRATENOTE;
-
-			static bool resolved = false;
-			static HRESULT (*vibrate)(DWORD cvn, const VIBRATENOTE *rgvn, BOOL fRepeat, DWORD dwTimeout) = 0;
-			if(!resolved)
-			{
-				QLibrary lib("aygshell");
-				if(lib.load())
-				{
-					*((void**)&vibrate) = lib.resolve("Vibrate");
-					if(!vibrate)
-						qDebug("Failed to resolve symbol: Vibrate.");
-                    else
-                        qDebug("Successful resolved symbol: Vibrate.");
-				}
-				else
-					qDebug("Failed to load library: aygshell.");
-				resolved = true;
-			}
-			if(vibrate)
-				vibrate(0, NULL, FALSE, 2000);
+			LedOn(1); 
+			Sleep(30);
+			LedOff(1);
 #endif
         }
         d->_mouseTapping++;
@@ -404,23 +408,23 @@ void ContentsWidget::timerEvent(QTimerEvent *e)
 
     if(d->_viewShift != 0 && !d->_mouseDown)
     {
-        if(qAbs(d->_viewShift) >= d->_rect.width())
+        if(qAbs(d->_viewShift) >= rect().width())
         {
-            Core_->switchList(d->_viewShift > 0 ? View::PIN_NEXT : View::PIN_PREV);
+            switchView(d->_viewShift > 0 ? View::PIN_NEXT : View::PIN_PREV);
             d->_viewShift = 0;
         }
         else
         {
             if(d->_viewShift > 0)
-                d->_viewShift += (int)qCeil((d->_rect.width()-d->_viewShift)*0.44f);
+                d->_viewShift += (int)qCeil((rect().width() - d->_viewShift)*0.44f);
             else
-                d->_viewShift -= (int)qCeil((d->_rect.width()+d->_viewShift)*0.44f);
+                d->_viewShift -= (int)qCeil((rect().width() + d->_viewShift)*0.44f);
 
-            if(d->_viewShift > d->_rect.width())
-                d->_viewShift = d->_rect.width();
+            if(d->_viewShift > rect().width())
+                d->_viewShift = rect().width();
 
-            if(d->_viewShift < -d->_rect.width())
-                d->_viewShift = -d->_rect.width();
+            if(d->_viewShift < -rect().width())
+                d->_viewShift = -rect().width();
             update();
         }
     }
@@ -469,6 +473,9 @@ void ContentsWidget::switchView(QVariant typeVariant)
 
 	Core_->threadDestroy();
 
+	// call update before sbList::onActivate for correct painting of Menu
+	update();
+
 	if(oldList != d->_views[d->_currentView])
 	{
 		d->_views[d->_currentView]->onActivate();
@@ -490,12 +497,12 @@ void ContentsWidget::switchView(QVariant typeVariant)
 
     d->_viewShift  = 0;
     d->_mousePower = 0.0f;
-    update();
 }
 
 QSize ContentsWidget::getSize() const
 {
-	return d_ptr->_rect.size();
+	//return d_ptr->_rect.size();
+    return size();
 }
 
 void ContentsWidget::performSearch()
