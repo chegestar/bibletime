@@ -119,7 +119,7 @@ public:
             BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +
             "<br/><br/>" +
             BtMiniSettingsModel::tr("Underlying frameworks:") +
-            "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.10.dev</td></tr></table>"
+            "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">" BT_VERSION "</td></tr></table>"
             "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" SWORD_VERSION_STR "</td></tr></table>"
             "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
             "</body>"));
