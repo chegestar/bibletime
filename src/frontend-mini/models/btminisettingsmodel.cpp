@@ -263,7 +263,8 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
                "it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to "
                "input box at the top your request. Try to use wildcards \"*\" (like \"take*\"), keywords (like \"strong:G1203\" "
                "or \"footnote:Eve\"), and combine several words. Note, you should have keyboard with Enter key on your keyboard to "
-               "start search, or on some platforms there is way to insert Return Carriage symbol.") + "<br/><br/>" +
+               "start search, or on some platforms there is way to insert Return Carriage symbol.<br/>Long pressing on item will bring "
+			   "verse to reading window.") + "<br/><br/>" +
             tr("<b>Default Modules.</b> There are several types of modules: default Bible is used to render cross-references, "
                "default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in "
                "context popup. To change default modules, when you open Module Selection popup, make long press on module you "

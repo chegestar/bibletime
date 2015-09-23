@@ -31,6 +31,10 @@
 #include <QTranslator>
 #include <QtDebug>
 
+#if QT_VERSION >= 0x050000
+#include <QAbstractNativeEventFilter>
+#endif
+
 #include <swlog.h>
 
 #include "backend/config/btconfig.h"
@@ -288,6 +292,57 @@ public:
     }
 
 
+    static bool eventFilterFunction(void *message, long *result)
+	{
+#ifdef Q_OS_WINCE
+		static bool enteredMainLoop = false;
+		MSG *msg = reinterpret_cast<MSG *>(message);
+
+		Q_CHECK_PTR(msg);
+
+	    switch(msg->message)
+		{
+		case WM_PAINT:
+			if(!enteredMainLoop)
+				qDebug("Start");
+			enteredMainLoop = true;
+			break;
+		case WM_ACTIVATE:
+			if(enteredMainLoop)
+			{
+				int active = LOWORD(msg->wParam);
+				bool minimized = (BOOL) HIWORD(msg->wParam);
+
+				if(BtMini::mainWidget()->winId() == msg->hwnd)
+					BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
+			}
+			break;
+		case WM_CLOSE: qDebug("Close"); break;
+		case WM_HIBERNATE: qDebug("Low memory");break;
+		}
+#endif
+		return false;
+	 }
+
+#if QT_VERSION >= 0x050000
+    class EventFilterProcessor : public QAbstractNativeEventFilter
+    {
+    public:
+        EventFilterProcessor() {;}
+
+        bool nativeEventFilter(const QByteArray & eventType, void * message, long * result)
+        {
+            eventFilterFunction(message, result);
+        }
+    };
+
+    static EventFilterProcessor* eventFilterProcessor()
+    {
+        static EventFilterProcessor s;
+        return &s;
+    }
+#endif
+
 protected:
     QSize sizeHint() const
     {
@@ -371,7 +426,9 @@ QWidget * BtMini::mainWidget()
 #ifdef Q_OS_SYMBIAN
         double factor = 14.0;
 #else
-        // desktop 96 dpi, 16 factor is good
+        // desktop 96 dpi 72 physical, 16 factor is good
+		// htc touch diamond 192, 16 factor, text is little small on screen
+		// htc hd2 android 232, factor 16 is good
         double factor = 16.0;
 #endif
 
@@ -876,12 +933,14 @@ int main(int argc, char *argv[])
 {
 #if QT_VERSION < 0x050000
     qInstallMsgHandler(BtMiniMessageHandler);
+    BibleTimeApp app(argc, argv);
+    app.setEventFilter(BtMiniMainWidget::eventFilterFunction);
 #else
     qInstallMessageHandler(BtMiniMessageHandler);
+    BibleTimeApp app(argc, argv);
+    app.installNativeEventFilter(BtMiniMainWidget::eventFilterProcessor());
 #endif
 
-    // Init application
-    BibleTimeApp app(argc, argv);
 
     //registerMetaTypes();
 
