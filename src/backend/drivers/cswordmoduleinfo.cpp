@@ -441,6 +441,15 @@ void CSwordModuleInfo::buildIndex() {
                 }
             }
 
+#ifdef Q_OS_WINCE
+            static int hits = 0;
+            if(++hits >= 100)
+            {
+                writer->optimize();
+                hits = 0;
+            }
+#endif
+
             m_module->increment();
         } // while (!(m_module->Error()) && !m_cancelIndexing)
 
