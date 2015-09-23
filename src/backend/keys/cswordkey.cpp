@@ -191,3 +191,16 @@ const BtSignal * CSwordKey::afterChangedSignaller() {
 
     return m_afterChangedSignaller;
 }
+
+bool CSwordKey::haveText()
+{
+    if (!m_module) return false;
+
+    if (dynamic_cast<sword::SWKey*>(this)) {
+        m_module->module()->getKey()->setText( rawKey() );
+    }
+
+    if (key().isNull()) return false;
+
+    return qstrlen(m_module->module()->getRawEntry());
+}

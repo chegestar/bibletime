@@ -99,6 +99,9 @@ public: /* Types: */
     /** Check whether key is valid. Can be invalidated during av11n mapping. */
     inline bool isValid() const { return m_valid; }
 
+    /** Like rawText, but only test if entry have content, without any conversion. */
+    bool haveText();
+
     /**
       This is called before a key change to emit a signal
     */
