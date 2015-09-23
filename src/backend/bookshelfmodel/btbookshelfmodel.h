@@ -32,7 +32,6 @@ class BtBookshelfModel: public QAbstractListModel {
 public: /* Types: */
 
     enum ModuleRole {
-        ModuleNameRole = Qt::DisplayRole,
         ModuleIconRole = Qt::DecorationRole,
         ModulePointerRole  = Qt::UserRole,
         ModuleCategoryRole = Qt::UserRole + 1,
@@ -42,6 +41,7 @@ public: /* Types: */
         ModuleHasIndexRole = Qt::UserRole + 5,
         ModuleIndexSizeRole = Qt::UserRole + 6,
         ModuleDescriptionRole = Qt::UserRole + 7,
+        ModuleNameRole = Qt::UserRole + 8,
         UserRole = Qt::UserRole + 100
     };
 
