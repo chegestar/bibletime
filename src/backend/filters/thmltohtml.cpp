@@ -367,14 +367,14 @@ bool ThmlToHtml::handleToken(sword::SWBuf &buf, const char *token,
             if (value[0] == '/')
                 value++; //strip the first /
 
-            buf.append("<img src=\"")
-               .append(
-                    QUrl::fromLocalFile(
-                        QTextCodec::codecForLocale()->toUnicode(
-                            myUserData->module->getConfigEntry(
-                                "AbsoluteDataPath")
-                        ).append('/').append(QString::fromUtf8(value))
-                    ).toString().toUtf8().constData())
+            buf.append("<img src=\"");
+            QString absPath(QTextCodec::codecForLocale()->toUnicode(myUserData->module->getConfigEntry("AbsoluteDataPath")));
+#ifdef BT_MINI
+            if(absPath[0] == '.') absPath.replace(0, 2, CSwordBackend::instance()->prefixPath);
+            if(absPath[0] == '.') absPath.replace(0, 1, QCoreApplication::applicationDirPath());
+#endif
+            QString url(QUrl::fromLocalFile(absPath.append('/').append(QString::fromUtf8(value))).toString());
+            buf.append(url.toUtf8().data())
                .append("\" />");
         } else { // Let unknown token pass thru:
             return sword::ThMLHTML::handleToken(buf, token, userData);
