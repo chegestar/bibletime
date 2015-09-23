@@ -82,9 +82,14 @@ public:
 	/** View does not update subviews during sleeping. */
 	void setSleep(bool sleep);
 
+    /** */
     void setWebKitEnabled(bool enable);
 
+    /** */
     void setContinuousScrolling(bool enable);
+
+    /** Allow mor than one column in one view. Default is 1. */
+    void setColumnsCount(int columns);
 
 public slots:
     /** Reimplemented from QAbstractItemView. */

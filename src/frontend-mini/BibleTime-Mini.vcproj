@@ -51,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="3"
 				AdditionalIncludeDirectories="&quot;$(OutDir)\GeneratedFiles&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\qtmain&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;.;.\..\..\..\sword\include;.\..;&quot;.\..\..\$(ConfigurationName)\GeneratedFiles&quot;;..\..\..\clucene\src;&quot;$(QTDIR)\include\QtSvg&quot;;&quot;$(QTDIR)\include\QtXml&quot;;&quot;$(QTDIR)\src\3rdparty\harfbuzz\src&quot;"
-				PreprocessorDefinitions="QT_LARGEFILE_SUPPORT;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;BT_MINI;_CL_DISABLE_MULTITHREADING;LUCENE_DISABLE_MEMTRACKING;QT_SVG_LIB;QT_XML_LIB;SWUSINGDLL"
+				PreprocessorDefinitions="QT_LARGEFILE_SUPPORT;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;_CL_DISABLE_MULTITHREADING;LUCENE_DISABLE_MEMTRACKING;QT_SVG_LIB;QT_XML_LIB;SWUSINGDLL;BT_MINI;BT_MINI_VERSION#\&quot;0.9.0\&quot;;BT_MINI_WEBKIT"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				DefaultCharIsUnsigned="true"
@@ -71,7 +71,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/SUBSYSTEM:WINDOWS"
-				AdditionalDependencies="qtmain.lib QtCore.lib QtSvg.lib QtGui.lib ..\..\..\build\win32\sword\Release\sword.lib Ws2_32.lib QtXml.lib"
+				AdditionalDependencies="qtmain.lib QtCore4.lib QtSvg4.lib QtGui4.lib QtWebKit4.lib ..\..\..\build\win32\sword\Release\sword.lib Ws2_32.lib QtXml4.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;"
 				GenerateDebugInformation="false"
@@ -130,7 +130,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;$(OutDir)\GeneratedFiles&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\qtmain&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;.;.\..\..\..\sword\include;.\..\..\..\sword\src\utilfuns\wince;.\..;&quot;.\..\..\$(ConfigurationName)\GeneratedFiles&quot;;..\..\..\clucene\src;&quot;$(QTDIR)\include\QtSvg&quot;;&quot;$(QTDIR)\include\QtXml&quot;;&quot;$(QTDIR)\src\3rdparty\harfbuzz\src&quot;"
-				PreprocessorDefinitions="UNDER_CE;WINCE;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;_WIN32_WCE=0x501;ARMV4I;_ARMV4I_;armv4i;_ARM_;ARM;_M_ARM;__arm__;QT_THREAD_SUPPORT;QT_NO_DEBUG;QT_CORE_LIB;QT_GUI_LIB;Q_OS_WINCE_WM;BT_MINI;QT_SVG_LIB;QT_XML_LIB"
+				PreprocessorDefinitions="UNDER_CE;WINCE;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;_WIN32_WCE=0x501;ARMV4I;_ARMV4I_;armv4i;_ARM_;ARM;_M_ARM;__arm__;QT_THREAD_SUPPORT;QT_NO_DEBUG;QT_CORE_LIB;QT_GUI_LIB;Q_OS_WINCE_WM;QT_SVG_LIB;QT_XML_LIB;BT_MINI;BT_MINI_VERSION#\&quot;0.9.0\&quot;"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				TreatWChar_tAsBuiltInType="false"
@@ -386,11 +386,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OutDir)\GeneratedFiles&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\qtmain&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;&quot;$(QTDIR)\include\QtWebKit&quot;;.;.\..\..\..\sword\include;.\..;&quot;.\..\..\$(ConfigurationName)\GeneratedFiles&quot;;..\..\..\clucene\src;&quot;$(QTDIR)\include\QtSvg&quot;;&quot;$(QTDIR)\include\QtXml&quot;;&quot;$(QTDIR)\src\3rdparty\harfbuzz\src&quot;"
-				PreprocessorDefinitions="QT_LARGEFILE_SUPPORT;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;DEBUG;_DEBUG;BT_MINI;_CL_DISABLE_MULTITHREADING;LUCENE_DISABLE_MEMTRACKING;QT_SVG_LIB;QT_XML_LIB;SWUSINGDLL"
+				PreprocessorDefinitions="QT_LARGEFILE_SUPPORT;_WINDOWS;_UNICODE;UNICODE;_WIN32;QT_NO_PRINTER;QT_NO_PRINTDIALOG;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;DEBUG;_DEBUG;BT_MINI;_CL_DISABLE_MULTITHREADING;LUCENE_DISABLE_MEMTRACKING;QT_SVG_LIB;QT_XML_LIB;SWUSINGDLL;BT_MINI_VERSION#\&quot;0.9.0\&quot;"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				DefaultCharIsUnsigned="true"
 				TreatWChar_tAsBuiltInType="false"
+				RuntimeTypeInfo="true"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -711,7 +712,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing btmini.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -722,7 +723,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing btmini.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -744,7 +745,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing btmini.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -784,7 +785,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -795,7 +796,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -806,7 +807,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -832,7 +833,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -843,7 +844,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -854,7 +855,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -884,7 +885,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -895,7 +896,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -906,7 +907,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -932,7 +933,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -943,7 +944,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -954,7 +955,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -984,7 +985,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -995,7 +996,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1006,7 +1007,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1032,7 +1033,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1043,7 +1044,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1054,7 +1055,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1080,7 +1081,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1091,7 +1092,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1102,7 +1103,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1114,6 +1115,98 @@
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
 							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D_DEBUG -DDEBUG -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\models\btminisettingsmodel.h"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D__arm__ -D_ARM_ -D_ARMV4I_ -D_M_ARM -D_UNICODE -D_WIN32 -D_WIN32_WCE=0x502 -D_WINDOWS -DARM -Darmv4i -DARMV4I -DQ_OS_WINCE_WM -DQT_NO_PRINTDIALOG -DQT_NO_PRINTER -DQT_WINCE_GESTURES -DUNDER_CE -DWINCE -DUNICODE -D_WIN32_WCE=0x501 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DBT_MINI &quot;-I.\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I.\GeneratedFiles\$(ConfigurationName)\.&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\sword\include&quot; &quot;-I.\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..\..\bibletime\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  &quot;-D_WIN32_WCE=$(CEVER)\.&quot; -DUNDER_CE &quot;-D$(PLATFORMDEFINES)\.&quot; -DWINCE -DDEBUG &quot;-D$(ARCHFAM)\.&quot; &quot;-D$(_ARCHFAM_)\.&quot; -DSTANDARDSHELL_UI_MODELNDEBUG -D_UNICODE -DUNICODE&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D_DEBUG -DDEBUG -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -D__arm__ -D_ARM_ -D_ARMV4I_ -D_M_ARM -D_UNICODE -D_WIN32 -D_WIN32_WCE=0x502 -D_WINDOWS -DARM -Darmv4i -DARMV4I -DQ_OS_WINCE_WM -DQT_NO_PRINTDIALOG -DQT_NO_PRINTER -DQT_WINCE_GESTURES -DUNDER_CE -DWINCE -DUNICODE -D_WIN32_WCE=0x501 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DBT_MINI &quot;-I.\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I.\GeneratedFiles\$(ConfigurationName)\.&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\sword\include&quot; &quot;-I.\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..\..\bibletime\src&quot;&#x0D;&#x0A;"
+							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Moc&apos;ing btminisettingsmodel.h..."
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  &quot;-D_WIN32_WCE=$(CEVER)\.&quot; -DUNDER_CE &quot;-D$(PLATFORMDEFINES)\.&quot; -DWINCE -DDEBUG &quot;-D$(ARCHFAM)\.&quot; &quot;-D$(_ARCHFAM_)\.&quot; -DSTANDARDSHELL_UI_MODEL -D_DEBUG -D_UNICODE -DUNICODE&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
@@ -1132,6 +1225,7 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1143,6 +1237,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1153,7 +1248,24 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1165,6 +1277,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1172,6 +1285,22 @@
 						CommandLine="copy $(InputPath) &quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;copy $(InputPath) &quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
 						Outputs="&quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;;&quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1188,6 +1317,98 @@
 						CommandLine="copy $(InputPath) &quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\btmini.qrc"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputPath);..\..\pics\icons\back.svg;..\..\pics\icons\bible_add.svg;..\..\pics\icons\bible_locked.svg;..\..\pics\icons\bible_remove.svg;..\..\pics\icons\bible.svg;..\..\pics\icons\bibletime.ico;..\..\pics\icons\bibletime.png;..\..\pics\icons\bibletime.svg;..\..\pics\icons\book_add.svg;..\..\pics\icons\book_locked.svg;..\..\pics\icons\book.svg;..\..\pics\icons\bookmark.svg;..\..\pics\icons\books.svg;..\..\pics\icons\calendar.svg;..\..\pics\icons\checkbox.svg;..\..\pics\icons\commentary_add.svg;..\..\pics\icons;..\..\pics\icons\commentary.svg;..\..\pics\icons\configure.svg;..\..\pics\icons\contents2.svg;..\..\pics\icons\default.svg;..\..\pics\icons\dictionary.svg;..\..\pics\icons\displayconfig.svg;..\..\pics\icons\displaytranslit.svg;..\..\pics\icons\document_magnifier.svg;..\..\pics\icons\edit_delete.svg;..\..\pics\icons\edit_undo.svg;..\..\pics\icons\exit.svg;..\..\pics\icons\export.svg;..\..\pics\icons\file_save.svg;..\..\pics\icons\fileclose.svg;..\..\pics\icons\find.svg;..\..\pics\icons\flag.svg;..\..\pics\icons\forward.svg;..\..\pics\icons\info.svg;..\..\pics\icons\layer-visible-on.svg;..\..\pics\icons\lexicon_add.svg;..\..\pics\icons\lexicon_locked.svg;..\..\pics\icons\lexicon.svg;..\..\pics\icons\light_bulb.svg;..\..\pics\icons\map.svg;..\..\pics\icons\pencil.svg;..\..\pics\icons\plus.svg;..\..\pics\icons\pointing_arrow.svg;..\..\pics\icons\questionable.svg;..\..\pics\icons\questionmark.svg;..\..\pics\icons\refresh.svg;..\..\pics\icons\startconfig.svg;..\..\pics\icons\stop.svg;..\..\pics\icons\swordconfig.svg;..\..\pics\icons\sync.svg;..\..\pics\icons\unlock.svg;..\..\i18n\messages\bibletime_ui_ru.qm;.\translations\bibletimemini_ru.qm;..\display-templates\Basic-Mini.tmpl;..\display-templates\Blue.css"
+						Outputs=".\..\..\$(ConfigurationName)\GeneratedFiles\qrc_$(InputName).cpp"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1259,6 +1480,74 @@
 			SourceControlFiles="false"
 			>
 			<File
+				RelativePath="..\..\$(ConfigurationName)\GeneratedFiles\qrc_btmini.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\$(ConfigurationName)\GeneratedFiles\qrc_btministyle.cpp"
 				>
 				<FileConfiguration
@@ -1308,9 +1597,9 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;.\ui\btministyle.cpp"
-							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -1319,7 +1608,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;.\ui\btministyle.cpp"
 							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;"
 						/>
@@ -1634,6 +1923,42 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\Release\GeneratedFiles\moc_btminisettingsmodel.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\Release\GeneratedFiles\moc_btminiview.cpp"
 					>
 					<FileConfiguration
@@ -1722,6 +2047,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1880,9 +2221,9 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Moc&apos;ing $(InputFileName)..."
-							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+							CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;.\ui\btministyle.cpp&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 							AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;.\ui\btministyle.cpp"
-							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\$(InputName).moc&quot;"
+							Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -2190,6 +2531,42 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\Debug\GeneratedFiles\moc_btminisettingsmodel.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\Debug\GeneratedFiles\moc_btminiview.cpp"
 					>
 					<FileConfiguration
@@ -2278,6 +2655,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2423,7 +2816,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2434,7 +2827,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2456,7 +2849,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2497,7 +2890,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2508,7 +2901,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2519,7 +2912,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2557,7 +2950,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2568,7 +2961,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2579,7 +2972,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2609,7 +3002,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2620,7 +3013,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2631,7 +3024,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2915,7 +3308,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2926,7 +3319,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -2937,7 +3330,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3027,7 +3420,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3038,7 +3431,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3049,7 +3442,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3079,7 +3472,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3090,7 +3483,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3101,7 +3494,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3131,7 +3524,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3142,7 +3535,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3153,7 +3546,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3183,7 +3576,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3194,7 +3587,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3205,7 +3598,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3279,7 +3672,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3290,7 +3683,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3301,7 +3694,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3331,7 +3724,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3342,7 +3735,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3353,7 +3746,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3383,7 +3776,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot; -DBT_MINI_WEBKIT  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3394,7 +3787,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DBT_MINI -DQT_SVG_LIB -DQT_XML_LIB  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DUNDER_CE -DWINCE -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -D_WIN32_WCE=0x501 -DARMV4I -D_ARMV4I_ -Darmv4i -D_ARM_ -DARM -D_M_ARM -D__arm__ -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQ_OS_WINCE_WM -DQT_SVG_LIB -DQT_XML_LIB -DBT_MINI -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..\..\..\sword\src\utilfuns\wince&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3405,7 +3798,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;  -DQT_LARGEFILE_SUPPORT -D_WINDOWS -D_UNICODE -DUNICODE -D_WIN32 -DQT_NO_PRINTER -DQT_NO_PRINTDIALOG -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DWIN32 -D_CRT_SECURE_NO_WARNINGS -DDEBUG -D_DEBUG -DBT_MINI -D_CL_DISABLE_MULTITHREADING -DLUCENE_DISABLE_MEMTRACKING -DQT_SVG_LIB -DQT_XML_LIB -DSWUSINGDLL -DBT_MINI_VERSION#\&quot;0.9.0\&quot;  &quot;-I$(OutDir)\GeneratedFiles&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\qtmain&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtWebKit&quot; &quot;-I.&quot; &quot;-I.\..\..\..\sword\include&quot; &quot;-I.\..&quot; &quot;-I.\..\..\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I.\..\..\..\clucene\src&quot; &quot;-I$(QTDIR)\include\QtSvg&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I$(QTDIR)\src\3rdparty\harfbuzz\src&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\$(ConfigurationName)\GeneratedFiles\moc_$(InputName).cpp&quot;"
 					/>
@@ -3781,6 +4174,10 @@
 				</File>
 				<File
 					RelativePath=".\models\btminimoduletextmodel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\models\btminisettingsmodel.cpp"
 					>
 				</File>
 			</Filter>

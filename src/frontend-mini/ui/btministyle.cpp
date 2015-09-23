@@ -30,6 +30,32 @@ public:
         Q_INIT_RESOURCE(btministyle);
 
         _night = night;
+
+        if(_night)
+        {
+            _palette.setColor(QPalette::Text, Qt::white);
+            _palette.setColor(QPalette::Base, QColor(22, 22, 22));
+            _palette.setColor(QPalette::Link, QColor("#62a4db"));
+
+            _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+            _palette.setColor(QPalette::HighlightedText, Qt::white);
+        }
+        else
+        {
+            _palette.setColor(QPalette::Text, Qt::black);
+            _palette.setColor(QPalette::Base, Qt::white);
+            _palette.setColor(QPalette::Link, QColor(127, 196, 255));
+
+            _palette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
+            _palette.setColor(QPalette::HighlightedText, QColor("#000000"));
+        }
+
+        _palette.setColor(QPalette::Window, _palette.color(QPalette::Base));
+        _palette.setColor(QPalette::Button, _palette.color(QPalette::Base));
+        _palette.setColor(QPalette::WindowText, _palette.color(QPalette::Text));
+        _palette.setColor(QPalette::ButtonText, _palette.color(QPalette::Text));
+
+        QApplication::setPalette(_palette);
     }
 
     ~BtMiniStyle()
@@ -104,7 +130,8 @@ public:
                 if(const QStyleOptionSlider *scrollbar = qstyleoption_cast<const QStyleOptionSlider *>(option))
                 {
                     p->setPen(Qt::NoPen);
-                    p->setBrush(_night ? QColor("#2c6799") : QColor(127, 196, 255));
+                    // "#2c6799"
+                    p->setBrush(_palette.color(QPalette::Link));
                     p->drawRect(scrollbar->rect);
 
                     if(scrollbar->subControls & SC_ScrollBarSlider)
@@ -168,33 +195,7 @@ public:
 
 	QPalette standardPalette() const
 	{
-        static bool b = true;
-        static QPalette defaultPalette(Qt::white);
-
-        if(b)
-        {
-            if(_night)
-            {
-                defaultPalette.setColor(QPalette::Window, QColor(33, 33, 33));
-                defaultPalette.setColor(QPalette::Button, QColor(33, 33, 33));
-                defaultPalette.setColor(QPalette::WindowText, Qt::white);
-                defaultPalette.setColor(QPalette::ButtonText, Qt::white);
-                defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-                defaultPalette.setColor(QPalette::HighlightedText, Qt::white);
-            }
-            else
-            {
-                defaultPalette.setColor(QPalette::Window, Qt::white);
-                defaultPalette.setColor(QPalette::Button, Qt::white);
-                defaultPalette.setColor(QPalette::WindowText, Qt::black);
-                defaultPalette.setColor(QPalette::ButtonText, Qt::black);
-                defaultPalette.setColor(QPalette::Highlight, QColor("#9cd2ff"));
-                defaultPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
-            }
-            b = false;
-        }
-
-	    return defaultPalette;
+        return _palette;
 	}
 
 
@@ -204,12 +205,9 @@ public:
         static bool initialized = false;
         if(!initialized)
         {
-            if(_night)
-                _menuFrame = new QPixmap(":/style-mini/menu-night-frame.png");
-            else
-                _menuFrame = new QPixmap(":/style-mini/menu-frame.png");
-            _menuFrameWidth = _menuFrame->width()/3;
-
+            _menuFrame = new QPixmap(_night ? ":/style-mini/menu-night-frame.png"
+                                            : ":/style-mini/menu-frame.png");
+            _menuFrameWidth = _menuFrame->width() / 3;
             initialized = true;
         }
 
@@ -227,15 +225,9 @@ public:
             if(l)
             {
                 l->viewport()->setAutoFillBackground(false);
+                l->setAutoFillBackground(false);
             }
         }
-
-//        if(QString(widget->metaObject()->className()) == "QWidget")
-//		{
-//			widget->setAutoFillBackground(true);
-//			foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
-//				w->setPalette(standardPalette());
-//		}
 
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
@@ -407,6 +399,8 @@ private:
     int      _menuFrameWidth;
 
     bool     _night;
+
+    QPalette _palette;
 };
 
 class BtMiniStylePlugin : public QStylePlugin

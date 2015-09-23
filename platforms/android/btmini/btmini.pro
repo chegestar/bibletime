@@ -4,13 +4,14 @@ VERSION = 0.9.0
 CONFIG += clucene
 CONFIG += webkit
 
-#CLUCENE_PATH = ../../../../clucene/src
-CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
+CLUCENE_PATH = ../../../../clucene/src
+#CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
 
 SWORD_PATH = ../../../../sword
 
 # Base section, nothing platform specific
 DEFINES += BT_MINI
+DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 
 INCLUDEPATH += . \
     $${SWORD_PATH}/include \
@@ -293,7 +294,74 @@ RESOURCES += \
     ../../../../bt/src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc
 
-OTHER_FILES += ../../../src/frontend-mini/todo.txt;
+OTHER_FILES += ../../../src/frontend-mini/todo.txt; \
+    android/AndroidManifest.xml \
+    android/res/drawable/icon.png \
+    android/res/drawable/logo.png \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png \
+    android/res/layout/splash.xml \
+    android/res/values/libs.xml \
+    android/res/values/strings.xml \
+    android/res/values-de/strings.xml \
+    android/res/values-el/strings.xml \
+    android/res/values-es/strings.xml \
+    android/res/values-et/strings.xml \
+    android/res/values-fa/strings.xml \
+    android/res/values-fr/strings.xml \
+    android/res/values-id/strings.xml \
+    android/res/values-it/strings.xml \
+    android/res/values-ja/strings.xml \
+    android/res/values-ms/strings.xml \
+    android/res/values-nb/strings.xml \
+    android/res/values-nl/strings.xml \
+    android/res/values-pl/strings.xml \
+    android/res/values-pt-rBR/strings.xml \
+    android/res/values-ro/strings.xml \
+    android/res/values-rs/strings.xml \
+    android/res/values-ru/strings.xml \
+    android/res/values-zh-rCN/strings.xml \
+    android/res/values-zh-rTW/strings.xml \
+    android/src/org/kde/necessitas/ministro/IMinistro.aidl \
+    android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
+    android/src/org/kde/necessitas/origo/QtActivity.java \
+    android/src/org/kde/necessitas/origo/QtApplication.java \
+    android/version.xml \
+    android/AndroidManifest.xml \
+    android/res/drawable/icon.png \
+    android/res/drawable/logo.png \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png \
+    android/res/layout/splash.xml \
+    android/res/values/libs.xml \
+    android/res/values/strings.xml \
+    android/res/values-de/strings.xml \
+    android/res/values-el/strings.xml \
+    android/res/values-es/strings.xml \
+    android/res/values-et/strings.xml \
+    android/res/values-fa/strings.xml \
+    android/res/values-fr/strings.xml \
+    android/res/values-id/strings.xml \
+    android/res/values-it/strings.xml \
+    android/res/values-ja/strings.xml \
+    android/res/values-ms/strings.xml \
+    android/res/values-nb/strings.xml \
+    android/res/values-nl/strings.xml \
+    android/res/values-pl/strings.xml \
+    android/res/values-pt-rBR/strings.xml \
+    android/res/values-ro/strings.xml \
+    android/res/values-rs/strings.xml \
+    android/res/values-ru/strings.xml \
+    android/res/values-zh-rCN/strings.xml \
+    android/res/values-zh-rTW/strings.xml \
+    android/src/org/kde/necessitas/ministro/IMinistro.aidl \
+    android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
+    android/src/org/kde/necessitas/origo/QtActivity.java \
+    android/src/org/kde/necessitas/origo/QtApplication.java \
+    android/version.xml
+
 # BtMini translations
 TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
 
@@ -422,7 +490,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 !symbian {
-	INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
+    INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
 }
 
 win32 {

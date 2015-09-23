@@ -41,7 +41,12 @@ public:
     /** */
     void          addModel(QAbstractItemModel *model, QString name);
 
+    /** */
+    void          setIndicator(QWidget *w);
+
 public slots:
+    /** */
+    void          updateIndicators(QModelIndex index);
 
 protected:
 

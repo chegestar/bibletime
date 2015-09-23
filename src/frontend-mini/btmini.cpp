@@ -329,8 +329,9 @@ QWidget * BtMini::mainWidget()
 
         w = new BtMiniMainWidget;
 
+        // desktop 96 dpi, 16 factor is good
         QFont f = w->font();
-        f.setPixelSize(qMin(size.width(), size.height()) / 14.0f *
+        f.setPixelSize(qMin(size.width(), size.height()) / 16.0f *
                        CBTConfig::get(CBTConfig::fontScale) / 100);
         w->setFont(f);
 
@@ -350,24 +351,29 @@ QWidget * BtMini::mainWidget()
     return w;
 }
 
+bool haveBible()
+{
+    foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
+        if(m->type() == CSwordModuleInfo::Bible)
+            return true;
+    return false;
+}
+
+void changeFontSize(QWidget *w, double factor)
+{
+    QFont f(w->font());
+    f.setPixelSize(f.pixelSize() * factor);
+    w->setFont(f);
+}
+
 QWidget * BtMini::worksWidget()
 {
     static BtMiniWidget *w = 0;
 
     if(!w)
     {
-        bool haveAnyBible = false;
-        foreach(CSwordModuleInfo *m, CSwordBackend::instance()->moduleList())
-            if(m->type() == CSwordModuleInfo::Bible)
-            {
-                haveAnyBible = true;
-                break;
-            }
-
-        if(!haveAnyBible)
-        {
+        if(!haveBible())
             return installerWidget(true);
-        }
 
 
         w = new BtMiniWidget(mainWidget());
@@ -577,27 +583,37 @@ QWidget * BtMini::installerWidget(bool firstTime)
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
+        changeFontSize(v, CBTConfig::get(CBTConfig::fontTextScale) / 100);
 
-        QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
-        v->setFont(f);
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
+            (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
 
-        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << (firstTime ? BtMiniPanel::Exit :
-                                                                                   BtMiniPanel::Close), w);
+        QPushButton *pb = new QPushButton(firstTime ? "No Bible installed" : "", w);
+        changeFontSize(pb, 0.8);
 
         // Put into layout
         QVBoxLayout *vl = new QVBoxLayout;
 
+        vl->addWidget(pb);
         vl->addWidget(v);
         vl->addWidget(p);
 
         w->setLayout(vl);
 
         if(firstTime)
-            BtMiniMenu::execQuery(tr("Please, install at\nleast one Bible text\nand restart"));
+            if(BtMiniMenu::execQuery(tr("Remote sources will be updated..."),
+                                  QStringList() << "Ok" << "Exit") == 1)
+            {
+                BtMini::mainWidget()->close();
+                return 0;
+            }
 
         // Setup model
         BtMiniModelsModel *m = new BtMiniModelsModel(v);
+
+        m->setIndicator(pb);
+        QObject::connect(v, SIGNAL(currentChanged(QModelIndex)), m, SLOT(updateIndicators(QModelIndex)));
+
         QStringList        ss(BtInstallBackend::sourceNameList(refresh));
         BtInstallMgr      *im = new BtInstallMgr(m);
 
@@ -703,6 +719,8 @@ void BtMini::installerQuery(const QModelIndex &index)
         if (BtMiniMenu::execQuery(QString(tr("Do you want to install %1 ?")).arg(m->name()),
             QStringList() << tr("Install") << tr("Cancel")) == 0)
         {
+            bool hb = haveBible();
+
             BtInstallMgr *im = index.model()->findChild<BtInstallMgr*>();
 
             QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Installing ...")));
@@ -722,6 +740,16 @@ void BtMini::installerQuery(const QModelIndex &index)
                 BtMiniMenu::execQuery(QString(tr("Module was not installed")));
             else
                 CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+
+            // Bible installed, can switch to reader
+            if(!hb && haveBible())
+            {
+                delete installerWidget()->findChild<BtMiniPanel*>();
+                installerWidget()->layout()->addWidget(new BtMiniPanel(BtMiniPanel::Activities() <<
+                    BtMiniPanel::Close, installerWidget()));
+
+                setActiveWidget(worksWidget());
+            }
         }
     }
 }
@@ -830,6 +858,9 @@ int main(int argc, char *argv[])
 
     //QApplication::setGraphicsSystem("opengl");
 
+    // Init application
+    BtMiniApplication app(argc, argv);
+
     if(!util::directory::initDirectoryCache())
     {
         qFatal("Init Application: Error initializing directory cache!");
@@ -839,8 +870,6 @@ int main(int argc, char *argv[])
     // TODO set style for main widget
     QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
 
-    // Init application
-    BtMiniApplication app(argc, argv);
 
     // FIX in necessitas sets QPlastiqueStyle when QApplication inits
 #ifdef ANDROID

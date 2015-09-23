@@ -51,6 +51,9 @@ kalemas@mail.ru :
     bug, sometimes book stay unlocalized in text view in chapter area
 	unlock locked modules
 +   Symbian build
+    multi column mode
+    fix webkit word context
+    apply settings without restart
 
 
     make commentary context parallel computed

@@ -221,7 +221,7 @@ public:
 		// insert new option
 		if(_lists.size() > _ld->levelOptionsCount())
 		{
-			QVector<BtMiniLayoutOption> os;
+            QVector<BtMiniLevelOption> os;
 			for(int ii = 0; ii < _ld->levelOptionsCount(); ++ii)
 				os.append(_ld->levelOption(ii));
 
@@ -246,7 +246,7 @@ public:
 	{
 		_lists[i] = List(module);
 
-		BtMiniLayoutOption o/*(_ld->levelOption(i))*/;
+		BtMiniLevelOption o;
 
 		_isSearch = false;
 
@@ -837,7 +837,7 @@ void BtMiniModuleTextModel::openModuleSelection()
 	// if modules more than 4, scrollbar always visible
 	if(m->modules().size() > 4)
 	{
-		BtMiniLayoutOption o = view->layoutDelegate()->levelOption();
+		BtMiniLevelOption o = view->layoutDelegate()->levelOption();
 		o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
 		view->layoutDelegate()->setLevelOption(o);
 	}

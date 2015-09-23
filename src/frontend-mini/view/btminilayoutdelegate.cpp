@@ -13,7 +13,7 @@
 
 #include "btminilayoutdelegate.h"
 
-BtMiniLayoutOption::BtMiniLayoutOption()
+BtMiniLevelOption::BtMiniLevelOption()
 {
     perLine         = 1;
     scrollBarPolicy = Qt::ScrollBarAsNeeded;
@@ -36,13 +36,13 @@ BtMiniLayoutDelegate::~BtMiniLayoutDelegate()
     ;
 }
 
-void BtMiniLayoutDelegate::setLevelOption(BtMiniLayoutOption &option)
+void BtMiniLayoutDelegate::setLevelOption(BtMiniLevelOption &option)
 {
     _options.resize(1);
     _options[0] = option;
 }
 
-void BtMiniLayoutDelegate::setLevelOption(const int level, BtMiniLayoutOption &option)
+void BtMiniLayoutDelegate::setLevelOption(const int level, BtMiniLevelOption &option)
 {
     Q_ASSERT(_options.size() > 0);
 
@@ -52,7 +52,7 @@ void BtMiniLayoutDelegate::setLevelOption(const int level, BtMiniLayoutOption &o
     _options[level] = option;
 }
 
-const BtMiniLayoutOption & BtMiniLayoutDelegate::levelOption(const int level) const
+const BtMiniLevelOption & BtMiniLayoutDelegate::levelOption(const int level) const
 {
     Q_CHECK_PTR(this);
 

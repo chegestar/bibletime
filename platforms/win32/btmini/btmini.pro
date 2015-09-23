@@ -1,16 +1,17 @@
 # Configuration
-VERSION = 0.3.4
+VERSION = 0.9.0
 
 CONFIG += clucene
 CONFIG += webkit
 
-#CLUCENE_PATH = ../../../../clucene/src
-CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
+CLUCENE_PATH = ../../../../clucene/src
+#CLUCENE_PATH = C:\Qt\Qt5.0.2\5.0.2\Src\qttools\src\assistant\3rdparty\clucene\src
 
 SWORD_PATH = ../../../../sword
 
 # Base section, nothing platform specific
 DEFINES += BT_MINI
+DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 
 INCLUDEPATH += . \
     $${SWORD_PATH}/include \
@@ -293,7 +294,7 @@ RESOURCES += \
     ../../../../bt/src/frontend-mini/ui/btministyle.qrc \
     ../../../btmini.qrc
 
-OTHER_FILES += ../../../src/frontend-mini/todo.txt
+OTHER_FILES += ../../../src/frontend-mini/todo.txt;
 
 # BtMini translations
 TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
@@ -423,7 +424,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 !symbian {
-	INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
+    INCLUDEPATH += $${SWORD_PATH}/include/internal/regex
 }
 
 win32 {
@@ -434,6 +435,8 @@ SOURCES += $${SWORD_PATH}/src/utilfuns/win32/dirent.cpp
 LIBS += -lws2_32
 }
 
+# Android
+android {
 OTHER_FILES += android/AndroidManifest.xml \
     android/res/drawable/icon.png \
     android/res/drawable/logo.png \
@@ -467,8 +470,8 @@ OTHER_FILES += android/AndroidManifest.xml \
     android/src/org/kde/necessitas/origo/QtActivity.java \
     android/src/org/kde/necessitas/origo/QtApplication.java \
     android/version.xml
-
-
+}
+else {
 # MeeGo platform
 unix {
 include(deployment.pri)
@@ -486,6 +489,7 @@ OTHER_FILES += \
 contains(MEEGO_EDITION,harmattan) {
     target.path = /opt/btmini/bin
     INSTALLS += target
+}
 }
 }
 
@@ -512,3 +516,4 @@ clucene {
 DEFINES += __GNUC__ NO_DUMMY_DECL
 }
 }
+

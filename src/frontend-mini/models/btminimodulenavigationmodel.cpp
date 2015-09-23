@@ -111,7 +111,7 @@ BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObjec
 
     d->_ld = new BtMiniLayoutDelegate(this);
 
-    BtMiniLayoutOption o = d->_ld->levelOption(0);
+    BtMiniLevelOption o = d->_ld->levelOption(0);
 
     o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
     o.perCycle = 0;

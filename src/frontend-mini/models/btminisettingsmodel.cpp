@@ -15,7 +15,10 @@
 
 #include <QtDebug>
 
+#include <config.h>
+
 #include "backend/config/cbtconfig.h"
+#include "backend/cswordmodulesearch.h"
 
 #include "btminisettingsmodel.h"
 #include "view/btminilayoutdelegate.h"
@@ -32,6 +35,7 @@ enum BtMiniSettingsIds
 #ifdef BT_MINI_WEBKIT
     BtMiniUseWebKit,
 #endif
+    BtMiniSearchType,
     BtMiniStyle,
     BtMiniForum = BtMiniStyle + 4
 };
@@ -53,12 +57,20 @@ public:
 #ifdef BT_MINI_WEBKIT
         _strings << tbs + "Use WebKit:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
 #endif
+        _strings << tbs + "Search type:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
         _strings << tbs + "Ui style:</td> <td align=\"right\"><b>%1</b></td></tr></table>";
-        _strings << "<body><font size=\"50%\"><i>Note: settings will be applied after application restart.</i></font></body>";
-        //_strings << "<table width=\"100%\" bgcolor=\"#9cd2ff\"><tr><td><font size=\"50%\"><center>About</center></font></td></tr></table>";
+        _strings << "<body><font size=\"50%\"><i>Note: most of settings will be applied after application restart.</i></font></body>";
         _strings << "<body><font size=\"50%\"><center>About</center></font></body>";
-        //_strings << "Please send feedback to <i>kalemas@mail.ru</i>";
-        _strings << "This app version is:<br/><center>0.0.0-beta</center>";
+        _strings << "<body><b>BibleTime Mini</b> - spend your time with Bible on mobile!<br/>"
+                    "<table width=\"100%\"><tr><td>Current version:</td><td align=\"right\"><b>"
+                    BT_MINI_VERSION "</b></td></tr></table>"
+                    "<table width=\"100%\"><tr><td>Built on:</td><td align=\"right\">" __DATE__ "</td></tr></table><br/><br/>"
+                    "It is cross-platform open-source Bible study application designed for mobile devices.<br/><br/>"
+                    "Underlying frameworks:"
+                    "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.9.1</td></tr></table>"
+                    "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" VERSION "</td></tr></table>"
+                    "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table><br/>"
+                    "</body>";
         _strings << "You could post feedback, report an issue or get help throught forum:"
                     "<br/><a href=\"" BT_MINI_FORUM_URL "\">" BT_MINI_FORUM_URL "</a></body>";
 
@@ -71,12 +83,16 @@ public:
     }
 
     QVector<QString>      _strings;
+    BtMiniLayoutDelegate *_ld;
 };
 
 BtMiniSettingsModel::BtMiniSettingsModel(QObject *parent)
     : QAbstractItemModel(parent) , d_ptr(new BtMiniSettingsModelPrivate())
 {
-    ;
+    d_ptr->_ld = new BtMiniLayoutDelegate(this);
+    BtMiniLevelOption o = d_ptr->_ld->levelOption();
+    o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
+    d_ptr->_ld->setLevelOption(o);
 }
 
 BtMiniSettingsModel::~BtMiniSettingsModel()
@@ -145,6 +161,22 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
             break;
         case BtMiniThreads:
             s = s.arg(CBTConfig::get(CBTConfig::threadedTextRetrieving) ? "on" : "off");
+            break;
+        case BtMiniSearchType:
+            switch(CBTConfig::get(CBTConfig::searchType))
+            {
+                case CSwordModuleSearch::AndType:
+                    s = s.arg("AND");
+                break;
+                case CSwordModuleSearch::OrType:
+                    s = s.arg("OR");
+                break;
+                case CSwordModuleSearch::FullType:
+                    s = s.arg("Full syntax");
+                break;
+                default:
+                    s = s.arg("Unknown");
+            }
             break;
         default:
             ;
@@ -228,6 +260,10 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         emit dataChanged(index, index);
         break;
 
+    case BtMiniSearchType:
+        CBTConfig::set(CBTConfig::searchType, (CBTConfig::get(CBTConfig::searchType) + 1)
+                       % (CSwordModuleSearch::FullType + 1));
+        emit dataChanged(index, index);
     default:
         ; //qDebug() << "clicked" << index.data();
     }

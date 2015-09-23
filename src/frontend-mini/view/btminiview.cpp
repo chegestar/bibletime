@@ -40,11 +40,11 @@
 #include <QWebSettings>.
 #endif
 
-#define SHORT_PRESS_DELAY        18
-#define LONG_PRESS_DELAY         60
+#define SHORT_PRESS_DELAY        20
+#define LONG_PRESS_DELAY         50
 #define SCROLL_SNAPPING_SPEED    0.3f
-#define SCROLL_ATTENUATION       0.93
 #define CACHED_SURFACE_OVERLAP   0.5
+#define SCROLL_ATTENUATION       0.93
 #define SCROLL_BACK_ATTENUATION  13.285713041 // qreal v = 1.0, t = 0.0; while(v > 0.0000001) t += v *= SCROLL_ATTENUATION; return t;
 
 /**
@@ -401,7 +401,7 @@ public:
         QString ct(text);
 
         // FIX for dark theme
-        QColor tc = widget->style()->standardPalette().color(QPalette::WindowText);
+        QColor tc = widget->palette().color(QPalette::WindowText);
         if(tc != Qt::black)
         {
             int i = ct.indexOf("<body>");
@@ -475,6 +475,7 @@ public:
 #ifdef BT_MINI_WEBKIT
         if(useWebKit)
         {
+
             QWebPage *wp = new QWebPage(widget);
             
             if(wp == 0)
@@ -1004,6 +1005,7 @@ public:
         _sleep               = false;
         _webKitEnabled       = false;
         _continuousScrolling = false;
+        _columnCount         = 1;
     }
 
     ~BtMiniViewPrivate()
@@ -1336,7 +1338,7 @@ public:
         // insert at beginning or end supported for now
         Q_ASSERT(insertAt == 0 || insertAt == v->_items.size());
 
-		const BtMiniLayoutOption &o = _ld->levelOption(subView);
+		const BtMiniLevelOption &o = _ld->levelOption(subView);
 
 		BtMiniViewItem *item = new BtMiniViewItem;
 
@@ -1490,7 +1492,7 @@ public:
         if(v->rowCount() <= v->_items.size())
             return;
 
-        const BtMiniLayoutOption &o = _ld->levelOption(subView);
+        const BtMiniLevelOption &o = _ld->levelOption(subView);
 
         for(int l = 0; l < amount; ++l)
         {
@@ -1593,7 +1595,7 @@ public:
             }
         }
 
-        const BtMiniLayoutOption &o = _ld->levelOption(subView);
+        const BtMiniLevelOption &o = _ld->levelOption(subView);
 
         // remove unnecessary items
         if(o.limitItems && v->_items.size() > 0)
@@ -1828,7 +1830,7 @@ public:
 				_view->_mutex.unlock();
 
 #if defined(Q_OS_WIN32) && defined(QT_DEBUG)
-				msleep(2000);
+                //msleep(2000);
 #endif
 				QString text(index.data().toString());
 
@@ -1907,6 +1909,7 @@ public:
 
     bool                          _webKitEnabled;
     bool                          _continuousScrolling;
+    int                           _columnCount;
 
     Q_DECLARE_PUBLIC(BtMiniView);
     BtMiniView * const             q_ptr;
@@ -2367,14 +2370,19 @@ void BtMiniView::doItemsLayout()
     // create views if them not created yet
 	d->activateIndex(QModelIndex(), true);
 
+    QSize svs(viewport()->size());
+    svs.setWidth(svs.width() / d->_columnCount);
+
     // resize new subviews
     foreach(BtMiniSubView *v, d->_subViews)
         if(v->baseSize().isEmpty())
-            v->setBaseSize(viewport()->size());
+            v->setBaseSize(svs);
 
-    // check if size is not equal to viewport size
-    if(d->currentSubView()->baseSize() != viewport()->size())
-        d->currentSubView()->setBaseSize(viewport()->size());
+    // refine subview base size
+    if(d->currentSubView()->baseSize() != svs)
+    {
+        d->currentSubView()->setBaseSize(svs);
+    }
 
     d->updateViews();
 
@@ -2392,7 +2400,7 @@ void BtMiniView::doItemsLayout()
 				continue;
 
 			BtMiniSubView *v = d->_subViews[i];
-			const BtMiniLayoutOption &o = d->_ld->levelOption(i);
+			const BtMiniLevelOption &o = d->_ld->levelOption(i);
 
 			if(v->_items.size() == 0)
 			{
@@ -2603,7 +2611,7 @@ void BtMiniView::setLevelOptions(const int level, int itemPerLine, QString itemP
         if(!(level == -1 || level == i))
             continue;
 
-        BtMiniLayoutOption o(d->_ld->levelOption(i));
+        BtMiniLevelOption o(d->_ld->levelOption(i));
 
         o.perLine  = itemPerLine;
         o.preText  = itemPreText;
@@ -2622,7 +2630,7 @@ void BtMiniView::setSearchRole(int searchRole, int level)
         if(!(level == -1 || level == i))
             continue;
 
-        BtMiniLayoutOption o(d->_ld->levelOption(i));
+        BtMiniLevelOption o(d->_ld->levelOption(i));
 
         o.searchRole = searchRole;
 
@@ -3175,17 +3183,18 @@ void BtMiniView::setSleep(bool sleep)
 
 void BtMiniView::setWebKitEnabled(bool enable)
 {
-    Q_D(BtMiniView);
-
-    d->_webKitEnabled = enable;
+    d_ptr->_webKitEnabled = enable;
 }
 
 void BtMiniView::setContinuousScrolling(bool enable)
 {
-    Q_D(BtMiniView);
+    d_ptr->_continuousScrolling = enable;
+}
 
-    d->_continuousScrolling = enable;
-
+void BtMiniView::setColumnsCount(int columns)
+{
+    Q_ASSERT(columns > 0);
+    d_ptr->_columnCount = columns;
 }
 
 QSize BtMiniView::sizeHint() const

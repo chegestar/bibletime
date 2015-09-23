@@ -20,9 +20,9 @@
 /** Options for subviews. There are always options for at least
     zero (default) level.
 */
-struct BtMiniLayoutOption
+struct BtMiniLevelOption
 {
-    BtMiniLayoutOption();
+    BtMiniLevelOption();
     
     QString preText;
     QString postText;
@@ -57,9 +57,9 @@ public:
     
     /** Get/set options for given layout level. Levels are usually represents
         subviews. */
-    const BtMiniLayoutOption & levelOption(int level = 0) const;
-    void setLevelOption(int level, BtMiniLayoutOption &option);
-    void setLevelOption(BtMiniLayoutOption &option);
+    const BtMiniLevelOption & levelOption(int level = 0) const;
+    void setLevelOption(int level, BtMiniLevelOption &option);
+    void setLevelOption(BtMiniLevelOption &option);
     void eraseLevelOption(int level);
     inline int levelOptionsCount() const { return _options.size(); }
     
@@ -71,7 +71,7 @@ public:
 
 
 protected:
-    QVector<BtMiniLayoutOption> _options;
+    QVector<BtMiniLevelOption> _options;
     bool                        _plain;
 
 };
