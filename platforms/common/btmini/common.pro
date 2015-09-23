@@ -184,7 +184,8 @@ SOURCES += \
     ../../../src/backend/managers/btstringmgr.cpp \
     ../../../src/util/directory.cpp \
     ../../../src/util/cresmgr.cpp \
-    ../../../src/backend/config/cbtconfig.cpp \
+    ../../../src/backend/config/btconfig.cpp \
+    ../../../src/backend/config/btconfigcore.cpp \
     ../../../src/backend/bookshelfmodel/btbookshelftreemodel.cpp \
     ../../../src/frontend/bookshelfmanager/btinstallmgr.cpp \
     ../../../src/backend/keys/cswordversekey.cpp \
@@ -220,7 +221,8 @@ SOURCES += \
     ../../../src/backend/bookshelfmodel/indexingitem.cpp \
     ../../../src/backend/keys/cswordtreekey.cpp \
     ../../../src/frontend/crossrefrendering.cpp \
-    ../../../src/backend/filters/btosismorphsegmentation.cpp
+    ../../../src/backend/filters/btosismorphsegmentation.cpp \
+    ../../../src/bibletimeapp.cpp
 
 
 HEADERS += \
@@ -242,7 +244,8 @@ HEADERS += \
     ../../../src/backend/managers/btstringmgr.h \
     ../../../src/util/directory.h \
     ../../../src/util/cresmgr.h \
-    ../../../src/backend/config/cbtconfig.h \
+    ../../../src/backend/config/btconfig.h \
+    ../../../src/backend/config/btconfigcore.h \
     ../../../src/backend/bookshelfmodel/btbookshelftreemodel.h \
     ../../../src/frontend/bookshelfmanager/btinstallmgr.h \
     ../../../src/frontend/bookshelfmanager/installpage/btinstallthread.h \
@@ -284,6 +287,8 @@ HEADERS += \
     ../../../src/frontend/crossrefrendering.h \
     ../../../src/backend/filters/btosismorphsegmentation.h \
     ../../../src/frontend-mini/btmini.h \
+    ../../../src/bibletimeapp.h \
+    \ # would be required to comment/uncomment following on first builds
     ../../../src/frontend-mini/ui/btministyle.cpp
 
 RESOURCES += ../../../btmini.qrc \
@@ -311,6 +316,8 @@ SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
 
 # Windows platform
 win32 {
+DEFINES += _CRT_SECURE_NO_WARNINGS
+
 INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
 
 SOURCES += $${SWORD_PATH}/src/utilfuns/win32/dirent.cpp
@@ -417,7 +424,7 @@ DEFINES += BT_MINI_WEBKIT
 
 # Clucene
 clucene {
-DEFINES += _CL_DISABLE_MULTITHREADING
+DEFINES += _CL_DISABLE_MULTITHREADING LUCENE_DISABLE_MEMTRACKING
 !symbian:DEFINES += _UCS2
 
 INCLUDEPATH += $${CLUCENE_PATH} \

@@ -71,8 +71,8 @@ public:
 			// TODO view now not supports row without items at all
 			_maxEntries = 1;
 
-			_displayOptions = CBTConfig::getDisplayOptionDefaults();
-			_filterOptions = CBTConfig::getFilterOptionDefaults();
+            _displayOptions = btConfig().getDisplayOptions();
+            _filterOptions = btConfig().getFilterOptions();
 
 			setModule(_name);
 		}
@@ -91,7 +91,7 @@ public:
 		void setModule(QString module)
 		{
 			if(module == "[Commentary]")
-				setModule(CBTConfig::get(CBTConfig::standardCommentary));
+                setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
             else if(module.contains(','))
                 setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
 			else
@@ -327,7 +327,7 @@ public:
 
 			if(_lists[i]._module->type() == CSwordModuleInfo::Lexicon)
 				;
-			else if(CBTConfig::get(CBTConfig::threadedTextRetrieving))
+            else if(btConfig().value<bool>("mini/threadedTextRetrieving"))
 			{
 				o.perCycle    = 3;
 				o.useThread   = true;
@@ -374,7 +374,7 @@ public:
         if(mc.isEmpty())
             return 0;
 
-        QStringList modules = CBTConfig::get(CBTConfig::openInfoModules);
+        QStringList modules = btConfig().value<QStringList>("mini/openInfoModules");
 
         if(!(list.size() == 1 && list[0].first == CInfoDisplay::Footnote))
             mc = "<center><small>" + info.left(info.indexOf('<', 1)).mid(
@@ -865,7 +865,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
         BtMiniView *view = new BtMiniView(&menu);
 
-        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
+        v->setWebKitEnabled(btConfig().value<bool>("mini/useWebKit", false));
         
         BtMiniModuleTextModel *m = d->fromContentsInfo(contents, &menu);
 
@@ -880,7 +880,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             l->addWidget(view);
             menu.setLayout(l);
 
-            view->scrollTo(m->index(CBTConfig::get(CBTConfig::openInfoModule), 0));
+            view->scrollTo(m->index(btConfig().value<int>("mini/openInfoModule", 0), 0));
             
             menu.exec();
 
@@ -891,8 +891,8 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             for(int i = 0; i < list.size(); ++i)
                 modules.append(m->d_func()->_lists[i]._name);
 
-            CBTConfig::set(CBTConfig::openInfoModule, view->currentLevel());
-            CBTConfig::set(CBTConfig::openInfoModules, modules);
+            btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
+            btConfig().setValue<QStringList>("mini/openInfoModules", modules);
 
             //CBTConfig::syncConfig();
         }
@@ -1178,7 +1178,7 @@ void BtMiniModuleTextModel::startSearch()
 
 	if(d->_searchText.isEmpty())
 		;
-	else if(CBTConfig::get(CBTConfig::searchUsingSword))
+    else if(btConfig().value<bool>("mini/searchUsingSword"))
 	{
 		QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Search ...")));
 		dialog->show();
@@ -1194,8 +1194,7 @@ void BtMiniModuleTextModel::startSearch()
 	}
 	else
 	{
-		CSwordModuleSearch searcher;
-		bool ok = true;
+        bool ok = true;
 
 		// build index if ascent
 		if(!m->hasIndex())
@@ -1222,8 +1221,9 @@ void BtMiniModuleTextModel::startSearch()
 
 		if(ok)
 		{
-			// set the search parameters
-			searcher.setSearchedText(d->_searchText);
+            CSwordModuleSearch searcher;
+
+            searcher.setSearchedText(d->_searchText);
 			searcher.setModules(QList<const CSwordModuleInfo*>() << m);
 			searcher.setSearchScope(scope);
 
@@ -1273,24 +1273,24 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
         switch(m->category())
         {
         case CSwordModuleInfo::Bibles:
-            CBTConfig::set(CBTConfig::standardBible, m);
+            btConfig().setDefaultSwordModuleByType("standardBible", m);
             break;
         case CSwordModuleInfo::Commentaries:
-            CBTConfig::set(CBTConfig::standardCommentary, m);
+            btConfig().setDefaultSwordModuleByType("standardCommentary", m);
             break;
         case CSwordModuleInfo::Lexicons:
-            CBTConfig::set(CBTConfig::standardLexicon, m);
+            btConfig().setDefaultSwordModuleByType("standardLexicon", m);
             if(m->has(CSwordModuleInfo::HebrewDef))
-                CBTConfig::set(CBTConfig::standardHebrewStrongsLexicon, m);
+                btConfig().setDefaultSwordModuleByType("standardHebrewStrongsLexicon", m);
             if(m->has(CSwordModuleInfo::GreekDef))
-                CBTConfig::set(CBTConfig::standardGreekStrongsLexicon, m);
+                btConfig().setDefaultSwordModuleByType("standardGreekStrongsLexicon", m);
             if(m->has(CSwordModuleInfo::HebrewParse))
-                CBTConfig::set(CBTConfig::standardHebrewMorphLexicon, m);
+               btConfig().setDefaultSwordModuleByType("standardHebrewMorphLexicon", m);
             if(m->has(CSwordModuleInfo::GreekParse))
-                CBTConfig::set(CBTConfig::standardGreekMorphLexicon, m);
+                btConfig().setDefaultSwordModuleByType("standardGreekMorphLexicon", m);
             break;
         case CSwordModuleInfo::DailyDevotional:
-            CBTConfig::set(CBTConfig::standardDailyDevotional, m);
+            btConfig().setDefaultSwordModuleByType("standardDailyDevotional", m);
             break;
         }
     }

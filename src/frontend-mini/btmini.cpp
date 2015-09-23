@@ -33,7 +33,7 @@
 
 #include <swlog.h>
 
-#include "backend/config/cbtconfig.h"
+#include "backend/config/btconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/btinstallbackend.h"
 #include "frontend/bookshelfmanager/btinstallmgr.h"
@@ -42,6 +42,7 @@
 #include "backend/managers/btstringmgr.h"
 #include "util/directory.h"
 #include "util/cresmgr.h"
+#include "bibletimeapp.h"
 
 #include "btmini.h"
 #include "models/btminimoduletextmodel.h"
@@ -188,7 +189,7 @@ public:
         _saveTimer = startTimer(5*60*1000);
 
         setWindowTitle("BibleTime Mini");
-        setWindowIcon(util::directory::getIcon(CResMgr::mainWindow::icon));
+        setWindowIcon(bApp->getIcon(CResMgr::mainWindow::icon));
     }
 
     ~BtMiniMainWidget()
@@ -207,16 +208,16 @@ public:
         for(int i = 0; i < list.size(); ++i)
         {
             if(list[i] == v->currentIndex())
-                CBTConfig::set(CBTConfig::openModule, i);
+                btConfig().setValue<int>("mini/openModule", i);
 
             modules.append(list[i].data(BtMini::ModuleRole).toString());
             places.append(list[i].data(BtMini::PlaceRole).toString());
         }
 
-        CBTConfig::set(CBTConfig::openModules, modules);
-        CBTConfig::set(CBTConfig::openPlaces, places);
+        btConfig().setValue<QStringList>("mini/openModules", modules);
+        btConfig().setValue<QStringList>("mini/openPlaces", places);
 
-        CBTConfig::syncConfig();
+        btConfig().sync();
     }
 
     /** */
@@ -377,7 +378,7 @@ QWidget * BtMini::mainWidget()
 
         QFont f = w->font();
         f.setPixelSize(qMin(size.width(), size.height()) / factor *
-                       CBTConfig::get(CBTConfig::fontScale) / 100);
+                       btConfig().value<int>("mini/fontScale", 100) / 100);
         w->setFont(f);
 
         qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
@@ -427,17 +428,17 @@ QWidget * BtMini::worksWidget(bool showTip)
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        v->setContinuousScrolling(CBTConfig::get(CBTConfig::miniContinuousScrolling));
+        v->setContinuousScrolling(btConfig().value<int>("mini/miniContinuousScrolling", false));
         v->setWebKitEnabled(true);
 
         QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
         f.setWeight(QFont::Normal);
         v->setFont(f);
 
-        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
+        v->setWebKitEnabled(btConfig().value<int>("mini/useWebKit", false));
 
-        if(CBTConfig::get(CBTConfig::useRenderCaching))
+        if(btConfig().value<int>("mini/useRenderCaching", false))
             v->setRenderCaching(true);
 
         // Setup controls
@@ -484,14 +485,8 @@ QWidget * BtMini::worksWidget(bool showTip)
         w->setLayout(vl);
 
         // Retrieve last session
-        QStringList modules = CBTConfig::get(CBTConfig::openModules);
-        QStringList places = CBTConfig::get(CBTConfig::openPlaces);
-
-        if(modules.size() == 0)
-        {
-            modules = CBTConfig::getDefault(CBTConfig::openModules);
-            places = CBTConfig::getDefault(CBTConfig::openPlaces);
-        }
+        QStringList modules = btConfig().value<QStringList>("mini/openModules", QStringList() << "KJV");
+        QStringList places = btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1");
 
         QStringList moduleNames;
 
@@ -534,7 +529,7 @@ QWidget * BtMini::worksWidget(bool showTip)
                 if(m->type() == CSwordModuleInfo::Bible)
                 {
                     modules = QStringList() << m->name();
-                    places = QStringList() << CBTConfig::getDefault(CBTConfig::openPlaces)[0];
+                    places = QStringList() << btConfig().value<QStringList>("mini/openPlaces", QStringList() << "John 1:1")[0];
                     break;
                 }
         }
@@ -553,7 +548,7 @@ QWidget * BtMini::worksWidget(bool showTip)
         m->setIndicators(b1, b3, b4, b2);
 
         // Restore last session
-        for(int i = 0, c = CBTConfig::get(CBTConfig::openModule); i < modules.size(); ++i)
+        for(int i = 0, c = btConfig().value<int>("mini/openModule", 0); i < modules.size(); ++i)
         {
             QModelIndex index(m->keyIndex(i, places[i]));
             if(i == c)
@@ -570,11 +565,11 @@ QWidget * BtMini::worksWidget(bool showTip)
             m, SLOT(modulesReloaded()));
 
         // tips
-        if(showTip && CBTConfig::get(CBTConfig::showTipAtStartup))
+        if(showTip && btConfig().value<int>("mini/showTipAtStartup", true))
         {
             if(BtMiniMenu::execTip(BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorks).toString() +
                                 BtMiniSettingsModel::standardData(BtMiniSettingsModel::tipWorksAddon).toString()) == 1)
-                CBTConfig::set(CBTConfig::showTipAtStartup, false);
+                btConfig().setValue<int>("mini/showTipAtStartup", false);
         }
     }
 
@@ -591,8 +586,8 @@ QWidget * BtMini::searchWidget()
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        v->setWebKitEnabled(CBTConfig::get(CBTConfig::useWebKit));
-        changeFontSize(v, CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        v->setWebKitEnabled(btConfig().value<int>("mini/useWebKit", false));
+        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
 
         // Setup controls
         QLineEdit *le = new QLineEdit(w);
@@ -652,7 +647,7 @@ QWidget * BtMini::installerWidget(bool firstTime)
 
         BtMiniView *v = new BtMiniView(w);
         v->setTopShadow(true);
-        changeFontSize(v, CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        changeFontSize(v, btConfig().value<int>("mini/fontTextScale", 100) / 100);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() <<
             (firstTime ? BtMiniPanel::Exit : BtMiniPanel::Close), w);
@@ -728,7 +723,7 @@ QWidget *BtMini::settingsWidget()
         //v->setTopShadow(true);
 
         QFont f(v->font());
-        f.setPixelSize(f.pixelSize() * CBTConfig::get(CBTConfig::fontTextScale) / 100);
+        f.setPixelSize(f.pixelSize() * btConfig().value<int>("mini/fontTextScale", 100) / 100);
         v->setFont(f);
 
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
@@ -875,54 +870,6 @@ void BtMiniMessageHandler(QtMsgType type, const QMessageLogContext &context, con
 #endif
 }
 
-class BtMiniApplication : public QApplication
-{
-public:
-    BtMiniApplication(int argc, char **argv) : QApplication(argc, argv)
-    {
-        mainLoop = false;
-    }
-
-    ~BtMiniApplication() {;}
-
-#ifdef Q_OS_WINCE
-    bool winEventFilter (MSG *msg, long *result)
-    {
-        switch(msg->message)
-        {
-        case WM_PAINT:
-            mainLoop = true;
-            break;
-        case WM_ACTIVATE:
-            {
-                if(mainLoop)
-                {
-                    int active = LOWORD(msg->wParam);
-                    bool minimized = (BOOL) HIWORD(msg->wParam);
-
-                    if(BtMini::mainWidget()->winId() == msg->hwnd)
-                        BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
-                }
-            }
-            break;
-        case WM_CLOSE:
-            qDebug("Close");
-            break;
-        case WM_HIBERNATE:
-            qDebug("Low memory");
-            break;
-        //default:
-        //	qDebug() << "msg:" << msg->message;
-        }
-        return false;
-    }
-#endif
-
-public:
-    bool mainLoop;
-
-};
-
 
 int main(int argc, char *argv[])
 {
@@ -933,35 +880,34 @@ int main(int argc, char *argv[])
 #endif
 
     // Init application
-    BtMiniApplication app(argc, argv);
+    BibleTimeApp app(argc, argv);
+
+    //registerMetaTypes();
 
     if(!util::directory::initDirectoryCache())
     {
         qFatal("Init Application: Error initializing directory cache!");
-        return -1;
+        return EXIT_FAILURE;
     }
 
-    QApplication::setStyle(CBTConfig::get(CBTConfig::miniStyle));
+    app.startInit();
+    if (!app.initBtConfig()) {
+        return EXIT_FAILURE;
+    }
 
-    app.setApplicationName("BibleTime Mini");
-    app.setOrganizationName("Crosswire");
-    app.setApplicationVersion(BT_MINI_VERSION);
+    app.setStyle(btConfig().value<QString>("mini/miniStyle", "mini"));
+    btConfig().setValue("bibletimeVersion", app.applicationVersion());
 
-//#ifdef Q_OS_WINCE
-    app.setAutoSipEnabled(true);
-//#endif
-
-    CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
 
     // install translators
-    QString ul(QLocale::system().name());
+    QString systemName(QLocale::system().name());
 
-    qDebug() << "Select interface locale:" << ul;
+    qDebug() << "Select interface locale:" << systemName;
 
     foreach(QString s, QStringList() << "bibletime_ui_" << "bibletimemini_")
     {
         QTranslator *t = new QTranslator(&app);
-        t->load(s + ul, util::directory::getLocaleDir().canonicalPath());
+        t->load(s + systemName, util::directory::getLocaleDir().canonicalPath());
         app.installTranslator(t);
     }
 
@@ -975,13 +921,13 @@ int main(int argc, char *argv[])
 
     // Init Sword
     sword::SWLog::setSystemLog(new BtMiniSwordLog);
-    sword::SWLog::getSystemLog()->setLogLevel(CBTConfig::get(CBTConfig::swordDebugLevel));
+    sword::SWLog::getSystemLog()->setLogLevel(btConfig().value<int>("mini/swordDebugLevel", sword::SWLog::LOG_ERROR));
 
-    sword::StringMgr::setSystemStringMgr(new BTStringMgr);
+    sword::StringMgr::setSystemStringMgr(new BtStringMgr);
 
     CSwordBackend *backend = CSwordBackend::createInstance();
 
-    backend->booknameLanguage(CBTConfig::get(CBTConfig::language));
+    backend->booknameLanguage(btConfig().value<QString>("language", systemName));
 
     CSwordBackend::instance()->initModules(CSwordBackend::OtherChange);
     backend->deleteOrphanedIndices();

@@ -17,7 +17,7 @@
 
 #include <config.h>
 
-#include "backend/config/cbtconfig.h"
+#include "backend/config/btconfig.h"
 #include "backend/cswordmodulesearch.h"
 
 #include "btmini.h"
@@ -91,7 +91,7 @@ public:
                     BtMiniSettingsModel::tr("It is cross-platform open-source Bible study application designed for mobile devices.") +
                     "<br/><br/>" +
                     BtMiniSettingsModel::tr("Underlying frameworks:") +
-                    "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.9.1</td></tr></table>"
+                    "<table width=\"100%\"><tr><td>BibleTime:</td><td align=\"right\">2.10.dev</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Sword project:</td><td align=\"right\">" VERSION "</td></tr></table>"
                     "<table width=\"100%\"><tr><td>Qt framework:</td><td align=\"right\">" QT_VERSION_STR "</td></tr></table>"
                     "</body>";
@@ -181,28 +181,28 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
         switch(index.row())
         {
         case BtMiniFontSize:
-            s = s.arg(CBTConfig::get(CBTConfig::fontScale));
+            s = s.arg(btConfig().value<int>("mini/fontScale", 100));
             break;
         case BtMiniFontTextSize:
-            s = s.arg(CBTConfig::get(CBTConfig::fontTextScale));
+            s = s.arg(btConfig().value<int>("mini/fontTextScale", 100));
             break;
 #ifdef BT_MINI_WEBKIT
         case BtMiniUseWebKit:
-            s = s.arg(CBTConfig::get(CBTConfig::useWebKit) ? tr("on") : tr("off"));
+            s = s.arg(btConfig().value<bool>("mini/useWebKit", false) ? tr("on") : tr("off"));
             break;
 #endif
         case BtMiniContinuousScrolling:
-            s = s.arg(CBTConfig::get(CBTConfig::miniContinuousScrolling) ? tr("on") : tr("off"));
+            s = s.arg(btConfig().value<bool>("mini/miniContinuousScrolling", false) ? tr("on") : tr("off"));
             break;
         case BtMiniStyle:
-            s = s.arg(CBTConfig::get(CBTConfig::miniStyle));
+            s = s.arg(btConfig().value<QString>("mini/miniStyle", "mini"));
             break;
         case BtMiniThreads:
-            s = s.arg(CBTConfig::get(CBTConfig::threadedTextRetrieving) ? tr("on") : tr("off"));
+            s = s.arg(btConfig().value<bool>("mini/threadedTextRetrieving", true) ? tr("on") : tr("off"));
             break;
 #ifndef BT_NO_CLUCENE
         case BtMiniSearchType:
-            switch(CBTConfig::get(CBTConfig::searchType))
+            switch(btConfig().value<int>("GUI/SearchDialog/searchType", CSwordModuleSearch::AndType))
             {
                 case CSwordModuleSearch::AndType:
                     s = s.arg(tr("AND"));
@@ -295,28 +295,28 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     switch(index.row())
     {
     case BtMiniFontSize:
-        CBTConfig::set(CBTConfig::fontScale, BtMiniMenu::execInput(
-            tr("Select size:"), "<b>%1%</b>", CBTConfig::get(CBTConfig::fontScale), 1, 1000));
+        btConfig().setValue("mini/fontScale", BtMiniMenu::execInput(
+            tr("Select size:"), "<b>%1%</b>", btConfig().value<int>("mini/fontScale", 100), 1, 1000));
         emit dataChanged(index, index);
         break;
 
     case BtMiniFontTextSize:
-        CBTConfig::set(CBTConfig::fontTextScale, BtMiniMenu::execInput(
-            tr("Select size:"), "<b>%1%</b>", CBTConfig::get(CBTConfig::fontTextScale), 1, 1000));
+        btConfig().setValue("mini/fontTextScale", BtMiniMenu::execInput(
+            tr("Select size:"), "<b>%1%</b>", btConfig().value<int>("mini/fontTextScale" , 100), 1, 1000));
         emit dataChanged(index, index);
         break;
 
 #ifdef BT_MINI_WEBKIT
     case BtMiniUseWebKit:
-        CBTConfig::set(CBTConfig::useWebKit, !CBTConfig::get(CBTConfig::useWebKit));
+        btConfig().setValue("mini/useWebKit", !btConfig().value<int>("mini/useWebKit", false));
         emit dataChanged(index, index);
         break;
 #endif
 
     case BtMiniContinuousScrolling:
         {
-            bool b = !CBTConfig::get(CBTConfig::miniContinuousScrolling);
-            CBTConfig::set(CBTConfig::miniContinuousScrolling, b);
+            bool b = !btConfig().value<bool>("mini/miniContinuousScrolling", false);
+            btConfig().setValue("mini/miniContinuousScrolling", b);
             BtMini::findView(BtMini::worksWidget())->setContinuousScrolling(b);
             emit dataChanged(index, index);
         }
@@ -325,13 +325,13 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
     case BtMiniStyle:
         {
             QStringList ss(QStyleFactory::keys());
-            int i = ss.indexOf(CBTConfig::get(CBTConfig::miniStyle));
+            int i = ss.indexOf(btConfig().value<QString>("mini/miniStyle", "mini"));
             QString s;
             if(i >= 0 && i < ss.size() - 1)
                 s = ss[i + 1];
             else
                 s = ss[0];
-            CBTConfig::set(CBTConfig::miniStyle, s);
+            btConfig().setValue("mini/miniStyle", s);
             emit dataChanged(index, index);
         }
         break;
@@ -342,14 +342,14 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         break;
 
     case BtMiniThreads:
-        CBTConfig::set(CBTConfig::threadedTextRetrieving, !CBTConfig::get(CBTConfig::threadedTextRetrieving));
+        btConfig().setValue("mini/threadedTextRetrieving", !btConfig().value<int>("mini/threadedTextRetrieving", true));
         emit dataChanged(index, index);
         break;
 
 #ifndef BT_NO_CLUCENE
     case BtMiniSearchType:
-        CBTConfig::set(CBTConfig::searchType, (CBTConfig::get(CBTConfig::searchType) + 1)
-                       % (CSwordModuleSearch::FullType + 1));
+        btConfig().setValue("GUI/SearchDialog/searchType", (btConfig().value<int>("GUI/SearchDialog/searchType",
+                            CSwordModuleSearch::AndType) + 1) % (CSwordModuleSearch::FullType + 1));
         emit dataChanged(index, index);
 		break;
 #endif
