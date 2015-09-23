@@ -105,7 +105,7 @@ public:
         _items.append(new Item(Item::UseWebKit, tbs + BtMiniSettingsModel::tr("Use WebKit:") +
             "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #endif
-#ifndef BT_NO_CLUCENE
+#ifndef BT_NO_LUCENE
         _items.append(new Item(Item::SearchType, tbs + BtMiniSettingsModel::tr("Search type:") +
             "</td> <td align=\"right\"><b>%1</b></td></tr></table>"));
 #endif
@@ -288,7 +288,7 @@ QVariant BtMiniSettingsModel::data(const QModelIndex &index, int role) const
             }
         case Item::Threads:
             return i->_text.arg(btConfig().value<bool>("mini/threadedTextRetrieving", true) ? tr("on") : tr("off"));
-#ifndef BT_NO_CLUCENE
+#ifndef BT_NO_LUCENE
         case Item::SearchType:
             switch(btConfig().value<int>("GUI/SearchDialog/searchType", CSwordModuleSearch::AndType))
             {
@@ -501,7 +501,7 @@ void BtMiniSettingsModel::clicked(const QModelIndex &index)
         BtMiniUi::instance()->resetWidgets(false, true, false);
         break;
 
-#ifndef BT_NO_CLUCENE
+#ifndef BT_NO_LUCENE
     case Item::SearchType:
         btConfig().setValue("GUI/SearchDialog/searchType", (btConfig().value<int>("GUI/SearchDialog/searchType",
                             CSwordModuleSearch::AndType) + 1) % (CSwordModuleSearch::FullType + 1));

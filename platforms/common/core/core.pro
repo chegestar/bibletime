@@ -161,7 +161,7 @@ warning("Non Mini build: WebKit required")
 
 # Clucene
 clucene:include(../../common/clucene/clucene.pro)
-!clucene:DEFINES += BT_NO_CLUCENE
+!clucene:DEFINES += BT_NO_LUCENE
 
 # CURL
 # optional
