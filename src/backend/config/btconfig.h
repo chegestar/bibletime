@@ -147,6 +147,10 @@ public: /* Methods: */
         QMutexLocker lock(&this->m_mutex);
         return m_defaultFont;
     }
+    inline void setDefaultFont(QFont font) {
+        QMutexLocker lock(&this->m_mutex);
+        m_defaultFont = font;
+	}
 
     /// \todo: put FontSettingsPair in QVariant directly
     /*!
