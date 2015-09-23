@@ -97,8 +97,13 @@ public:
             g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
 
             BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(g);
-            mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
-                "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
+            mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'><word-breaks/>"
+                                 // RtoL module support, need decision from Crosswire
+                                 << "<br/>"
+                                 //<< "<div dir=\"" << BtBookshelfModel::ModuleDescriptionRole << "\">"
+                                 << BtBookshelfModel::ModuleDescriptionRole
+                                 //<< "</div>"
+                                 << "</font>");
             mm->setSourceModel(be->model());
             mm->setObjectName(s);
 
