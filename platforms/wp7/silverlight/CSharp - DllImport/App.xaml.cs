@@ -56,7 +56,6 @@ namespace CSharp___DllImport
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            int r = DllImportCaller.lib.ShellExecuteEx7(@"\Applications\Install\9333C986-FBF8-4DDD-9F51-79582FAF21E8\Install\test.exe");
         }
 
         // Code to execute when the application is activated (brought to foreground)

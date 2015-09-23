@@ -65,47 +65,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ASM_JIT\ASM.cs" />
-    <Compile Include="ASM_JIT\Tests.cs" />
     <Compile Include="Code\Win32ErrorCode.cs" />
     <Compile Include="Code\WinError.cs" />
-    <Compile Include="Hacked Tile System\TileSystem.cs" />
-    <Compile Include="Phone\Children\AppLauncher.cs" />
-    <Compile Include="Phone\Children\Battery.cs" />
-    <Compile Include="Phone\Children\Camera\Camera.cs" />
-    <Compile Include="Phone\Children\Console7.cs" />
-    <Compile Include="Phone\Children\IExplorer.cs" />
-    <Compile Include="Phone\Children\IO\IO.cs" />
-    <Compile Include="Phone\Children\OS\Bluetooth.cs" />
-    <Compile Include="Phone\Children\OS\IPowerDevice.cs" />
-    <Compile Include="Phone\Children\OS\Kernel\Kernel.cs" />
-    <Compile Include="Phone\Children\OS\OS.cs" />
-    <Compile Include="Phone\Children\OS\User\User.cs" />
-    <Compile Include="Phone\Children\OS\PostSendMSG\PostMessage.cs" />
-    <Compile Include="Phone\Children\OS\PostSendMSG\SendMessage.cs" />
-    <Compile Include="Phone\Children\OS\PostSendMSG\SysCodes.cs" />
-    <Compile Include="Phone\Children\OS\WiFi.cs" />
-    <Compile Include="Phone\Children\Search.cs" />
-    <Compile Include="Phone\Children\Shell\Shell.cs" />
-    <Compile Include="Phone\Children\Sound.cs" />
-    <Compile Include="Phone\Children\TaskHost\HostInformation.cs" />
-    <Compile Include="Phone\Children\TaskHost\TaskHost.cs" />
-    <Compile Include="Phone\Children\XboxLive.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Phone\CoreE\Interop.cs" />
-    <Compile Include="Phone\Children\DEP.cs" />
-    <Compile Include="Phone\Children\KeyboardHook.cs" />
-    <Compile Include="Phone\Children\Network.cs" />
-    <Compile Include="Phone\Children\TaskManager\TaskManager.cs" />
-    <Compile Include="Phone\Children\TaskManager\WP7Process.cs" />
-    <Compile Include="Phone\Children\Vibrator.cs" />
-    <Compile Include="Phone\Children\XAPInstaller.cs" />
-    <Compile Include="Phone\Children\Zune.cs" />
-    <Compile Include="Phone\Children\Clipboard.cs" />
     <Compile Include="Phone\CoreE\Samsung\StandardRightsTest.cs" />
-    <Compile Include="Phone\Display.cs" />
     <Compile Include="Phone\ManifestAppInfo.cs" />
-    <Compile Include="Phone\MarshalCopy.cs" />
-    <Compile Include="Phone\Phone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +82,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BibleTime-Mini.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="COMRilClient.dll" />
     <Content Include="DllImportMango.dll" />
     <Content Include="exec.xdaHoax" />
@@ -160,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
