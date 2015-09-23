@@ -212,9 +212,12 @@ bool setTargetList( const QStringList& targets ) {
     return true;
 }
 
-QStringList sourceNameList() {
+QStringList sourceNameList(bool retrieve) {
     BtInstallMgr mgr;
     Q_ASSERT(mgr.installConf);
+
+    if(retrieve)
+        mgr.refreshRemoteSourceConfiguration();
 
     QStringList names;
 
