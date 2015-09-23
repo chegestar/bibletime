@@ -14,14 +14,17 @@
 #include <QBoxLayout>
 #include <QDesktopWidget>
 #include <QFile>
+#include <QFontDatabase>
+#include <QtGlobal>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPainter>
-#include <QPlastiqueStyle>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QStackedWidget>
 #include <QStyle>
+#include <QStyleFactory>
+#include <QTextCodec>
 #include <QTextStream>
 #include <QTimer>
 #include <QTranslator>
@@ -74,21 +77,21 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 
     if (jniBtMiniVm->GetEnv((void **)&p_env, JNI_VERSION_1_6) != JNI_OK)
     {
-        qCritical("Jni cant get environment");
+        qCritical("Jni can't get environment");
         return -1;
     }
 
     jniBtMiniClass = (*p_env).FindClass("org/kde/necessitas/origo/QtActivity");
     if (!jniBtMiniClass)
     {
-        qCritical("Jni cant get class");
+        qCritical("Jni can't get class");
         return -1;
     }
 
     jniBtMiniVibrateMethodId = p_env->GetStaticMethodID(jniBtMiniClass,"vibrate", "(J)V");
     if (!jniBtMiniVibrateMethodId)
     {
-        qCritical("Jni cant get method");
+        qCritical("Jni can't get method");
         return -1;
     }
 
@@ -189,6 +192,17 @@ public:
     };
     void setOrientation(ScreenOrientation orientation)
     {
+        #if defined(Q_OS_SYMBIAN)
+            // If the version of Qt on the device is < 4.7.2, that attribute won't work
+            if (orientation != ScreenOrientationAuto) {
+                const QStringList v = QString::fromAscii(qVersion()).split(QLatin1Char('.'));
+                if (v.count() == 3 && (v.at(0).toInt() << 16 | v.at(1).toInt() << 8 | v.at(2).toInt()) < 0x040702) {
+                    qWarning("Screen orientation locking only supported with Qt 4.7.2 and above");
+                    return;
+                }
+            }
+        #endif // Q_OS_SYMBIAN
+
         Qt::WidgetAttribute attribute;
         switch (orientation) {
     #if QT_VERSION < 0x040702
@@ -225,6 +239,10 @@ public:
         showFullScreen();
     #elif defined(Q_WS_MAEMO_5)
         showMaximized();
+    #elif defined(Q_OS_WINCE)
+        w->resize(Application::desktop()->size());
+        w->show();
+        w->showFullScreen();
     #else
         show();
     #endif
@@ -303,11 +321,10 @@ QWidget * BtMini::mainWidget()
 
     if(!w)
     {
-        //QSize size(240, 320);
+#if defined  Q_OS_WINCE || defined (ANDROID) || defined (Q_OS_UNIX)
+        QSize size(QApplication::desktop()->size());
+#else
         QSize size(480, 640);
-
-#ifdef Q_WS_WINCE
-        size = QApplication::desktop()->size();
 #endif
 
         w = new BtMiniMainWidget;
@@ -316,15 +333,14 @@ QWidget * BtMini::mainWidget()
         f.setPixelSize(qMin(size.width(), size.height())/14.0f);
         w->setFont(f);
 
-        w->resize(size);
+        qDebug() << "Device dpi lx ly px py:" << w->logicalDpiX() << w->logicalDpiY() <<
+                    w->physicalDpiX() << w->physicalDpiY();
 
-#ifdef Q_OS_WINCE
-        w->show();
-        w->showFullScreen();
-#elif defined (ANDROID)
+#if defined  Q_OS_WINCE || defined (ANDROID) || defined (Q_OS_UNIX)
         w->setOrientation(BtMiniMainWidget::ScreenOrientationAuto);
         w->showExpanded();
 #else
+        w->resize(size);
         w->show();
         w->raise();
 #endif
@@ -566,11 +582,11 @@ QWidget * BtMini::installerWidget(bool firstTime)
         QStringList        ss(BtInstallBackend::sourceNameList(refresh));
         BtInstallMgr      *im = new BtInstallMgr(m);
 
-        BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
-        o.limitItems = true;
-        o.perCycle = 5;
-        o.scrollPerItem = true;
-        v->layoutDelegate()->setLevelOption(1, o);
+        //BtMiniLayoutOption o(v->layoutDelegate()->levelOption());
+        //o.limitItems = true;
+        //o.perCycle = 5;
+        //o.scrollPerItem = true;
+        //v->layoutDelegate()->setLevelOption(1, o);
 
         foreach(QString s, ss)
         {
@@ -580,7 +596,7 @@ QWidget * BtMini::installerWidget(bool firstTime)
 
             CSwordBackend *be = BtInstallBackend::backend(is);
 
-            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
+            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(false), m);
             mm->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<br/>"
                 "<word-breaks/><font size=\"60%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font>");
             mm->setSourceModel(be->model());
@@ -751,7 +767,7 @@ int main(int argc, char *argv[])
     // Init application
     BtMiniApplication app(argc, argv);
 
-    // issue in necessitas sets QPlasticqueStyle when QApplication inits
+    // issue in necessitas sets QPlastiqueStyle when QApplication inits
 #ifdef ANDROID
     QApplication::setStyle("mini");
 #endif
@@ -772,7 +788,8 @@ int main(int argc, char *argv[])
     CBTConfig::set(CBTConfig::bibletimeVersion, app.applicationVersion());
 
     // install translators
-    QString ul(QLocale::system().uiLanguages()[0].toLatin1());
+    //QString ul(QLocale::system().uiLanguages()[0].toLatin1().replace('-', '_'));
+    QString ul(QLocale::system().name());
 
     qDebug() << "Select interface locale:" << ul;
 

@@ -12,43 +12,50 @@
 <context>
     <name>BtMini</name>
     <message>
-        <location filename="../btmini.cpp" line="440"/>
+        <location filename="../btmini.cpp" line="537"/>
         <source>Update all sources?</source>
         <translation>Обновить источники?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="441"/>
+        <location filename="../btmini.cpp" line="538"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="441"/>
+        <location filename="../btmini.cpp" line="538"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="441"/>
-        <location filename="../btmini.cpp" line="535"/>
+        <location filename="../btmini.cpp" line="538"/>
+        <location filename="../btmini.cpp" line="637"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="534"/>
+        <location filename="../btmini.cpp" line="565"/>
+        <source>Please, install at
+least one Bible text
+and restart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../btmini.cpp" line="636"/>
         <source>Do you want to install %1 ?</source>
         <translation>Установить %1 ?</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="535"/>
+        <location filename="../btmini.cpp" line="637"/>
         <source>Install</source>
         <translation>Установить</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="539"/>
+        <location filename="../btmini.cpp" line="641"/>
         <source>Installing ...</source>
         <translation>Установка ...</translation>
     </message>
     <message>
-        <location filename="../btmini.cpp" line="548"/>
+        <location filename="../btmini.cpp" line="650"/>
         <source>Module was not installed</source>
         <translation>Модуль не установлен</translation>
     </message>
@@ -60,7 +67,7 @@
 <context>
     <name>BtMiniMenu</name>
     <message>
-        <location filename="../ui/btminimenu.cpp" line="335"/>
+        <location filename="../ui/btminimenu.cpp" line="342"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -160,6 +167,14 @@
         <location filename="../ui/btminipanel.cpp" line="140"/>
         <source>No</source>
         <translation>Нет</translation>
+    </message>
+</context>
+<context>
+    <name>BtMiniView</name>
+    <message>
+        <location filename="../view/btminiview.cpp" line="2774"/>
+        <source>Hello World!</source>
+        <translation type="unfinished">Привет Мир!</translation>
     </message>
 </context>
 <context>

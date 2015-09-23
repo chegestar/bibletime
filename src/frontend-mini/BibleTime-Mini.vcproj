@@ -3392,7 +3392,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\backend\filters\osismorphsegmentation.cpp"
+				RelativePath="..\backend\filters\osismorphsegmentation_bt.cpp"
 				>
 			</File>
 			<File

@@ -1,4 +1,7 @@
+
 CONFIG += clucene
+
+#QT += widgets
 
 DEFINES += BT_MINI
 
@@ -43,7 +46,7 @@ SOURCES += \
     ../../../../sword/src/mgr/encfiltmgr.cpp \
     ../../../../sword/src/mgr/markupfiltmgr.cpp \
     ../../../../sword/src/mgr/filemgr.cpp \
-    ../../../../sword/src/mgr/versemgr.cpp \
+    ../../../../sword/src/mgr/versificationmgr.cpp \
     ../../../../sword/src/mgr/ftptrans.cpp \
     ../../../../sword/src/mgr/swlocale.cpp \
     ../../../../sword/src/mgr/localemgr.cpp \
@@ -100,6 +103,7 @@ SOURCES += \
     ../../../../sword/src/modules/filters/teiplain.cpp \
     ../../../../sword/src/modules/filters/teirtf.cpp \
     ../../../../sword/src/modules/filters/teihtmlhref.cpp \
+    ../../../../sword/src/modules/filters/teixhtml.cpp \
     ../../../../sword/src/modules/filters/gbfthml.cpp \
     ../../../../sword/src/modules/filters/gbfosis.cpp \
     ../../../../sword/src/modules/filters/thmlosis.cpp \
@@ -274,7 +278,13 @@ HEADERS += \
     ../../../../bt/src/backend/keys/cswordtreekey.h \
     ../../../../bt/src/frontend/crossrefrendering.h \
     ../../../../bt/src/backend/filters/osismorphsegmentation.h \
-    ../../../../bt/src/frontend-mini/btmini.h
+    ../../../../bt/src/frontend-mini/btmini.h \
+    ../../../../bt/src/frontend-mini/ui/btministyle.cpp \
+    CLucene/clucene-config.h
+
+win32 {
+LIBS += -lws2_32
+}
 
 RESOURCES += \
     ../../../../bt/src/frontend-mini/ui/btministyle.qrc \
@@ -317,6 +327,8 @@ OTHER_FILES += ../../../src/frontend-mini/todo.txt \
 
 TRANSLATIONS += ../../../src/frontend-mini/translations/bibletimemini_ru.ts
 
+
+# clucene, could be turned off when porting on new plaftorm
 clucene {
 DEFINES += _UCS2 _CL_DISABLE_MULTITHREADING
 
@@ -419,5 +431,26 @@ SOURCES += \
     ../../../../clucene/src/CLucene/config/repl_tprintf.cpp
 }
 else {
-DEFINES += BT_NO_LUCENE
+DEFINES += BT_NO_CLUCENE
+}
+
+
+# meego platform
+unix {
+include(deployment.pri)
+qtcAddDeployment()
+
+OTHER_FILES += \
+    qtc_packaging/debian_harmattan/rules \
+    qtc_packaging/debian_harmattan/README \
+    qtc_packaging/debian_harmattan/manifest.aegis \
+    qtc_packaging/debian_harmattan/copyright \
+    qtc_packaging/debian_harmattan/control \
+    qtc_packaging/debian_harmattan/compat \
+    qtc_packaging/debian_harmattan/changelog
+
+contains(MEEGO_EDITION,harmattan) {
+    target.path = /opt/btmini/bin
+    INSTALLS += target
+}
 }

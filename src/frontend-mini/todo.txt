@@ -1,50 +1,16 @@
 kalemas@mail.ru :
 === tasks ======================================================================
-+	support delayedLayout and fix subview risizes
-+	long tapping indication
-+	model module range relative module bounds
-+	restore red letter words
-+	correct rows insert/remove for plain layout
--	contents of numbers for subView
-+	decide how to render entries with SimpleKey
-+	search view
-+		in search term add: *term* AND *otherTerm*
-+		scrollbar changes current index
-+		highlight search term and remove section headings
-+	testament persitence check
-+	sometimes view resized more than mainWidget
-+	add ability to use QWebPage instead of QTextDocument(memory concurmption twice more)
-+	remake search in BtBookShelfTreeModel on match()
-+	icon rendering for view
-+	fix resize on scrollbars
-+	use dialog util to display messages on screen
-+	CSwordBibleModuleInfo bounds information caching
-+	modules model
-+	optimize power consurmption: timer to stop update
-+	layout n items on line without account of contents width
-+	rendering caching
-+	context menu: add left(+), add right(+), clear(+), bookmark, select
-+	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
-+	modules model: module manager button, category / language+modules layout
-+	simple html render item (fast)
-+	while context info is opening, threaded text rendering from sword cause mixed up text, josh 2 2
-+	text formating for preview text
-+	threaded text aquirition priority, for now first text rendered for inactive views
-+	when receive verse text from thread, resize from center
-+	context info problems, misalignment qtextdocument | qstatictext
-+	remove hack with QTextDocument recreation in BtMiniView::currentContents - increase perfomance
-+	preview role and threaded data retrieving
-+	context for highlited word broken
-+	fixed desktop build
-+	scrollbar always shown if more than 5 modules in module selection
-+	lexicon/dictionary support
-+	localized strong: search keyword
-+	translation
-+	call style to draw view shadow
++    context for highlited word broken
++    fixed desktop build
++    scrollbar always shown if more than 5 modules in module selection
++    lexicon/dictionary support
++    localized strong: search keyword
++    translation
++    call style to draw view shadow
     improve BT modularity
-+		Install manager - information of repos/modules, manage modules
++       Install manager - information of repos/modules, manage modules
         Bookmarks
-+		move all model roles to global header
++       move all model roles to global header
     android
 +       use qt-resources system for external read-only resurces
 +       allow to run without modules
@@ -52,27 +18,37 @@ kalemas@mail.ru :
 +       "build index..." overlaped with virtual keyboard
 +       vibration on long press
 +       restore clucene
--       cant get right language locale
-        not all characters drawn, probably qt font doesnt contain whole set
+-       cant get right language locale (necessitas bug)
+-       not all characters drawn, probably qt font doesnt contain whole set (necessitas bug)
++   fix font size on non wince targets
++   long press depend on time, not update interval
+?   maybe installing a module automatically download and istall sword locale for that language
+    install manager by languages
+    qlabel incorrectly layout text in menus (inner qtextdcumet taller then height sometimes)
+		try to replace with custom control
+    logic to take into account device dpi for font size policy
+        android hd2 - 239 dpi
+        win64 17" 1600x900 - 96 dpi
+    settings ui
+        font size
+        non stop scrolling
     linux
-        no text drawn after tr()
+        no non ascii characters drawn
     design changes
         cut-off menu overlays, open contex full-size
         sliding panels for queries
         hideable bottom panel
         top area to indicate current location
-    qlabel incorrectly layouted in menus (inner qtextdcumet taller then height)
     selecting items and active item
-    install manager by languages
     current subview indication
     footnote display using icon
-    restore original BT paths, or dirs in resources
+?   restore original BT paths, or dirs in resources
     bug, delayed module verses layout stops on missed content
     crush when search RSTchs on ���������*
     bug, sometimes on Matt n navigation second level opens as books again
     bug, sometimes book stay unlocalized in text view in chapter area
 
-    make commentary context parallel
+    make commentary context parallel computed
         make work array and threads array static
     current module seem to fail to get text from sword after module installation
 
@@ -84,10 +60,19 @@ kalemas@mail.ru :
         process unhandled css construction before passing to QTextDocument
     replace unistd.h with io.h/direct.h on wince
     megre linked verses in model
-    new menu look
+    ? new menu look
     context for word even withot tagging (dictionary lookup)
     new system for context modules: add/remove from context lookup
 
+    new style of sliding, next view doesn't slide but fade
+    topbar with animated effect when go sublevel
+    find way to communicate with scrollbar to display current position and marks
+    ? maybe make scroll bar transprent and overlapping view
+    ? ability to turn on auto sctolling feature: limit fading from initial speed on touch raise, round small speeds
+    ? scrolling like book pages, good because eyes always move all around the screen
+    night mode in style
+    bookmarks would be named as Cuttings or Clippings
+    notes - based on personal commentary module with av11n mapping support remark, should be created by app
 
 === known tasks ================================================================
     dialog looses event filter for qapplication after minimize/maximize
@@ -129,19 +114,19 @@ kalemas@mail.ru :
             get / set (on switch and destroy) place
             remember module also
             place, module, date started, date visited
-?		colors
+?        colors
         reading count
             created as byte-array for every versification
-?			increased when exceed 256-bound
-?			converted beetwheen v11ns on call
+?            increased when exceed 256-bound
+?            converted beetwheen v11ns on call
             or maybe implement this throught history
 
-?	sliding, animated backgrounds
-?	read html / txt / rtf / doc formats
+?    sliding, animated backgrounds
+?    read html / txt / rtf / doc formats
 
 === SWORD ======================================================================
     load locales on demand
-%	av11n mappings
+%    av11n mappings
     load av11n on demand from file
     make more steps for search
 

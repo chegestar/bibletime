@@ -166,16 +166,8 @@ public:
         
 		CSwordVerseKey key(l->_module);
 
-		if(l->_hasScope)
-		{
-			key.Headings(1);
-			key.setIndex(l->_scopeMap[index.row()]);
-		}
-		else
-		{
-			key.Headings(1);
-			key.setIndex(index.row() + l->_firstEntry);
-		}
+		key.setIntros(true);
+		key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() + l->_firstEntry);
 		
         return key;
     }
@@ -364,7 +356,7 @@ public:
                 if(!place.isEmpty())
                 {
                     CSwordVerseKey key(l->_module);
-                    l->setScope(key.ParseVerseList((const char*)place.toUtf8()));
+                    l->setScope(key.parseVerseList((const char*)place.toUtf8()));
 
 					if(!l->_hasContents)
 						l->setContents(QString());
@@ -539,10 +531,10 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
 							if(!d->_isSearch)
 							{
-								((sword::VerseKey*)(l->_module->module()->getKey()))->Headings(1);
+								((sword::VerseKey*)(l->_module->module()->getKey()))->setIntros(true);
 
 								CSwordVerseKey k1(l->_module);
-								k1.Headings(1);
+								k1.setIntros(true);
 								k1.setKey(keyName);
 
 								CTextRendering::KeyTreeItem::Settings preverse_settings(false,
@@ -1020,8 +1012,8 @@ void BtMiniModuleTextModel::startSearch()
 	if(CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(m))
 	{
 		sword::VerseKey key(bm->lowerBound());
-		key.LowerBound(bm->lowerBound());
-		key.UpperBound(bm->upperBound());
+		key.setLowerBound(bm->lowerBound());
+		key.setUpperBound(bm->upperBound());
 		scope = key;
 	}
 

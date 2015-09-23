@@ -90,7 +90,7 @@
 #define _CL_HAVE_FLOAT_T  1 
 
 #ifdef __MINGW32__
-typedef float float_t;
+//typedef float float_t;
 #endif
 
 
@@ -208,9 +208,9 @@ typedef float float_t;
 /* #undef _CL_HAVE_SNPRINTF_BUG */
 
 /* Define to 1 if you have the `snwprintf' function. */
+#ifdef _WIN32
 #define _CL_HAVE_SNWPRINTF
-
-
+#endif
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define _CL_HAVE_STDINT_H  1 
@@ -242,7 +242,9 @@ typedef float float_t;
 
 
 /* Define to 1 if you have the <tchar.h> header file. */
-//#define _CL_HAVE_TCHAR_H
+#ifdef _WIN32
+#define _CL_HAVE_TCHAR_H
+#endif
 
 /* Define to 1 if you have the `tell' function. */
 #define _CL_HAVE_TELL

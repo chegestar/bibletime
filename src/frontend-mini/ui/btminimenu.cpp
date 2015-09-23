@@ -49,6 +49,11 @@ public:
 		const QSize s = (menu->parentWidget()->geometry().size() - menu->frameSize())/2;
 		menu->move(QPoint(s.width(), s.height()));
 	}
+
+    static QWidget * parentWidget()
+    {
+        return QApplication::topLevelWidgets()[0];
+    }
     
     QList<QWidget*>  _buttons;
     int              _result;
@@ -60,7 +65,7 @@ public:
 };
 
 BtMiniMenu::BtMiniMenu() : d_ptr(new BtMiniMenuPrivate)
-	, QWidget(QApplication::topLevelWidgets()[0], Qt::FramelessWindowHint)
+    , QWidget(BtMiniMenuPrivate::parentWidget(), Qt::FramelessWindowHint)
 {
 	//setWindowModality(Qt::ApplicationModal);
     //setModal(false);
@@ -247,7 +252,7 @@ void BtMiniMenu::paintEvent(QPaintEvent *e)
     QPainter p(this);
     
     // QStyle::PE_PanelMenu on windows is hollow
-#if defined Q_WS_WIN || defined ANDROID
+#if defined Q_WS_WIN || defined ANDROID || defined __unix__
     QStyleOptionButton opt;
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);

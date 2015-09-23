@@ -74,7 +74,7 @@ public:
 			_key.book(_bm->books()->at(child));
 			_key.setChapter(0);
 			_key.setVerse(0);
-			_key.Normalize();
+			_key.normalize();
 		}
 		else if(_parentKey.getChapter() == 0)
 		{
@@ -82,7 +82,7 @@ public:
 			_key.setAutoNormalize(false);
 			_key.setChapter(child + 1);
 			_key.setVerse(0);
-			_key.Normalize();
+            _key.normalize();
 		}
 		else if(_parentKey.getVerse() == 0)
 		{
@@ -155,7 +155,7 @@ void BtMiniModuleNavigationModel::setModule(QString &module)
 		Q_CHECK_PTR(d->_bm);
 
 		d->_key.setModule(d->_bm);
-		d->_key.Headings(1);
+        d->_key.setIntros(true);
 
 		d->_parentIndex = QModelIndex();
 		d->setupVerseKey(d->_parentIndex);
@@ -235,7 +235,7 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 			d->_key.setAutoNormalize(false);
 			d->_key.setChapter(0);
 			d->_key.setVerse(0);
-			d->_key.Normalize();
+            d->_key.normalize();
 
 	#ifdef QT_DEBUG
 			if(d->_bm->books()->indexOf(d->_key.book()) == -1)

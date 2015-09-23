@@ -17,6 +17,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QtDebug>
+#include <qdrawutil.h>
 
 class BtMiniStyle : public QCommonStyle
 {
@@ -380,7 +381,11 @@ public:
     }
 };
 
-#include "btministyle.moc"
+//#ifdef Q_OS_WIN
+//#include "btministyle.moc"
+//#else
+#include "moc_btministyle.cpp"
+//#endif
 
 // HACK declare static plugin
 QObject * qt_plugin_instance_BtMiniStylePlugin() Q_PLUGIN_INSTANCE(BtMiniStylePlugin)

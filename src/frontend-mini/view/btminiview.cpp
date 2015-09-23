@@ -42,11 +42,11 @@
 #include <QWebFrame>
 #include <QWebHitTestResult>
 #include <QWebPage>
-#include <QWebSettings>
+#include <QWebSettings>.
 #endif
 
-#define SHORT_PRESS_DELAY        13
-#define LONG_PRESS_DELAY         32
+#define SHORT_PRESS_DELAY        18
+#define LONG_PRESS_DELAY         60
 #define SCROLL_SNAPPING_SPEED    0.3f
 #define SCROLL_ATTENUATION       0.93
 #define CACHED_SURFACE_OVERLAP   0.5
@@ -456,7 +456,7 @@ public:
                 int contentStart = ct.indexOf("#content", cssStart);
                 int cssEnd = ct.indexOf("</style>");
 
-                // fix default font size
+                // fix default font size to widget font size
                 if(contentStart >= 0 && contentStart < cssEnd)
                 {
                     int fontSize = ct.indexOf("font-size:", contentStart);
@@ -2140,12 +2140,12 @@ void BtMiniView::timerEvent(QTimerEvent *e)
         if(d->_mouseTapping == LONG_PRESS_DELAY)
         {
             if(receivers(SIGNAL(longPressed(const QModelIndex &))) > 0)
-                BtMini::vibrate(30);
+                BtMini::vibrate(20);
         }
         else if(d->_mouseTapping == SHORT_PRESS_DELAY)
         {
             if(receivers(SIGNAL(shortPressed(const QModelIndex &))) > 0)
-                BtMini::vibrate(30);
+                BtMini::vibrate(20);
         }
 
         d->_mouseTapping++;
@@ -2759,16 +2759,21 @@ void BtMiniView::paintEvent(QPaintEvent *e)
         painter.setPen(Qt::NoPen);
 
 		int mt = d->_mouseTapping - 6;
+        float f = 1.3f;
         
         for(int i = qMax(0, mt - 3), e = mt; i <= e; ++i)
         {
-            QPoint p(z.center() + (QPointF(qCos(i / 1.7), qSin(i / 1.7)) * (z.width() / 2)).toPoint());
+            QPoint p(z.center() + (QPointF(qCos(i / f), qSin(i / f)) * (z.width() / 2)).toPoint());
             QRect r(p.x()-(m*0.25), p.y()-(m*0.25), m*0.5, m*0.5);
 
             painter.setBrush(QColor(0, 0, 0, (255 * 0.8) / (mt - i + 1)));
             painter.drawEllipse(r);
         }
     }
+
+//    painter.setPen(Qt::black);
+//    painter.drawText(viewport()->rect(), QString("Hi Привет"));
+//    painter.drawText(viewport()->rect(), tr("Hello World!"));
 }
 
 void BtMiniView::resizeEvent(QResizeEvent *e)
