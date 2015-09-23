@@ -36,12 +36,13 @@
 #include "backend/config/btconfig.h"
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/btinstallbackend.h"
-#include "frontend/bookshelfmanager/btinstallmgr.h"
+#include "backend/btinstallmgr.h"
 #include "backend/managers/cdisplaytemplatemgr.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/managers/btstringmgr.h"
 #include "util/directory.h"
 #include "util/cresmgr.h"
+#include "util/geticon.h"
 #include "bibletimeapp.h"
 
 #include "btmini.h"
@@ -189,7 +190,7 @@ public:
         _saveTimer = startTimer(5*60*1000);
 
         setWindowTitle("BibleTime Mini");
-        setWindowIcon(bApp->getIcon(CResMgr::mainWindow::icon));
+        setWindowIcon(util::getIcon(CResMgr::mainWindow::icon));
     }
 
     ~BtMiniMainWidget()

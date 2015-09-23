@@ -270,8 +270,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
                "would like to make default and select corresponding action.") + "<br/><br/>" +
             tr("<b>Parallel Bible display.</b> You would open several Bible texts in one view, with respect of different verse "
                "markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like "
-               "to add, then select \"") + tr("Add Parallel") + "\"."
-               "." +
+               "to add, then select \"") + tr("Add Parallel") + "\"." +
             QString("</body>"));
     case tipWorksAddon:
         return QString(tr("<br/>This information you could access again in <b>Settings</b> under the <b>Handbook</b> item."));

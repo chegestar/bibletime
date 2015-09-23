@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 0.9.5
+VERSION = 0.9.6
 
 CONFIG += webkit clucene svg
 
@@ -19,16 +19,14 @@ INCLUDEPATH += . \
 SOURCES += \
     $${SWORD_PATH}/src/modules/common/zipcomprs.cpp \
     $${SWORD_PATH}/src/utilfuns/zlib/untgz.c \
-    $${SWORD_PATH}/src/utilfuns/zlib/gzio.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/gzlib.c \
+    $${SWORD_PATH}/src/utilfuns/zlib/gzread.c \
     $${SWORD_PATH}/src/utilfuns/zlib/zutil.c \
     $${SWORD_PATH}/src/utilfuns/zlib/uncompr.c \
     $${SWORD_PATH}/src/utilfuns/zlib/trees.c \
-    $${SWORD_PATH}/src/utilfuns/zlib/infutil.c \
     $${SWORD_PATH}/src/utilfuns/zlib/inftrees.c \
     $${SWORD_PATH}/src/utilfuns/zlib/inflate.c \
     $${SWORD_PATH}/src/utilfuns/zlib/inffast.c \
-    $${SWORD_PATH}/src/utilfuns/zlib/infcodes.c \
-    $${SWORD_PATH}/src/utilfuns/zlib/infblock.c \
     $${SWORD_PATH}/src/utilfuns/zlib/deflate.c \
     $${SWORD_PATH}/src/utilfuns/zlib/crc32.c \
     $${SWORD_PATH}/src/utilfuns/zlib/compress.c \
@@ -50,7 +48,7 @@ SOURCES += \
     $${SWORD_PATH}/src/mgr/markupfiltmgr.cpp \
     $${SWORD_PATH}/src/mgr/filemgr.cpp \
     $${SWORD_PATH}/src/mgr/versificationmgr.cpp \
-    $${SWORD_PATH}/src/mgr/ftptrans.cpp \
+    $${SWORD_PATH}/src/mgr/remotetrans.cpp \
     $${SWORD_PATH}/src/mgr/swlocale.cpp \
     $${SWORD_PATH}/src/mgr/localemgr.cpp \
     $${SWORD_PATH}/src/mgr/swcacher.cpp \
@@ -75,6 +73,8 @@ SOURCES += \
     $${SWORD_PATH}/src/modules/common/zstr.cpp \
     $${SWORD_PATH}/src/modules/common/entriesblk.cpp \
     $${SWORD_PATH}/src/modules/common/sapphire.cpp \
+    $${SWORD_PATH}/src/modules/common/xzcomprs.cpp \
+    $${SWORD_PATH}/src/modules/common/bz2comprs.cpp \
     $${SWORD_PATH}/src/modules/filters/swbasicfilter.cpp \
     $${SWORD_PATH}/src/modules/filters/swoptfilter.cpp \
     $${SWORD_PATH}/src/modules/filters/gbfhtml.cpp \
@@ -115,6 +115,9 @@ SOURCES += \
     $${SWORD_PATH}/src/modules/filters/osisheadings.cpp \
     $${SWORD_PATH}/src/modules/filters/osisfootnotes.cpp \
     $${SWORD_PATH}/src/modules/filters/osishtmlhref.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisglosses.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisxlit.cpp \
+    $${SWORD_PATH}/src/modules/filters/osisenum.cpp \
     $${SWORD_PATH}/src/modules/filters/osisxhtml.cpp \
     $${SWORD_PATH}/src/modules/filters/osiswebif.cpp \
     $${SWORD_PATH}/src/modules/filters/osismorph.cpp \
@@ -127,7 +130,6 @@ SOURCES += \
     $${SWORD_PATH}/src/modules/filters/osisvariants.cpp \
     $${SWORD_PATH}/src/modules/filters/osiswordjs.cpp \
     $${SWORD_PATH}/src/modules/filters/osismorphsegmentation.cpp \
-    $${SWORD_PATH}/src/modules/filters/osisruby.cpp \
     $${SWORD_PATH}/src/modules/filters/latin1utf8.cpp \
     $${SWORD_PATH}/src/modules/filters/latin1utf16.cpp \
     $${SWORD_PATH}/src/modules/filters/utf8utf16.cpp \
@@ -140,11 +142,10 @@ SOURCES += \
     $${SWORD_PATH}/src/modules/filters/utf8greekaccents.cpp \
     $${SWORD_PATH}/src/modules/filters/cipherfil.cpp \
     $${SWORD_PATH}/src/modules/filters/rtfhtml.cpp \
-    $${SWORD_PATH}/src/modules/filters/plainfootnotes.cpp \
-    $${SWORD_PATH}/src/modules/filters/plainhtml.cpp \
     $${SWORD_PATH}/src/modules/filters/greeklexattribs.cpp \
     $${SWORD_PATH}/src/modules/filters/unicodertf.cpp \
     $${SWORD_PATH}/src/modules/filters/papyriplain.cpp \
+    $${SWORD_PATH}/src/modules/filters/scsuutf8.cpp \
     $${SWORD_PATH}/src/modules/genbook/swgenbook.cpp \
     $${SWORD_PATH}/src/modules/genbook/rawgenbook/rawgenbook.cpp \
     $${SWORD_PATH}/src/modules/lexdict/swld.cpp \
@@ -187,7 +188,7 @@ SOURCES += \
     ../../../src/backend/config/btconfig.cpp \
     ../../../src/backend/config/btconfigcore.cpp \
     ../../../src/backend/bookshelfmodel/btbookshelftreemodel.cpp \
-    ../../../src/frontend/bookshelfmanager/btinstallmgr.cpp \
+    ../../../src/backend/btinstallmgr.cpp \
     ../../../src/backend/keys/cswordversekey.cpp \
     ../../../src/backend/keys/cswordldkey.cpp \
     ../../../src/backend/keys/cswordkey.cpp \
@@ -204,9 +205,10 @@ SOURCES += \
     ../../../src/backend/bookshelfmodel/item.cpp \
     ../../../src/backend/bookshelfmodel/categoryitem.cpp \
     ../../../src/frontend/cinfodisplay.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallthread.cpp \
+    ../../../src/backend/btinstallthread.cpp \
     ../../../src/util/tool.cpp \
     ../../../src/util/dialogutil.cpp \
+    ../../../src/util/geticon.cpp \
     ../../../src/backend/rendering/cchapterdisplay.cpp \
     ../../../src/backend/rendering/cbookdisplay.cpp \
     ../../../src/backend/filters/thmltohtml.cpp \
@@ -247,8 +249,8 @@ HEADERS += \
     ../../../src/backend/config/btconfig.h \
     ../../../src/backend/config/btconfigcore.h \
     ../../../src/backend/bookshelfmodel/btbookshelftreemodel.h \
-    ../../../src/frontend/bookshelfmanager/btinstallmgr.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallthread.h \
+    ../../../src/backend/btinstallmgr.h \
+    ../../../src/backend/btinstallthread.h \
     ../../../src/frontend/cinfodisplay.h \
     ../../../src/frontend/displaywindow/btactioncollection.h \
     ../../../src/frontend/crossrefrendering.h \
@@ -288,11 +290,10 @@ HEADERS += \
     ../../../src/backend/filters/btosismorphsegmentation.h \
     ../../../src/frontend-mini/btmini.h \
     ../../../src/bibletimeapp.h \
-    \ # would be required to comment/uncomment following on first builds
-    ../../../src/frontend-mini/ui/btministyle.cpp
+#    ../../../src/frontend-mini/ui/btministyle.cpp
 
-RESOURCES += ../../../btmini.qrc \
-    ../../../src/frontend-mini/ui/btministyle.qrc
+RESOURCES += ../../../src/frontend-mini/ui/btministyle.qrc \
+    ../../../btmini.qrc
 
 OTHER_FILES += ../../../src/frontend-mini/todo.txt
 
@@ -315,8 +316,8 @@ SOURCES += $${SWORD_PATH}/src/utilfuns/regex.c \
 }
 
 # Windows platform
-win32 {
-DEFINES += _CRT_SECURE_NO_WARNINGS
+windows {
+DEFINES += _CRT_SECURE_NO_WARNINGS REGEX_MALLOC
 
 INCLUDEPATH += $${SWORD_PATH}/src/utilfuns/win32
 
@@ -334,11 +335,12 @@ DEFINES += BT_MINI_VERSION="\\\\\"$${VERSION}\\\\\""
 # Android platform
 android {
 greaterThan(QT_MAJOR_VERSION, 4):CONFIG -= webkit
+
+DEFINES += STDC_HEADERS
 }
 
 # MeeGo platform
-unix {
-contains(MEEGO_EDITION,harmattan) {
+unix:contains(MEEGO_EDITION,harmattan) {
 
 include(../../common/btmini/deployment.pri)
 qtcAddDeployment()
@@ -351,7 +353,6 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog
-}
 }
 
 # Symbian platform

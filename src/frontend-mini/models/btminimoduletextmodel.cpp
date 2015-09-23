@@ -19,7 +19,7 @@
 #include <QtDebug>
 
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
-#include "backend/config/cbtconfig.h"
+#include "backend/config/btconfig.h"
 #include "backend/cswordmodulesearch.h"
 #include "backend/keys/cswordldkey.h"
 #include "backend/keys/cswordtreekey.h"
@@ -568,11 +568,6 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						CSwordVerseKey key(d->indexToVerseKey(index));
 						const int v = key.getVerse();
 
-//						if(!d->_isSearch && v == 1)
-//							r += "<center><b><font size='+1'>" + key.book() + " " +
-//								QString::number(key.getChapter()) + "</font></b></center>";
-
-
                         QList<const CSwordModuleInfo*> modules;
                         modules << l->_module;
 
@@ -588,117 +583,32 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                         }
 
 
-                        // New edit
-                        if(true)
-                        {
-                            Rendering::CEntryDisplay ed;
+                        if(!d->_isSearch && v == 1)
+                            r += "<center><b><font size='+1'>" + key.book() + " " +
+                                    QString::number(key.getChapter()) + "</font></b></center>";
 
-                            if(!d->_isSearch && v == 1)
-                                r += "<center><b><font size='+1'>" + key.book() + " " +
-                                        QString::number(key.getChapter()) + "</font></b></center>";
+                        if(v != 0)
+                            r += Rendering::CEntryDisplay().text(modules, key.key(), l->_displayOptions, l->_filterOptions);
 
-                            if(v != 0)
-                                r += ed.text(modules, key.key(), l->_displayOptions, l->_filterOptions);
-
-                            if(v == key.getVerseMax())
-                                r += "<font size='1'><br>&nbsp;</font>";
-                        }
-                        // Old edit
-                        else if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
-						{
-							using namespace Rendering;
-
-							CDisplayRendering render(l->_displayOptions, l->_filterOptions);
-
-							CTextRendering::KeyTreeItem::Settings settings(false, d->_isSearch ?
-								CTextRendering::KeyTreeItem::Settings::CompleteShort :
-								CTextRendering::KeyTreeItem::Settings::SimpleKey);
-
-							CTextRendering::KeyTree tree;
-
-							QString keyName = key.key();
-
-							if(!d->_isSearch)
-							{
-                                ((sword::VerseKey*)(l->_module->module()->getKey()))->setIntros(true);
-
-								CSwordVerseKey k1(l->_module);
-								k1.setIntros(true);
-								k1.setKey(keyName);
-
-								CTextRendering::KeyTreeItem::Settings preverse_settings(false,
-									CTextRendering::KeyTreeItem::Settings::NoKey);
-
-                                if(k1.getVerse() == 1)
-                                {
-                                    if (k1.getChapter() == 1)
-									{
-										k1.setChapter(0);
-										k1.setVerse(0);
-										if(k1.rawText().length() > 0)
-										{
-											tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
-										}
-										k1.setChapter(1);
-									}
-									k1.setVerse(0);
-									if(k1.rawText().length() > 0)
-									{
-										tree.append(new Rendering::CTextRendering::KeyTreeItem(k1.key(), modules, preverse_settings));
-									}
-								}
-							}
-	                        
-							tree.append(new Rendering::CTextRendering::KeyTreeItem(keyName, modules, settings));
-							r += render.renderKeyTree(tree);
-
-							qDeleteAll(tree);
-
-							if(v == key.getVerseMax())
-								r += "<font size='1'><br>&nbsp;</font>";
-						}
-						else
-							Q_ASSERT(!d->_isSearch);
+                        if(!d->_isSearch && v == key.getVerseMax())
+                            r += "<font size='1'><br>&nbsp;</font>";
 					}
 					else if(l->_module && l->_module->type() == CSwordModuleInfo::Lexicon)
 					{
-						using namespace Rendering;
+						CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
 
-						CDisplayRendering render(l->_displayOptions, l->_filterOptions);
-						CTextRendering::KeyTreeItem::Settings settings(false, CTextRendering::KeyTreeItem::Settings::SimpleKey);
-						CTextRendering::KeyTree tree;
-                        CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
-
-						QList<const CSwordModuleInfo*> modules;
-						modules << l->_module;
-
-                        int i = l->_hasScope ? l->_scopeMap[index.row()] : index.row();
-
-                        tree.append(new Rendering::CTextRendering::KeyTreeItem(lm->entries()[i], modules, settings));
-						r += render.renderKeyTree(tree);
-
-                        qDeleteAll(tree);
+						Rendering::CEntryDisplay ed;
+                        r += ed.text(QList<const CSwordModuleInfo*>() << lm, lm->entries()[l->_hasScope ?
+							l->_scopeMap[index.row()] : index.row()], l->_displayOptions, l->_filterOptions);
 					}
                     else if(l->_module && l->_module->type() == CSwordModuleInfo::GenericBook)
                     {
                         CSwordBookModuleInfo *b = reinterpret_cast<CSwordBookModuleInfo*>(l->_module);
                         CSwordTreeKey key(b->tree(), b);
-
                         key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() * 4);
 
-                        using namespace Rendering;
-
-                        CDisplayRendering render(l->_displayOptions, l->_filterOptions);
-                        CTextRendering::KeyTreeItem::Settings settings;
-                        CTextRendering::KeyTree tree;
-
-                        QList<const CSwordModuleInfo*> modules;
-                        modules << l->_module;
-
-                        tree.append(new Rendering::CTextRendering::KeyTreeItem(key.key(), modules, settings));
-                        r += render.renderKeyTree(tree);
-
-                        qDeleteAll(tree);
+						Rendering::CEntryDisplay ed;
+                        r += ed.text(QList<const CSwordModuleInfo*>() << l->_module, key.key(), l->_displayOptions, l->_filterOptions);
                     }
 
                     if(d->_isSearch && !d->_searchText.isEmpty())
@@ -893,8 +803,6 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
             btConfig().setValue<int>("mini/openInfoModule", view->currentLevel());
             btConfig().setValue<QStringList>("mini/openInfoModules", modules);
-
-            //CBTConfig::syncConfig();
         }
     }
 }
@@ -1163,7 +1071,7 @@ void BtMiniModuleTextModel::startSearch()
 	QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
 	CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(cm);
 
-    qDebug() << "Start search" << cm << d->_searchText;
+    //qDebug() << "Start search" << cm << d->_searchText;
 
 	sword::ListKey results;
 	sword::ListKey scope;

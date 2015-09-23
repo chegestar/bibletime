@@ -9,7 +9,7 @@
 *
 **********/
 
-#include "backend/config/cbtconfig.h"
+#include "backend/config/btconfig.h"
 
 #include "btminilayoutdelegate.h"
 
