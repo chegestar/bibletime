@@ -1,4 +1,4 @@
-/*********
+﻿/*********
 *
 * This file is part of BibleTime's source code, http://www.bibletime.info/.
 *
@@ -40,15 +40,17 @@ bool savePlainFile(const QString & filename,
 
     QFile saveFile(filename);
 
-#ifndef BT_MINI
     if (saveFile.exists()) {
         if (!forceOverwrite
+#ifndef BT_MINI
             && message::showQuestion(0, QObject::tr("Overwrite File?"),
                 QString::fromLatin1("<qt><b>%1</b><br/>%2</qt>")
                 .arg( QObject::tr("The file already exists.") )
                 .arg( QObject::tr("Do you want to overwrite it?")),
                 QMessageBox::Yes | QMessageBox::No,
-                QMessageBox::No) == QMessageBox::No)
+                QMessageBox::No) == QMessageBox::No
+#endif
+                )
         {
             return false;
         }
@@ -66,6 +68,7 @@ bool savePlainFile(const QString & filename,
         if (saveFile.error() == QFile::NoError)
             return true;
 
+#ifndef BT_MINI
         QMessageBox::critical(0, QObject::tr("Error"),
                               QString::fromLatin1("<qt>%1<br/><b>%2</b></qt>")
                                   .arg(QObject::tr("Error while writing to file."))
@@ -76,8 +79,8 @@ bool savePlainFile(const QString & filename,
                               QString::fromLatin1("<qt>%1<br/><b>%2</b></qt>")
                                   .arg(QObject::tr("The file couldn't be opened for saving."))
                                   .arg(QObject::tr("Please check permissions etc.")));
+#endif
     }
-
     return false;
 }
 
