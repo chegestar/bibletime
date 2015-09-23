@@ -51,7 +51,11 @@ const unsigned int INDEX_VERSION = 7;
 
 //Maximum index entry size, 1MiB for now
 //Lucene default is too small
-const unsigned long BT_MAX_LUCENE_FIELD_LENGTH = 1024 * 1024;
+#ifndef BT_MINI
+    const unsigned long BT_MAX_LUCENE_FIELD_LENGTH = 1024 * 1024;
+#else
+    const unsigned long BT_MAX_LUCENE_FIELD_LENGTH = 1024 * 128;
+#endif
 
 CSwordModuleInfo::CSwordModuleInfo(sword::SWModule * module,
                                    CSwordBackend & backend,
