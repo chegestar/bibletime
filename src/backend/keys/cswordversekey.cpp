@@ -58,18 +58,35 @@ void CSwordVerseKey::setModule(const CSwordModuleInfo *newModule) {
     Q_ASSERT(newModule->type() == CSwordModuleInfo::Bible
              || newModule->type() == CSwordModuleInfo::Commentary);
 
-    m_module = newModule;
-
     //check if the module contains the key we present
     const CSBMI* bible = dynamic_cast<const CSBMI*>(newModule);
 
-    if (_compare(bible->lowerBound()) < 0) {
+    clearBounds();
+
+    //reposition key
+    sword::VerseKey newKey = newModule->module()->getKey();
+    newKey.positionFrom(*this);
+    bool v = newKey.popError() == 0;
+    
+    m_module = newModule;
+
+    setVersificationSystem(bible->lowerBound().getVersificationSystem());
+
+    // HACK setKey does not support ranges
+    emitBeforeChanged();
+    copyFrom(newKey);
+    emitAfterChanged();
+
+    // limit to Bible bounds
+    if (!(v && _compare(bible->lowerBound()) >= 0)) {
         setKey(bible->lowerBound());
     }
 
     if (_compare(bible->upperBound()) > 0) {
         setKey(bible->upperBound());
     }
+
+    m_valid = v;
 }
 
 /** Returns the current book as Text, not as integer. */
@@ -123,6 +140,7 @@ const char * CSwordVerseKey::rawKey() const {
 }
 
 bool CSwordVerseKey::setKey(const QString &newKey) {
+    m_valid = true;
     return setKey(newKey.toUtf8().constData());
 }
 
