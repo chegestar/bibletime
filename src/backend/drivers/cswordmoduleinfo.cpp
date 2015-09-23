@@ -9,7 +9,6 @@
 
 #include "backend/drivers/cswordmoduleinfo.h"
 
-#include <CLucene.h>
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QDebug>
@@ -40,6 +39,11 @@
 #include <rtfhtml.h>
 #include <versekey.h>
 
+#ifndef BT_NO_LUCENE
+#include <CLucene.h>
+#include <CLucene/util/Misc.h>
+#include <CLucene/util/Reader.h>
+#endif
 
 //Increment this, if the index format changes
 //Then indices on the user's systems will be rebuilt
@@ -215,6 +219,7 @@ QString CSwordModuleInfo::getModuleStandardIndexLocation() const {
 }
 
 bool CSwordModuleInfo::hasIndex() const {
+#ifndef BT_NO_LUCENE
     { // Is this a directory?
         QFileInfo fi(getModuleStandardIndexLocation());
         if (!fi.isDir())
@@ -243,11 +248,15 @@ bool CSwordModuleInfo::hasIndex() const {
     // Is the index there?
     return lucene::index::IndexReader::indexExists(getModuleStandardIndexLocation()
                                                    .toLatin1().constData());
+#else
+    return false;
+#endif
 }
 
 void CSwordModuleInfo::buildIndex() {
     m_cancelIndexing = false;
 
+#ifndef BT_NO_LUCENE
     try {
         // Without this we don't get strongs, lemmas, etc.
         m_backend.setFilterOptions(btConfig().getFilterOptions());
@@ -455,6 +464,9 @@ void CSwordModuleInfo::buildIndex() {
         m_cancelIndexing = false;
         throw;
     }
+#else
+    return false;
+#endif
 }
 
 void CSwordModuleInfo::deleteIndex() {
@@ -495,6 +507,7 @@ size_t CSwordModuleInfo::searchIndexed(const QString & searchedText,
 
     results.clear();
 
+#ifndef BT_NO_LUCENE
     // do not use any stop words
     static const TCHAR * stop_words[1u]  = { NULL };
     lucene::analysis::standard::StandardAnalyzer analyzer(stop_words);
@@ -548,6 +561,7 @@ size_t CSwordModuleInfo::searchIndexed(const QString & searchedText,
             results.add(*swKey); // No scope, give me all buffers
         }
     }
+#endif
 
     qDeleteAll(list);
     list.clear();
