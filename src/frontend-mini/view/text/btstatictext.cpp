@@ -554,7 +554,8 @@ namespace {
             const QTextItemInt &ti = static_cast<const QTextItemInt &>(textItem);
 
 			QStaticTextItem currentItem;
-			currentItem.fontEngine = ti.fontEngine;
+			//currentItem.fontEngine = ti.fontEngine;
+			currentItem.setFontEngine(ti.fontEngine);
             currentItem.font = ti.font();
             currentItem.charOffset = m_chars.size();
             currentItem.numChars = ti.num_chars;

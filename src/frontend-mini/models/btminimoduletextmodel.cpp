@@ -91,7 +91,7 @@ public:
 		void setModule(QString module)
 		{
 			if(module == "[Commentary]")
-                setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
+				setModule(btConfig().getDefaultSwordModuleByType("standardCommentary"));
             else if(module.contains(','))
                 setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
 			else
@@ -374,7 +374,7 @@ public:
         if(mc.isEmpty())
             return 0;
 
-        QStringList modules = btConfig().value<QStringList>("mini/openInfoModules");
+		QStringList modules = btConfig().value<QStringList>("mini/openInfoModules", QStringList() << "[Contents]" << "[Commentary]");
 
         if(!(list.size() == 1 && list[0].first == CInfoDisplay::Footnote))
             mc = "<center><small>" + info.left(info.indexOf('<', 1)).mid(
@@ -402,10 +402,13 @@ public:
                 {
                     CSwordVerseKey key(l->_module);
                     l->setScope(key.parseVerseList((const char*)place.toUtf8()));
-
-					if(!l->_hasContents)
-						l->setContents(QString());
                 }
+
+				if(l->_scopeMap.size() == 0)
+				{
+					l->_hasScope = false;
+					l->setContents(QString());
+				}
             }
         }
 

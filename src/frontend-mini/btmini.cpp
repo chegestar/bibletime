@@ -332,7 +332,7 @@ public:
 
         bool nativeEventFilter(const QByteArray & eventType, void * message, long * result)
         {
-            eventFilterFunction(message, result);
+            return eventFilterFunction(message, result);
         }
     };
 
