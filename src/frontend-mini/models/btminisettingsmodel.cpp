@@ -257,7 +257,7 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
                "Where you will be able to add and remove additional views for parallel (currently unsyncronized) viewing.") + "<br/><br/>" +
             tr("<b>Context view.</b> It is consist of two views: word context, and commentary context. Try to slide left/right "
                "to observe them. Default modules used for this context could be configurated in Module selection window "
-               "by long pressping.<br/>") + "<br/><br/>" +
+               "by long pressping.") + "<br/><br/>" +
             tr("<b>Search.</b> BibleTime Mini uses CLucene indexed search, this means that you have to wait for some "
                "time to generate search index database to search in the module (on 1GHz device to index heavy module like KJV, "
                "it takes for 10 minutes and on 600MHz devices same take for about hour). Switch to Find view and type to "
@@ -267,14 +267,20 @@ QVariant BtMiniSettingsModel::standardData(StandardData data)
             tr("<b>Default Modules.</b> There are several types of modules: default Bible is used to render cross-references, "
                "default Commentary, to show in context popup, Greek and Hebrew Strongs Dictionaries to render definitions in "
                "context popup. To change default modules, when you open Module Selection popup, make long press on module you "
-               "would like to make default and select corresponding action.") +
+               "would like to make default and select corresponding action.") + "<br/><br/>" +
+            tr("<b>Parallel Bible display.</b> You would open several Bible texts in one view, with respect of different verse "
+               "markups. On any view with Bible opened, open module selection dialog and make long press on the module you would like "
+               "to add, then select \"") + tr("Add Parallel") + "\"."
+               "." +
             QString("</body>"));
     case tipWorksAddon:
         return QString(tr("<br/>This information you could access again in <b>Settings</b> under the <b>Handbook</b> item."));
     case news:
         return QString(tr("<body><b><center>News and Updates:</center></b><br/>") +
-                    tr("<b>0.9.3</b> - was added support for General Books and search in non Bible "
-                          "modules was fixed.") +
+                       tr("<b>0.9.5</b> - parallel Bible display, make long tap in module selection dialog "
+                             "and press \"") + tr("Add Parallel") + "\".<br/>" +
+                       tr("<b>0.9.3</b> - was added support for General Books and search in non Bible "
+                             "modules was fixed.") +
                        "</body>");
     default:
         return QVariant();

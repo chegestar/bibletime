@@ -46,6 +46,9 @@ public:
 
 	bool eventFilter(QObject *watched, QEvent *e);
 
+    /** Close all opened menus. */
+    static void closeMenus();
+
 signals:
     void canceled();
 

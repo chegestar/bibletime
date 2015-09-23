@@ -214,7 +214,7 @@ BtMiniMenu * BtMiniMenu::createQuery(QString text, QStringList actions)
 
     const int m = dialog->font().pixelSize() / 4;
     v->setSpacing(m);
-    v->setContentsMargins(m, m, m, m);
+    dialog->setContentsMargins(m, m, m, m);
     
     // add menu text
     if(!text.isEmpty())
@@ -294,7 +294,7 @@ int BtMiniMenu::execInput(QString caption, QString pattern, int currentValue, in
 
     const int m = dialog->font().pixelSize() / 4;
     vl->setSpacing(m);
-    vl->setContentsMargins(m, m, m, m);
+    dialog.data()->setContentsMargins(m, m, m, m);
 
     // add caption
     QLabel *l = new QLabel(caption, dialog.data());
@@ -429,7 +429,14 @@ bool BtMiniMenu::eventFilter(QObject *o, QEvent *e)
             hide();
         break;
 	}
-	return false;
+    return false;
+}
+
+void BtMiniMenu::closeMenus()
+{
+    foreach(BtMiniMenu *m, BtMiniMenuPrivate::parentWidget()->findChildren<BtMiniMenu*>())
+        //m->close();
+        m->cancel();
 }
 
 BtMiniMenu * BtMiniMenu::createProgress(QString text)
@@ -440,7 +447,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 
 	const int m = dialog->font().pixelSize() / 4;
 	vl->setSpacing(m);
-    vl->setContentsMargins(m, m, m, m);
+    dialog->setContentsMargins(m, m, m, m);
 
     QLabel *l = new QLabel(text, dialog);
     l->setWordWrap(true);

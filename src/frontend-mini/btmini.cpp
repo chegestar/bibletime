@@ -500,6 +500,25 @@ QWidget * BtMini::worksWidget(bool showTip)
 
         for(int i = 0; i < modules.size(); ++i)
         {
+            // parallel module
+            if(modules[i].contains(','))
+            {
+                QStringList sl(modules[i].split(','));
+                QString rs;
+                foreach(QString s, sl)
+                {
+                    if(!moduleNames.contains(s))
+                        qDebug() << "Remove reference to inexistent module in parallel module" << s;
+                    else
+                        rs.append(rs.isEmpty() ? s : ',' + s);
+                }
+
+                modules[i] = rs;
+
+                if(!rs.isEmpty())
+                    continue;
+            }
+
             if(!moduleNames.contains(modules[i]))
             {
                 qDebug() << "Remove reference to inexistent module" << modules[i];
@@ -972,3 +991,38 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+
+
+///* HACK declare to resolve dependencies */
+//void report(const char *msg, ...)
+//{
+//	char buffer[256];
+//	va_list args;
+//	va_start (args, msg);
+//	vsprintf (buffer,msg, args);
+//	va_end (args);
+
+//	printf(buffer);
+
+//	FILE *fp;
+
+//	fp = fopen("\btlog.txt", "a");
+//	if (fp != NULL)
+//	{
+//		fputs("dummy function ", fp);
+//		fputs(buffer, fp);
+//	}
+
+//	fclose(fp);
+//}
+//int __cdecl atexit(void (__cdecl *)(void))
+//{
+//	report("atexit\n");
+//	return 0;
+//}
+
+//void __cdecl exit (int code)
+//{
+//	report("exit\n");
+//}

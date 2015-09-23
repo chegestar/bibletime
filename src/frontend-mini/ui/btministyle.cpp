@@ -226,11 +226,11 @@ public:
             widget->setPalette(widget->palette());
 #endif
 
-        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
-        {
-            const int cm = le->font().pixelSize() / 7.0;
-            le->setContentsMargins(cm, cm, cm, cm);
-        }
+//        if(QLineEdit *le = qobject_cast<QLineEdit*>(widget))
+//        {
+//            const int cm = le->font().pixelSize() / 7.0;
+//            le->setContentsMargins(cm, cm, cm, cm);
+//        }
 
         if(QString(widget->metaObject()->className()) == "BtMiniMenu")
         {

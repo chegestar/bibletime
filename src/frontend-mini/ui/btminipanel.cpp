@@ -91,14 +91,16 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
             Q_ASSERT(false);
         }
 
-        QPushButton *b = new QPushButton(tr(bt.toLatin1()), this);
+        QString br(tr(bt.toLatin1()));
+
+        QPushButton *b = new QPushButton(br, this);
         b->setObjectName(bt);
 
         connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
 
         d->addActivity(a, b);
         l->addWidget(b);
-        l->setStretchFactor(b, bt.size() + 3);
+        l->setStretchFactor(b, br.size() + 3);
     }
 
     setLayout(l);

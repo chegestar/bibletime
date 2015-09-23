@@ -28,6 +28,7 @@
 #include "backend/drivers/cswordbookmoduleinfo.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/rendering/cdisplayrendering.h"
+#include "backend/rendering/centrydisplay.h"
 #include "btglobal.h"
 #include "frontend/cinfodisplay.h"
 
@@ -91,6 +92,8 @@ public:
 		{
 			if(module == "[Commentary]")
 				setModule(CBTConfig::get(CBTConfig::standardCommentary));
+            else if(module.contains(','))
+                setModule(CSwordBackend::instance()->findModuleByName(module.section(',', 0, 0)));
 			else
 				setModule(CSwordBackend::instance()->findModuleByName(module));
 		}
@@ -100,7 +103,10 @@ public:
 			_module = module;
 
 			if(!_module)
+            {
+                qDebug() << "Can't find module for list" << _name;
 				return;
+            }
 
 			if(_module->type() == CSwordModuleInfo::Bible ||
 				_module->type() == CSwordModuleInfo::Commentary)
@@ -110,7 +116,8 @@ public:
 				_firstEntry = bm->lowerBound().getIndex();
 				_maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
 
-				_displayOptions.verseNumbers = true;
+                _displayOptions.verseNumbers = true;
+                _displayOptions.simpleVerseNumber = true;
 			}
 
             if(_module->type() == CSwordModuleInfo::Lexicon)
@@ -298,6 +305,9 @@ public:
 			o.allowStaticText = false;
 
 			_isSearch         = true;
+
+            _lists[i]._displayOptions.simpleVerseNumber = false;
+            _lists[i]._displayOptions.introdutions = false;
 		}
 		else if(module == "[Contents]")
 		{
@@ -558,11 +568,43 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						CSwordVerseKey key(d->indexToVerseKey(index));
 						const int v = key.getVerse();
 
-						if(!d->_isSearch && v == 1)
-							r += "<center><b><font size='+1'>" + key.book() + " " +
-								QString::number(key.getChapter()) + "</font></b></center>";
+//						if(!d->_isSearch && v == 1)
+//							r += "<center><b><font size='+1'>" + key.book() + " " +
+//								QString::number(key.getChapter()) + "</font></b></center>";
 
-						if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
+
+                        QList<const CSwordModuleInfo*> modules;
+                        modules << l->_module;
+
+                        // parallel display
+                        if(l->_name.contains(','))
+                        {
+                            foreach(QString s, l->_name.split(',').mid(1))
+                            {
+                                CSwordModuleInfo *m = CSwordBackend::instance()->findModuleByName(s);
+                                if(m)
+                                    modules << m;
+                            }
+                        }
+
+
+                        // New edit
+                        if(true)
+                        {
+                            Rendering::CEntryDisplay ed;
+
+                            if(!d->_isSearch && v == 1)
+                                r += "<center><b><font size='+1'>" + key.book() + " " +
+                                        QString::number(key.getChapter()) + "</font></b></center>";
+
+                            if(v != 0)
+                                r += ed.text(modules, key.key(), l->_displayOptions, l->_filterOptions);
+
+                            if(v == key.getVerseMax())
+                                r += "<font size='1'><br>&nbsp;</font>";
+                        }
+                        // Old edit
+                        else if(key.getBook() > 0 && key.getChapter() > 0 && v > 0 && key.haveText())
 						{
 							using namespace Rendering;
 
@@ -574,14 +616,11 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 
 							CTextRendering::KeyTree tree;
 
-							QList<const CSwordModuleInfo*> modules;
-							modules << l->_module;
-
 							QString keyName = key.key();
 
 							if(!d->_isSearch)
 							{
-								((sword::VerseKey*)(l->_module->module()->getKey()))->setIntros(true);
+                                ((sword::VerseKey*)(l->_module->module()->getKey()))->setIntros(true);
 
 								CSwordVerseKey k1(l->_module);
 								k1.setIntros(true);
@@ -590,9 +629,9 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 								CTextRendering::KeyTreeItem::Settings preverse_settings(false,
 									CTextRendering::KeyTreeItem::Settings::NoKey);
 
-								if(k1.getVerse() == 1)
-								{
-									if (k1.getChapter() == 1)
+                                if(k1.getVerse() == 1)
+                                {
+                                    if (k1.getChapter() == 1)
 									{
 										k1.setChapter(0);
 										k1.setVerse(0);
@@ -699,15 +738,16 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
         break;
         
     case BtMini::ModuleRole:
-        switch(d->indexDepth(index))
-        {
-        case 1:
-            return d->_lists[index.internalId()]._module->name();
-        case 2:
-            if(d->indexList(index)->_module)
-                return d->indexList(index)->_module->name();
-            break;
-        }
+        return d->indexList(index)->_name;
+//        switch(d->indexDepth(index))
+//        {
+//        case 1:
+//            return d->_lists[index.internalId()]._module->name();
+//        case 2:
+//            if(d->indexList(index)->_module)
+//                return d->indexList(index)->_module->name();
+//            break;
+//        }
         break;
     }
     
@@ -987,7 +1027,7 @@ void BtMiniModuleTextModel::openPlaceSelection()
 
     BtMiniView *works = BtMini::findView(BtMini::worksWidget());
 
-    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString();
+    QString cm = works->currentIndex().data(BtMini::ModuleRole).toString().section(',', 0, 0);
 	QString cp = works->currentIndex().data(BtMini::PlaceRole).toString();
 
 	works->setSleep(true);
@@ -1075,6 +1115,8 @@ void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
 
     if(d->_moduleIndicator)
     {
+        //Q_ASSERT(index.model() == this);
+        //QString module(d->indexList(index)->_name);
         QString module(index.data(BtMini::ModuleRole).toString());
         d->_moduleIndicator->setText(module.isEmpty() ? tr("No Module") : module);
     }
@@ -1209,6 +1251,10 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     if(!m)
         return;
 
+    QModelIndex wi = BtMini::findView(BtMini::worksWidget())->currentIndex();
+    QString wm(wi.data(BtMini::ModuleRole).toString());
+    CSwordModuleInfo *md = CSwordBackend::instance()->findModuleByName(wm.section(',', 0, 0));
+
     QStringList actions;
     
     QString category(m->categoryName(m->category()));
@@ -1216,6 +1262,9 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
         category = category.left(10) + "...";
     
     actions << tr("Set default ") + "\n" + category;
+
+    if(md && md->category() == m->category() == CSwordModuleInfo::Bibles)
+        actions << tr("Add Parallel");
     
     const int r = BtMiniMenu::execMenu(actions);
 
@@ -1244,6 +1293,11 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
             CBTConfig::set(CBTConfig::standardDailyDevotional, m);
             break;
         }
+    }
+    else if(r == 1)
+    {
+        setData(wi, wm + ',' + m->name(), BtMini::ModuleRole);
+        BtMiniMenu::closeMenus();
     }
 }
 
