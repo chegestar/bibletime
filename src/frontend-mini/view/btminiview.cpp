@@ -147,11 +147,31 @@ public:
 
             Q_ASSERT(_width > 0);
 
-            doc->setDefaultFont(parent->font());
-            doc->setHtml(text);
+            // HACK correct css to work with QTextDocument
+            QString ct = text;
+            int cssStart = ct.indexOf("<style type=\"text/css\">");
 
-            //doc->setTextWidth(_icon.isNull() ? _width : _width - _iconSize);
-            //_height = doc->size().height();
+            if(cssStart >= 0)
+            {
+                int contentStart = ct.indexOf("#content", cssStart);
+                int cssEnd = ct.indexOf("</style>");
+
+                // fix default font size
+                if(contentStart >= 0 && contentStart < cssEnd)
+                {
+                    int fontSize = ct.indexOf("font-size:", contentStart);
+
+                    if(fontSize >= 0 && fontSize < ct.indexOf("}", contentStart))
+                    {
+                        int column = ct.indexOf(":", fontSize) + 1;
+                        ct.replace(column, ct.indexOf(";", fontSize) - column,
+                            QString("%1px").arg(parent->font().pixelSize()));
+                    }
+                }
+            }
+
+            doc->setDefaultFont(parent->font());
+            doc->setHtml(ct);
         }
         
         qSwap(_doc, doc);
@@ -804,8 +824,7 @@ public:
 
 		if(_subViews.size() > 0)
         {
-			q->setVerticalScrollBarPolicy(_ld->levelOption(_currentSubView).allowScrollBar ?
-				Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
+			q->setVerticalScrollBarPolicy(_ld->levelOption(_currentSubView).scrollBarPolicy);
 
             // rearrange subviews
             for(int i = 0; i < _subViews.size(); ++i)
@@ -1989,12 +2008,15 @@ void BtMiniView::activateSubView(int id)
 
         // remove unnecessary items of previous view to release memory
         BtMiniSubView *v = d->currentSubView();
-        while(v->_items.size() > 0 && v->contentsRect().bottom() -
-            v->_items[v->_items.size() - 1]->height() > height())
-            d->removeItem(d->_currentSubView, v->_items.size() - 1);
-        while(v->_items.size() > 0 && v->contentsRect().top() +
-            v->_items[0]->height() < 0)
-            d->removeItem(d->_currentSubView, 0);
+        if(layoutDelegate()->levelOption(d->_currentSubView).perCycle > 0)
+        {
+            while(v->_items.size() > 0 && v->contentsRect().bottom() -
+                v->_items[v->_items.size() - 1]->height() > height())
+                d->removeItem(d->_currentSubView, v->_items.size() - 1);
+            while(v->_items.size() > 0 && v->contentsRect().top() +
+                v->_items[0]->height() < 0)
+                d->removeItem(d->_currentSubView, 0);
+        }
 
         d->_currentSubView = id;
         d->_mousePower = QPointF();
@@ -2021,15 +2043,11 @@ void BtMiniView::setRootIndex(const QModelIndex &index)
 {
     Q_D(BtMiniView);
 
-    //qDebug() << "BtMiniView::setRootIndex" << index;
-
     BtMiniLayoutDelegate *ld = model()->findChild<BtMiniLayoutDelegate*>();
     if(ld)
-    {
-        //qDebug() << "\t set layout delegate" << ld;
         setLayoutDelegate(ld);
-    }
 
+    setVerticalScrollBarPolicy(d->_ld->levelOption().scrollBarPolicy);
     d->activateIndex(index, true);
 
     scheduleDelayedItemsLayout();
@@ -2235,7 +2253,9 @@ void BtMiniView::setLayoutDelegate(BtMiniLayoutDelegate *ld)
 {
     Q_D(BtMiniView);
 
-    d->_ld = ld;
+    d->_ld = ld == 0 ? findChild<BtMiniLayoutDelegate *>() : ld;
+
+    Q_CHECK_PTR(d->_ld);
 }
 
 void BtMiniView::setInteractive(bool mode)
@@ -2556,4 +2576,18 @@ QString BtMiniView::currentContents() const
     }
 
     return QString();
+}
+
+BtMiniLayoutDelegate * BtMiniView::layoutDelegate()
+{
+    Q_D(BtMiniView);
+
+    return d->_ld;
+}
+
+const BtMiniLayoutDelegate * BtMiniView::layoutDelegate() const
+{
+    Q_D(const BtMiniView);
+
+    return d->_ld;
 }

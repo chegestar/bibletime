@@ -25,6 +25,7 @@ public:
     {
         None = 0,
         Search,
+        Installer,
         Exit,
 		Close
     };

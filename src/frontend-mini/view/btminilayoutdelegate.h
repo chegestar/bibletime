@@ -28,10 +28,14 @@ struct BtMiniLayoutOption
     QString postText;
 
     int     perLine;
+
+    /** Layout full model into the view (if 0) or use batched layout. */
     int     perCycle;
+    
+    /** Remove items that could be unnecessary (faraway from viewport). */
     bool    limitItems;
     
-	bool    allowScrollBar;
+	Qt::ScrollBarPolicy scrollBarPolicy;
     bool    scrollPerItem;
 
     bool    useThread;

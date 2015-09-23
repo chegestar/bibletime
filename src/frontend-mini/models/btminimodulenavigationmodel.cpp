@@ -101,7 +101,7 @@ BtMiniModuleNavigationModel::BtMiniModuleNavigationModel(QString &module, QObjec
 
     BtMiniLayoutOption o = d->_ld->levelOption(0);
 
-    o.allowScrollBar = true;
+    o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
     o.perCycle = 0;
     o.perLine = 1;
     o.preText = "<b><center>";

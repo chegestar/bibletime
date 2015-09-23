@@ -28,6 +28,8 @@
 #endif
 
 #include "backend/config/cbtconfig.h"
+#include "backend/bookshelfmodel/btbookshelftreemodel.h"
+#include "backend/btinstallbackend.h"
 #include "backend/managers/cdisplaytemplatemgr.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/managers/btstringmgr.h"
@@ -37,6 +39,7 @@
 #include <SWLog.h>
 
 #include "models/btminimoduletextmodel.h"
+#include "models/btminimodelsmodel.h"
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
 #include "view/btminiview.h"
@@ -206,7 +209,7 @@ QWidget * BtMini::worksWidget()
         b4->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
         BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << 
-            BtMiniPanel::Search << BtMiniPanel::Exit, w);
+            BtMiniPanel::Search << BtMiniPanel::Installer << BtMiniPanel::Exit, w);
 
         // Put into layout
         QHBoxLayout *hl = new QHBoxLayout;
@@ -333,6 +336,49 @@ QWidget * BtMini::searchWidget()
 	}
 
 	return w;
+}
+
+/** */
+QWidget * BtMini::bookshelfWidget()
+{
+    static BtMiniWidget *w = 0;
+
+    if(!w)
+    {
+        w = new BtMiniWidget(mainWidget());
+
+        BtMiniView *v = new BtMiniView(w);
+        v->setTopShadowEnabled(true);
+
+        BtMiniPanel *p = new BtMiniPanel(BtMiniPanel::Activities() << BtMiniPanel::Close, w);
+
+        // Put into layout
+        QVBoxLayout *vl = new QVBoxLayout;
+
+        vl->addWidget(v);
+        vl->addWidget(p);
+
+        w->setLayout(vl);
+
+        // Setup model
+        QStringList sources(BtInstallBackend::sourceNameList(true));
+        BtMiniModelsModel *m = new BtMiniModelsModel(v);
+
+        foreach(QString source, sources)
+        {
+            sword::InstallSource is = BtInstallBackend::source(source);
+            CSwordBackend *be = BtInstallBackend::backend(is);
+
+            BtBookshelfTreeModel *mm = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), m);
+            mm->setSourceModel(be->model());
+
+            m->addModel(mm, source);
+        }
+
+        v->setModel(m);
+    }
+
+    return w;
 }
 
 void BtMini::setActiveWidget(QWidget *widget)

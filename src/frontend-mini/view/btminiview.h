@@ -61,8 +61,11 @@ public:
     void setTopShadowEnabled(bool mode);
 
     /** This function does not take ownership of delegate. Also layout delegate can be
-        attached automaticaly if model has a children of BtMiniLayoutDelegate type. */
+        attached automatically if model has a children of BtMiniLayoutDelegate type.
+        View should always have such delegate. */
     void setLayoutDelegate(BtMiniLayoutDelegate *layoutDelagate);
+    BtMiniLayoutDelegate * layoutDelegate();
+    const BtMiniLayoutDelegate * layoutDelegate() const;
     
     /** Set specified options for given level. */
     void setLevelOptions(int level, int itemsOnLine, QString preText, QString postText);

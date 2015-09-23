@@ -45,9 +45,12 @@ namespace BtMini
 
     /** */
     QWidget * aboutWidget();
-    
+
     /** User data: bookmarks, history, favorites. */
     QWidget * bookmarksWidget();
+
+    /** Raised if user tapped on verse. */
+    QWidget * contextWidget();
     
     /** The only way to switch interface states. Works with functions above. */
     void setActiveWidget(QWidget *widget);

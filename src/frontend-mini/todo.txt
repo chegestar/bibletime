@@ -20,13 +20,9 @@ kalemas@mail.ru :
 +	use dialog util to display messages on screen
 ?	footnote displayed using icon
 +	CSwordBibleModuleInfo bounds information caching
-	modules model
-	optimize power consurmption: timer to stop update
-	improve BT modularity
-		Install manager - information of repos/modules, manage modules
-		Bookmarks
-		move all model roles to global header
-	restore original BT paths, or dirs in resources
++	modules model
++	optimize power consurmption: timer to stop update
++	layout n items on line without account of contents width
 	current subview indication
 	context menu: add left(+), add right(+), clear(+), bookmark, select
 	bottom panel: search, bookshelf, settings, bookmarks, about, exit(+)
@@ -34,46 +30,24 @@ kalemas@mail.ru :
 	selecting items and active item
 	rendering caching
 	preview role and threaded data retrieving
-	combined subViews
-?	layout n items on line without account of contents width
-		
-	model/view architecture for lists
-		BtMiniTextModel
-			Comentary
-			Bible
-			Lexicon
-			Book
-			Images
-			Lexicon Lookup
-			Word / Strongs Lookup
-			Verses Lookup / Search
-		BtMiniModulesModel == BtBookshelfModel
-			Select
-			Remove
-			Install
-				Language
-				Type
-				Modules
-		BtMiniSettingsModel
-			Display
-				Font Size
-			Default Modules
-			Default Filters
-			General
-				Search Type (CLucene, Sword Plain Search)
-				Module prior Category Language
-				Display Tips
-	long tap in Search will follow place
-	            
+	restore original BT paths, or dirs in resources
+	improve BT modularity
+		Install manager - information of repos/modules, manage modules
+		Bookmarks
+		move all model roles to global header
+	bug, delayed module verses layout stops on missed content
+	simple html render item (fast)
 
-	memory leaking
+	memory leaking on wince
 		crtdebug detect leaking starting from QApplication init
 	QTextDocument issues
 		not load external style sheet
 		font enumeration in font-family dont work
+		process unhandled css construction before passing to QTextDocument
 	replace unistd.h with io.h/direct.h
 	translation
 	megre linked verses in model
+	
 	
 === known tasks ================================================================
 	dialog looses event filter for qapplication after minimize/maximize

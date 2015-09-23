@@ -78,18 +78,26 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 				d->addActivity(a, b);
 				l->addWidget(b);
 			}
-			break;
-		case Exit:
-			{
-				QPushButton *b = new QPushButton(QString(tr("Exit")), this);
-				connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
-				d->addActivity(a, b);
-				l->addWidget(b);
-			}
-			break;
+            break;
+        case Exit:
+            {
+                QPushButton *b = new QPushButton(QString(tr("Exit")), this);
+                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
+                d->addActivity(a, b);
+                l->addWidget(b);
+            }
+            break;
+        case Installer:
+            {
+                QPushButton *b = new QPushButton(QString(tr("Install")), this);
+                connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
+                d->addActivity(a, b);
+                l->addWidget(b);
+            }
+            break;
         case Search:
             {
-                QPushButton *b = new QPushButton(QString(tr("Search")), this);
+                QPushButton *b = new QPushButton(QString(tr("Find")), this);
                 connect(b, SIGNAL(clicked()), this, SLOT(controlActivated()));
                 d->addActivity(a, b);
                 l->addWidget(b);
@@ -139,5 +147,10 @@ void BtMiniPanel::controlActivated()
     case Close:
         BtMini::setActiveWidget(BtMini::worksWidget());
         break;
+    case Installer:
+        BtMini::setActiveWidget(BtMini::bookshelfWidget());
+        break;
+    default:
+        Q_ASSERT(false);
     }
 }

@@ -14,7 +14,7 @@
 BtMiniLayoutOption::BtMiniLayoutOption()
 {
     perLine         = 1;
-    allowScrollBar  = true;
+    scrollBarPolicy = Qt::ScrollBarAsNeeded;
     allowInputBox   = false;
     perCycle        = 0;
     limitItems      = false;

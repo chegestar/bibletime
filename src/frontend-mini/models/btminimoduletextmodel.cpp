@@ -213,7 +213,7 @@ public:
 
 		if(module == "[Search]")
 		{
-			o.allowScrollBar = true;
+			o.scrollBarPolicy = Qt::ScrollBarAsNeeded;
 			o.limitItems     = true;
 			o.perCycle       = 1;
 			o.scrollPerItem  = true;
@@ -222,17 +222,17 @@ public:
         }
         else if(module == "[Contents]")
         {
-            o.allowScrollBar = true;
+            o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
             o.limitItems     = false;
             o.perCycle       = 0;
         }
         else if(module == "[Commentary]")
         {
-            o.allowScrollBar = true;
+            o.scrollBarPolicy = Qt::ScrollBarAlwaysOn;
         }
 		else
 		{
-			o.allowScrollBar = false;
+			o.scrollBarPolicy = Qt::ScrollBarAlwaysOff;
 			o.limitItems     = true;
 			o.perCycle       = 1;
 		}
@@ -308,11 +308,12 @@ public:
                     if(d.first == CInfoDisplay::Key)
                         place = d.second;
 
-                Q_ASSERT(!place.isEmpty());
-
-                CSwordVerseKey key(m->d_func()->_lists[i]._module);
-                m->d_func()->_lists[i].setScope(key.ParseVerseList(
-                    (const char*)place.toUtf8()));
+                if(!place.isEmpty())
+                {
+                    CSwordVerseKey key(m->d_func()->_lists[i]._module);
+                    m->d_func()->_lists[i].setScope(key.ParseVerseList(
+                        (const char*)place.toUtf8()));
+                }
             }
         }
 
@@ -608,6 +609,11 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
     if(!contents.isEmpty())
     {
         BtMiniMenu menu;
+
+        QFont f(menu.font());
+        f.setPixelSize(f.pixelSize() * 0.55f);
+        menu.setFont(f);
+
         BtMiniView *view = new BtMiniView(&menu);
         
         BtMiniModuleTextModel *m = d->fromContentsInfo(contents, &menu);
@@ -692,24 +698,20 @@ void BtMiniModuleTextModel::openModuleSelection()
     BtMiniMenu menu;
 
     QFont f(menu.font());
-    f.setPixelSize(f.pixelSize() * 0.75);
+    f.setPixelSize(f.pixelSize() * 0.55);
     menu.setFont(f);
 
     BtMiniView *view = new BtMiniView(&menu);
     view->setInteractive(true);
-    //view->setLevelOptions(0, 1, "<small><b><center>", "</center></b></small>");
 
     QVBoxLayout *l = new QVBoxLayout;
     l->addWidget(view);
     menu.setLayout(l);
 
-    BtBookshelfTreeModel::Grouping grouping(true);
-
-    BtBookshelfTreeModel * m = new BtBookshelfTreeModel(grouping, view);
+    BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
-    m->setDisplayFormat(QList<QVariant>() << "<p style=\"font-size: 15pt\">" <<
-        BtBookshelfModel::ModuleNameRole << "</p><p style=\"font-size: 7pt;\">" <<
-        BtBookshelfModel::ModuleDescriptionRole << "</p>");
+    m->setDisplayFormat(QList<QVariant>() << "<p>" << BtBookshelfModel::ModuleNameRole << "</p><p>"
+        "<font size=\"50%\" color=\"#555555\">" << BtBookshelfModel::ModuleDescriptionRole << "</font></p>");
 
     view->setModel(m);
 
@@ -723,25 +725,34 @@ void BtMiniModuleTextModel::openModuleSelection()
 
     menu.exec();
 
+    if(menu.wasCanceled())
+        return;
+
     QString nm = view->currentIndex().data(BtBookshelfModel::ModuleNameRole).toString();
 
-    if(!menu.wasCanceled() && cm != nm)
-    {
-        CSwordVerseKey place(CSwordBackend::instance()->findModuleByName(cm));
+    if(cm == nm)
+        return;
+
+    CSwordVerseKey place(CSwordBackend::instance()->findModuleByName(cm));
+
+    if(cm.size() > 0)
         place.setKey(works->currentIndex().data(BtMini::PlaceRole).toString());
 
-        if(!works->model()->setData(works->currentIndex(), nm, BtMini::ModuleRole))
-            qDebug() << "BtMiniModuleTextModel::openModuleSelection: failed to change module";
-        else
-        {
-            place.setModule(CSwordBackend::instance()->findModuleByName(nm));
-		
-			QModelIndex index = keyIndex(works->currentLevel(), place.key());
-
-			if(index.isValid())
-				works->scrollTo(index);
-		}
+    // Change view current module
+    if(!works->model()->setData(works->currentIndex(), nm, BtMini::ModuleRole))
+    {
+        qDebug() << "BtMiniModuleTextModel::openModuleSelection: failed to change module";
     }
+    else
+    {
+        // Restore module place
+        place.setModule(CSwordBackend::instance()->findModuleByName(nm));
+	
+		QModelIndex index = keyIndex(works->currentLevel(), place.key());
+
+		if(index.isValid())
+			works->scrollTo(index);
+	}
 }
 
 void BtMiniModuleTextModel::openPlaceSelection()
