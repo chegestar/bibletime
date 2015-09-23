@@ -19,6 +19,7 @@
 #include <QScopedPointer>
 #include <QTextDocument>
 #include "backend/config/btconfig.h"
+#include "backend/drivers/cswordbiblemoduleinfo.h"
 #include "backend/drivers/cswordlexiconmoduleinfo.h"
 #include "backend/keys/cswordkey.h"
 #include "backend/managers/clanguagemgr.h"
@@ -300,10 +301,23 @@ void CSwordModuleInfo::buildIndex() {
         writer->setMinMergeDocs(1000);
 #endif
 
-        m_module->setPosition(sword::TOP);
-        unsigned long verseLowIndex = m_module->getIndex();
-        m_module->setPosition(sword::BOTTOM);
-        unsigned long verseHighIndex = m_module->getIndex();
+        CSwordBibleModuleInfo *bm = qobject_cast<CSwordBibleModuleInfo*>(this);
+
+        unsigned long verseLowIndex;
+        unsigned long verseHighIndex;
+
+        if(bm)
+        {
+            verseLowIndex = bm->lowerBound().getIndex();
+            verseHighIndex = bm->upperBound().getIndex();
+        }
+        else
+        {
+            m_module->setPosition(sword::TOP);
+            verseLowIndex = m_module->Index();
+            m_module->setPosition(sword::BOTTOM);
+            verseHighIndex = m_module->Index();
+        }
 
         // verseLowIndex is not 0 in all cases (i.e. NT-only modules)
         unsigned long verseIndex = verseLowIndex + 1;
@@ -341,7 +355,11 @@ void CSwordModuleInfo::buildIndex() {
         wchar_t * const wcharBuffer = sPwcharBuffer.data();
         Q_ASSERT(wcharBuffer);
 
-        m_module->setPosition(sword::TOP);
+        if(bm)
+            vk->setIndex(bm->lowerBound().getIndex());
+        else
+            m_module->setPosition(sword::TOP);
+
         while (!(m_module->popError()) && !m_cancelIndexing) {
 
             /* Also index Chapter 0 and Verse 0, because they might have
