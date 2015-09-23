@@ -9,6 +9,7 @@
 
 #include "backend/keys/cswordversekey.h"
 
+#include <QMutex>
 #include <QStringList>
 #include <QDebug>
 
@@ -20,11 +21,15 @@
 #include <localemgr.h>
 
 
+QMutex CSwordMutex;
+
 CSwordVerseKey::CSwordVerseKey(const CSwordModuleInfo *module)
     : CSwordKey(module)
 {
     typedef CSwordBibleModuleInfo CSBMI;
     if (const CSBMI *bible = dynamic_cast<const CSBMI*>(module) ) {
+         QMutexLocker lock(&CSwordMutex);
+
         // Copy important settings like versification system
         copyFrom(static_cast<sword::VerseKey*>(bible->module()->getKey()));
 
@@ -62,6 +67,8 @@ void CSwordVerseKey::setModule(const CSwordModuleInfo *newModule) {
     const CSBMI* bible = dynamic_cast<const CSBMI*>(newModule);
 
     clearBounds();
+
+    QMutexLocker locker(&CSwordMutex);
 
     //reposition key
     sword::VerseKey newKey = newModule->module()->getKey();

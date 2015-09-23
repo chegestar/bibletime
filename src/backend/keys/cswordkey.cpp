@@ -9,6 +9,7 @@
 
 #include "backend/keys/cswordkey.h"
 
+#include <QMutex>
 #include <QRegExp>
 #include <QString>
 #include <QTextCodec>
@@ -26,14 +27,19 @@
 #include <versekey.h>
 
 
+extern QMutex CSwordMutex;
+
 const QTextCodec * CSwordKey::m_cp1252Codec = QTextCodec::codecForName("Windows-1252");
 
 QString CSwordKey::rawText() {
     if (!m_module)
         return QString::null;
 
-    if (dynamic_cast<sword::SWKey*>(this))
+    if (dynamic_cast<sword::SWKey*>(this)) {
+        CSwordMutex.lock();
         m_module->module()->getKey()->setText( rawKey() );
+        CSwordMutex.unlock();
+    }
 
     if (key().isNull())
         return QString::null;
@@ -47,6 +53,8 @@ QString CSwordKey::renderedText(const CSwordKey::TextRenderType mode) {
     sword::SWKey * const k = dynamic_cast<sword::SWKey *>(this);
 
     if (k) {
+        QMutexLocker locker(&CSwordMutex);
+
         sword::VerseKey * vk_mod = dynamic_cast<sword::VerseKey *>(m_module->module()->getKey());
         if (vk_mod)
             vk_mod->setIntros(true);
@@ -129,7 +137,11 @@ QString CSwordKey::strippedText() {
     if (dynamic_cast<sword::SWKey*>(this)) {
         char * buffer = new char[strlen(rawKey()) + 1];
         strcpy(buffer, rawKey());
+
+        CSwordMutex.lock();
         m_module->module()->getKey()->setText(buffer);
+        CSwordMutex.unlock();
+
         delete [] buffer;
     }
 
@@ -147,6 +159,8 @@ void CSwordKey::emitAfterChanged() {
 }
 
 CSwordKey * CSwordKey::createInstance(const CSwordModuleInfo * module) {
+    QMutexLocker locker(&CSwordMutex);
+
     if (!module)
         return 0;
 
