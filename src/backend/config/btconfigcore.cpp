@@ -12,12 +12,12 @@
 #include <cstddef>
 #include <limits>
 
+#define GROUP_SESSIONS      QString("sessions/")
+#define KEY_CURRENT_SESSION QString("sessions/currentSession")
+#define GROUP_SESSION       QString("sessions/%1/")
+#define KEY_SESSION_NAME    QString("sessions/%1/name")
+#define UI_FONT_SIZE        QString("ui/fontSize")
 
-const QString BtConfigCore::GROUP_SESSIONS      = "sessions/";
-const QString BtConfigCore::KEY_CURRENT_SESSION = "sessions/currentSession";
-const QString BtConfigCore::GROUP_SESSION       = "sessions/%1/";
-const QString BtConfigCore::KEY_SESSION_NAME    = "sessions/%1/name";
-const QString BtConfigCore::UI_FONT_SIZE        = "ui/fontSize";
 
 
 BtConfigCore::BtConfigCore(const QString & settingsFile)
