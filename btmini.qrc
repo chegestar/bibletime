@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/bibletime/icons">
+    <qresource prefix="/share/bibletime/icons">
         <file alias="back.svg">pics/icons/back.svg</file>
         <file alias="bible_add.svg">pics/icons/bible_add.svg</file>
         <file alias="bible_locked.svg">pics/icons/bible_locked.svg</file>
@@ -53,11 +53,11 @@
         <file alias="sync.svg">pics/icons/sync.svg</file>
         <file alias="unlock.svg">pics/icons/unlock.svg</file>
     </qresource>
-    <qresource prefix="/bibletime/locale">
+    <qresource prefix="/share/bibletime/locale">
         <file alias="bibletime_ui_ru.qm">i18n/messages/bibletime_ui_ru.qm</file>
         <file alias="bibletimemini_ru.qm">src/frontend-mini/translations/bibletimemini_ru.qm</file>
     </qresource>
-    <qresource prefix="/bibletime/display-templates">
+    <qresource prefix="/share/bibletime/display-templates">
         <file alias="Basic.tmpl">src/display-templates/Basic-Mini.tmpl</file>
         <file alias="Blue.css">src/display-templates/Blue.css</file>
     </qresource>
