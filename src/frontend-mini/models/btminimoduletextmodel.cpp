@@ -119,7 +119,7 @@ public:
 		}
 
 		/** Set list contents to specified text. */
-		void setContents(QString &contents)
+        void setContents(QString contents)
 		{
 			_hasContents = true;
 			_contents = contents;
@@ -129,7 +129,7 @@ public:
 		}
 
 		/** For sword module lists set scope of verses. Scope will not be set if \list is empty. */
-		void setScope(sword::ListKey &list)
+        void setScope(sword::ListKey list)
 		{
 			_hasScope = list.Count() > 0;
 			_scopeMap.clear();
@@ -967,7 +967,7 @@ void BtMiniModuleTextModel::updateIndicators(const QModelIndex &index)
     if(d->_moduleIndicator)
     {
         QString module(index.data(BtMini::ModuleRole).toString());
-        d->_moduleIndicator->setText(module.isEmpty() ? "No Module" : module);
+        d->_moduleIndicator->setText(module.isEmpty() ? tr("No Module") : module);
     }
 
     if(d->_leftIndicator)
@@ -1029,13 +1029,14 @@ void BtMiniModuleTextModel::startSearch()
 		;
 	else if(CBTConfig::get(CBTConfig::searchUsingSword))
 	{
-		QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Search ..."));
+		QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Search ...")));
 		dialog->show();
 
 		m->module()->createSearchFramework();
 
+        QPair<BtMiniMenu*, CSwordModuleInfo*> p(dialog.data(), m);
 		results = m->module()->search(d->_searchText.replace(tr("strong:", "Strongs search keyword"), "strong:").toUtf8(),
-			0, 0, &scope, 0, &BtMiniModuleTextModelPrivate::searchProgress, &qMakePair(dialog.data(), m));
+            0, 0, &scope, 0, &BtMiniModuleTextModelPrivate::searchProgress, &p);
 
 		if(dialog->wasCanceled() || m->module()->terminateSearch)
 			results = sword::ListKey();
@@ -1048,11 +1049,11 @@ void BtMiniModuleTextModel::startSearch()
 		// build index if ascent
 		if(!m->hasIndex())
 		{
-			if(BtMiniMenu::execQuery("Build index for module?", QStringList() << "Yes" << "No") != 0)
+			if(BtMiniMenu::execQuery(tr("Build index for module?"), QStringList() << tr("Yes") << tr("No")) != 0)
 				ok = false;
 			else
 			{
-				QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress("Indexing..."));
+				QScopedPointer<BtMiniMenu> dialog(BtMiniMenu::createProgress(tr("Indexing...")));
 
 				QObject::connect(dialog.data(), SIGNAL(canceled()), m, SLOT(cancelIndexing()));
 				QObject::connect(m, SIGNAL(indexingProgress(int)), dialog.data(), SLOT(setValue(int)));

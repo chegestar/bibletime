@@ -19,8 +19,8 @@ public:
 	BtMiniModelsModelPrivate() {;}
 	~BtMiniModelsModelPrivate() {;}
 
-	QVector<QPair<QAbstractItemModel*, QString>>  _models;
-	mutable QVector<QModelIndex>                  _mapping;
+    QVector<QPair<QAbstractItemModel*, QString> >  _models;
+    mutable QVector<QModelIndex>                   _mapping;
 
 };
 

@@ -204,7 +204,7 @@ QModelIndex BtMiniModuleNavigationModel::index(int row, int column, const QModel
 	if(d->_bm)
 	{
 	    d->setupVerseKey(parent, row);
-	    return createIndex(row, column, d->_key.getIndex());
+        return createIndex(row, column, (int)d->_key.getIndex());
 	}
 
 	if(d->_lm)
@@ -254,7 +254,7 @@ QModelIndex BtMiniModuleNavigationModel::parent(const QModelIndex &index) const
 
 		Q_ASSERT(row >= 0);
 
-		return createIndex(row, 0, d->_key.getIndex());
+        return createIndex(row, 0, (int)d->_key.getIndex());
 	}
 
 	if(d->_ld)
@@ -344,7 +344,7 @@ QModelIndex BtMiniModuleNavigationModel::keyToIndex(QString key) const
 		else if(d->_key.getVerse() == 0)
 			row = d->_key.getChapter() - 1;
 
-		return createIndex(row, 0, d->_key.getIndex());
+        return createIndex(row, 0, (int)d->_key.getIndex());
 	}
 
 	if(d->_lm)

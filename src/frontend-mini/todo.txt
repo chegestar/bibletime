@@ -155,17 +155,14 @@ Main purpose: every day Bible Reading, nice looking, intuitive interface, comfor
 
 === remarks ====================================================================
 Issues
-.	Since sip panel didn't raise sip button it is not able to change software
-	keyboard in the application. also default keyboard should have
-	enter/return key to launch search. (wince)
-.	To enable g-sensor support for runtime orientation change use third party
-	applications like G-Config. (wince)
+	Since sip panel didn't raise sip button it is not able to change software keyboard in the application. 
+		also default keyboard should have enter/return key to launch search. (wince)
+	To enable g-sensor support for runtime orientation change use third party applications like G-Config. (wince)
 Qt
-	we get nothing on application deactivation under wince
-		handle WM_ACTIVATEAPP code in WM_ACTIVATE cause not working popups
-		maybe replace WM_ACTIVATEAPP with WM_NCACTIVATE = 0x0086?
-	QFont::setPointSize don't work on wince
+	we get nothing on application deactivation under wince, solved by using winEvent
+	QFont::setPointSize don't work on wince, solved by QFontMetrics::height
 	SIP adjusted to the bottom of screen
+	qt color names not used on device to optimize library size
 Sword
 	exception with /MD option and signed c-strings, require /J
 BibleTime

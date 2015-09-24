@@ -442,12 +442,12 @@ QWidget * BtMini::installerWidget()
 void BtMini::setActiveWidget(QWidget *widget)
 {
 	if(widget)
+	{
 	    qobject_cast<QStackedWidget*>(mainWidget())->setCurrentWidget(widget);
 
-	bool b = widget != worksWidget();
-	findView(worksWidget())->setSleep(b);
-
-	qDebug() << "Set works sleep" << b;
+		bool b = widget != worksWidget();
+		findView(worksWidget())->setSleep(b);
+	}
 }
 
 BtMiniView * BtMini::findView(QWidget *widget)
@@ -483,14 +483,14 @@ void BtMini::installerQuery(const QModelIndex &index)
 
 			connect(im, SIGNAL(percentCompleted(int, int)), dialog.data(), SLOT(setValue(int)));
 
-			int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &BtInstallBackend::source(
-				BtInstallBackend::sourceNameList(true)[index.parent().row()]));
+            sword::InstallSource is = BtInstallBackend::source(BtInstallBackend::sourceNameList(true)[index.parent().row()]);
+            int status = im->installModule(CSwordBackend::instance(), 0, m->name().toLatin1(), &is);
 
-			if (status != 0 || dialog->wasCanceled())
-				BtMiniMenu::execQuery(QString(tr("Module was not installed")));
-			else
-				CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
-				//BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
+            if (status != 0 || dialog->wasCanceled())
+                BtMiniMenu::execQuery(QString(tr("Module was not installed")));
+            else
+                CSwordBackend::instance()->reloadModules(CSwordBackend::AddedModules);
+                //BtMiniMenu::execQuery(QString(tr("Completed. Restart application to see module")));
 		}
 	}
 }
@@ -572,10 +572,7 @@ public:
 					bool minimized = (BOOL) HIWORD(msg->wParam);
 
 					if(BtMini::mainWidget()->winId() == msg->hwnd)
-					{
 						BtMini::findView(BtMini::worksWidget())->setSleep(active == WA_INACTIVE);
-						qDebug() << "Set works sleep winEvent" << (active == WA_INACTIVE) << active;
-					}
 				}
 			}
 			break;

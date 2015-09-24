@@ -202,4 +202,5 @@ SOURCES += ../backend/bookshelfmodel/btbookshelfmodel.cpp \
     ../../../clucene/src/CLucene/config/utf8.cpp \
     ../../../clucene/src/CLucene/search/WildcardQuery.cpp \
     ../../../clucene/src/CLucene/search/WildcardTermEnum.cpp
+TRANSLATIONS += ./translations/bibletimemini_ru.ts
 RESOURCES += ./ui/btministyle.qrc

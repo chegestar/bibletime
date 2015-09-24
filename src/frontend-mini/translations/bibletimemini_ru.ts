@@ -40,7 +40,7 @@
     <message>
         <location filename="../btmini.cpp" line="477"/>
         <source>Install</source>
-        <translation type="unfinished">Установка</translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <location filename="../btmini.cpp" line="481"/>
@@ -55,6 +55,14 @@
     <message>
         <source>Completed. Restart application to see module</source>
         <translation type="obsolete">Готово. Перезапустите приложение чтобы увидеть модуль</translation>
+    </message>
+</context>
+<context>
+    <name>BtMiniMenu</name>
+    <message>
+        <location filename="../ui/btminimenu.cpp" line="335"/>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -75,10 +83,40 @@
         <translation>Убрать</translation>
     </message>
     <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="970"/>
+        <source>No Module</source>
+        <translation>Нет Модуля</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1032"/>
+        <source>Search ...</source>
+        <translation>Поиск ...</translation>
+    </message>
+    <message>
         <location filename="../models/btminimoduletextmodel.cpp" line="1037"/>
         <source>strong:</source>
         <comment>Strongs search keyword</comment>
-        <translation type="unfinished"></translation>
+        <translation>стронг:</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <source>Build index for module?</source>
+        <translation>Создать индекс для модуля?</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1051"/>
+        <source>No</source>
+        <translation>Нет</translation>
+    </message>
+    <message>
+        <location filename="../models/btminimoduletextmodel.cpp" line="1055"/>
+        <source>Indexing...</source>
+        <translation>Индексирование...</translation>
     </message>
     <message>
         <location filename="../models/btminimoduletextmodel.cpp" line="1108"/>

@@ -28,7 +28,9 @@
 #include "btminilayoutdelegate.h"
 #include "btminiview.h"
 
+#ifdef BT_STATIC_TEXT
 #include "text/btstatictext.h"
+#endif
 
 #ifndef QT_NO_WEBKIT
 // actually not supported
@@ -82,8 +84,8 @@ private:
 	public:
 		TextItem(const QString &text, QFont font)
 		{
-			QVector<QPair<QString,Data>> stack;
-			stack << QPair<QString,Data>(QString(),Data());
+            QVector<QPair<QString, Data> > stack;
+            stack << QPair<QString, Data>(QString(), Data());
 
 			stack.last().second.font = font;
 			_data.append(stack.last().second);
@@ -350,7 +352,9 @@ public:
         _height          = 0;
         _doc             = 0;
 		_ti              = 0;
+#ifdef BT_STATIC_TEXT
 		_st              = 0;
+#endif
     }
     
     virtual ~BtMiniViewItem()
@@ -369,8 +373,10 @@ public:
 			delete _doc, _doc = 0;
 		if(_ti)
 			delete _ti, _ti = 0;
+#ifdef BT_STATIC_TEXT
 		if(_st)
 			delete _st, _st = 0;
+#endif
 	}
 
 
@@ -456,8 +462,8 @@ public:
 #endif
 
         QString ct = text;
-		
-		if(!text.isEmpty())
+
+        if(!text.isEmpty())
         {
             Q_ASSERT(_width > 0);
 
@@ -482,47 +488,48 @@ public:
                     }
                 }
 
-				// fix percent font-size
-				for(int i = cssStart; i < cssEnd; )
-				{
-					int fontSize = ct.indexOf("font-size:", i);
-					
-					if(fontSize == -1)
-						break;
+                // fix percent font-size
+                for(int i = cssStart; i < cssEnd; )
+                {
+                        int fontSize = ct.indexOf("font-size:", i);
 
-					for(int ii = fontSize + 10; ; ++ii)
-					{
-						if(ct[ii] == '\n')
-							break;
-						else if(ct[ii] == '%')
-						{
-							int fs = fontSize + 10;
-							int v = ct.mid(fs, ii - fs).toInt();
-							ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
-						}
-					}
+                        if(fontSize == -1)
+                                break;
 
-					i = fontSize + 10;
+                        for(int ii = fontSize + 10; ; ++ii)
+                        {
+                                if(ct[ii] == '\n')
+                                        break;
+                                else if(ct[ii] == '%')
+                                {
+                                        int fs = fontSize + 10;
+                                        int v = ct.mid(fs, ii - fs).toInt();
+                                        ct = ct.replace(fs, ii - fs + 1, QString("%1px").arg(widget->font().pixelSize() * v / 100));
+                                }
+                        }
 
-				}
+                        i = fontSize + 10;
+                }
             }
         }
 
-		if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
-		{
-			_st = new BtStaticText();
-			_st->setText(ct);
-			_st->prepare(QTransform(), widget->font());
-			
-			resize(size());
-			return;
-		}
+#ifdef BT_STATIC_TEXT
+        if(_allowStaticText && isTextAcceptable(ct, QStringList() << "img" << "table", true))
+        {
+                _st = new BtStaticText();
+                _st->setText(ct);
+                _st->prepare(QTransform(), widget->font());
 
-		if(!_doc)
-			_doc = new QTextDocument(widget);
-        
-		_doc->setDefaultFont(widget->font());
-		_doc->setHtml(ct);
+                resize(size());
+                return;
+        }
+#endif
+
+        if(!_doc)
+                _doc = new QTextDocument(widget);
+
+        _doc->setDefaultFont(widget->font());
+        _doc->setHtml(ct);
 		
         resize(size());
     }
@@ -540,20 +547,7 @@ public:
 
     inline QSize size() const { return QSize(_width, _height); }
 
-    inline void resize(QSize &newSize) { resize(newSize.width(), newSize.height()); }
-
-    QSize contentsSize() const
-    {
-#ifdef USE_WEBKIT
-        if(_wp)
-            return _wp->mainFrame()->contentsSize();
-#endif
-        if(_doc)
-            return QSize(_doc->idealWidth(), _doc->size().height());
-		if(_st)
-			return _st->size().toSize();
-        return QSize();
-    }
+    inline void resize(QSize newSize) { resize(newSize.width(), newSize.height()); }
 
     void resize(const int width, const int height)
     {
@@ -561,22 +555,24 @@ public:
 		int h = 0;
 
         if(!_icon.isNull())
-		{
+        {
             w -= _scale * 1.66;
-			h = qMax(h, (int)(_scale * 1.66));
-		}
+            h = qMax(h, (int)(_scale * 1.66));
+        }
 
-		if(_ti)
-		{
-			_ti->resize(w, height);
-			h = qMax(h, _ti->size().height());
-		}
+        if(_ti)
+        {
+            _ti->resize(w, height);
+            h = qMax(h, _ti->size().height());
+        }
 
-		if(_st)
-		{
-			_st->setTextWidth(w);
-			h = qMax(h, (int)_st->size().height());
-		}
+#ifdef BT_STATIC_TEXT
+        if(_st)
+        {
+            _st->setTextWidth(w);
+            h = qMax(h, (int)_st->size().height());
+        }
+#endif
 
 #ifdef USE_WEBKIT
         if(_wp)
@@ -597,6 +593,22 @@ public:
         }
 
 		_height = h;
+    }
+
+    QSize contentsSize() const
+    {
+#ifdef USE_WEBKIT
+        if(_wp)
+            return _wp->mainFrame()->contentsSize();
+#endif
+        if(_doc)
+            return QSize(_doc->idealWidth(), _doc->size().height());
+
+#ifdef BT_STATIC_TEXT
+        if(_st)
+            return _st->size().toSize();
+#endif
+        return QSize();
     }
 
     /** Rendering. */
@@ -633,25 +645,27 @@ public:
 			painter->translate(-p);
         }
 
-		if(_ti)
-			_ti->paint(painter, p, clipping.translated(point.x() - p.x(), 0).intersected(
-				QRect(0, 0, _width, _height)));
+        if(_ti)
+            _ti->paint(painter, p, clipping.translated(point.x() - p.x(), 0).intersected(
+                           QRect(0, 0, _width, _height)));
 
-		if(_st)
-		{
-			QRect b(clipping.intersected(QRect(p.x() - point.x(), 0, _width, _height)).translated(point));
+#ifdef BT_STATIC_TEXT
+        if(_st)
+        {
+                QRect b(clipping.intersected(QRect(p.x() - point.x(), 0, _width, _height)).translated(point));
 
-			painter->save();
+                painter->save();
 
-			painter->setFont(_st->defaultFont());
-			painter->setClipping(true);
-			painter->setClipRect(clipping.translated(point));
-			//painter->eraseRect(b);
+                painter->setFont(_st->defaultFont());
+                painter->setClipping(true);
+                painter->setClipRect(clipping.translated(point));
+                //painter->eraseRect(b);
 
-			painter->drawStaticText(p, *((QStaticText*)_st));
+                painter->drawStaticText(p, *((QStaticText*)_st));
 
-			painter->restore();
-		}
+                painter->restore();
+        }
+#endif
     }
 
 public:
@@ -676,10 +690,13 @@ public:
 #ifdef USE_WEBKIT
     QWebPage        *_wp;
 #endif
-	QTextDocument   *_doc;
-	TextItem        *_ti;
-	BtStaticText    *_st;
 
+    QTextDocument   *_doc;
+    TextItem        *_ti;
+
+#ifdef BT_STATIC_TEXT
+    BtStaticText    *_st;
+#endif
 };
 
 class BtMiniSubView
@@ -825,7 +842,7 @@ public:
     }
 
     /** Get/set base subview size. */
-    void setBaseSize(QSize &size)
+    void setBaseSize(QSize size)
     {
         //qDebug() << "setBaseSize" << size << contentsRect();
 
@@ -1857,11 +1874,11 @@ public:
     
     /** Thread for background calculations launched. Should be set true in 
 	main thread and set false in created thread. */
-	QList<QModelIndex>                 _modelWork;
-	QList<QPair<QModelIndex, QString>> _modelDone;
-	QVector<BtMiniViewThread*>         _threads;
-	QMutex                             _mutex;
-	bool                               _sleep;
+    QList<QModelIndex>                   _modelWork;
+    QList<QPair<QModelIndex, QString> >  _modelDone;
+    QVector<BtMiniViewThread*>           _threads;
+    QMutex                               _mutex;
+    bool                                 _sleep;
     
     /** Item and subview layout delegate. */
     BtMiniLayoutDelegate         *_ld;
@@ -2987,6 +3004,7 @@ QString BtMiniView::currentContents() const
                     st = v->_items[i]->_doc->toPlainText();
 				}
 				
+#ifdef BT_STATIC_TEXT
 				if(v->_items[i]->_st)
 				{
 					sp = v->_items[i]->_st->hitTest(pp);
@@ -2995,6 +3013,7 @@ QString BtMiniView::currentContents() const
 					st = v->_items[i]->_st->plainText();
 					dt = v->_items[i]->_st->text();
 				}
+#endif
 				
 				if(!st.isEmpty())
 				{

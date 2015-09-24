@@ -332,7 +332,7 @@ BtMiniMenu * BtMiniMenu::createProgress(QString text)
 	pb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     vl->addWidget(pb, 0, Qt::AlignCenter);
 
-    QPushButton *b = new QPushButton("Cancel", dialog);
+    QPushButton *b = new QPushButton(tr("Cancel"), dialog);
     connect(b, SIGNAL(clicked()), dialog, SLOT(cancel()));
     vl->addWidget(b, 0, Qt::AlignCenter);
 

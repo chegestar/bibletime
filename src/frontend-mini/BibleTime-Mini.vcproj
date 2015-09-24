@@ -975,9 +975,20 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description=""
-						CommandLine="copy $(InputPath) &quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;"
+						CommandLine="copy $(InputPath) &quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;copy $(InputPath) &quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
 						AdditionalDependencies="$(InputPath)"
-						Outputs="&quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;"
+						Outputs="&quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;;&quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine="copy $(InputPath) &quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;copy $(InputPath) &quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
+						AdditionalDependencies="$(InputPath)"
+						Outputs="&quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;;&quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -986,9 +997,20 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description=""
-						CommandLine="copy $(InputPath) &quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;"
+						CommandLine="copy $(InputPath) &quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;copy $(InputPath) &quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
-						Outputs="&quot;.\..\..\$(ConfigurationName)\bibletime\display-templates\Basic.tmpl&quot;"
+						Outputs="&quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;;&quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine="copy $(InputPath) &quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;&#x0D;&#x0A;copy $(InputPath) &quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
+						AdditionalDependencies="$(InputPath)"
+						Outputs="&quot;.\..\..\Debug\bibletime\display-templates\Basic.tmpl&quot;;&quot;.\..\..\Release\bibletime\display-templates\Basic.tmpl&quot;"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1503,6 +1525,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2043,6 +2073,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Windows Mobile 6.5.3 Professional DTK (ARMV4I)"
 						ExcludedFromBuild="true"
 						>
 						<Tool
