@@ -31,6 +31,7 @@
 #include "backend/drivers/cswordlexiconmoduleinfo.h"
 #include "backend/drivers/cswordbookmoduleinfo.h"
 #include "backend/managers/cswordbackend.h"
+#include "backend/rendering/btinforendering.h"
 #include "backend/rendering/cdisplayrendering.h"
 #include "backend/rendering/centrydisplay.h"
 #include "btglobal.h"
@@ -768,20 +769,20 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
 
         using namespace InfoDisplay;
 
-        CInfoDisplay::ListInfoData list = CInfoDisplay::detectInfo(mc);
-        mc = InfoDisplay::CInfoDisplay::formatInfo(list);
+        Rendering::ListInfoData list = Rendering::detectInfo(mc);
+        mc = Rendering::formatInfo(list);
 
         if(mc.isEmpty())
             return;
 
-        if(!(list.size() == 1 && list[0].first == CInfoDisplay::Footnote))
+        if(!(list.size() == 1 && list[0].first == Rendering::Footnote))
             mc = "<center><small>" + contents.left(contents.indexOf('<', 1)).mid(
                 contents.indexOf('>') + 1) + "</small></center>" + mc;
 
         QStringList modules;
-        foreach(CInfoDisplay::InfoData d, list)
+        foreach(Rendering::InfoData d, list)
         {
-            if(d.first == CInfoDisplay::Key && btConfig().getDefaultSwordModuleByType("standardCommentary") != 0)
+            if(d.first == Rendering::Key && btConfig().getDefaultSwordModuleByType("standardCommentary") != 0)
                 modules.append("[Commentary]");
             else if(!modules.contains("[Contents]"))
                 modules.prepend("[Contents]");
@@ -801,8 +802,8 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             {
                 QString place;
 
-                foreach(CInfoDisplay::InfoData d, list)
-                    if(d.first == CInfoDisplay::Key)
+                foreach(Rendering::InfoData d, list)
+                    if(d.first == Rendering::Key)
                         place = d.second;
 
                 if(!place.isEmpty())

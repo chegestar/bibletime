@@ -22,6 +22,8 @@
 #include "backend/btbookmarksmodel.h"
 #include "backend/config/btconfig.h"
 #include "backend/managers/cswordbackend.h"
+#include "backend/rendering/ctextrendering.h"
+#include "util/bticons.h"
 
 #include "ui/btminimenu.h"
 #include "ui/btminipanel.h"
@@ -96,7 +98,9 @@ QVariant BookmarksProxyModel::data(const QModelIndex & index, int role) const
             QList<CSwordModuleInfo const *> modules;
             modules << BtMiniClippingsWidgetPrivate::model().module(mapToSource(index));
             QString key(BtMiniClippingsWidgetPrivate::model().key(mapToSource(index)));
-            QString t = Rendering::CEntryDisplay().text(modules, key, _displayOptions, _filterOptions);
+            QString t = Rendering::CEntryDisplay().textKeyRendering(modules, key,
+                _displayOptions, _filterOptions,
+                Rendering::CTextRendering::KeyTreeItem::Settings::ExpandedLong, false);
             return t;
         }
     case Qt::DecorationRole:
