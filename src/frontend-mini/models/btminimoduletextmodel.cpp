@@ -1133,9 +1133,18 @@ void BtMiniModuleTextModel::startSearch()
 				QObject::connect(dialog.data(), SIGNAL(canceled()), m, SLOT(cancelIndexing()));
 				QObject::connect(m, SIGNAL(indexingProgress(int)), dialog.data(), SLOT(setValue(int)));
 
-				dialog->show();
+                dialog->show();
 
-				if(!m->buildIndex() || dialog->wasCanceled())
+                try {
+                    m->buildIndex();
+                } catch (...) {
+                    BtMiniMenu::execQuery(tr("Indexing aborted") + "\n" +
+                                         tr("An internal error occurred while building "
+                                            "the index."));
+                    ok = false;
+                }
+
+                if(!ok || dialog->wasCanceled())
 				{
 					if (m->hasIndex())
 						m->deleteIndex();
