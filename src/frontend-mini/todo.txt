@@ -53,6 +53,12 @@ kalemas@mail.ru :
 +       render item text
 +       remove bookmark for invalid index
 +       install model seem have stricture problems
++       folder must have unique name
+
+    epic rebasing
++       icons
++       there was problems with range keys in bookmarks
+        module name in entry name in bookmarks
 
     restore search term during one session
     find correct facility to retrieve icons
