@@ -75,7 +75,7 @@ BtMiniPanel::BtMiniPanel(Activities activities, QWidget *parent)
 
     foreach(Activity a, activities)
     {
-#ifndef 
+#ifndef BT_MINI_EXIT_BUTTON
         if(a == Exit)
             continue;
 #endif
