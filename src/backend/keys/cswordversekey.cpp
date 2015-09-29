@@ -159,9 +159,17 @@ bool CSwordVerseKey::setKey(const char *newKey) {
         /// \todo Is this check necessary?
         // Check if empty string:
         if (*newKey != '\0') {
-            QString newKeyStr = newKey;
-            emitBeforeChanged();
-            positionFrom(newKey);
+            if(strchr(newKey, '-')) {
+                VerseKey vk(newKey, newKey, getVersificationSystem());
+                Q_ASSERT(vk.isBoundSet());
+                setLowerBound(vk.getLowerBound());
+                setUpperBound(vk.getUpperBound());
+                setPosition(sword::TOP);
+            } else {
+                QString newKeyStr = newKey;
+                emitBeforeChanged();
+                positionFrom(newKey);
+            }
         } else {
             const CSwordModuleInfo *m = module();
             if (m->type() == CSwordModuleInfo::Bible) {
