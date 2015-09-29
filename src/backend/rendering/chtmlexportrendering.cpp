@@ -157,7 +157,7 @@ QString CHTMLExportRendering::renderEntry(const KeyTreeItem& i, CSwordKey* k) {
             // if key was expanded
             if(CSwordVerseKey *vk = dynamic_cast<CSwordVerseKey*>(key))
             {
-                if(vk->isBoundSet() && i.mappedKey())
+                if(vk->isBoundSet())
                 {
                     CSwordVerseKey pk(*vk);
                     for(int i = vk->getLowerBound().getIndex() + 1; i <= vk->getUpperBound().getIndex(); ++i)
