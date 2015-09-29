@@ -256,70 +256,63 @@ public:
 
         _models.append(model);
 
-        if(qobject_cast<BtBookshelfTreeModel*>(model))
+        for(int i = 0, s = model->rowCount(); i < s; ++i)
         {
-            for(int i = 0, s = model->rowCount(); i < s; ++i)
-            {
-                // language
-                QModelIndex li = model->index(i, 0);
-                QString language = li.data().toString();
+            // language
+            QModelIndex li = model->index(i, 0);
+            QString language = li.data().toString();
 
-                int lid = -1;
-                for(int ii = 0; ii < _items.size(); ++ii)
+            int lid = -1;
+            for(int ii = 0; ii < _items.size(); ++ii)
+            {
+                if(_items[ii]._text == language)
                 {
-                    if(_items[ii]._text == language)
+                    lid = ii;
+                    break;
+                }
+            }
+
+            // add new language
+            if(lid == -1)
+            {
+                _items.append(Item(language, QString(), QModelIndex(), BtIcons::instance().icon_flag));
+                lid = _items.size() - 1;
+            }
+
+            // add categories
+            for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
+            {
+                QModelIndex ci = model->index(ii, 0, li);
+                QString category = model->data(ci).toString();
+
+                int cid = -1;
+                for(int iii = 0; iii < _items[lid]._children.size(); ++iii)
+                {
+                    if(_items[lid]._children[iii]._text == category)
                     {
-                        lid = ii;
+                        cid = iii;
                         break;
                     }
                 }
 
-                // add new language
-                if(lid == -1)
+                // add new category
+                if(cid == -1)
                 {
-                    _items.append(Item(language, QString(), QModelIndex(), util::getIcon("flag.svg")));
-                    lid = _items.size() - 1;
+                    _items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
+                    cid = _items[lid]._children.size() - 1;
                 }
 
-                // add categories
-                for(int ii = 0, s = model->rowCount(li); ii < s; ++ii)
+                _items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + model->objectName() + "</b></center></font>"));
+
+                // add modules
+                for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
                 {
-                    QModelIndex ci = model->index(ii, 0, li);
-                    QString category = model->data(ci).toString();
-
-                    int cid = -1;
-                    for(int iii = 0; iii < _items[lid]._children.size(); ++iii)
-                    {
-                        if(_items[lid]._children[iii]._text == category)
-                        {
-                            cid = iii;
-                            break;
-                        }
-                    }
-
-                    // add new category
-                    if(cid == -1)
-                    {
-                        _items[lid]._children.append(Item(category, QString(), QModelIndex(), ci.data(Qt::DecorationRole).value<QIcon>()));
-                        cid = _items[lid]._children.size() - 1;
-                    }
-
-                    _items[lid]._children[cid]._children.append(Item("<font size=\"66%\"><center><b>" + model->objectName() + "</b></center></font>"));
-
-                    // add modules
-                    for(int iii = 0, s = model->rowCount(ci); iii < s; ++iii)
-                    {
-                        QModelIndex mi = model->index(iii, 0, ci);
-                        _items[lid]._children[cid]._children.append(Item(QString(), model->objectName(), mi));
-                    }
+                    QModelIndex mi = model->index(iii, 0, ci);
+                    _items[lid]._children[cid]._children.append(Item(QString(), model->objectName(), mi));
                 }
             }
 
             qSort(_items);
-        }
-        else
-        {
-            Q_ASSERT(true);
         }
     }
 
