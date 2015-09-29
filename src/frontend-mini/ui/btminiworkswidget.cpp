@@ -30,6 +30,7 @@
 #include "btmini.h"
 #include "models/btminimodulenavigationmodel.h"
 #include "models/btminimoduletextmodel.h"
+#include "models/btminimodulesmodel.h"
 #include "view/btminilayoutdelegate.h"
 #include "view/btminiview.h"
 #include "ui/btminiclippingswidget.h"
@@ -253,8 +254,6 @@ void BtMiniWorksWidget::openModuleSelection()
 
     BtBookshelfTreeModel * m = new BtBookshelfTreeModel(BtBookshelfTreeModel::Grouping(true), view);
     m->setSourceModel(CSwordBackend::instance()->model());
-    m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'><word-breaks/>"
-                        << BtBookshelfModel::ModuleDescriptionHtmlRole << "</font>");
 
     // if modules more than 4, scrollbar always visible
     if(m->modules().size() > 4)
@@ -264,7 +263,10 @@ void BtMiniWorksWidget::openModuleSelection()
         view->layoutDelegate()->setLevelOption(o);
     }
 
-    view->setModel(m);
+    QAbstractItemModel *pm = BtMiniModulesModel::wrapWithProxy(m);
+    pm->setParent(view);
+
+    view->setModel(pm);
 
     QModelIndexList list = m->match(m->index(0, 0), BtBookshelfModel::ModuleNameRole,
         cm, 1, Qt::MatchExactly | Qt::MatchRecursive);

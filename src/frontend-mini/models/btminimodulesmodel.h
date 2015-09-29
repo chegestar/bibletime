@@ -40,6 +40,9 @@ public:
     /** */
     void          setIndicator(QWidget *w);
 
+    /** Create QIdentityProxyModel that overrides BtBookshelfModel::data() rendering suitable for Mini */
+    static QAbstractItemModel * wrapWithProxy(QAbstractItemModel * source);
+
 
 public slots:
     /** */

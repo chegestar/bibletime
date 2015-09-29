@@ -10,6 +10,7 @@
 **********/
 
 #include <QApplication>
+#include <QIdentityProxyModel>
 #include <QLabel>
 #include <QTimer>
 #include <QThread>
@@ -23,11 +24,45 @@
 #include "backend/btinstallbackend.h"
 #include "backend/btinstallmgr.h"
 #include "backend/drivers/cswordmoduleinfo.h"
-#include "util/geticon.h"
+#include "util/bticons.h"
 
 #include "btmini.h"
 #include "ui/btminimenu.h"
 #include "btminimodulesmodel.h"
+
+
+class BookshelfProxyModel : public QIdentityProxyModel
+{
+public:
+    BookshelfProxyModel(QObject * parent = 0) : QIdentityProxyModel(parent) {}
+    ~BookshelfProxyModel() {}
+
+    QVariant data(const QModelIndex & index, int role) const
+    {
+        if(role == Qt::DisplayRole)
+        {
+            CSwordModuleInfo * m = static_cast<CSwordModuleInfo *>(QIdentityProxyModel::data(index,
+                BtBookshelfModel::ModulePointerRole).value<void *>());
+
+            if(m)
+            {
+                QString text(m->name());
+                text.append("<font size='60%' color='#555555'><word-breaks/>");
+                QString d(m->config(CSwordModuleInfo::Description));
+                if(d.isRightToLeft())
+                    text.append("<div dir=\"rtl\">");
+                else
+                    text.append("<div>");
+                text.append(d).append("</div></font>");
+
+                return(text);
+            }
+        }
+
+        return QIdentityProxyModel::data(index, role);
+    }
+};
+
 
 struct Item
 {
@@ -100,12 +135,12 @@ public:
             g.push_back(BtBookshelfTreeModel::GROUP_CATEGORY);
 
             BtBookshelfTreeModel *m = new BtBookshelfTreeModel(g);
-            m->setDisplayFormat(QList<QVariant>() << BtBookshelfModel::ModuleNameRole << "<font size='60%' color='#555555'><word-breaks/>"
-                                << BtBookshelfModel::ModuleDescriptionHtmlRole << "</font>");
             m->setSourceModel(be->model());
-            m->setObjectName(s);
+            QAbstractItemModel *pm = BtMiniModulesModel::wrapWithProxy(m);
+            m->setParent(pm);
+            pm->setObjectName(s);
 
-            _data.append(m);
+            _data.append(pm);
         }
 
         _dataComplete = true;
@@ -461,6 +496,13 @@ void BtMiniModulesModel::setIndicator(QWidget *w)
     d_ptr->_indicator = qobject_cast<QLabel*>(w);
     Q_CHECK_PTR(d_ptr->_indicator);
     connect(w, SIGNAL(destroyed()), this, SLOT(indicatorDestroyed()));
+}
+
+QAbstractItemModel *BtMiniModulesModel::wrapWithProxy(QAbstractItemModel *source)
+{
+    BookshelfProxyModel *pm = new BookshelfProxyModel;
+    pm->setSourceModel(source);
+    return pm;
 }
 
 void BtMiniModulesModel::updateIndicators(QModelIndex index)
