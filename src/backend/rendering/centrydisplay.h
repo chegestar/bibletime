@@ -44,7 +44,8 @@ class CEntryDisplay: public sword::SWDisplay {
                                const QString &key,
                                const DisplayOptions &displayOptions,
                                const FilterOptions &filterOptions,
-                               CTextRendering::KeyTreeItem::Settings::KeyRenderingFace keyRendering);
+                               CTextRendering::KeyTreeItem::Settings::KeyRenderingFace keyRendering,
+                               bool introdutions = true);
 
         virtual char display(sword::SWModule& mod) { (void)mod; return 'c';}
 

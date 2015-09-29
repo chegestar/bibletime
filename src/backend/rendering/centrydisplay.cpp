@@ -37,8 +37,8 @@ const QString CEntryDisplay::textKeyRendering(
         const QString &keyName,
         const DisplayOptions &displayOptions,
         const FilterOptions &filterOptions,
-        CTextRendering::KeyTreeItem::Settings::KeyRenderingFace keyRendering
-        bool introdutions = true) {
+        CTextRendering::KeyTreeItem::Settings::KeyRenderingFace keyRendering,
+        bool introdutions) {
 
     if (keyName.isEmpty())
         return QString("");
