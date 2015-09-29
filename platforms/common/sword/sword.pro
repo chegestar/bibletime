@@ -230,6 +230,9 @@ LIBS += -lws2_32
 }
 
 # MeeGo platform
-unix:contains(MEEGO_EDITION,harmattan) {
+#unix:contains(MEEGO_EDITION,harmattan) {
+#DEFINES += STDC_HEADERS
+#}
+
+# for regex
 DEFINES += STDC_HEADERS
-}
