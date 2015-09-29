@@ -811,14 +811,6 @@ public:
     void setModelIndex(const QModelIndex &parent, const QModelIndex &index)
     {
         Q_ASSERT(index.isValid() || parent.isValid());
-//        qDebug() << (index.parent() == parent) << parent.internalId() << index.parent().internalId() <<
-//                    parent.row() << index.parent().row();
-//        qDebug() << index.data() << index.parent().data() << parent.data();
-        qDebug() << index.parent() << parent;
-        if(index.isValid() && index.parent() != parent)
-        {
-            index.parent();
-        }
         Q_ASSERT(!index.isValid() || index.parent() == parent);
 
         _index = index;
