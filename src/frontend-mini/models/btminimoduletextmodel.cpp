@@ -845,7 +845,7 @@ void BtMiniModuleTextModel::openContext(const QModelIndex &index)
             f.setWeight(QFont::Normal);
             view->setFont(f);
 
-            QPushButton *b = BtMiniUi::instance()->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+            QPushButton *b = BtMiniUi::instance()->makeButton(QObject::tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
 
             BtMiniPanel *p = new BtMiniPanel;
             p->addWidget(b, Qt::AlignLeft);
@@ -1185,7 +1185,7 @@ void BtMiniModuleTextModel::openModuleMenu(const QModelIndex &index)
     view->setTopShadow(true);
 
     BtMiniPanel *p = new BtMiniPanel(w);
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
     QLabel *c = new QLabel(m->name());
     c->setAlignment(Qt::AlignCenter);
     p->addWidget(b, Qt::AlignLeft);

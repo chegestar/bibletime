@@ -50,7 +50,6 @@ extern "C" {
 #include "backend/managers/btstringmgr.h"
 #include "util/directory.h"
 #include "util/cresmgr.h"
-#include "util/geticon.h"
 #include "bibletimeapp.h"
 
 #include "btmini.h"
@@ -339,6 +338,8 @@ int main(int argc, char *argv[])
 		sword::SWLog::LOG_ERROR
 #endif
 		));
+
+    app.initIcons();
 
     sword::StringMgr::setSystemStringMgr(new BtStringMgr);
 

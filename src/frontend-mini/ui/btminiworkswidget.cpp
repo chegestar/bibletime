@@ -237,7 +237,7 @@ void BtMiniWorksWidget::openModuleSelection()
     view->setInteractive(true);
     view->setTopShadow(true);
 
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
     QPushButton *i = BtMiniUi::instance()->makeButton(tr("Install"));
     QLabel *lb = new QLabel(tr("Select Text:"));
     lb->setAlignment(Qt::AlignCenter);
@@ -296,7 +296,7 @@ void BtMiniWorksWidget::openPlaceSelection()
     view->setTopShadow(true);
     BtMiniUi::changeFontSize(view, 1.2);
 
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
 
     BtMiniPanel *p = new BtMiniPanel(w);
     p->addWidget(b, Qt::AlignLeft);
@@ -452,7 +452,7 @@ void BtMiniWorksWidget::openContext(const QModelIndex &index)
             f.setWeight(QFont::Normal);
             view->setFont(f);
 
-            QPushButton *b = BtMiniUi::instance()->makeButton(QObject::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+            QPushButton *b = BtMiniUi::instance()->makeButton(QObject::tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
 
             BtMiniPanel *p = new BtMiniPanel;
             p->addWidget(b, Qt::AlignLeft);
@@ -565,7 +565,7 @@ void BtMiniWorksWidget::openModuleMenu(const QModelIndex &index)
     view->setTopShadow(true);
 
     BtMiniPanel *p = new BtMiniPanel(w);
-    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *b = BtMiniUi::instance()->makeButton(tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
     QLabel *c = new QLabel(m->name());
     c->setAlignment(Qt::AlignCenter);
     p->addWidget(b, Qt::AlignLeft);

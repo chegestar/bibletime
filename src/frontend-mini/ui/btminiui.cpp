@@ -22,8 +22,8 @@
 
 #include "backend/managers/cswordbackend.h"
 #include "backend/config/btconfig.h"
+#include "util/bticons.h"
 #include "util/cresmgr.h"
-#include "util/geticon.h"
 
 #include "btmini.h"
 #include "btminimenu.h"
@@ -86,7 +86,7 @@ public:
             _saveTimer = startTimer(5*60*1000);
 
             setWindowTitle("BibleTime Mini");
-            setWindowIcon(util::getIcon(CResMgr::mainWindow::icon));
+            setWindowIcon(BtIcons::instance().icon_bibletime);
 
 #if QT_VERSION >= 0x050200
             QObject::connect(QApplication::instance(), SIGNAL(applicationStateChanged(Qt::ApplicationState)),
@@ -374,8 +374,8 @@ public:
         BtMiniUi::changeFontSize(le, 0.95);
         le->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
-        QPushButton *pb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
-        QPushButton *eb = q->makeButton("", "find.svg");
+        QPushButton *pb = q->makeButton(BtMiniUi::tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
+        QPushButton *eb = q->makeButton("", BtIcons::instance().icon_find);
 
         BtMiniPanel *p = new BtMiniPanel;
         p->addWidget(pb, Qt::AlignLeft);
@@ -418,7 +418,7 @@ public:
 
         QPushButton *bb = 0;
         if(_worksWidget)
-            bb = q->makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+            bb = q->makeButton(BtMiniUi::tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
 #ifdef BT_MINI_EXIT_BUTTON
         else
             bb = q->makeButton(BtMiniUi::tr("Exit"));
@@ -426,7 +426,7 @@ public:
         if(bb) bb->setObjectName("back");
 
         //QPushButton *rb = new QPushButton(BtMiniUi::tr("Refresh"));
-        QPushButton *rb = q->makeButton("", "refresh.svg");
+        QPushButton *rb = q->makeButton("", BtIcons::instance().icon_refresh);
 
         QLabel *lb = new QLabel(BtMiniModulesModel::tr("Updating") + "...", _installerWidget);
         lb->setAlignment(Qt::AlignCenter);
@@ -477,7 +477,7 @@ public:
         BtMiniSettingsModel *m = new BtMiniSettingsModel(v);
         v->setModel(m);
 
-        QPushButton *bb = q->makeButton(BtMiniUi::tr("Apply"), "mini-back.svg", "mini-back-night.svg");
+        QPushButton *bb = q->makeButton(BtMiniUi::tr("Apply"), ":/mini-back.svg", ":/mini-back-night.svg");
 
         QLabel *lb = new QLabel(BtMiniUi::tr("Settings"));
         lb->setAlignment(Qt::AlignCenter);
@@ -760,9 +760,9 @@ QPushButton* BtMiniUi::makeButton(QString text, QString icon, QString invertedIc
     if(!icon.isEmpty())
     {
         if(!invertedIcon.isEmpty() && BtMiniUi::instance()->mainWidget()->style()->standardPalette().background().color().lightnessF() < 0.2)
-            b->setIcon(util::getIcon(invertedIcon));
+            b->setIcon(QIcon(invertedIcon));
         else
-            b->setIcon(util::getIcon(icon));
+            b->setIcon(QIcon(icon));
 
         b->setIconSize(BtMiniUi::getIconSize(b->icon()));
     }

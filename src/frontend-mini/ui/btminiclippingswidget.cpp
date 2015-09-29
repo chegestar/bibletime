@@ -127,10 +127,10 @@ BtMiniClippingsWidget::BtMiniClippingsWidget(QWidget *parent)
     d->_view->setLayoutDelegate(ld);
     d->_view->setModel(&d->proxyModel());
 
-    QPushButton *bb = BtMiniUi::makeButton(BtMiniUi::tr("Back"), "mini-back.svg", "mini-back-night.svg");
+    QPushButton *bb = BtMiniUi::makeButton(BtMiniUi::tr("Back"), ":/mini-back.svg", ":/mini-back-night.svg");
     d->_captionEdit = new QLineEdit;
     d->_caption     = new QLabel;
-    QPushButton *rn = BtMiniUi::makeButton("", "pencil.svg");
+    QPushButton *rn = BtMiniUi::makeButton("", BtIcons::instance().icon_pencil);
 
     d->_captionEdit->setAlignment(Qt::AlignCenter);
     d->_captionEdit->setVisible(false);
