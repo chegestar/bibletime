@@ -123,7 +123,7 @@ public:
 				_maxEntries = bm->upperBound().getIndex() - _firstEntry + 1;
 
                 _displayOptions.verseNumbers = true;
-                _displayOptions.simpleVerseNumber = true;
+                _simpleVerseNumber = true;
 			}
 
             if(_module->type() == CSwordModuleInfo::Lexicon)
@@ -193,8 +193,10 @@ public:
 		long                _maxEntries;
 		long                _firstEntry;
 
-		DisplayOptions      _displayOptions;
-		FilterOptions       _filterOptions;
+        DisplayOptions      _displayOptions;
+        FilterOptions       _filterOptions;
+        bool                _simpleVerseNumber;
+        bool                _introdutions;
 
 		bool                _hasScope;
 		QVector<int>        _scopeMap;
@@ -315,8 +317,8 @@ public:
 
 			_isSearch         = true;
 
-            _lists[i]._displayOptions.simpleVerseNumber = false;
-            _lists[i]._displayOptions.introdutions = false;
+            _lists[i]._simpleVerseNumber = false;
+            _lists[i]._introdutions = false;
 		}
 		else if(module == "[Contents]")
 		{
