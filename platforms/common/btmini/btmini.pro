@@ -1,5 +1,5 @@
 # Configuration
-VERSION = 1.2.0
+VERSION = 1.2.1
 
 CONFIG += clucene svg xml mini
 
@@ -8,8 +8,10 @@ CONFIG += clucene svg xml mini
 DEFINES += BT_MINI
 DEFINES += BT_MINI_VERSION=\\\"$${VERSION}\\\"
 
+
 INCLUDEPATH += . \
     ../../../src/frontend-mini \
+
 
 SOURCES += \
     ../../../src/bibletimeapp.cpp \
@@ -93,6 +95,7 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/changelog \
 }
 
+
 # Symbian platform
 symbian {
 # version
@@ -136,22 +139,27 @@ DEFINES += BT_STATIC_TEXT
 SOURCES += ../../../src/frontend-mini/view/btstatictext.cpp
 }
 
+
 # BlackBerry10 Platform
 blackberry {
 LIBS += -lbbdevice
 }
+
 
 # Windows Phone
 winphone {
 # have to be built against curl
 }
 
-# BibleTime Core
-include(../../common/core/core.pro)
 
 # QtQuick definitions, maybe separate into different project?
 qml:DEFINES += BT_MINI_QML
 qml:QT += qml quick
+
+
+# BibleTime Core
+include(../../common/core/core.pro)
+
 
 # show translations in project explorer
 OTHER_FILES += $${TRANSLATIONS}
