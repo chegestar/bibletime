@@ -56,6 +56,7 @@ bool BibleTimeApp::initBtConfig() {
     BtConfig::InitState const r = BtConfig::initBtConfig();
     if (r == BtConfig::INIT_OK)
         return true;
+#ifndef BT_MINI
     if (r == BtConfig::INIT_NEED_UNIMPLEMENTED_FORWARD_MIGRATE) {
         /// \todo Migrate from btConfigOldApi to BTCONFIG_API_VERSION
         qWarning() << "BibleTime configuration migration is not yet implemented!!!";
@@ -87,6 +88,7 @@ bool BibleTimeApp::initBtConfig() {
                     QMessageBox::No) == QMessageBox::No)
             return false;
     }
+#endif
     BtConfig::forceMigrate();
     return true;
 }
@@ -98,7 +100,9 @@ bool BibleTimeApp::initDisplayTemplateManager() {
     new CDisplayTemplateMgr(errorMessage);
     if (errorMessage.isNull())
         return true;
+#ifndef BT_MINI
     message::showCritical(0, tr("Fatal error!"), errorMessage);
+#endif
     return false;
 }
 
