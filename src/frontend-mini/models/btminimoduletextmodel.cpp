@@ -34,6 +34,7 @@
 #include "backend/rendering/btinforendering.h"
 #include "backend/rendering/cdisplayrendering.h"
 #include "backend/rendering/centrydisplay.h"
+#include "backend/rendering/ctextrendering.h"
 #include "btglobal.h"
 #include "frontend/cinfodisplay.h"
 
@@ -560,7 +561,11 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                                     + key.book() + " " + QString::number(key.getChapter()) + "</font></b></center>";
 
                         if(v != 0)
-                            r += Rendering::CEntryDisplay().text(modules, key.key(), l->_displayOptions, l->_filterOptions);
+                            r += Rendering::CEntryDisplay().textKeyRendering(modules, key.key(),
+                                l->_displayOptions, l->_filterOptions,
+                                l->_simpleVerseNumber ? Rendering::CTextRendering::KeyTreeItem::Settings::SimpleKey :
+                                                        Rendering::CTextRendering::KeyTreeItem::Settings::CompleteShort,
+                                l->_introdutions);
 
                         if(!d->_isSearch && v == key.getVerseMax())
                             r += "<font size='1'><br>&nbsp;</font>";
@@ -570,8 +575,12 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
 						CSwordLexiconModuleInfo *lm = qobject_cast<CSwordLexiconModuleInfo*>(l->_module);
 
 						Rendering::CEntryDisplay ed;
-                        r += ed.text(QList<const CSwordModuleInfo*>() << lm, lm->entries()[l->_hasScope ?
-							l->_scopeMap[index.row()] : index.row()], l->_displayOptions, l->_filterOptions);
+                        r += ed.textKeyRendering(QList<const CSwordModuleInfo*>() << lm, lm->entries()[l->_hasScope ?
+                            l->_scopeMap[index.row()] : index.row()],
+                            l->_displayOptions, l->_filterOptions,
+                            l->_simpleVerseNumber ? Rendering::CTextRendering::KeyTreeItem::Settings::SimpleKey :
+                                                    Rendering::CTextRendering::KeyTreeItem::Settings::CompleteShort,
+                            l->_introdutions);
 					}
                     else if(l->_module && l->_module->type() == CSwordModuleInfo::GenericBook)
                     {
@@ -580,7 +589,11 @@ QVariant BtMiniModuleTextModel::data(const QModelIndex &index, int role) const
                         key.setIndex(l->_hasScope ? l->_scopeMap[index.row()] : index.row() * 4);
 
 						Rendering::CEntryDisplay ed;
-                        r += ed.text(QList<const CSwordModuleInfo*>() << l->_module, key.key(), l->_displayOptions, l->_filterOptions);
+                        r += ed.textKeyRendering(QList<const CSwordModuleInfo*>() << l->_module,
+                            key.key(), l->_displayOptions, l->_filterOptions,
+                            l->_simpleVerseNumber ? Rendering::CTextRendering::KeyTreeItem::Settings::SimpleKey :
+                                                    Rendering::CTextRendering::KeyTreeItem::Settings::CompleteShort,
+                            l->_introdutions);
                     }
 
                     if(d->_isSearch && !d->_searchText.isEmpty())
