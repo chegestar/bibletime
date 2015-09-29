@@ -45,6 +45,7 @@ extern "C" {
 #include "backend/bookshelfmodel/btbookshelftreemodel.h"
 #include "backend/btinstallbackend.h"
 #include "backend/btinstallmgr.h"
+#include "backend/cswordmodulesearch.h"
 #include "backend/managers/cdisplaytemplatemgr.h"
 #include "backend/managers/cswordbackend.h"
 #include "backend/managers/btstringmgr.h"
@@ -305,6 +306,24 @@ int main(int argc, char *argv[])
 	QFontDatabase::addApplicationFont("jGaramond.ttf");
 
     app.startInit();
+
+    // Register methatypes
+    qRegisterMetaType<FilterOptions>("FilterOptions");
+    qRegisterMetaType<DisplayOptions>("DisplayOptions");
+    qRegisterMetaTypeStreamOperators<BtBookshelfTreeModel::Grouping>("BtBookshelfTreeModel::Grouping");
+
+    qRegisterMetaType<BTModuleTreeItem::Grouping>("Grouping");
+    qRegisterMetaTypeStreamOperators<BTModuleTreeItem::Grouping>("Grouping");
+    qRegisterMetaType<CSwordModuleSearch::SearchType>("SearchType");
+    qRegisterMetaTypeStreamOperators<CSwordModuleSearch::SearchType>("SearchType");
+
+    qRegisterMetaType<BtConfig::StringMap>("StringMap");
+    qRegisterMetaTypeStreamOperators<BtConfig::StringMap>("StringMap");
+
+    qRegisterMetaType<QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+
+
     if (!app.initBtConfig())
         return EXIT_FAILURE;
 
