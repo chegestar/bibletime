@@ -114,7 +114,6 @@ SOURCES += \
     ../../../src/frontend/settingsdialogs/clistwidget.cpp \
     ../../../src/frontend/settingsdialogs/cswordsettings.cpp \
     ../../../src/frontend/tips/bttipdialog.cpp \
-    ../../../src/util/bticons.cpp \
     ../../../src/util/btmodules.cpp \
 
 
