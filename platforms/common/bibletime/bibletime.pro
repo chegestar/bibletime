@@ -3,7 +3,7 @@
 #   installation to parent folder of executeale location
 
 # Configuration
-VERSION = 2.10.0_dev
+VERSION = 2.10.0
 CONFIG += clucene svg xml webkit
 QT += printsupport
 
