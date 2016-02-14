@@ -225,10 +225,8 @@ public:
     /** Parents count. */
     inline int indexDepth(const QModelIndex &index) const
     {
-        if(_singleModule)
-            return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 1;
-        else
-            return index.isValid() ? ((int)index.internalId() <= _lists.size() ? 1 : 2) : 0;
+        return index.isValid() ? (static_cast<unsigned int>(index.internalId()) <= _lists.size() ? 1 : 2) :
+                                 _singleModule ? 1 : 0;
     }
 
     /** List for index. */
