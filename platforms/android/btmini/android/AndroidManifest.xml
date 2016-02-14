@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest android:versionCode="17" package="org.qtproject.bibletimemini" android:installLocation="auto" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.1.3">
+<manifest android:versionCode="20" package="org.qtproject.bibletimemini" android:installLocation="auto" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.2.1">
     <application android:icon="@drawable/icon" android:label="BibleTime Mini" android:name="org.qtproject.qt5.android.bindings.QtApplication">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:screenOrientation="unspecified" android:label="BibleTime Mini" android:name="org.qtproject.bibletimemini.MiniActivity">
             <intent-filter>
