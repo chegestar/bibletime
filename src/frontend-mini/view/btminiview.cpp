@@ -505,9 +505,13 @@ public:
 #endif
 
         // HACK for dark theme
-        QColor tc = widget->palette().color(QPalette::WindowText);
-        if(tc != QColor(0, 0, 0))
-            ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
+        //QColor tc = widget->palette().color(QPalette::WindowText);
+		//qDebug() << "tc:" << tc;
+		//if (tc != QColor(0, 0, 0))
+		{
+			//qDebug() << "hack for dark theme" << tc;
+			//ct = ct.insert(ct.size(), "</font>").insert(0, QString("<font color=\"%1\">").arg(tc.name()));
+		}
 
         // HACK resources path from url format to absolute path and set width
         ct.replace("<img src=\"file://"
@@ -651,6 +655,7 @@ public:
             painter->save();
             painter->translate(p);
             QAbstractTextDocumentLayout::PaintContext ctx;
+			ctx.palette.setColor(QPalette::Text, painter->pen().color()); // take color not from app palette but from widget foreground
             QRect rect(clipping.translated(point.x() - p.x(), 0));
             if (rect.isValid())
             {
