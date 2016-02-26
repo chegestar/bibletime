@@ -1036,6 +1036,8 @@ bool BtMiniModuleTextModel::insertRows(int row, int count, const QModelIndex &pa
     for(; count > 0; row++, count--)
         d->insertModule(row, "");
     endInsertRows();
+
+	return true;
 }
 
 bool BtMiniModuleTextModel::removeRows(int row, int count, const QModelIndex &parent)
@@ -1048,6 +1050,8 @@ bool BtMiniModuleTextModel::removeRows(int row, int count, const QModelIndex &pa
     for(; count > 0; count--)
         d->eraseModule(row);
     endRemoveRows();
+
+	return true;
 }
 
 QHash<int, QByteArray> BtMiniModuleTextModel::roleNames() const
