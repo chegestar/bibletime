@@ -19,7 +19,7 @@ class BtMiniView;
 class BtMiniUiPrivate;
 class QPushButton;
 
-#if !(defined Q_OS_ANDROID || defined Q_OS_MAC || defined Q_OS_LINUX || defined Q_OS_WIN32 || defined Q_OS_BLACKBERRY)
+#if !(defined Q_OS_ANDROID || defined Q_OS_MAC || defined Q_OS_LINUX || defined Q_OS_WIN32 || defined Q_OS_BLACKBERRY || defined Q_OS_WINRT)
 #define BT_MINI_EXIT_BUTTON
 #endif
 
