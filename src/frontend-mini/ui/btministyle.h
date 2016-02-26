@@ -380,25 +380,25 @@ public:
         // bottom panel widget
         if(QString(widget->metaObject()->className()) == "BtMiniPanel")
         {
-            if(widget->parentWidget()->layout()->indexOf(widget) > 0)
-            {
-                widget->setAutoFillBackground(true);
+            //if(widget->parentWidget()->layout()->indexOf(widget) > 0)
+            //{
+                //widget->setAutoFillBackground(true);
 
-                QPalette p = widget->palette();
-                if(_night)
-                {
-                    p.setColor(QPalette::Window, QColor(0, 0, 0));
-                    p.setColor(QPalette::Button, QColor(0, 0, 0));
-                }
-                else
-                {
-                    p.setColor(QPalette::Window, QColor::fromHsl(0, 0, 128));
-                    p.setColor(QPalette::ButtonText, QColor::fromHsl(0, 0, 255));
-                }
+                //QPalette p = widget->palette();
+                //if(_night)
+                //{
+                //    p.setColor(QPalette::Window, QColor(0, 0, 0));
+                //    p.setColor(QPalette::Button, QColor(0, 0, 0));
+                //}
+                //else
+                //{
+                //    p.setColor(QPalette::Window, QColor::fromHsl(0, 0, 128));
+                //    p.setColor(QPalette::ButtonText, QColor::fromHsl(0, 0, 255));
+                //}
 
-                foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
-                    w->setPalette(p);
-            }
+                //foreach(QWidget *w, widget->findChildren<QWidget*>() << widget)
+                //    w->setPalette(p);
+            //}
 
             widget->setMinimumHeight(baseSize() * 2.6);
         }
