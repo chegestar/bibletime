@@ -3,9 +3,11 @@
 #   installation to parent folder of executeale location
 
 # Configuration
-VERSION = 2.10.0_dev
-CONFIG += clucene svg xml webkit
+VERSION = 2.10.0
+CONFIG += clucene svg xml webkit c++11 curl
 QT += printsupport
+
+debug:DEFINES += BT_DEBUG
 
 INCLUDEPATH += . \
 
@@ -15,6 +17,16 @@ SOURCES += \
     ../../../src/bibletime_slots.cpp \
     ../../../src/bibletimeapp.cpp \
     ../../../src/main.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfwizard.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelftaskpage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfinstallfinalpage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfremovefinalpage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfworkspage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelflanguagespage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfsourcespage.cpp \
+    ../../../src/frontend/bookshelfwizard/btbookshelfsourcesprogresspage.cpp \
+    ../../../src/frontend/bookshelfwizard/btinstallpagemodel.cpp \
+    ../../../src/frontend/bookshelfwizard/cswordsetupinstallsourcesdialog.cpp \
     ../../../src/frontend/btaboutdialog.cpp \
     ../../../src/frontend/btaboutmoduledialog.cpp \
     ../../../src/frontend/btbookshelfdockwidget.cpp \
@@ -26,25 +38,13 @@ SOURCES += \
     ../../../src/frontend/btmodulechooserdialog.cpp \
     ../../../src/frontend/btmoduleindexdialog.cpp \
     ../../../src/frontend/btopenworkaction.cpp \
+    ../../../src/frontend/btprinter.cpp \
+    ../../../src/frontend/btwebenginepage.cpp \
+    ../../../src/frontend/btwebengineview.cpp \
     ../../../src/frontend/cexportmanager.cpp \
     ../../../src/frontend/cmdiarea.cpp \
-    ../../../src/frontend/cprinter.cpp \
     ../../../src/frontend/bookmarks/bteditbookmarkdialog.cpp \
     ../../../src/frontend/bookmarks/cbookmarkindex.cpp \
-    ../../../src/frontend/bookshelfmanager/btconfigdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/btmodulemanagerdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/cswordsetupinstallsourcesdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/indexpage/btindexpage.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallmodulechooserdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallmodulechooserdialogmodel.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpage.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpagemodel.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpageworkswidget.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpathdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallprogressdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/installpage/btrefreshprogressdialog.cpp \
-    ../../../src/frontend/bookshelfmanager/removepage/btremovepage.cpp \
-    ../../../src/frontend/bookshelfmanager/removepage/btremovepagetreemodel.cpp \
     ../../../src/frontend/cinfodisplay.cpp \
     ../../../src/frontend/display/btcolorwidget.cpp \
     ../../../src/frontend/display/btfindwidget.cpp \
@@ -97,6 +97,7 @@ SOURCES += \
     ../../../src/frontend/searchdialog/analysis/csearchanalysislegenditem.cpp \
     ../../../src/frontend/searchdialog/analysis/csearchanalysisscene.cpp \
     ../../../src/frontend/searchdialog/analysis/csearchanalysisview.cpp \
+    ../../../src/frontend/settingsdialogs/btconfigdialog.cpp \
     ../../../src/frontend/settingsdialogs/btfontchooserwidget.cpp \
     ../../../src/frontend/settingsdialogs/btfontsettings.cpp \
     ../../../src/frontend/settingsdialogs/btshortcutsdialog.cpp \
@@ -109,13 +110,24 @@ SOURCES += \
     ../../../src/frontend/settingsdialogs/clistwidget.cpp \
     ../../../src/frontend/settingsdialogs/cswordsettings.cpp \
     ../../../src/frontend/tips/bttipdialog.cpp \
-    ../../../src/util/bticons.cpp \
+    ../../../src/frontend/welcome/btwelcomedialog.cpp \
     ../../../src/util/btmodules.cpp \
 
 
 HEADERS += \
     ../../../src/bibletimeapp.h \
     ../../../src/bibletime.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfwizard.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfwizardpage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelftaskpage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfinstallfinalpage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfremovefinalpage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfworkspage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelflanguagespage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfsourcespage.h \
+    ../../../src/frontend/bookshelfwizard/btbookshelfsourcesprogresspage.h \
+    ../../../src/frontend/bookshelfwizard/btinstallpagemodel.h \
+    ../../../src/frontend/bookshelfwizard/cswordsetupinstallsourcesdialog.h \
     ../../../src/frontend/btaboutdialog.h \
     ../../../src/frontend/btaboutmoduledialog.h \
     ../../../src/frontend/btbookshelfdockwidget.h \
@@ -127,26 +139,14 @@ HEADERS += \
     ../../../src/frontend/btmodulechooserdialog.h \
     ../../../src/frontend/btmoduleindexdialog.h \
     ../../../src/frontend/btopenworkaction.h \
+    ../../../src/frontend/btprinter.h \
+    ../../../src/frontend/btwebenginepage.h \
+    ../../../src/frontend/btwebengineview.h \
     ../../../src/frontend/cdragdrop.h \
     ../../../src/frontend/cexportmanager.h \
     ../../../src/frontend/cmdiarea.h \
-    ../../../src/frontend/cprinter.h \
     ../../../src/frontend/bookmarks/bteditbookmarkdialog.h \
     ../../../src/frontend/bookmarks/cbookmarkindex.h \
-    ../../../src/frontend/bookshelfmanager/btconfigdialog.h \
-    ../../../src/frontend/bookshelfmanager/btmodulemanagerdialog.h \
-    ../../../src/frontend/bookshelfmanager/cswordsetupinstallsourcesdialog.h \
-    ../../../src/frontend/bookshelfmanager/indexpage/btindexpage.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallmodulechooserdialog.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallmodulechooserdialogmodel.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpage.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpagemodel.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpageworkswidget.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallpathdialog.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btinstallprogressdialog.h \
-    ../../../src/frontend/bookshelfmanager/installpage/btrefreshprogressdialog.h \
-    ../../../src/frontend/bookshelfmanager/removepage/btremovepage.h \
-    ../../../src/frontend/bookshelfmanager/removepage/btremovepagetreemodel.h \
     ../../../src/frontend/cinfodisplay.h \
     ../../../src/frontend/display/btcolorwidget.h \
     ../../../src/frontend/display/btfindwidget.h \
@@ -199,6 +199,7 @@ HEADERS += \
     ../../../src/frontend/searchdialog/analysis/csearchanalysislegenditem.h \
     ../../../src/frontend/searchdialog/analysis/csearchanalysisscene.h \
     ../../../src/frontend/searchdialog/analysis/csearchanalysisview.h \
+    ../../../src/frontend/settingsdialogs/btconfigdialog.h \
     ../../../src/frontend/settingsdialogs/btfontchooserwidget.h \
     ../../../src/frontend/settingsdialogs/btfontsettings.h \
     ../../../src/frontend/settingsdialogs/btshortcutsdialog.h \
@@ -211,6 +212,7 @@ HEADERS += \
     ../../../src/frontend/settingsdialogs/clistwidget.h \
     ../../../src/frontend/settingsdialogs/cswordsettings.h \
     ../../../src/frontend/tips/bttipdialog.h \
+    ../../../src/frontend/welcome/btwelcomedialog.h \
     ../../../src/util/btmodules.h \
     ../../../src/util/macros.h
 

@@ -171,13 +171,15 @@ SOURCES += \
     $${SWORD_PATH}/src/utilfuns/zlib/gzread.c \
 
 # Compressors
-windows:DEFINES += EXCLUDEXZ EXCLUDEBZIP2
+windows|android:DEFINES += EXCLUDEXZ EXCLUDEBZIP2
 
 !contains(DEFINES, EXCLUDEXZ) {
     SOURCES += $${SWORD_PATH}/src/modules/common/xzcomprs.cpp
+    LIBS    += -llzma
 }
 !contains(DEFINES, EXCLUDEBZIP2) {
     SOURCES += $${SWORD_PATH}/src/modules/common/bz2comprs.cpp
+    LIBS    += -lbz2
 }
 
 
@@ -228,6 +230,9 @@ LIBS += -lws2_32
 }
 
 # MeeGo platform
-unix:contains(MEEGO_EDITION,harmattan) {
+#unix:contains(MEEGO_EDITION,harmattan) {
+#DEFINES += STDC_HEADERS
+#}
+
+# for regex
 DEFINES += STDC_HEADERS
-}

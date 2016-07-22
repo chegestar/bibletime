@@ -22,6 +22,7 @@ SOURCES += \
     ../../../src/backend/btinstallmgr.cpp \
     ../../../src/backend/btinstallthread.cpp \
     ../../../src/backend/btmoduletreeitem.cpp \
+    ../../../src/backend/btsourcesthread.cpp \
     ../../../src/backend/config/btconfig.cpp \
     ../../../src/backend/config/btconfigcore.cpp \
     ../../../src/backend/cswordmodulesearch.cpp \
@@ -44,7 +45,7 @@ SOURCES += \
     ../../../src/backend/managers/clanguagemgr.cpp \
     ../../../src/backend/managers/cswordbackend.cpp \
     ../../../src/backend/managers/referencemanager.cpp \
-    ../../../src/backend/models/btmoduletextmodel.cpp \
+    ../../../src/backend/models/btlistmodel.cpp \
     ../../../src/backend/rendering/btinforendering.cpp \
     ../../../src/backend/rendering/cbookdisplay.cpp \
     ../../../src/backend/rendering/cchapterdisplay.cpp \
@@ -53,10 +54,9 @@ SOURCES += \
     ../../../src/backend/rendering/chtmlexportrendering.cpp \
     ../../../src/backend/rendering/cplaintextexportrendering.cpp \
     ../../../src/backend/rendering/ctextrendering.cpp \
+    ../../../src/util/bticons.cpp \
     ../../../src/util/cresmgr.cpp \
     ../../../src/util/directory.cpp \
-    ../../../src/util/bticons.cpp \
-    ../../../src/util/btmodules.cpp \
     ../../../src/util/tool.cpp \
 
 
@@ -71,11 +71,12 @@ HEADERS += \
     ../../../src/backend/bookshelfmodel/moduleitem.h \
     ../../../src/backend/btbookmarksmodel.h \
     ../../../src/backend/btglobal.h \
+    ../../../src/backend/btsignal.h \
     ../../../src/backend/btinstallbackend.h \
     ../../../src/backend/btinstallmgr.h \
     ../../../src/backend/btinstallthread.h \
     ../../../src/backend/btmoduletreeitem.h \
-    ../../../src/backend/btsignal.h \
+    ../../../src/backend/btsourcesthread.h \
     ../../../src/backend/config/btconfig.h \
     ../../../src/backend/config/btconfigcore.h \
     ../../../src/backend/cswordmodulesearch.h \
@@ -94,11 +95,11 @@ HEADERS += \
     ../../../src/backend/managers/clanguagemgr.h \
     ../../../src/backend/managers/cswordbackend.h \
     ../../../src/backend/managers/referencemanager.h \
+    ../../../src/backend/models/btlistmodel.h \
     ../../../src/backend/keys/cswordkey.h \
     ../../../src/backend/keys/cswordldkey.h \
     ../../../src/backend/keys/cswordtreekey.h \
     ../../../src/backend/keys/cswordversekey.h \
-    ../../../src/backend/models/btmoduletextmodel.h \
     ../../../src/backend/rendering/cbookdisplay.h \
     ../../../src/backend/rendering/cchapterdisplay.h \
     ../../../src/backend/rendering/cdisplayrendering.h \
@@ -108,8 +109,6 @@ HEADERS += \
     ../../../src/backend/rendering/ctextrendering.h \
     ../../../src/util/cresmgr.h \
     ../../../src/util/directory.h \
-    ../../../src/util/bticons.h \
-    ../../../src/util/btmodules.h \
     ../../../src/util/tool.h \
 
 
@@ -168,7 +167,7 @@ warning("Non Mini build: WebKit required")
 
 # Clucene
 clucene:include(../../common/clucene/clucene.pro)
-!clucene:DEFINES += BT_NO_CLUCENE
+!clucene:DEFINES += BT_NO_LUCENE
 
 # CURL
 # optional
