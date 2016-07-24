@@ -103,13 +103,16 @@ QString CDisplayRendering::entryLink(const KeyTreeItem &item,
                     if(vk.isBoundSet())
                     {
                         linkText += "-";
-                        if(vk.getUpperBound().getBook() != vk.getLowerBound().getBook())
-                            linkText += QString::fromUtf8(vk.getUpperBound().getShortText());
-                        else if(vk.getUpperBound().getChapter() != vk.getLowerBound().getChapter())
-                            linkText += QString::number(vk.getUpperBound().getChapter()) + ":" +
-                                    QString::number(vk.getUpperBound().getVerse());
-                        else
-                            linkText += QString::number(vk.getUpperBound().getVerse());
+                        sword::VerseKey const upper = vk.getUpperBound();
+                        sword::VerseKey const lower = vk.getLowerBound();
+                        if (upper.getBook() != lower.getBook()) {
+                            linkText += QString::fromUtf8(upper.getShortText());
+                        } else if(upper.getChapter() != lower.getChapter()) {
+                            linkText += QString("%1:%2").arg(upper.getChapter())
+                                                        .arg(lower.getVerse());
+                        } else {
+                            linkText += QString::number(upper.getVerse());
+                        }
                     }
                 }
                 else
