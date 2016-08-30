@@ -26,7 +26,12 @@ CSwordBibleModuleInfo::CSwordBibleModuleInfo(sword::SWModule *module,
         , m_upperBound(0)
         , m_bookList(0)
 {
-    // Intentionally empty
+    Q_CHECK_PTR(module);
+
+    const char *v11n = static_cast<sword::VerseKey*>(
+        module->getKey())->getVersificationSystem();
+    m_lowerBound.setVersificationSystem(v11n);
+    m_upperBound.setVersificationSystem(v11n);
 }
 
 void CSwordBibleModuleInfo::initBounds() const {
@@ -42,9 +47,13 @@ void CSwordBibleModuleInfo::initBounds() const {
     sword::VerseKey key(module()->getKeyText());
     m_hasOT = (key.getTestament() == 1);
 
+    m_lowerBound.setKey(key.getText());
+
     m->setPosition(sword::BOTTOM);
     key = module()->getKeyText();
     m_hasNT = (key.getTestament() == 2);
+
+    m_upperBound.setKey(key.getText());
 
     m->setSkipConsecutiveLinks(oldStatus);
 
