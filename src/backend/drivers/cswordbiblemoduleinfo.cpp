@@ -27,7 +27,12 @@ CSwordBibleModuleInfo::CSwordBibleModuleInfo(sword::SWModule & module,
         , m_upperBound(nullptr)
         , m_bookList(nullptr)
 {
-    // Intentionally empty
+    Q_CHECK_PTR(module);
+
+    const char *v11n = static_cast<sword::VerseKey*>(
+        module->getKey())->getVersificationSystem();
+    m_lowerBound.setVersificationSystem(v11n);
+    m_upperBound.setVersificationSystem(v11n);
 }
 
 void CSwordBibleModuleInfo::initBounds() const {
@@ -43,14 +48,15 @@ void CSwordBibleModuleInfo::initBounds() const {
     sword::VerseKey key(m.getKeyText());
     m_hasOT = (key.getTestament() == 1);
 
+    m_lowerBound.setKey(key.getText());
+
     m.setPosition(sword::BOTTOM);
     key = m.getKeyText();
     m_hasNT = (key.getTestament() == 2);
 
-    m.setSkipConsecutiveLinks(oldStatus);
+    m_upperBound.setKey(key.getText());
 
-    m_lowerBound.setKey(m_hasOT ? "Genesis 1:1" : "Matthew 1:1");
-    m_upperBound.setKey(!m_hasNT ? "Malachi 4:6" : "Revelation of John 22:21");
+    m.setSkipConsecutiveLinks(oldStatus);
 
     m_boundsInitialized = true;
 }
