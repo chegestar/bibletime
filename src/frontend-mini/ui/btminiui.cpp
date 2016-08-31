@@ -947,6 +947,8 @@ void BtMiniUi::modulesReloaded()
 {
     Q_D(BtMiniUi);
 
+    d->setupDefaultModules();
+
     if(!d->_haveBible)
     {
         bool haveBible = false;
@@ -970,8 +972,6 @@ void BtMiniUi::modulesReloaded()
             activateWorks();
         }
     }
-
-    d->setupDefaultModules();
 }
 
 void BtMiniUi::openWorksMenu()
