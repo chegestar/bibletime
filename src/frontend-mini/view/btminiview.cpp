@@ -2815,7 +2815,7 @@ void BtMiniView::scroll(float horizontal, float vertical)
             const QModelIndex &index(d->currentSubView()->modelIndex());
             int i = -1;
             if(index.isValid())
-                d->currentSubView()->indexItem(index);
+                i = d->currentSubView()->indexItem(index);
             if(i != -1)
             {
                 int oi = i;
